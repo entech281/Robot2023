@@ -8,14 +8,15 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class DriveSubsystem extends EntechSubsystem {
 
-    private CANSparkMax frontLeftSpark;
-    private CANSparkMax frontRightSpark;
-    private CANSparkMax rearLeftSpark;
-    private CANSparkMax rearRightSpark;
+    private MotorController frontLeftSpark;
+    private MotorController frontRightSpark;
+    private MotorController rearLeftSpark;
+    private MotorController rearRightSpark;
 
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder frontRightEncoder;
