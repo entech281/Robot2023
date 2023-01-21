@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.Controllers;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class CANMotorController implements MotorController {
 
-    public enum MotorControllerType {
+    public static enum MotorControllerType {
         TSRX,
         SMAX_BRUSHED,
         SMAX_BRUSHLESS
@@ -113,9 +113,9 @@ public class CANMotorController implements MotorController {
             case TSRX:
                 motorControllerTSRX.feed();
             case SMAX_BRUSHED:
-                return;
+                motorControllerSMAX.set(get());
             case SMAX_BRUSHLESS:
-                return;
+                motorControllerSMAX.set(get());
         }
     }
 }

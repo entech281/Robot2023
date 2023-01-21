@@ -1,7 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.DriveCommand;
 import frc.robot.commands.CommandFactory;
 import frc.robot.subsystems.SubsystemManager;
 
@@ -26,7 +26,7 @@ public class OperatorInterface {
         //        .whenPressed(commandFactory.snapToYawCommand( 90.0))
         //        .add();
 
-        subsystemManager.getDriveSubsystem().setDefaultCommand ( new ArcadeDriveCommand(subsystemManager.getDriveSubsystem(), driveStick) );
+        subsystemManager.getDriveSubsystem().setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), driveStick));
     }
 
 }
