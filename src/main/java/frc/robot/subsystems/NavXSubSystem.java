@@ -12,7 +12,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  * @author dcowden
@@ -56,6 +56,7 @@ public class NavXSubSystem extends EntechSubsystem {
     @Override
     public void periodic() {
         latestYawAngle = angle_scale*navX.getYaw();
+        SmartDashboard.putNumber("NavX", latestYawAngle);
     }    
 
     public static double findNearestQuadrant(double angle){
@@ -94,5 +95,4 @@ public class NavXSubSystem extends EntechSubsystem {
     public Gyro getGyro() {
       return navX;
     }
-
 }

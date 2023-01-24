@@ -1,7 +1,15 @@
-package frc.robot.Filters;
+package frc.robot.filters;
 
 public abstract class Filter {
+    protected boolean enable;
+
     public abstract void filter(DriveInput DI);
-    public abstract void setEnabled(boolean enabled);
-    public abstract boolean getEnabled();
+
+    public void setEnabled(boolean enabled) {
+        enable = enabled;
+    }
+
+    public boolean getEnabled() {
+        return enable;
+    };
 }

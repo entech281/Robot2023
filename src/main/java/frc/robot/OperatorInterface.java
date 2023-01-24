@@ -18,13 +18,23 @@ public class OperatorInterface {
         this.driveStick = new Joystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
         this.joystickManager = new JoystickButtonManager(driveStick);
 
-        // joystickManager.addButton(RobotConstants.DRIVER_STICK.TURN_LEFT90)
-        //        .whenPressed(commandFactory.snapToYawCommand(-90.0))
-        //        .add();
+        joystickManager.addButton(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
+                .whenPressed(commandFactory.ButtonFilterCommand(
+                    subsystemManager.getDriveSubsystem(), 
+                    RobotConstants.DRIVER_STICK.TURN_TOGGLE, 
+                    true
+                    )
+                )
+                .add();
 
-        // joystickManager.addButton(RobotConstants.DRIVER_STICK.TURN_RIGHT90)
-        //        .whenPressed(commandFactory.snapToYawCommand( 90.0))
-        //        .add();
+        joystickManager.addButton(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
+            .whenReleased(commandFactory.ButtonFilterCommand(
+                    subsystemManager.getDriveSubsystem(), 
+                    RobotConstants.DRIVER_STICK.TURN_TOGGLE,
+                    false
+                )
+            )
+            .add();
 
         subsystemManager.getDriveSubsystem().setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), driveStick));
     }

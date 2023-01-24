@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.Filters.DriveInput;
+import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -32,7 +32,7 @@ public class DriveCommand extends EntechCommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_drive.drive(new DriveInput(m_stick.getX(), m_stick.getY(), m_stick.getZ()));
+        m_drive.drive(new DriveInput(m_stick.getX(), m_stick.getY(), 0));
     }
 
     // Called once the command ends or is interrupted.

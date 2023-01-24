@@ -1,23 +1,14 @@
-package frc.robot.Filters;
+package frc.robot.filters;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 public class LockZFilter extends Filter {
     private final double startingZeroZ;
     private Gyro gyro;
-    private boolean enable = false;
 
     public LockZFilter(Gyro Gyro) {
         gyro = Gyro;
         startingZeroZ = gyro.getAngle();
-    }
-
-    public void setEnabled(boolean enabled) {
-        enable = enabled;
-    }
-
-    public boolean getEnabled() {
-        return enable;
     }
 
     public void filter(DriveInput DI) {

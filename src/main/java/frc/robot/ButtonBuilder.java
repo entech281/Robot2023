@@ -39,6 +39,7 @@ class JoystickButtonManager {
         public Builder whileHeld(Command command);
         
         public Builder whileHeldContinuous(Command command);
+
         
     }
 
