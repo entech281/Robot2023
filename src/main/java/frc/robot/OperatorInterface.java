@@ -19,24 +19,20 @@ public class OperatorInterface {
         this.joystickManager = new JoystickButtonManager(driveStick);
 
         joystickManager.addButton(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
-                .whenPressed(commandFactory.ButtonFilterCommand(
-                    subsystemManager.getDriveSubsystem(), 
-                    RobotConstants.DRIVER_STICK.TURN_TOGGLE, 
-                    true
-                    )
-                )
-                .add();
-
-        joystickManager.addButton(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
-            .whenReleased(commandFactory.ButtonFilterCommand(
-                    subsystemManager.getDriveSubsystem(), 
-                    RobotConstants.DRIVER_STICK.TURN_TOGGLE,
-                    false
+            .whenPressed(commandFactory.ButtonFilterTrueCommand( 
+                    RobotConstants.DRIVER_STICK.TURN_TOGGLE
                 )
             )
             .add();
 
-        subsystemManager.getDriveSubsystem().setDefaultCommand(new DriveCommand(subsystemManager.getDriveSubsystem(), driveStick));
+        joystickManager.addButton(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
+            .whenReleased(commandFactory.ButtonFilterFalseCommand(
+                    RobotConstants.DRIVER_STICK.TURN_TOGGLE
+                )
+            )
+            .add();
+
+        subsystemManager.getDriveSubsystem().setDefaultCommand(commandFactory.DriveCommand(driveStick));
     }
 
 }

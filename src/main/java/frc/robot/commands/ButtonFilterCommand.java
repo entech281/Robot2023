@@ -10,6 +10,7 @@ public class ButtonFilterCommand extends EntechCommandBase {
     private DriveFilterManager DFM;
     private int buttonNumber;
     private boolean enable;
+    private boolean isFinished = false;
   
     /**
      * Creates a new ExampleCommand.
@@ -39,6 +40,7 @@ public class ButtonFilterCommand extends EntechCommandBase {
             default:
                 return;
         }
+        isFinished = true;
     }
   
     // Called once the command ends or is interrupted.
@@ -49,7 +51,7 @@ public class ButtonFilterCommand extends EntechCommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return isFinished;
     }
   
     // Returns true if this command should run when robot is disabled.

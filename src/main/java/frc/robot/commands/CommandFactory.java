@@ -1,8 +1,12 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
+import frc.robot.filters.DriveInput;
+
 /**
  *
  * @author dcowden
@@ -14,8 +18,20 @@ public class CommandFactory {
         this.sm = subsystemManager;
     }
 
-    public Command ButtonFilterCommand(DriveSubsystem Drive, int ButtonNumber, boolean enabled) {
-        return new ButtonFilterCommand(Drive, ButtonNumber, enabled);
+    public Command ButtonFilterFalseCommand(int ButtonNumber) {
+        return new ButtonFilterCommand(sm.getDriveSubsystem(), ButtonNumber, false);
+    }
+
+    public Command ButtonFilterTrueCommand(int ButtonNumber) {
+        return new ButtonFilterCommand(sm.getDriveSubsystem(), ButtonNumber, true);
+    }
+
+    public Command DriveCommand(DriveInput DI) {
+        return new DriveCommand(sm.getDriveSubsystem(), DI);
+    }
+
+    public Command DriveCommand(Joystick joystick) {
+        return new DriveCommand(sm.getDriveSubsystem(), new DriveInput(joystick.getX(), joystick.getY(), 0));
     }
 
     public Command getAutonomousCommand(){
