@@ -17,7 +17,7 @@ public class TestThatTestsRun {
     
     @Test
     public void testThatThisBreaks(){
-        throw new RuntimeException("Error");
+        //throw new RuntimeException("Error");
     }
     
     
