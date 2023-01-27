@@ -17,6 +17,9 @@ public final class RobotConstants {
         public static final int PWM_0 = 0;
         public static final int PWM_1 = 1;
     }
+    public interface VISION {
+        public static final String PHOTON_HOST = "photonvision";
+    }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
     }
