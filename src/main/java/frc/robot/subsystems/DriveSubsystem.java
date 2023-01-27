@@ -62,7 +62,10 @@ public class DriveSubsystem extends EntechSubsystem {
     SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
     SmartDashboard.putNumber("Back Right Talon", rearRightTalon.get());
 
-    SmartDashboard.putNumberArray("Driver Input", loggingDriveInput.get());
+    SmartDashboard.putNumber("Driver Input X", loggingDriveInput.getX());
+    SmartDashboard.putNumber("Driver Input Y", loggingDriveInput.getY());
+    SmartDashboard.putNumber("Driver Input Z", loggingDriveInput.getZ());
+
 
     DFM.refreshFilterEnable();
     robotDrive.feed();
@@ -70,6 +73,7 @@ public class DriveSubsystem extends EntechSubsystem {
   }
 
   public void drive(DriveInput DI) {
+    loggingDriveInput = DI;
     DFM.applyFilters(DI);
     robotDrive.driveCartesian(DI.getX(), DI.getY(), DI.getZ());
   }

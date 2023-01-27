@@ -6,10 +6,10 @@ public class TurnToggleFilter extends Filter {
 
     public void filter(DriveInput DI) {
         if (!enable) {
+            DI.setZ(0);
             return;
         }
         
-        DI.setZ(DI.getY());
-        DI.setY(0);
+        DI.setX(0);
     }
 }

@@ -26,12 +26,8 @@ public class CommandFactory {
         return new ButtonFilterCommand(sm.getDriveSubsystem(), ButtonNumber, true);
     }
 
-    public Command DriveCommand(DriveInput DI) {
-        return new DriveCommand(sm.getDriveSubsystem(), DI);
-    }
-
     public Command DriveCommand(Joystick joystick) {
-        return new DriveCommand(sm.getDriveSubsystem(), new DriveInput(joystick.getX(), joystick.getY(), 0));
+        return new DriveCommand(sm.getDriveSubsystem(), joystick);
     }
 
     public Command getAutonomousCommand(){

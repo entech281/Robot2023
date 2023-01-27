@@ -23,6 +23,7 @@ public class DriveFilterManager {
 
     public void applyFilters(DriveInput DI) {
         lockZ.filter(DI);
+        turnToggle.filter(DI);
     }
 
     public void clearFilters() {
