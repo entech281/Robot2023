@@ -1,67 +1,84 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
+
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.RobotConstants;
-
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import frc.robot.filters.DriveFilterManager;
+import frc.robot.filters.DriveInput;
 
 public class DriveSubsystem extends EntechSubsystem {
+  private WPI_TalonSRX frontLeftTalon;
+  private WPI_TalonSRX rearLeftTalon;
+  private WPI_TalonSRX frontRightTalon;
+  private WPI_TalonSRX rearRightTalon;
+  private MecanumDrive robotDrive;
+  private DriveFilterManager DFM;
 
-    private CANSparkMax frontLeftSpark;
-    private CANSparkMax frontRightSpark;
-    private CANSparkMax rearLeftSpark;
-    private CANSparkMax rearRightSpark;
+  private Gyro gyro; 
 
-    private RelativeEncoder frontLeftEncoder;
-    private RelativeEncoder frontRightEncoder;
-    private RelativeEncoder rearLeftEncoder;
-    private RelativeEncoder rearRightEncoder;
+  private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
+  
+  public DriveSubsystem(Gyro Gyro) {
+    gyro = Gyro;
+  }
 
-    private MotorControllerGroup leftMotorController;
-    private MotorControllerGroup rightMotorController;
-    private DifferentialDrive robotDrive;
+  @Override
+  public void initialize() {
+    frontLeftTalon  = new WPI_TalonSRX(RobotConstants.CAN.FRONT_LEFT_MOTOR);
+    rearLeftTalon   = new WPI_TalonSRX(RobotConstants.CAN.REAR_LEFT_MOTOR);
+    frontRightTalon = new WPI_TalonSRX(RobotConstants.CAN.FRONT_RIGHT_MOTOR);
+    rearRightTalon  = new WPI_TalonSRX(RobotConstants.CAN.REAR_RIGHT_MOTOR);
+    robotDrive      = new MecanumDrive(frontLeftTalon, rearLeftTalon, frontRightTalon, rearRightTalon);
+    DFM             = new DriveFilterManager(gyro);
 
-    @Override
-    public void initialize() {
-        frontLeftSpark = new CANSparkMax(RobotConstants.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
-        rearLeftSpark = new CANSparkMax(RobotConstants.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
-        leftMotorController = new MotorControllerGroup(frontLeftSpark, rearLeftSpark);
+    robotDrive.setDeadband(0.1);
 
-        frontRightSpark = new CANSparkMax(RobotConstants.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
-        rearRightSpark = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
-        rightMotorController = new MotorControllerGroup(frontRightSpark, rearRightSpark);
-        frontLeftEncoder = frontLeftSpark.getEncoder();
-        frontRightEncoder = frontRightSpark.getEncoder();
-        rearLeftEncoder = rearLeftSpark.getEncoder();
-        rearRightEncoder = rearRightSpark.getEncoder();
-        robotDrive = new DifferentialDrive(leftMotorController, rightMotorController);
-    }
+    frontLeftTalon.setInverted(true);
+    rearLeftTalon.setInverted(false);
+    frontRightTalon.setInverted(true);
+    rearRightTalon.setInverted(false);
+    
+    frontLeftTalon.enableCurrentLimit(false);
+    rearLeftTalon.enableCurrentLimit(false);
+    frontRightTalon.enableCurrentLimit(false);
+    rearRightTalon.enableCurrentLimit(false);
+  }
 
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType(getName());
-        builder.addDoubleProperty("FL Encoder Ticks", () -> { return frontLeftEncoder.getPosition(); }, null);
-        builder.addDoubleProperty("FR Encoder Ticks", () -> { return frontRightEncoder.getPosition(); }, null);
-        builder.addDoubleProperty("RL Encoder Ticks", () -> { return rearLeftEncoder.getPosition(); }, null);
-        builder.addDoubleProperty("RR Encoder Ticks", () -> { return rearRightEncoder.getPosition(); }, null);
-    }
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Front Left Talon", frontLeftTalon.get());
+    SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
+    SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
+    SmartDashboard.putNumber("Back Right Talon", rearRightTalon.get());
 
-    public void feedWatchDog(){
-        robotDrive.feed();
-    }
+    SmartDashboard.putNumber("Driver Input X", loggingDriveInput.getX());
+    SmartDashboard.putNumber("Driver Input Y", loggingDriveInput.getY());
+    SmartDashboard.putNumber("Driver Input Z", loggingDriveInput.getZ());
 
-    @Override
-    public void periodic() {
-        feedWatchDog();
-    }
 
-    public void arcadeDrive(double forward, double rotation) {
-        robotDrive.arcadeDrive(forward, rotation);
-        feedWatchDog();
-    }
+    DFM.refreshFilterEnable();
+    robotDrive.feed();
+    robotDrive.feedWatchdog();
+  }
+
+  public void drive(DriveInput DI) {
+    loggingDriveInput = DI;
+    DFM.applyFilters(DI);
+    robotDrive.driveCartesian(DI.getX(), DI.getY(), DI.getZ());
+  }
+
+  public DriveFilterManager getDFM() {
+    return DFM;
+  }
 }

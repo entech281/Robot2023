@@ -4,12 +4,13 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.filters.DriveInput;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class ArcadeDriveCommand extends EntechCommandBase {
-    private final DriveSubsystem m_drive;
-    private final Joystick m_stick;
+public class DriveCommand extends EntechCommandBase {
+    private final DriveSubsystem drive;
+    private final Joystick joystick;
 
     /**
      * Creates a new ArcadeDrive. This command will drive your robot according to the joystick
@@ -18,10 +19,10 @@ public class ArcadeDriveCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public ArcadeDriveCommand(DriveSubsystem drive, Joystick stick) {
-        super(drive);
-        m_drive = drive;
-        m_stick = stick;
+    public DriveCommand(DriveSubsystem Drive, Joystick Joystick) {
+        super(Drive);
+        drive = Drive;
+        joystick = Joystick;
     }
 
     // Called when the command is initially scheduled.
@@ -31,7 +32,7 @@ public class ArcadeDriveCommand extends EntechCommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_drive.arcadeDrive(m_stick.getY(), m_stick.getX());
+        drive.drive(new DriveInput(-joystick.getX(), joystick.getY(), -joystick.getZ()));
     }
 
     // Called once the command ends or is interrupted.

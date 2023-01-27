@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SubsystemManager {
     private DriveSubsystem driveSubsystem;
+    private NavXSubSystem navXSubSystem;
 
     public SubsystemManager() {
     }
@@ -16,9 +17,14 @@ public class SubsystemManager {
         return driveSubsystem;
     }
 
+    public NavXSubSystem getNavXSubSystem() {
+        return navXSubSystem;
+    }
+
 
     public void initAll() {
-        driveSubsystem = new DriveSubsystem();
+        navXSubSystem  = new NavXSubSystem();
+        driveSubsystem = new DriveSubsystem(navXSubSystem.getGyro());
 
         // Initialize the known subsystems
         driveSubsystem.initialize();
