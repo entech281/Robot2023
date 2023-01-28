@@ -18,7 +18,6 @@ public class TestNodePoses {
         NodePose npA = new NodePose(0, 0, 0, NodeID.B1);
         NodePose npB = NodePoses.getNodePose(NodeID.B1);
 
-        assertEquals(npA.getNodeID(), npB.getNodeID());
-        assertEquals(npA.getPoseToTag(), npB.getPoseToTag());
+        assertEquals(npA, npB);
     }
 }
