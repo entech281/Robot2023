@@ -11,6 +11,11 @@ public class DriveInput {
     private double x;
     private double y;
     private double z;
+    
+    private boolean feildOrientated = false;
+
+    public boolean getFeildOrientated() { return this.feildOrientated; }
+    public void setFeildOrientated(boolean feildOrientated) { this.feildOrientated = feildOrientated; }
 
     public DriveInput(double X, double Y, double Z) {
         x = X;
@@ -37,6 +42,7 @@ public class DriveInput {
     }
 
 
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -45,12 +51,12 @@ public class DriveInput {
             return false;
         }
         DriveInput driveInput = (DriveInput) o;
-        return x == driveInput.x && y == driveInput.y && z == driveInput.z;
+        return x == driveInput.x && y == driveInput.y && z == driveInput.z && feildOrientated == driveInput.feildOrientated;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, z);
+        return Objects.hash(x, y, z, feildOrientated);
     }
 
 }

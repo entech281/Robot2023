@@ -22,7 +22,7 @@ public class TestTurnToggle {
         assertEquals(DI.getX(), 5, SMALLDIFFERENCE);
         assertEquals(DI.getY(), 6, SMALLDIFFERENCE);
         assertEquals(DI.getZ(), 0, SMALLDIFFERENCE);
-    }   
+    }
 
     @Test
     public void testTurnToggleOn() {
@@ -35,5 +35,5 @@ public class TestTurnToggle {
         assertEquals(DI.getX(), 0, SMALLDIFFERENCE);
         assertEquals(DI.getY(), 6, SMALLDIFFERENCE);
         assertEquals(DI.getZ(), 7, SMALLDIFFERENCE);
-    }   
+    }
 }

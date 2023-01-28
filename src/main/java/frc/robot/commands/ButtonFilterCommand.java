@@ -3,6 +3,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveFilterManager;
+import frc.robot.filters.DriveFilterManager.filters;
 
 public class ButtonFilterCommand extends EntechCommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
@@ -35,8 +36,12 @@ public class ButtonFilterCommand extends EntechCommandBase {
     public void execute() {
         switch(buttonNumber) {
             case RobotConstants.DRIVER_STICK.TURN_TOGGLE:
-                DFM.getTurnToggle().setEnabled(enable);;
+                DFM.getFilter(filters.TURNTOGGLEFILTER).setEnabled(enable);
                 break;
+            case RobotConstants.DRIVER_STICK.FEILDORIENT:
+                DFM.getFilter(filters.FEILDORIENTTOGGLE).setEnabled(
+                    !(DFM.getFilter(filters.FEILDORIENTTOGGLE).getEnabled())
+                );
             default:
                 return;
         }

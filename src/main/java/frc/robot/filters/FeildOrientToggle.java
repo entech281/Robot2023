@@ -5,17 +5,17 @@ package frc.robot.filters;
  *
  * @author aheitkamp
  */
-public class TurnToggleFilter extends Filter {
+public class FeildOrientToggle extends Filter {
 
-    public TurnToggleFilter() {}
+    public FeildOrientToggle() {}
 
     @Override
     public void filter(DriveInput DI) {
         if (!enable) {
-            DI.setZ(0);
+            DI.setFeildOrientated(false);
             return;
         }
         
-        DI.setX(0);
+        DI.setFeildOrientated(true);;
     }
 }

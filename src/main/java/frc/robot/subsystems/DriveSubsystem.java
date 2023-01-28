@@ -80,7 +80,11 @@ public class DriveSubsystem extends EntechSubsystem {
   public void drive(DriveInput DI) {
     loggingDriveInput = DI;
     DFM.applyFilters(DI);
-    robotDrive.driveCartesian(DI.getX(), DI.getY(), DI.getZ());
+    if (DI.getFeildOrientated()) {
+      robotDrive.driveCartesian(DI.getX(), DI.getY(), DI.getZ(), gyro.getRotation2d());
+    } else {
+      robotDrive.driveCartesian(DI.getX(), DI.getY(), DI.getZ());
+    }
   }
 
   public DriveFilterManager getDFM() {

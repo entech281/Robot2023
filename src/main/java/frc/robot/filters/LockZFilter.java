@@ -16,6 +16,7 @@ public class LockZFilter extends Filter {
         startingZeroZ = gyro.getAngle();
     }
 
+    @Override
     public void filter(DriveInput DI) {
         if (!enable) {
             return;

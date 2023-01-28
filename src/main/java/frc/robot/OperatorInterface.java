@@ -19,6 +19,9 @@ public class OperatorInterface {
             .onTrue(commandFactory.ButtonFilterTrueCommand( RobotConstants.DRIVER_STICK.TURN_TOGGLE ))
             .onFalse(commandFactory.ButtonFilterFalseCommand( RobotConstants.DRIVER_STICK.TURN_TOGGLE ));
 
+        driveStick.button(RobotConstants.DRIVER_STICK.FEILDORIENT)
+            .onTrue(commandFactory.ButtonFilterTrueCommand(RobotConstants.DRIVER_STICK.FEILDORIENT));
+
         subsystemManager.getDriveSubsystem().setDefaultCommand(commandFactory.DriveCommand(driveStick.getHID()));
     }
 
