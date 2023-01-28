@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SubsystemManager {
     private DriveSubsystem driveSubsystem;
+    private NavXSubSystem navXSubSystem;
+    private VisionSubsystem visionSubsystem;
 
     public SubsystemManager() {
     }
@@ -16,14 +18,25 @@ public class SubsystemManager {
         return driveSubsystem;
     }
 
+    public NavXSubSystem getNavXSubSystem() {
+        return navXSubSystem;
+    }
+    public VisionSubsystem getVisionSubsystem() {
+        return visionSubsystem;
+    }
+
 
     public void initAll() {
-        driveSubsystem = new DriveSubsystem();
+        navXSubSystem  = new NavXSubSystem();
+        driveSubsystem = new DriveSubsystem(navXSubSystem.getGyro());
+        visionSubsystem = new VisionSubsystem();
 
         // Initialize the known subsystems
         driveSubsystem.initialize();
+        visionSubsystem.initialize();
 
         // Make sure they all send their logging data
         SmartDashboard.putData(driveSubsystem);
+        SmartDashboard.putData(visionSubsystem);
     }
 }

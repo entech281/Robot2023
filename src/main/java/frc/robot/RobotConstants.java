@@ -17,16 +17,20 @@ public final class RobotConstants {
         public static final int PWM_0 = 0;
         public static final int PWM_1 = 1;
     }
+    public interface VISION {
+        public static final String PHOTON_HOST = "photonvision";
+    }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
     }
     public interface DRIVER_STICK {
+        public static final int TURN_TOGGLE = 2;
     }
     public interface CAN {
-        public static final int FRONT_LEFT_MOTOR = 1;
-        public static final int REAR_LEFT_MOTOR = 2;
-        public static final int FRONT_RIGHT_MOTOR = 3;
-        public static final int REAR_RIGHT_MOTOR = 4;
+        public static final int FRONT_LEFT_MOTOR = 5;
+        public static final int REAR_LEFT_MOTOR = 8;
+        public static final int FRONT_RIGHT_MOTOR = 7;
+        public static final int REAR_RIGHT_MOTOR = 6;
     }
     public interface DIGITAL_IO {
     }
