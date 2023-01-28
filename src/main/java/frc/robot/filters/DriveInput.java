@@ -1,5 +1,10 @@
 package frc.robot.filters;
 
+/**
+ * 
+ *
+ * @author aheitkamp
+ */
 public class DriveInput {
     private double x;
     private double y;

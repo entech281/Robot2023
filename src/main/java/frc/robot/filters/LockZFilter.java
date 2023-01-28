@@ -2,6 +2,11 @@ package frc.robot.filters;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
+/**
+ * 
+ *
+ * @author aheitkamp
+ */
 public class LockZFilter extends Filter {
     private final double startingZeroZ;
     private Gyro gyro;

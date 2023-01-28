@@ -17,6 +17,11 @@ import frc.robot.RobotConstants;
 import frc.robot.filters.DriveFilterManager;
 import frc.robot.filters.DriveInput;
 
+/**
+ * 
+ *
+ * @author aheitkamp
+ */
 public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontLeftTalon;
   private WPI_TalonSRX rearLeftTalon;

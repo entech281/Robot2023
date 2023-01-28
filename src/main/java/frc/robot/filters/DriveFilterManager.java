@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 import frc.robot.RobotConstants;
 
+/**
+ * 
+ *
+ * @author aheitkamp
+ */
 public class DriveFilterManager {
     private Gyro gyro;
 
