@@ -1,5 +1,7 @@
 package frc.robot.filters;
 
+import java.util.Objects;
+
 /**
  * 
  *
@@ -33,4 +35,22 @@ public class DriveInput {
 
         return output;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof DriveInput)) {
+            return false;
+        }
+        DriveInput driveInput = (DriveInput) o;
+        return x == driveInput.x && y == driveInput.y && z == driveInput.z;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
+    }
+
 }

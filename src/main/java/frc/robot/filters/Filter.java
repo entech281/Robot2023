@@ -6,7 +6,7 @@ package frc.robot.filters;
  * @author aheitkamp
  */
 public abstract class Filter {
-    protected boolean enable;
+    protected boolean enable = false;
 
     public abstract void filter(DriveInput DI);
 
