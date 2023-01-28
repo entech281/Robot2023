@@ -1,6 +1,5 @@
 package frc.robot.filters;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 import frc.robot.RobotConstants;
