@@ -6,10 +6,17 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Launch TestDriveInput",
+      "name": "Launch Main",
       "request": "launch",
-      "mainClass": "frc.robot.filters.TestDriveInput",
-      "projectName": "Robot2023"
+      "mainClass": "frc.robot.Main",
+      "projectName": "Robot2023-1"
+    },
+    {
+      "type": "java",
+      "name": "Launch VisionInfo",
+      "request": "launch",
+      "mainClass": "frc.robot.commands.VisionInfo",
+      "projectName": "Robot2023-1"
     },
     {
       "type": "wpilib",
