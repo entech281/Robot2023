@@ -1,0 +1,47 @@
+package frc.robot.targeting;
+
+import edu.wpi.first.math.geometry.Pose2d;
+
+public class VisionOutputs {
+    private Pose2d tagPosesRelativeToCamera;
+    private boolean cameraHasTargets;
+    private int tagIDs;
+    private double latency;
+
+    public double getLatency() {
+        return this.latency;
+    }
+
+    public void setLatency(double latency) {
+        this.latency = latency;
+    }
+
+    public int getTagIDs() {
+        return this.tagIDs;
+    }
+
+    public void setTagIDs(int tagIDs) {
+        this.tagIDs = tagIDs;
+    }
+
+    public boolean isCameraHasTargets() {
+        return this.cameraHasTargets;
+    }
+
+    public boolean getCameraHasTargets() {
+        return this.cameraHasTargets;
+    }
+
+    public void setCameraHasTargets(boolean cameraHasTargets) {
+        this.cameraHasTargets = cameraHasTargets;
+    }
+
+    public Pose2d getTagPosesRelativeToCamera() {
+        return this.tagPosesRelativeToCamera;
+    }
+
+    public void setTagPosesRelativeToCamera(Pose2d tagPosesRelativeToCamera) {
+        this.tagPosesRelativeToCamera = tagPosesRelativeToCamera;
+    }
+
+}
