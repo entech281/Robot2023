@@ -2,10 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
-import frc.robot.filters.DriveInput;
 
 /**
  *
@@ -28,6 +26,10 @@ public class CommandFactory {
 
     public Command DriveCommand(Joystick joystick) {
         return new DriveCommand(sm.getDriveSubsystem(), joystick);
+    }
+
+    public Command getToggleFieldAbsolute(DriveSubsystem drive) {
+        return new ToggleFieldAbsoluteCommand(drive);
     }
 
     public Command getAutonomousCommand(){
