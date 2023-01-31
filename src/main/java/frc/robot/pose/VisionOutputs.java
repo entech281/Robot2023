@@ -1,4 +1,6 @@
-package frc.robot.targeting;
+package frc.robot.pose;
+
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
@@ -7,6 +9,15 @@ public class VisionOutputs {
     private boolean cameraHasTargets;
     private int tagIDs;
     private double latency;
+
+    public PhotonTrackedTarget getNumberOfTargets() {
+        return this.NumberOfTargets;
+    }
+
+    public void setNumberOfTargets(PhotonTrackedTarget NumberOfTargets) {
+        this.NumberOfTargets = NumberOfTargets;
+    }
+    private PhotonTrackedTarget NumberOfTargets;
 
     public double getLatency() {
         return this.latency;

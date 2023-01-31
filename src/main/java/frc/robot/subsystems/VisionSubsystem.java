@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.RobotConstants;
-import frc.robot.targeting.VisionOutputs;
+import frc.robot.pose.VisionOutputs;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -47,6 +47,7 @@ public class VisionSubsystem extends EntechSubsystem {
       var result = camera.getLatestResult();
       Boolean cameraHasTargets = result.hasTargets();
       visionOutputs.setCameraHasTargets(cameraHasTargets);
+      PhotonTrackedTarget NumberOfTargets = result.getBestTarget();
 
       int tagIDs = target.getFiducialId();
       visionOutputs.setTagIDs(tagIDs);
@@ -60,6 +61,8 @@ public class VisionSubsystem extends EntechSubsystem {
       double targetXin = target3D.getX();
       double targetYin = target3D.getY();
       visionOutputs.setTagPosesRelativeToCamera(new Pose2d(targetXin, targetYin, null));
+
+
   }
   
   @Override
@@ -78,6 +81,7 @@ public class VisionSubsystem extends EntechSubsystem {
       SmartDashboard.putNumber("getcameraPitch", bestTarget.getPitch());
       SmartDashboard.putNumber("getcameraSkew", bestTarget.getSkew());
       SmartDashboard.putNumber("getcameraYaw", bestTarget.getYaw());
+      SmartDashboard.putBoolean("getNumberOfTags", result.hasTargets());
     }
   }
 
