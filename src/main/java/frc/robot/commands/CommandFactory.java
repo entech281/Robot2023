@@ -28,11 +28,15 @@ public class CommandFactory {
         return new DriveCommand(sm.getDriveSubsystem(), joystick);
     }
 
-    public Command getToggleFieldAbsolute(DriveSubsystem drive) {
-        return new ToggleFieldAbsoluteCommand(drive);
+    public Command getToggleFieldAbsolute() {
+        return new ToggleFieldAbsoluteCommand(sm.getDriveSubsystem());
     }
 
     public Command getAutonomousCommand(){
         return null;
+    }
+
+    public Command getZeroGyro() {
+        return new ZeroGyroCommand(sm.getNavXSubSystem());
     }
 }

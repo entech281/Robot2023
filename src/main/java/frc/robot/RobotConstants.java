@@ -26,6 +26,7 @@ public final class RobotConstants {
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 2;
         public static final int TOGGLE_FIELD_ABSOLUTE = 12;
+        public static final int ZERO_GYRO_ANGLE = 11;
     }
     public interface CAN {
         public static final int FRONT_LEFT_MOTOR = 5;

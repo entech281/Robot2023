@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class NavXSubSystem extends EntechSubsystem {
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
-    private double angle_scale = 1.0;
+    private double angle_scale = -1.0;
     private double latestYawAngle = 0.0;
     
     
