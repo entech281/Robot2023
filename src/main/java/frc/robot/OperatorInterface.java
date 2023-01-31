@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.CommandFactory;
+import frc.robot.pose.TargetNode;
 import frc.robot.subsystems.SubsystemManager;
 
 public class OperatorInterface {
@@ -20,6 +21,10 @@ public class OperatorInterface {
             .onFalse(commandFactory.ButtonFilterFalseCommand( RobotConstants.DRIVER_STICK.TURN_TOGGLE ));
 
         subsystemManager.getDriveSubsystem().setDefaultCommand(commandFactory.DriveCommand(driveStick.getHID()));
+    }
+    
+    public TargetNode getTargetNode(){
+        return  TargetNode.NONE;
     }
 
 }

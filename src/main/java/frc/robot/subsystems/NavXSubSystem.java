@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.pose.NavxOutput;
 /**
  *
  * @author dcowden
@@ -37,7 +38,11 @@ public class NavXSubSystem extends EntechSubsystem {
         DriverStation.reportWarning("NavX Initialize Complete", false);
     }
 
-    public double getAngle() {
+    public NavxOutput getNavxOutput(){
+        return new NavxOutput(getAngle());
+    }
+    
+    protected double getAngle() {
         return latestYawAngle;
     }
 
