@@ -48,8 +48,8 @@ public class DriveSubsystem extends EntechSubsystem {
     robotDrive.setDeadband(0.1);
 
     frontLeftTalon.setInverted(true);
-    rearLeftTalon.setInverted(false);
-    frontRightTalon.setInverted(true);
+    rearLeftTalon.setInverted(true);
+    frontRightTalon.setInverted(false);
     rearRightTalon.setInverted(false);
     
     frontLeftTalon.enableCurrentLimit(false);
@@ -94,9 +94,9 @@ public class DriveSubsystem extends EntechSubsystem {
     loggingDriveInput = DI;
     DFM.applyFilters(DI);
     if (isFieldAbsoluteActive()) {
-      robotDrive.driveCartesian(DI.getX(), DI.getY(), DI.getZ(), Rotation2d.fromDegrees(gyro.getAngle()));
+      robotDrive.driveCartesian(DI.getY(), DI.getX(), DI.getZ(), Rotation2d.fromDegrees(gyro.getAngle()));
     } else {
-      robotDrive.driveCartesian(DI.getX(), DI.getY(), DI.getZ());
+      robotDrive.driveCartesian(DI.getY(), DI.getX(), DI.getZ());
     }
   }
 
