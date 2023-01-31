@@ -4,21 +4,22 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.EntechSubsystem;
+import frc.robot.subsystems.NavXSubSystem;
 
 /** An example command that uses an example subsystem. */
-public class ExampleCommand extends EntechCommandBase {
+public class ZeroGyroCommand extends EntechCommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final EntechSubsystem m_subsystem;
+  private final NavXSubSystem NavX;
+  private boolean isFinished = false;
 
   /**
-   * Creates a new ExampleCommand.
+   *
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ExampleCommand(EntechSubsystem subsystem) {
+  public ZeroGyroCommand(NavXSubSystem subsystem) {
       super(subsystem);
-      m_subsystem = subsystem;
+      NavX = subsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -29,6 +30,8 @@ public class ExampleCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    NavX.getGyro().reset();
+    isFinished = true;
   }
 
   // Called once the command ends or is interrupted.
@@ -39,12 +42,12 @@ public class ExampleCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return false;
+      return isFinished;
   }
 
   // Returns true if this command should run when robot is disabled.
   @Override
   public boolean runsWhenDisabled() {
-      return false;
+      return true;
   }
 }

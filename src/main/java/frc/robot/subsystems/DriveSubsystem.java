@@ -9,6 +9,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +28,8 @@ public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX rearRightTalon;
   private MecanumDrive robotDrive;
   private DriveFilterManager DFM;
+
+  private boolean useFieldAbsolute = false;
 
   private Gyro gyro; 
 
@@ -51,8 +55,8 @@ public class DriveSubsystem extends EntechSubsystem {
     robotDrive.setDeadband(0.1);
 
     frontLeftTalon.setInverted(true);
-    rearLeftTalon.setInverted(false);
-    frontRightTalon.setInverted(true);
+    rearLeftTalon.setInverted(true);
+    frontRightTalon.setInverted(false);
     rearRightTalon.setInverted(false);
     
     frontLeftTalon.enableCurrentLimit(false);
@@ -61,8 +65,12 @@ public class DriveSubsystem extends EntechSubsystem {
     rearRightTalon.enableCurrentLimit(false);
   }
 
+  
+
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("NavX Angle", gyro.getAngle());
+
     SmartDashboard.putNumber("Front Left Talon", frontLeftTalon.get());
     SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
     SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
@@ -71,6 +79,8 @@ public class DriveSubsystem extends EntechSubsystem {
     SmartDashboard.putNumber("Driver Input X", loggingDriveInput.getX());
     SmartDashboard.putNumber("Driver Input Y", loggingDriveInput.getY());
     SmartDashboard.putNumber("Driver Input Z", loggingDriveInput.getZ());
+
+    SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
 
 
     DFM.refreshFilterEnable();
@@ -81,7 +91,11 @@ public class DriveSubsystem extends EntechSubsystem {
   public void drive(DriveInput DI) {
     loggingDriveInput = DI;
     DFM.applyFilters(DI);
-    robotDrive.driveCartesian(DI.getX(), DI.getY(), DI.getZ());
+    if (isFieldAbsoluteActive()) {
+      robotDrive.driveCartesian(DI.getY(), DI.getX(), DI.getZ(), Rotation2d.fromDegrees(gyro.getAngle()));
+    } else {
+      robotDrive.driveCartesian(DI.getY(), DI.getX(), DI.getZ());
+    }
   }
 
   public void activateAlignmentSolution ( AlignmentSolution solution ){
@@ -89,5 +103,21 @@ public class DriveSubsystem extends EntechSubsystem {
   }
   public DriveFilterManager getDFM() {
     return DFM;
+  }
+
+  public boolean isFieldAbsoluteActive() {
+    return useFieldAbsolute;
+  }
+
+  public void setFieldAbsolute(boolean active) {
+    useFieldAbsolute = active;
+  }
+
+  public void toggleFieldAbsolute() {
+    if (isFieldAbsoluteActive()) {
+      setFieldAbsolute(false);
+    } else {
+      setFieldAbsolute(true);
+    }
   }
 }
