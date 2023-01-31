@@ -39,10 +39,10 @@ public class NavXSubSystem extends EntechSubsystem {
     }
 
     public NavxOutput getNavxOutput(){
-        return new NavxOutput();
+        return new NavxOutput(getAngle());
     }
     
-    public double getAngle() {
+    protected double getAngle() {
         return latestYawAngle;
     }
 
