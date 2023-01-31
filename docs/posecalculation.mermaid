@@ -1,0 +1,28 @@
+## to view this, paste into https://mermaid-js.github.io/mermaid-live-editor
+sequenceDiagram
+    TimedRobot->>+Robot: periodic()
+    Note right of Robot: This looks like a lot of code to be in Robot, but it will be really just a few lines
+    Robot-->>+VisionSubsystem:getVisionOutput()
+    VisionSubsystem-->>-Robot:VisionOutput
+    Robot-->+NavxSubsystem:getNavxOutput()
+    NavxSubsystem-->>-Robot:NavxOutput
+    Robot-->>+DriveSubsystem:getDriveOutput()
+    DriveSubsystem-->>-Robot:DriveOutput
+
+    Robot-->>+ArmSubsystem:getArmOutput()
+    ArmSubsystem-->>-Robot:ArmOutput
+
+    Robot-->>+PoseCalculator:calculatePose(VisionOutput, NavxOutput, DriveOutput, ArmOutput)
+    PoseCalculator-->>-Robot:RobotPose
+
+    Robot-->>+OperatorInterface: getSelectedDeploymentNode()
+    OperatorInterface-->>-Robot: Node
+
+    Robot-->>+AlignmentCalculator: calculateAlignmentSolution()
+    AlignmentCalculator-->>-Robot: AlignmentSolution
+
+    Robot-->>DriveSubsystem: activateAlignmentSolution(AlignmentSolution)
+    DriveSubsystem-->>DriveSubsystem: computeDrive Adjustments and stuff
+
+    #John-->>-Alice: Hi Alice, I can hear you!
+    #John-->>-Alice: I feel great!

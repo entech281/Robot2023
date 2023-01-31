@@ -4,22 +4,22 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.NavXSubSystem;
 
 /** An example command that uses an example subsystem. */
-public class ToggleFieldAbsoluteCommand extends EntechCommandBase {
+public class ZeroGyroCommand extends EntechCommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveSubsystem m_drive;
+  private final NavXSubSystem NavX;
   private boolean isFinished = false;
 
   /**
-   * Creates a new ToggleFieldAbsoluteCommand.
+   *
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ToggleFieldAbsoluteCommand(DriveSubsystem subsystem) {
+  public ZeroGyroCommand(NavXSubSystem subsystem) {
       super(subsystem);
-      m_drive = subsystem;
+      NavX = subsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -30,7 +30,7 @@ public class ToggleFieldAbsoluteCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.toggleFieldAbsolute();
+    NavX.getGyro().reset();
     isFinished = true;
   }
 

@@ -13,10 +13,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveFilterManager;
 import frc.robot.filters.DriveInput;
+import frc.robot.pose.AlignmentSolution;
+import frc.robot.pose.DriveOutput;
 
 public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontLeftTalon;
@@ -36,6 +39,10 @@ public class DriveSubsystem extends EntechSubsystem {
     gyro = Gyro;
   }
 
+  public DriveOutput getDriveOutput(){
+      return new DriveOutput();
+  }
+  
   @Override
   public void initialize() {
     frontLeftTalon  = new WPI_TalonSRX(RobotConstants.CAN.FRONT_LEFT_MOTOR);
@@ -58,31 +65,22 @@ public class DriveSubsystem extends EntechSubsystem {
     rearRightTalon.enableCurrentLimit(false);
   }
 
-  @Override
-  public void initSendable(SendableBuilder builder) {
-      builder.setSmartDashboardType("Drive");
-      builder.addBooleanProperty("Field Absolute", this::isFieldAbsoluteActive, this::setFieldAbsolute);
-
-      builder.addDoubleProperty("Front Left Talon", () -> { return frontLeftTalon.get(); }, null);
-      builder.addDoubleProperty("Front Right Talon", () -> { return frontRightTalon.get(); }, null);
-      builder.addDoubleProperty("Rear Left Talon", () -> { return rearLeftTalon.get(); }, null);
-      builder.addDoubleProperty("Rear Right Talon", () -> { return rearRightTalon.get(); }, null);
-
-      builder.addDoubleProperty("Driver Input X", () -> { return loggingDriveInput.getX(); }, null);
-      builder.addDoubleProperty("Driver Input Y", () -> { return loggingDriveInput.getY(); }, null);
-      builder.addDoubleProperty("Driver Input Z", () -> { return loggingDriveInput.getZ(); }, null);
-  }
+  
 
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("Front Left Talon", frontLeftTalon.get());
-    // SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
-    // SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
-    // SmartDashboard.putNumber("Back Right Talon", rearRightTalon.get());
+    SmartDashboard.putNumber("NavX Angle", gyro.getAngle());
 
-    // SmartDashboard.putNumber("Driver Input X", loggingDriveInput.getX());
-    // SmartDashboard.putNumber("Driver Input Y", loggingDriveInput.getY());
-    // SmartDashboard.putNumber("Driver Input Z", loggingDriveInput.getZ());
+    SmartDashboard.putNumber("Front Left Talon", frontLeftTalon.get());
+    SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
+    SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
+    SmartDashboard.putNumber("Back Right Talon", rearRightTalon.get());
+
+    SmartDashboard.putNumber("Driver Input X", loggingDriveInput.getX());
+    SmartDashboard.putNumber("Driver Input Y", loggingDriveInput.getY());
+    SmartDashboard.putNumber("Driver Input Z", loggingDriveInput.getZ());
+
+    SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
 
 
     DFM.refreshFilterEnable();
@@ -100,6 +98,9 @@ public class DriveSubsystem extends EntechSubsystem {
     }
   }
 
+  public void activateAlignmentSolution ( AlignmentSolution solution ){
+      //use the solution to affect the drive
+  }
   public DriveFilterManager getDFM() {
     return DFM;
   }
