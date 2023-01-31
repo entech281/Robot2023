@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.SubsystemManager;
 import frc.robot.commands.CommandFactory;
-import frc.robot.pose.AlignCalcs;
+import frc.robot.pose.AlignCalc;
 import frc.robot.pose.AlignmentSolution;
 import frc.robot.pose.ArmOutput;
 import frc.robot.pose.DriveOutput;
@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
       TargetNode tn = oi.getTargetNode();
       
       
-      AlignmentSolution as = new AlignCalcs().calculateSolution(tn, rp);
+      AlignmentSolution as = new AlignCalc().calculateSolution(tn, rp);
       drive.activateAlignmentSolution(as);
       
   }

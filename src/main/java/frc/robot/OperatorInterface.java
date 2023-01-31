@@ -24,7 +24,7 @@ public class OperatorInterface {
     }
     
     public TargetNode getTargetNode(){
-        return new TargetNode();
+        return  TargetNode.NONE;
     }
 
 }

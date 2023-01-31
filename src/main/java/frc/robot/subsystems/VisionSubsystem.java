@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import frc.robot.RobotConstants;
-import frc.robot.pose.VisionOutputs;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -14,7 +13,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.VisionOutput;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionSubsystem extends EntechSubsystem {
   PhotonTrackedTarget bestTarget;
@@ -26,15 +27,10 @@ public class VisionSubsystem extends EntechSubsystem {
   public VisionSubsystem() {
     
   }
-
-  public VisionOutput getVisionOutput(){
-      return new VisionOutput();
-  }
   
   // Entech does all the creation work in the initialize method
   @Override
   public void initialize() {
-    // Create the internal objects here
     camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
     bestTarget = camera.getLatestResult().getBestTarget();
   }
@@ -45,29 +41,41 @@ public class VisionSubsystem extends EntechSubsystem {
       builder.addDoubleProperty("CameraLatency", () -> {return latency; }, null);
   }
 
-  public void getVisionOutputs(){
+  public VisionOutput getVisionOutput(){
 
-      VisionOutputs visionOutputs = new VisionOutputs();
+      VisionOutput visionOutput = new VisionOutput();
+      
+      PhotonPipelineResult result = camera.getLatestResult();
+      visionOutput.setLatency(result.getLatencyMillis());
+      
+      /**
+       *   Old code using only a single target. See updated version below that does multiple
+            Boolean cameraHasTargets = result.hasTargets();
+            visionOutput.setCameraHasTargets(cameraHasTargets);
 
-      var result = camera.getLatestResult();
-      Boolean cameraHasTargets = result.hasTargets();
-      visionOutputs.setCameraHasTargets(cameraHasTargets);
-      PhotonTrackedTarget NumberOfTargets = result.getBestTarget();
-
-      int tagIDs = target.getFiducialId();
-      visionOutputs.setTagIDs(tagIDs);
-
-      double latency = camera.getLatestResult().getLatencyMillis();
-      visionOutputs.setLatency(latency);
-
-      PhotonTrackedTarget t = result.getBestTarget();
-      bestTarget = result.getBestTarget();
-      target3D = t.getBestCameraToTarget();
-      double targetXin = target3D.getX();
-      double targetYin = target3D.getY();
-      visionOutputs.setTagPosesRelativeToCamera(new Pose2d(targetXin, targetYin, null));
+            int tagIDs = target.getFiducialId();
+            visionOutput.setTagIDs(tagIDs);
 
 
+
+            PhotonTrackedTarget t = result.getBestTarget();
+            bestTarget = result.getBestTarget();
+            target3D = t.getBestCameraToTarget();
+            double targetXin = target3D.getX();
+            double targetYin = target3D.getY();
+            visionOutput.setTagPosesRelativeToCamera(new Pose2d(targetXin, targetYin, null));
+      */
+      
+      for ( PhotonTrackedTarget t: result.getTargets()){
+          
+          Transform3d t3d = t.getBestCameraToTarget();
+          Pose2d p = new Pose2d(t3d.getX(),t3d.getY(), t3d.getRotation().toRotation2d());
+          RecognizedAprilTagTarget rat = new RecognizedAprilTagTarget(p,t.getFiducialId());
+          visionOutput.addRecognizedTarget(rat);
+      }
+
+
+      return visionOutput;
   }
   
   @Override

@@ -1,11 +1,15 @@
-package frc.robot.posecalcs;
-
-import java.beans.Transient;
+package frc.robot.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.filters.DriveInput;
 
 public class AlignCalc {
+
+
+    public AlignmentSolution calculateSolution( TargetNode tn, RobotPose rp){
+        return new AlignmentSolution();
+    }    
+    
     static public DriveInput CalculateDrive(Pose2d currentRobotPose, Pose2d finalRobotPose) {
         DriveInput fakeJoystick;
         fakeJoystick = new DriveInput(0.,0.,0.);
