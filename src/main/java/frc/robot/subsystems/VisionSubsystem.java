@@ -5,10 +5,12 @@
 package frc.robot.subsystems;
 
 import frc.robot.RobotConstants;
+import frc.robot.pose.VisionOutputs;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,10 +20,11 @@ public class VisionSubsystem extends EntechSubsystem {
   PhotonTrackedTarget bestTarget;
   Transform3d target3D;
   PhotonCamera camera;
+  PhotonTrackedTarget target;
   double latency;
 
   public VisionSubsystem() {
-
+    
   }
 
   public VisionOutput getVisionOutput(){
@@ -42,6 +45,31 @@ public class VisionSubsystem extends EntechSubsystem {
       builder.addDoubleProperty("CameraLatency", () -> {return latency; }, null);
   }
 
+  public void getVisionOutputs(){
+
+      VisionOutputs visionOutputs = new VisionOutputs();
+
+      var result = camera.getLatestResult();
+      Boolean cameraHasTargets = result.hasTargets();
+      visionOutputs.setCameraHasTargets(cameraHasTargets);
+      PhotonTrackedTarget NumberOfTargets = result.getBestTarget();
+
+      int tagIDs = target.getFiducialId();
+      visionOutputs.setTagIDs(tagIDs);
+
+      double latency = camera.getLatestResult().getLatencyMillis();
+      visionOutputs.setLatency(latency);
+
+      PhotonTrackedTarget t = result.getBestTarget();
+      bestTarget = result.getBestTarget();
+      target3D = t.getBestCameraToTarget();
+      double targetXin = target3D.getX();
+      double targetYin = target3D.getY();
+      visionOutputs.setTagPosesRelativeToCamera(new Pose2d(targetXin, targetYin, null));
+
+
+  }
+  
   @Override
   public void periodic() {
     var result = camera.getLatestResult();
@@ -55,9 +83,10 @@ public class VisionSubsystem extends EntechSubsystem {
       SmartDashboard.putNumber("getcameraY", target3D.getY());
       SmartDashboard.putNumber("getcameraZ", target3D.getZ());
       
-      SmartDashboard.putNumber("getcameraY", bestTarget.getPitch());
-      SmartDashboard.putNumber("getcameraY", bestTarget.getSkew());
-      SmartDashboard.putNumber("getcameraY", bestTarget.getYaw());
+      SmartDashboard.putNumber("getcameraPitch", bestTarget.getPitch());
+      SmartDashboard.putNumber("getcameraSkew", bestTarget.getSkew());
+      SmartDashboard.putNumber("getcameraYaw", bestTarget.getYaw());
+      SmartDashboard.putBoolean("getNumberOfTags", result.hasTargets());
     }
   }
 
