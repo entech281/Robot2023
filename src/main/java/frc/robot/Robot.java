@@ -9,6 +9,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.SubsystemManager;
 import frc.robot.commands.CommandFactory;
+import frc.robot.pose.AlignCalcs;
+import frc.robot.pose.AlignmentSolution;
+import frc.robot.pose.ArmOutput;
+import frc.robot.pose.DriveOutput;
+import frc.robot.pose.NavxOutput;
+import frc.robot.pose.PoseCalculator;
+import frc.robot.pose.RobotPose;
+import frc.robot.pose.TargetNode;
+import frc.robot.pose.VisionOutput;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -48,9 +58,26 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    updateAlignment();
     CommandScheduler.getInstance().run();
   }
 
+  
+  private void updateAlignment(){
+      DriveSubsystem drive = subsystemManager.getDriveSubsystem();
+      DriveOutput dro = drive.getDriveOutput();
+      VisionOutput vo = subsystemManager.getVisionSubsystem().getVisionOutput();
+      ArmOutput ao = subsystemManager.getArmSubsystem().getArmOutput();
+      NavxOutput no = subsystemManager.getNavXSubSystem().getNavxOutput();
+      
+      RobotPose rp = new PoseCalculator().calculatePose( dro, vo, no, ao );
+      TargetNode tn = oi.getTargetNode();
+      
+      
+      AlignmentSolution as = new AlignCalcs().calculateSolution(tn, rp);
+      drive.activateAlignmentSolution(as);
+      
+  }
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {}

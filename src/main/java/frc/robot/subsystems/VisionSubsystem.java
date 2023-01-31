@@ -12,6 +12,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.pose.VisionOutput;
 
 public class VisionSubsystem extends EntechSubsystem {
   PhotonTrackedTarget bestTarget;
@@ -23,6 +24,10 @@ public class VisionSubsystem extends EntechSubsystem {
 
   }
 
+  public VisionOutput getVisionOutput(){
+      return new VisionOutput();
+  }
+  
   // Entech does all the creation work in the initialize method
   @Override
   public void initialize() {

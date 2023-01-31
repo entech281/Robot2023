@@ -10,7 +10,8 @@ public class SubsystemManager {
     private DriveSubsystem driveSubsystem;
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
-
+    private ArmSubsystem armSubsystem;
+    
     public SubsystemManager() {
     }
 
@@ -25,18 +26,26 @@ public class SubsystemManager {
         return visionSubsystem;
     }
 
-
+    public ArmSubsystem getArmSubsystem(){
+        return armSubsystem;
+    }
+    
     public void initAll() {
         navXSubSystem  = new NavXSubSystem();
         driveSubsystem = new DriveSubsystem(navXSubSystem.getGyro());
         visionSubsystem = new VisionSubsystem();
-
+        armSubsystem = new ArmSubsystem();
+        
         // Initialize the known subsystems
+        navXSubSystem.initialize();
         driveSubsystem.initialize();
         visionSubsystem.initialize();
-
+        armSubsystem.initialize();
+        
         // Make sure they all send their logging data
+        SmartDashboard.putData(navXSubSystem);
         SmartDashboard.putData(driveSubsystem);
         SmartDashboard.putData(visionSubsystem);
+        SmartDashboard.putData(armSubsystem);
     }
 }

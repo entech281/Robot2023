@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveFilterManager;
 import frc.robot.filters.DriveInput;
+import frc.robot.pose.AlignmentSolution;
+import frc.robot.pose.DriveOutput;
 
 public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontLeftTalon;
@@ -33,6 +35,10 @@ public class DriveSubsystem extends EntechSubsystem {
     gyro = Gyro;
   }
 
+  public DriveOutput getDriveOutput(){
+      return new DriveOutput();
+  }
+  
   @Override
   public void initialize() {
     frontLeftTalon  = new WPI_TalonSRX(RobotConstants.CAN.FRONT_LEFT_MOTOR);
@@ -78,6 +84,9 @@ public class DriveSubsystem extends EntechSubsystem {
     robotDrive.driveCartesian(DI.getX(), DI.getY(), DI.getZ());
   }
 
+  public void activateAlignmentSolution ( AlignmentSolution solution ){
+      //use the solution to affect the drive
+  }
   public DriveFilterManager getDFM() {
     return DFM;
   }
