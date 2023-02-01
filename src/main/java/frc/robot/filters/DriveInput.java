@@ -2,6 +2,11 @@ package frc.robot.filters;
 
 import java.util.Objects;
 
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
 public class DriveInput {
     private double x;
     private double y;

@@ -1,5 +1,10 @@
 package frc.robot.filters;
 
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
 public class TurnToggleFilter extends Filter {
 
     public TurnToggleFilter() {}
@@ -9,7 +14,5 @@ public class TurnToggleFilter extends Filter {
             DI.setZ(0);
             return;
         }
-        
-        DI.setX(0);
     }
 }

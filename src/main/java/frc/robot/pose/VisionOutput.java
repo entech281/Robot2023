@@ -1,6 +1,5 @@
 package frc.robot.pose;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class VisionOutput {
 
     //public Pose2d getTagPosesRelativeToCamera() {
     //    return this.tagPosesRelativeToCamera;
-    //}/
+    //}
 
     //public void setTagPosesRelativeToCamera(Pose2d tagPosesRelativeToCamera) {
     //    this.tagPosesRelativeToCamera = tagPosesRelativeToCamera;
