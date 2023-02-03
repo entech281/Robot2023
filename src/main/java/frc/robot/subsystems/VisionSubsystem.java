@@ -41,31 +41,12 @@ public class VisionSubsystem extends EntechSubsystem {
       builder.addDoubleProperty("CameraLatency", () -> {return latency; }, null);
   }
 
-  public VisionOutput getVisionOutput(){
+  public VisionOutput getVisionOutput() {
 
       VisionOutput visionOutput = new VisionOutput();
       
       PhotonPipelineResult result = camera.getLatestResult();
       visionOutput.setLatency(result.getLatencyMillis());
-      
-      /**
-       *   Old code using only a single target. See updated version below that does multiple
-            Boolean cameraHasTargets = result.hasTargets();
-            visionOutput.setCameraHasTargets(cameraHasTargets);
-
-            int tagIDs = target.getFiducialId();
-            visionOutput.setTagIDs(tagIDs);
-
-
-
-            PhotonTrackedTarget t = result.getBestTarget();
-            bestTarget = result.getBestTarget();
-            target3D = t.getBestCameraToTarget();
-            double targetXin = target3D.getX();
-            double targetYin = target3D.getY();
-            visionOutput.setTagPosesRelativeToCamera(new Pose2d(targetXin, targetYin, null));
-      */
-      
       for ( PhotonTrackedTarget t: result.getTargets()){
           
           Transform3d t3d = t.getBestCameraToTarget();
@@ -73,11 +54,9 @@ public class VisionSubsystem extends EntechSubsystem {
           RecognizedAprilTagTarget rat = new RecognizedAprilTagTarget(p,t.getFiducialId());
           visionOutput.addRecognizedTarget(rat);
       }
-
-
       return visionOutput;
   }
-  
+
   @Override
   public void periodic() {
     var result = camera.getLatestResult();
@@ -102,4 +81,4 @@ public class VisionSubsystem extends EntechSubsystem {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
-} 
+}
