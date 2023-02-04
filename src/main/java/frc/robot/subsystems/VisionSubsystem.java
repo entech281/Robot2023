@@ -37,8 +37,7 @@ public class VisionSubsystem extends EntechSubsystem {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-
-      builder.addDoubleProperty("CameraLatency", () -> {return latency; }, null);
+      builder.addDoubleProperty("CameraLatency", () -> { return latency; }, null);
   }
 
   public VisionOutput getVisionOutput(){

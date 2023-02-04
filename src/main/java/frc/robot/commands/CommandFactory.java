@@ -27,12 +27,16 @@ public class CommandFactory {
         return new DriveCommand(sm.getDriveSubsystem(), joystick);
     }
 
-    public Command getToggleFieldAbsolute() {
+    public Command ToggleFieldAbsolute() {
         return new ToggleFieldAbsoluteCommand(sm.getDriveSubsystem());
     }
 
+    public Command SnapYawDegreesCommand(double Angle) {
+        return new SnapYawDegreesCommand(sm.getDriveSubsystem(), sm.getNavXSubSystem(), Angle);
+    }
+
     public Command getAutonomousCommand(){
-        return null;
+        return SnapYawDegreesCommand(160);
     }
 
     public Command getZeroGyro() {

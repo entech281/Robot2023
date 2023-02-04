@@ -32,7 +32,7 @@ public class DriveCommand extends EntechCommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        drive.drive(new DriveInput(-joystick.getX(), joystick.getY(), -joystick.getZ()));
+        drive.drive(new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ()));
     }
 
     // Called once the command ends or is interrupted.

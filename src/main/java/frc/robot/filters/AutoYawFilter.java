@@ -15,18 +15,26 @@ public class AutoYawFilter extends Filter {
     public AutoYawFilter(NavXSubSystem NavX) {
         navX = NavX;
 
-        PID = new PIDController(0.03, 0, 0.01);
-        PID.setTolerance(4);
+        PID = new PIDController(0.095, 0.15, 0.0085);
+        PID.setTolerance(2);
         PID.enableContinuousInput(-180, 180);
     }
 
     public void filter(DriveInput DI) {
         if (!enable) {
+            PID.reset();
             return;
         }
 
+        if (DI.getX() < 0.1 || DI.getY() < 0.1) {
+            PID.reset();
+            return;
+        }
+    
         double setPoint = Math.toDegrees(Math.atan2(DI.getX(), DI.getY()));
+        double calcValue = PID.calculate(navX.getAngle(), setPoint);
 
-        DI.setZ(PID.calculate(navX.getAngle(), Math.max(-1, Math.min(setPoint, 1))));
+        DI.setOverrideYawLock(true);
+        DI.setZ(Math.max(-0.75, Math.min(calcValue, 0.75)));
     }
 }

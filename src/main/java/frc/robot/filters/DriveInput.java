@@ -11,6 +11,7 @@ public class DriveInput {
     private double x;
     private double y;
     private double z;
+    private boolean overrideYawLock = false;
 
     public DriveInput(double X, double Y, double Z) {
         x = X;
@@ -35,6 +36,9 @@ public class DriveInput {
 
         return output;
     }
+
+    public boolean getOverrideYawLock() { return overrideYawLock; }
+    public void setOverrideYawLock(boolean OverrideYawLock) { overrideYawLock = OverrideYawLock; }
 
 
     @Override

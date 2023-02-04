@@ -4,6 +4,11 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveFilterManager;
 
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
 public class ButtonFilterCommand extends EntechCommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final DriveSubsystem drive;

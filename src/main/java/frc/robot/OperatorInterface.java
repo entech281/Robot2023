@@ -21,7 +21,7 @@ public class OperatorInterface {
             .onFalse(commandFactory.ButtonFilterFalseCommand( RobotConstants.DRIVER_STICK.TURN_TOGGLE ));
 
         driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
-            .onTrue(commandFactory.getToggleFieldAbsolute());
+            .onTrue(commandFactory.ToggleFieldAbsolute());
 
         driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
             .onTrue(commandFactory.getZeroGyro());
