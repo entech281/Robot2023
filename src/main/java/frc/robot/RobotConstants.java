@@ -19,6 +19,17 @@ public final class RobotConstants {
     }
     public interface VISION {
         public static final String PHOTON_HOST = "photonvision";
+        
+        public interface APRILTAGIDS {
+            public static final int BLUE_LOADING = 4;
+            public static final int BLUE_MIDDLE = 7;
+            public static final int BLUE_RIGHT = 6;
+            public static final int BLUE_LEFT = 8;
+            public static final int RED_LOADING = 5;
+            public static final int RED_MIDDLE = 2;
+            public static final int RED_RIGHT = 1;
+            public static final int RED_LEFT = 3; 
+        }
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
@@ -35,5 +46,6 @@ public final class RobotConstants {
         public static final int REAR_RIGHT_MOTOR = 6;
     }
     public interface DIGITAL_IO {
+
     }
 }
