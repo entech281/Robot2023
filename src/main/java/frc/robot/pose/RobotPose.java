@@ -19,17 +19,4 @@ public class RobotPose {
     public Pose2d getPose(){
         return pose;
     }
-   
-    //arm pose code in progress
-    
-    //public RobotPose(/*Arm Pose*/ newPose){
-        //armPose = newpose;
-    //}
-
-    //private /*Arm Pose*/ armPose;
-
-    //public /*Arm Pose*/ getarmPose(){
-        //return armPose;
-    //}
-    
 }
