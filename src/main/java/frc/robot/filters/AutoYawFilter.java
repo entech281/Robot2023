@@ -25,15 +25,15 @@ public class AutoYawFilter extends Filter {
             PID.reset();
             return;
         }
-
-        if (DI.getX() < 0.1 || DI.getY() < 0.1) {
+    
+        if (Math.abs(DI.getX()) < 0.1 || Math.abs(DI.getY()) < 0.1) {
             PID.reset();
             return;
         }
     
-        double setPoint = Math.toDegrees(Math.atan2(DI.getX(), DI.getY()));
+        double setPoint = Math.toDegrees(Math.atan2(DI.getY(), DI.getX()));
         double calcValue = PID.calculate(navX.getAngle(), setPoint);
-
+    
         DI.setOverrideYawLock(true);
         DI.setZ(Math.max(-0.75, Math.min(calcValue, 0.75)));
     }

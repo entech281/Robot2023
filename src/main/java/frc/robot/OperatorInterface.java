@@ -25,6 +25,9 @@ public class OperatorInterface {
 
         driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
             .onTrue(commandFactory.getZeroGyro());
+
+        driveStick.button(RobotConstants.DRIVER_STICK.ZERO_ROBOT_ANGLE)
+            .onTrue(commandFactory.SnapYawDegreesCommand(0));
             
         subsystemManager.getDriveSubsystem().setDefaultCommand(commandFactory.DriveCommand(driveStick.getHID()));
     }
