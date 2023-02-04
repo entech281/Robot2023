@@ -14,7 +14,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.pose.RecognizedAprilTagTarget;
-import frc.robot.pose.VisionOutput;
+import frc.robot.pose.VisionPose;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionSubsystem extends EntechSubsystem {
@@ -41,9 +41,9 @@ public class VisionSubsystem extends EntechSubsystem {
       builder.addDoubleProperty("CameraLatency", () -> {return latency; }, null);
   }
 
-  public VisionOutput getVisionOutput(){
+  public VisionPose getVisionOutput(){
 
-      VisionOutput visionOutput = new VisionOutput();
+      VisionPose visionOutput = new VisionPose();
       
       PhotonPipelineResult result = camera.getLatestResult();
       visionOutput.setLatency(result.getLatencyMillis());

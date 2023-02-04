@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VisionOutput {
+public class VisionPose {
     //private Pose2d tagPosesRelativeToCamera;
     //private boolean cameraHasTargets;
     //private int tagIDs;

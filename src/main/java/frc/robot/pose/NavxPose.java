@@ -6,9 +6,9 @@ import edu.wpi.first.math.geometry.Pose2d;
  *
  * @author dcowden
  */
-public class NavxOutput {
+public class NavxPose {
     
-    public NavxOutput(double angle, Pose2d newpose){
+    public NavxPose(double angle, Pose2d newpose){
         this.angle = angle;
         this.pose = newpose;
     }

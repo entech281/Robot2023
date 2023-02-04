@@ -8,8 +8,9 @@ import edu.wpi.first.math.geometry.Pose2d;
  */
 public class PoseCalculator {
     
-    public RobotPose calculatePose ( DriveOutput ddo, VisionOutput vo, NavxOutput no, ArmOutput ao){
-        RobotPose newPose = new RobotPose(new Pose2d());
+    public RobotPose calculatePose ( DrivePose ddo, VisionPose vo, NavxPose no, ArmPose ao){
+        RobotPose newPose = new RobotPose(new NavxPose(0, null), new ArmPose(false, 0, 0));
+        //lots of math needs to be added
         return newPose;
     }
 }
