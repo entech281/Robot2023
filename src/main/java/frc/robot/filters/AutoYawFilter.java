@@ -11,7 +11,7 @@ import frc.robot.subsystems.NavXSubSystem;
 public class AutoYawFilter extends Filter {
     private NavXSubSystem navX;
     private PIDController PID;
-    
+
     public AutoYawFilter(NavXSubSystem NavX) {
         navX = NavX;
 
@@ -25,16 +25,16 @@ public class AutoYawFilter extends Filter {
             PID.reset();
             return;
         }
-    
+
         if (Math.abs(DI.getX()) < 0.1 || Math.abs(DI.getY()) < 0.1) {
             PID.reset();
             return;
         }
-    
+
         double setPoint = Math.toDegrees(Math.atan2(DI.getY(), DI.getX()));
-        
+
         if (Math.abs(setPoint - navX.getAngle()) > 90) {
-            setPoint+=180;
+            setPoint += 180;
         }
 
         double calcValue = PID.calculate(navX.getAngle(), setPoint);

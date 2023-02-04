@@ -20,7 +20,7 @@ public class LockZFilter extends Filter {
         if (!enable) {
             return;
         }
-        
+
         double trueAngle = navX.getAngle() % 360;
         double outputZ = startingZeroZ - trueAngle;
 

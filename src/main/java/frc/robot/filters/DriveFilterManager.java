@@ -17,7 +17,7 @@ public class DriveFilterManager {
 
     public DriveFilterManager(NavXSubSystem NavX) {
         navX = NavX;
-        
+
         lockZ = new LockZFilter(navX);
         autoYaw = new AutoYawFilter(navX);
         turnToggle = new TurnToggleFilter();

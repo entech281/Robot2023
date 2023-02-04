@@ -8,7 +8,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class ToggleFieldAbsoluteCommand extends EntechCommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private boolean isFinished = false;
 
@@ -18,8 +18,8 @@ public class ToggleFieldAbsoluteCommand extends EntechCommandBase {
    * @param subsystem The subsystem used by this command.
    */
   public ToggleFieldAbsoluteCommand(DriveSubsystem subsystem) {
-      super(subsystem);
-      m_drive = subsystem;
+    super(subsystem);
+    m_drive = subsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -42,12 +42,12 @@ public class ToggleFieldAbsoluteCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return isFinished;
+    return isFinished;
   }
 
   // Returns true if this command should run when robot is disabled.
   @Override
   public boolean runsWhenDisabled() {
-      return true;
+    return true;
   }
 }

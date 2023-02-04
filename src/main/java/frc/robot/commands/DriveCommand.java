@@ -13,7 +13,8 @@ public class DriveCommand extends EntechCommandBase {
     private final Joystick joystick;
 
     /**
-     * Creates a new ArcadeDrive. This command will drive your robot according to the joystick
+     * Creates a new ArcadeDrive. This command will drive your robot according to
+     * the joystick
      * This command does not terminate.
      *
      * @param drive The drive subsystem on which this command will run
@@ -27,7 +28,8 @@ public class DriveCommand extends EntechCommandBase {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
@@ -37,7 +39,8 @@ public class DriveCommand extends EntechCommandBase {
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+    }
 
     // Returns true when the command should end.
     @Override

@@ -7,7 +7,8 @@ package frc.robot.filters;
  */
 public class TurnToggleFilter extends Filter {
 
-    public TurnToggleFilter() {}
+    public TurnToggleFilter() {
+    }
 
     public void filter(DriveInput DI) {
         if (!enable && !DI.getOverrideYawLock()) {

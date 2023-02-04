@@ -16,23 +16,23 @@ import frc.robot.subsystems.NavXSubSystem;
  * @author aheitkamp
  */
 public class SnapYawDegreesCommand extends EntechCommandBase {
+    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
     private final PIDController PID;
     private final NavXSubSystem navX;
-    private int stoppingCounter = 0;  
+    private int stoppingCounter = 0;
 
     /**
      * 
      *
      * @param drive The drive subsystem on which this command will run
-     * @param NavX The NavX subsystem the command will use
+     * @param NavX  The NavX subsystem the command will use
      * @param Angle The angle you want to snap to
      */
     public SnapYawDegreesCommand(DriveSubsystem Drive, NavXSubSystem NavX, double Angle) {
         super(Drive);
         drive = Drive;
         navX = NavX;
-
 
         PID = new PIDController(0.0865, 0.5, 0.0075);
         PID.enableContinuousInput(-180, 180);
@@ -42,7 +42,8 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
