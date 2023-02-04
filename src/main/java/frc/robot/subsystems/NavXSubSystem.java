@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -17,14 +18,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.pose.NavxPose;
 /**
  *
- * @author dcowden
+ * @author mandrews
+ * 
+ * This code implements the NavX sensor into proper right handed ROBOT coordinate systems
+ *   X => +forward/-reverse, Y => +left/-right, Z => +up/-down, rotX (roll) => +rollRight, rotY (pitch) => +noseDown, rotZ (yaw) => +ccw  
+ * Assumes the following robot and NavX installation.  MXP shows location of MXP connection on NavX
+ * 
+ *              ^ +X
+ *              | 
+ *       \\+---------+//
+ *         |  +---+  |
+ *   +Y    |  |MXP|  |
+ *   <---- |  |   |  |
+ *         |  |   |  |
+ *         |  +---+  |
+ *       //+---------+\\
  */
-public class NavXSubSystem extends EntechSubsystem {
+public class NavXSubSystem extends EntechSubsystem implements Gyro {
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
-    private double angle_scale = 1.0;
-    private double latestYawAngle = 0.0;
-    
+    private double initialYawAngle = 0.0;
     
     public NavXSubSystem() {
     }
@@ -42,27 +55,38 @@ public class NavXSubSystem extends EntechSubsystem {
     public NavxPose getNavxOutput(){
         return new NavxPose(getAngle(), new Pose2d());
     }
-    
-    protected double getAngle() {
-        return latestYawAngle;
-    }
 
     public void zeroYaw() {
         navX.zeroYaw();
     }
 
-    public void flipOutputAngle(boolean flip) {
-      if (flip) {
-        angle_scale = -1.0;
-      } else {
-        angle_scale = 1.0;
-      }
+    public double getRoll() {
+      return navX.getPitch();
+    }
+
+    public double getPitch() {
+      return -navX.getRoll();
+    }
+
+    public double getYaw() {
+      return -navX.getYaw() + initialYawAngle;
+    }
+
+    public double getX() {
+      return navX.getDisplacementX();
+    }
+
+    public double getY() {
+      return navX.getDisplacementY();
+    }
+
+    public double getZ() {
+      return navX.getDisplacementZ();
     }
 
     @Override
     public void periodic() {
-        latestYawAngle = angle_scale*navX.getYaw();
-        SmartDashboard.putNumber("NavX", latestYawAngle);
+        SmartDashboard.putNumber("NavX", getYaw());
     }    
 
     public static double findNearestQuadrant(double angle){
@@ -78,27 +102,41 @@ public class NavXSubSystem extends EntechSubsystem {
           return 180.0;
         }        
     }
-    
-    public static double findNearestRocketSide(double angle){
-        if (angle < -81.25) {
-           return -140.25;
-        } else if (angle < 0) {
-            return -22.25;
-        } else if (angle < 81.25) {
-            return 22.25;
-        } else{
-            return 151.25;
-        }        
-    }    
-    
-    public double findNearestAngledQuadrant(){
-        return findNearestRocketSide(angle_scale * navX.getYaw());
-    }
-    public double findNearestQuadrant() {
-        return findNearestQuadrant(angle_scale * navX.getYaw());
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType(getName());
+        builder.addDoubleProperty("NavX Yaw", this::getYaw, null);
+        builder.addDoubleProperty("NavX Pitch", this::getPitch, null);
+        builder.addDoubleProperty("NavX Roll", this::getRoll, null);
+        builder.addDoubleProperty("NavX X", this::getX, null);
+        builder.addDoubleProperty("NavX Y", this::getY, null);
+        builder.addDoubleProperty("NavX Z", this::getZ, null);
     }
 
-    public Gyro getGyro() {
-      return navX;
+    @Override
+    public void close() throws Exception {
+      navX.close();
     }
+
+    @Override
+    public void calibrate() {
+      navX.calibrate();
+    }
+
+    @Override
+    public void reset() {
+      navX.reset();
+    }
+
+    @Override
+    public double getRate() {
+      return navX.getRate();
+    }
+
+    @Override
+    public double getAngle() {
+      return navX.getAngle();
+    }
+
 }

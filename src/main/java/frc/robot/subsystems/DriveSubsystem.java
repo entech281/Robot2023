@@ -10,9 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.RobotConstants;
@@ -31,12 +29,12 @@ public class DriveSubsystem extends EntechSubsystem {
 
   private boolean useFieldAbsolute = false;
 
-  private Gyro gyro; 
+  private NavXSubSystem navX; 
 
   private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
   
-  public DriveSubsystem(Gyro Gyro) {
-    gyro = Gyro;
+  public DriveSubsystem(NavXSubSystem navx) {
+    navX = navx;
   }
 
   public DrivePose getDriveOutput(){
@@ -50,7 +48,7 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightTalon = new WPI_TalonSRX(RobotConstants.CAN.FRONT_RIGHT_MOTOR);
     rearRightTalon  = new WPI_TalonSRX(RobotConstants.CAN.REAR_RIGHT_MOTOR);
     robotDrive      = new MecanumDrive(frontLeftTalon, rearLeftTalon, frontRightTalon, rearRightTalon);
-    DFM             = new DriveFilterManager(gyro);
+    DFM             = new DriveFilterManager(navX);
 
     robotDrive.setDeadband(0.1);
 
@@ -69,8 +67,6 @@ public class DriveSubsystem extends EntechSubsystem {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("NavX Angle", gyro.getAngle());
-
     SmartDashboard.putNumber("Front Left Talon", frontLeftTalon.get());
     SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
     SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
@@ -92,7 +88,7 @@ public class DriveSubsystem extends EntechSubsystem {
     loggingDriveInput = DI;
     DFM.applyFilters(DI);
     if (isFieldAbsoluteActive()) {
-      robotDrive.driveCartesian(DI.getY(), DI.getX(), DI.getZ(), Rotation2d.fromDegrees(gyro.getAngle()));
+      robotDrive.driveCartesian(DI.getY(), DI.getX(), DI.getZ(), Rotation2d.fromDegrees(navX.getYaw()));
     } else {
       robotDrive.driveCartesian(DI.getY(), DI.getX(), DI.getZ());
     }

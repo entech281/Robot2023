@@ -30,7 +30,7 @@ public class ZeroGyroCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    NavX.getGyro().reset();
+    NavX.zeroYaw();
     isFinished = true;
   }
 
