@@ -17,7 +17,7 @@ import frc.robot.RobotConstants;
 import frc.robot.filters.DriveFilterManager;
 import frc.robot.filters.DriveInput;
 import frc.robot.pose.AlignmentSolution;
-import frc.robot.pose.DriveOutput;
+import frc.robot.pose.DrivePose;
 
 public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontLeftTalon;
@@ -37,8 +37,8 @@ public class DriveSubsystem extends EntechSubsystem {
     navX = NavX;
   }
 
-  public DriveOutput getDriveOutput(){
-      return new DriveOutput();
+  public DrivePose getDriveOutput(){
+      return new DrivePose();
   }
   
   @Override

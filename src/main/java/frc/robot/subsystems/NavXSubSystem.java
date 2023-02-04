@@ -9,11 +9,12 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.pose.NavxOutput;
+import frc.robot.pose.NavxPose;
 /**
  *
  * @author dcowden
@@ -37,8 +38,8 @@ public class NavXSubSystem extends EntechSubsystem {
         DriverStation.reportWarning("NavX Initialize Complete", false);
     }
 
-    public NavxOutput getNavxOutput(){
-        return new NavxOutput(getAngle());
+    public NavxPose getNavxOutput(){
+        return new NavxPose(getAngle(), new Pose2d());
     }
     
     public double getAngle() {

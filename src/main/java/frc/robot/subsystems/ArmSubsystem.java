@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.pose.ArmOutput;
+import frc.robot.pose.ArmPose;
 
 /**
  *
@@ -10,8 +10,8 @@ import frc.robot.pose.ArmOutput;
 public class ArmSubsystem extends EntechSubsystem{
  
   
-  public ArmOutput getArmOutput(){
-      return new ArmOutput();
+  public ArmPose getArmOutput(){
+      return new ArmPose(true, 0.0, 0.0);
   }
   @Override
   public void initialize() {

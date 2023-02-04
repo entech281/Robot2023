@@ -6,7 +6,9 @@ package frc.robot.pose;
  */
 public class PoseCalculator {
     
-    public RobotPose calculatePose ( DriveOutput ddo, VisionOutput vo, NavxOutput no, ArmOutput ao){
-        return new RobotPose();
+    public RobotPose calculatePose ( DrivePose ddo, VisionPose vo, NavxPose no, ArmPose ao){
+        RobotPose newPose = new RobotPose(new NavxPose(0, null), new ArmPose(false, 0, 0), new VisionPose());
+        //lots of math needs to be added
+        return newPose;
     }
 }
