@@ -7,13 +7,15 @@ package frc.robot.pose;
  */
 public class RobotPose {
 
-    public RobotPose(NavxPose bodyPose, ArmPose armPose){
+    public RobotPose(NavxPose bodyPose, ArmPose armPose, VisionPose visionPose){
         this.bodyPose = bodyPose;
         this.armPose = armPose;
+        this.visionPose = visionPose;
     }
   
     private NavxPose bodyPose;
     private ArmPose armPose;
+    private VisionPose visionPose;
 
     public NavxPose getBodyPose(){
         return bodyPose;
@@ -21,6 +23,10 @@ public class RobotPose {
 
     public ArmPose getArmPose(){
         return armPose;
+    }
+
+    public VisionPose getVisionPose(){
+        return visionPose;
     }
 
 }
