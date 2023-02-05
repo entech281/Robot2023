@@ -19,6 +19,7 @@ public class MoveDistanceInstruction implements AlignmentInstruction{
         return distanceInches;
     }
     
+    @Override
     public String toString(){
         return "move" + distanceInches;
     }
