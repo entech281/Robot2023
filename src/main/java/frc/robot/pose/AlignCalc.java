@@ -9,58 +9,44 @@ public class AlignCalc {
 
     public static final Pose2d FIELD_ZERO = new Pose2d ( 0.0,0.0,new Rotation2d(0.0));
 
-    public AlignmentSolution calculateSolution( TargetNode tn, RobotPose rp){
+    
+    public AlignmentSolution calculateSolution( ScoringLocation loc , RobotPose rp){
         
-        AlignmentSolution as = new AlignmentSolution();
-        FieldAprilTag fat = rp.getSelectedTag();
-        Pose2d robotBase = rp.getCalculatedPose();        
-        Pose2d target = computePoseOfTarget( tn, fat );
-        as.setStartingPose(rp);
-        as.setTarget(tn);
-        as.setTargetPose(target);
-        as.setRobotPose(robotBase);
+        AlignmentSolution as = new AlignmentSolution(loc, rp);
+        Pose2d robotBase = rp.getCalculatedPose();  
+        Pose2d targetPose = loc.computeAbsolutePose();
+        
+        Transform2d deltaToTarget = targetPose.minus(robotBase);        
+        double angleToTarget = deltaToTarget.getRotation().getDegrees();
+        double distanceToTarget = deltaToTarget.getTranslation().getNorm();
         
         
-        Transform2d deltaToTarget = computeAngleToTarget (robotBase, target);
-        if ( tn.noTargetSelected() ){
-            as.setStrategy(AlignmentSolution.AlignmentStrategy.HOPELESS_I_GIVE_UP);
-            return as;
+        if ( canDeployImmediately(angleToTarget, distanceToTarget)){
+            as.setDeployNow(true);
         }
+        else{
+            boolean canDeployThirdRow = ( loc.isThirdRow() && angleToTarget <= RobotConstants.VISION.MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES );
+            boolean canDeploy2ndRow = ( loc.is2ndRow() && angleToTarget <= RobotConstants.VISION.MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES );
 
-        if ( tn.is2ndRow() ){
-            if ( canDeploy2ndRowFromHere(deltaToTarget)){
-                as.setStrategy(AlignmentSolution.AlignmentStrategy.ROTATE_AND_DEPLOY);             
+            if (canDeployThirdRow || canDeploy2ndRow){
+                as.setDegreesToRotate(angleToTarget);
             }
-            else{
-                as.setStrategy(AlignmentSolution.AlignmentStrategy.HOPELESS_I_GIVE_UP);
-            }
-        }
-        else if ( tn.isThirdRow()){
-            if ( canDeployThirdRowFromHere(deltaToTarget)){
-                as.setStrategy(AlignmentSolution.AlignmentStrategy.ROTATE_AND_DEPLOY);
-            }
-            else{
-                as.setStrategy(AlignmentSolution.AlignmentStrategy.HOPELESS_I_GIVE_UP);
+            if ( ! isDistanceWithinTolerance(distanceToTarget)){
+                as.setDistanceToMove(distanceToTarget);
             }
         }
+  
         return as;
     }   
     
-    private boolean canDeployThirdRowFromHere(Transform2d deltaToScoringNode){
-        return deltaToScoringNode.getRotation().getDegrees() <= RobotConstants.VISION.MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES;
+    protected static boolean canDeployImmediately ( double angleToTarget, double distanceToTarget){
+        return isAngleWithinTolerance(angleToTarget) && isDistanceWithinTolerance(distanceToTarget);
     }
     
-    private boolean canDeploy2ndRowFromHere(Transform2d deltaToScoringNode){
-        return deltaToScoringNode.getRotation().getDegrees() <= RobotConstants.VISION.MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES;
+    protected static boolean isAngleWithinTolerance ( double angleToTarget){
+         return (angleToTarget <= RobotConstants.ALIGNMENT.ANGLE_TOLERANCE_DEGREES);
     }
-    
-    private Pose2d computePoseOfTarget(TargetNode tn, FieldAprilTag fat ){
-        Transform2d offsetToTarget = new Transform2d( tn.getOffsetToTarget(), Rotation2d.fromDegrees(0.0));
-        return fat.getPositionInches().plus(offsetToTarget);
+    public static  boolean isDistanceWithinTolerance ( double distanceToTarget){
+        return (distanceToTarget <= RobotConstants.ALIGNMENT.DISTANCE_TOLERANCE_INCHES);
     }
-    
-    private Transform2d computeAngleToTarget ( Pose2d robotBase, Pose2d scoringNode){
-        Transform2d delta = scoringNode.minus(robotBase);
-        return delta;
-    }    
 }

@@ -33,6 +33,11 @@ public final class RobotConstants {
         public static final boolean INIT_CLAW_STATE = false;
         public static final double MIN_EXTENSION_INCHES = 0.0;
         public static final double MAX_EXTENSION_INCHES = 200.0;
+        public static final double ARM_MAX_REACH_INCHES = 32; //from center of robot base!!!
+    }
+    public interface ALIGNMENT{
+        public static final double ANGLE_TOLERANCE_DEGREES=2.0;
+        public static final double DISTANCE_TOLERANCE_INCHES=2.0;
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;

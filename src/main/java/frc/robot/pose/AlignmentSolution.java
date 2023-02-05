@@ -1,7 +1,5 @@
 package frc.robot.pose;
 
-import edu.wpi.first.math.geometry.Pose2d;
-
 /**
  * An alignment solution should include everything we need if we
  * wanted to execute a fully autonomous score from our current position.
@@ -15,49 +13,27 @@ import edu.wpi.first.math.geometry.Pose2d;
  */
 public class AlignmentSolution {
     
+    public AlignmentSolution ( ScoringLocation sl, RobotPose rp){
+        this.scoringLocation = sl;
+        this.robotPose = rp;
+    }
+    
     public enum AlignmentStrategy{
         HOPELESS_I_GIVE_UP,
+        DEPLOY_NOW,
         ROTATE_AND_DEPLOY,
+        ROTATE_THEN_FOWARD,
         ORTHOGONAL_APPOROACH,
-        NO_STRATEGY_SELECTED
+        NO_STRATEGY_SELECTED,
+        CONFUSED
     }
     
-    private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
-    private TargetNode target;
-    private RobotPose startingPose;
-
-    public Pose2d getRobotPose() {
+    public ScoringLocation getScoringLocation() {
+        return scoringLocation;
+    }
+    
+    public RobotPose getRobotPose() {
         return robotPose;
-    }
-
-    public void setRobotPose(Pose2d robotPose) {
-        this.robotPose = robotPose;
-    }
-
-    public Pose2d getTargetPose() {
-        return targetPose;
-    }
-
-    public void setTargetPose(Pose2d targetPose) {
-        this.targetPose = targetPose;
-    }
-    private Pose2d robotPose;
-    private Pose2d targetPose;
-
-    public RobotPose getStartingPose() {
-        return startingPose;
-    }
-
-    public void setStartingPose(RobotPose startingPose) {
-        this.startingPose = startingPose;
-    }
-    
-    public TargetNode getTarget() {
-        return target;
-    }
-
-    public void setTarget(TargetNode target) {
-        this.target = target;
     }
     
     public AlignmentStrategy getStrategy() {
@@ -67,4 +43,36 @@ public class AlignmentSolution {
     public void setStrategy(AlignmentStrategy strategy) {
         this.strategy = strategy;
     }
+
+    public double getDistanceToMove() {
+        return distanceToMove;
+    }
+
+    public void setDistanceToMove(double distanceToMoveForward) {
+        this.distanceToMove= distanceToMoveForward;
+    }
+
+    public double getDegreesToRotate() {
+        return degreesToRotate;
+    }
+
+    public void setDegreesToRotate(double degreesToRotate) {
+        this.degreesToRotate = degreesToRotate;
+    }
+    
+    private double distanceToMove = 0.0;
+    private double degreesToRotate = 0.0;
+    private boolean deployNow = false;
+
+    public boolean isDeployNow() {
+        return deployNow;
+    }
+
+    public void setDeployNow(boolean deployNow) {
+        this.deployNow = deployNow;
+    }
+    
+    private RobotPose robotPose; // to store what we were given
+    private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
+    private ScoringLocation scoringLocation;    
 }

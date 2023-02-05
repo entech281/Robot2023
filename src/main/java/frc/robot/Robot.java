@@ -13,9 +13,11 @@ import frc.robot.pose.AlignCalc;
 import frc.robot.pose.AlignmentSolution;
 import frc.robot.pose.ArmPose;
 import frc.robot.pose.DrivePose;
+import frc.robot.pose.FieldAprilTag;
 import frc.robot.pose.NavxPose;
 import frc.robot.pose.PoseCalculator;
 import frc.robot.pose.RobotPose;
+import frc.robot.pose.ScoringLocation;
 import frc.robot.pose.TargetNode;
 import frc.robot.pose.VisionPose;
 import frc.robot.subsystems.DriveSubsystem;
@@ -66,16 +68,22 @@ public class Robot extends TimedRobot {
   private void updateAlignment(){
       DriveSubsystem drive = subsystemManager.getDriveSubsystem();
       DrivePose dro = drive.getDriveOutput();
-      VisionPose vo = subsystemManager.getVisionSubsystem().getVisionOutput();
-      ArmPose ao = subsystemManager.getArmSubsystem().getArmOutput();
-      NavxPose no = subsystemManager.getNavXSubSystem().getNavxOutput();
+      VisionPose vp = subsystemManager.getVisionSubsystem().getVisionOutput();
+      ArmPose ap = subsystemManager.getArmSubsystem().getArmOutput();
+      NavxPose np = subsystemManager.getNavXSubSystem().getNavxOutput();
       
-      RobotPose rp = new PoseCalculator().calculatePose( dro, vo, no, ao );
-      TargetNode tn = oi.getTargetNode();
+      RobotPose rp = new PoseCalculator().calculatePose( dro, vp, np, ap );
+
+      FieldAprilTag fat = vp.getMostCentralAprilTag();
+      TargetNode selectedNode = oi.getTargetNode();
       
+      if ( fat != null && selectedNode.isTargetSelected() ){
+          ScoringLocation sl = new ScoringLocation(fat,selectedNode);
+          AlignmentSolution as = new AlignCalc().calculateSolution(sl,rp);
+          drive.activateAlignmentSolution(as);
+      }
+
       
-      AlignmentSolution as = new AlignCalc().calculateSolution(tn, rp);
-      drive.activateAlignmentSolution(as);
       
   }
   /** This function is called once each time the robot enters Disabled mode. */

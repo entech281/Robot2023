@@ -18,6 +18,13 @@ public class VisionPose implements Sendable{
         return this.pipelineLatency;
     }
 
+    public FieldAprilTag getMostCentralAprilTag(){
+        if ( recognizedTargets.size() == 1){
+            RecognizedAprilTagTarget rat = recognizedTargets.get(0);
+            return FieldAprilTagCollection.findFromTag(rat.getTagId());
+        }
+        return null;
+    }
     public void setPipelineLatency(double pipelineLatency) {
         this.pipelineLatency = pipelineLatency;
     }

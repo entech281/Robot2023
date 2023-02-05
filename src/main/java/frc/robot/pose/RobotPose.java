@@ -13,18 +13,9 @@ public class RobotPose implements Sendable{
 
   
     private Pose2d calculatedPose;
-    private FieldAprilTag selectedTag;
     private  NavxPose bodyPose;
     private  ArmPose armPose;
-    private  VisionPose visionPose;
-
-    public FieldAprilTag getSelectedTag() {
-        return selectedTag;
-    }
-
-    public void setSelectedTag(FieldAprilTag selectedTag) {
-        this.selectedTag = selectedTag;
-    }    
+    private  VisionPose visionPose; 
     
     public Pose2d getCalculatedPose() {
         return calculatedPose;
