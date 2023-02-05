@@ -2,6 +2,7 @@ package frc.robot.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ public class TestTargetNode {
     public void testGetPoseToTag() {
         TargetNode np = TargetNode.A2;
 
-        assertEquals(np.getPoseToTag(), new Pose2d(0, 0, new Rotation2d(0)));
+        assertEquals(np.getOffsetToTarget(), new Translation2d(0, 0));
     }    
     
 }

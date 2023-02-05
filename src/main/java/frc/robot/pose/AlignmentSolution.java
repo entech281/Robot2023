@@ -1,5 +1,7 @@
 package frc.robot.pose;
 
+import edu.wpi.first.math.geometry.Pose2d;
+
 /**
  * An alignment solution should include everything we need if we
  * wanted to execute a fully autonomous score from our current position.
@@ -12,6 +14,7 @@ package frc.robot.pose;
  * @author dcowden
  */
 public class AlignmentSolution {
+    
     public enum AlignmentStrategy{
         HOPELESS_I_GIVE_UP,
         ROTATE_AND_DEPLOY,
@@ -22,6 +25,24 @@ public class AlignmentSolution {
     private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
     private TargetNode target;
     private RobotPose startingPose;
+
+    public Pose2d getRobotPose() {
+        return robotPose;
+    }
+
+    public void setRobotPose(Pose2d robotPose) {
+        this.robotPose = robotPose;
+    }
+
+    public Pose2d getTargetPose() {
+        return targetPose;
+    }
+
+    public void setTargetPose(Pose2d targetPose) {
+        this.targetPose = targetPose;
+    }
+    private Pose2d robotPose;
+    private Pose2d targetPose;
 
     public RobotPose getStartingPose() {
         return startingPose;

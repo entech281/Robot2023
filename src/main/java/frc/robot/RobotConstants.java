@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -17,8 +18,21 @@ public final class RobotConstants {
         public static final int PWM_0 = 0;
         public static final int PWM_1 = 1;
     }
+    public enum TEAM{
+        RED,
+        BLUE
+    }
     public interface VISION {
-        public static final String PHOTON_HOST = "photonvision";
+        public static final String PHOTON_HOST = "photonvision";  
+        public static final double MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES = 40.0;
+        public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
+    }
+    public interface ARM{
+        public static final double MIN_ANGLE_DEGREES = 0.0;
+        public static final double MAX_ANGLE_DEGREES = 90.0;
+        public static final boolean INIT_CLAW_STATE = false;
+        public static final double MIN_EXTENSION_INCHES = 0.0;
+        public static final double MAX_EXTENSION_INCHES = 200.0;
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
