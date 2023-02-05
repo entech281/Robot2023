@@ -4,6 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import frc.robot.RobotConstants;
+import frc.robot.pose.instructions.DeployInstruction;
+import frc.robot.pose.instructions.MoveDistanceInstruction;
+import frc.robot.pose.instructions.RotateInstruction;
 
 public class AlignCalc {
 
@@ -22,18 +25,21 @@ public class AlignCalc {
         
         
         if ( canDeployImmediately(angleToTarget, distanceToTarget)){
-            as.setDeployNow(true);
-        }
+            as.addAlignmentInstruction(new DeployInstruction() );
+            as.setStrategy(AlignmentSolution.AlignmentStrategy.DEPLOY_NOW);
+            return as;
+        }   
         else{
             boolean canDeployThirdRow = ( loc.isThirdRow() && angleToTarget <= RobotConstants.VISION.MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES );
             boolean canDeploy2ndRow = ( loc.is2ndRow() && angleToTarget <= RobotConstants.VISION.MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES );
 
             if (canDeployThirdRow || canDeploy2ndRow){
-                as.setDegreesToRotate(angleToTarget);
+                as.addAlignmentInstruction(new RotateInstruction(angleToTarget));
             }
             if ( ! isDistanceWithinTolerance(distanceToTarget)){
-                as.setDistanceToMove(distanceToTarget);
+                as.addAlignmentInstruction(new MoveDistanceInstruction(distanceToTarget));
             }
+            as.addAlignmentInstruction(new DeployInstruction());
         }
   
         return as;

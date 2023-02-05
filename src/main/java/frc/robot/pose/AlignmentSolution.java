@@ -1,5 +1,9 @@
 package frc.robot.pose;
 
+import frc.robot.pose.instructions.AlignmentInstruction;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * An alignment solution should include everything we need if we
  * wanted to execute a fully autonomous score from our current position.
@@ -44,35 +48,15 @@ public class AlignmentSolution {
         this.strategy = strategy;
     }
 
-    public double getDistanceToMove() {
-        return distanceToMove;
+    public void addAlignmentInstruction( AlignmentInstruction is ){
+        alignmentInstructions.add(is);
     }
-
-    public void setDistanceToMove(double distanceToMoveForward) {
-        this.distanceToMove= distanceToMoveForward;
-    }
-
-    public double getDegreesToRotate() {
-        return degreesToRotate;
-    }
-
-    public void setDegreesToRotate(double degreesToRotate) {
-        this.degreesToRotate = degreesToRotate;
+    public List<AlignmentInstruction> getAlignmentInstructions() {
+        return alignmentInstructions;
     }
     
-    private double distanceToMove = 0.0;
-    private double degreesToRotate = 0.0;
-    private boolean deployNow = false;
-
-    public boolean isDeployNow() {
-        return deployNow;
-    }
-
-    public void setDeployNow(boolean deployNow) {
-        this.deployNow = deployNow;
-    }
-    
-    private RobotPose robotPose; // to store what we were given
+    private final List<AlignmentInstruction> alignmentInstructions = new ArrayList<>();
+    private final RobotPose robotPose; // to store what we were given
     private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
     private ScoringLocation scoringLocation;    
 }
