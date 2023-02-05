@@ -18,4 +18,8 @@ public class MoveDistanceInstruction implements AlignmentInstruction{
     public double getDistanceInches() {
         return distanceInches;
     }
+    
+    public String toString(){
+        return "move" + distanceInches;
+    }
 }

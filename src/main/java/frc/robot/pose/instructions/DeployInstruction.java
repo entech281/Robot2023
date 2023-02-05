@@ -9,5 +9,7 @@ package frc.robot.pose.instructions;
  * @author dcowden
  */
 public class DeployInstruction implements AlignmentInstruction{
-    
+    public String toString(){
+        return "DEPLOY!";
+    }
 }

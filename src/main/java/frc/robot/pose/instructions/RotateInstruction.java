@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package frc.robot.pose.instructions;
 
 /**
@@ -16,4 +13,9 @@ public class RotateInstruction implements AlignmentInstruction{
         return degreesToRotate;
     }
     private double degreesToRotate = 0.0;
+    
+    @Override
+    public String toString(){
+        return "Rotate " + degreesToRotate;
+    }
 }
