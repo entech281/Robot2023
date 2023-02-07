@@ -48,7 +48,7 @@ public class VisionSubsystem extends EntechSubsystem {
       PhotonPipelineResult result = camera.getLatestResult();
       visionOutput.setLatency(result.getLatencyMillis());
       for ( PhotonTrackedTarget t: result.getTargets()){
-          
+        
           Transform3d t3d = t.getBestCameraToTarget();
           Pose2d p = new Pose2d(t3d.getX(),t3d.getY(), t3d.getRotation().toRotation2d());
           RecognizedAprilTagTarget rat = new RecognizedAprilTagTarget(p,t.getFiducialId());

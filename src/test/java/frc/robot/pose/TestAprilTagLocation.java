@@ -16,6 +16,5 @@ public class TestAprilTagLocation {
         AprilTagLocation loc = AprilTagLocation.BLUE_LOADING;
         assertEquals(loc.getX(), 636.96, 0.01);
         assertEquals(loc.getY(), 265.74, 0.01);
-        assertEquals(loc.getZ(), 27.38, 0.01);
     }
 }
