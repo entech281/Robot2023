@@ -28,6 +28,12 @@ public class OperatorInterface {
 
         driveStick.button(RobotConstants.DRIVER_STICK.ZERO_ROBOT_ANGLE)
             .onTrue(commandFactory.SnapYawDegreesCommand(0));
+
+        driveStick.pov(RobotConstants.DRIVER_STICK.POV.RIGHT)
+            .onTrue(commandFactory.NudgeRightCommand());
+
+        driveStick.pov(RobotConstants.DRIVER_STICK.POV.LEFT)
+            .onTrue(commandFactory.NudgeLeftCommand());
             
         subsystemManager.getDriveSubsystem().setDefaultCommand(commandFactory.DriveCommand(driveStick.getHID()));
     }

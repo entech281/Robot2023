@@ -35,11 +35,19 @@ public class CommandFactory {
         return new SnapYawDegreesCommand(sm.getDriveSubsystem(), sm.getNavXSubSystem(), Angle);
     }
 
-    public Command getAutonomousCommand(){
+    public Command getAutonomousCommand() {
         return SnapYawDegreesCommand(160);
     }
 
     public Command getZeroGyro() {
         return new ZeroGyroCommand(sm.getNavXSubSystem());
+    }
+
+    public Command NudgeLeftCommand() {
+        return new NudgeLeftCommand(sm.getDriveSubsystem());
+    }
+
+    public Command NudgeRightCommand() {
+        return new NudgeRightCommand(sm.getDriveSubsystem());
     }
 }
