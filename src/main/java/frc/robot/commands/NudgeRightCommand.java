@@ -38,7 +38,7 @@ public class NudgeRightCommand extends EntechCommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        DriveInput DI = new DriveInput(0, -0.5, 0);
+        DriveInput DI = new DriveInput(0, 0.5, 0);
         drive.drive(DI);
     }
 
