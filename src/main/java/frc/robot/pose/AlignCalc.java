@@ -16,6 +16,9 @@ public class AlignCalc {
     public AlignmentSolution calculateSolution( ScoringLocation loc , RobotPose rp){
         
         AlignmentSolution as = new AlignmentSolution(loc, rp);
+        
+        //OBSERVATION: we only ever use the calculated pose inside here. This 
+        //probably means we shouldnt accept RobotPose, but a Pose2d....
         Pose2d robotBase = rp.getCalculatedPose();  
         Pose2d targetPose = loc.computeAbsolutePose();
         

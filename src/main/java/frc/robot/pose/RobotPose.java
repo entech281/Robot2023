@@ -11,6 +11,22 @@ import edu.wpi.first.util.sendable.SendableBuilder;
  */
 public class RobotPose implements Sendable{
 
+    public void setCalculatedPose(Pose2d calculatedPose) {
+        this.calculatedPose = calculatedPose;
+    }
+
+    public void setBodyPose(NavxPose bodyPose) {
+        this.bodyPose = bodyPose;
+    }
+
+    public void setArmPose(ArmPose armPose) {
+        this.armPose = armPose;
+    }
+
+    public void setVisionPose(VisionPose visionPose) {
+        this.visionPose = visionPose;
+    }
+
   
     private Pose2d calculatedPose;
     private  NavxPose bodyPose;

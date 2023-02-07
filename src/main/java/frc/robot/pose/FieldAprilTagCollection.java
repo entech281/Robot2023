@@ -27,7 +27,7 @@ public class FieldAprilTagCollection {
     public static final FieldAprilTag BLUE_LOADING = new FieldAprilTag(0.0, 0.0, 180.0,AprilTagIds.BLUE_LOADING,  RobotConstants.TEAM.BLUE);
     public static final FieldAprilTag BLUE_RIGHT = new FieldAprilTag(0.0, 0.0, 180.0,AprilTagIds.BLUE_RIGHT,  RobotConstants.TEAM.BLUE);
     public static final FieldAprilTag BLUE_MIDDLE = new FieldAprilTag(0.0, 0.0,180.0, AprilTagIds.BLUE_MIDDLE,  RobotConstants.TEAM.BLUE);
-    public static final FieldAprilTag BLUE_LEFT = new FieldAprilTag(0.0, 0.0, 180.0, AprilTagIds.BLUE_LEFT,  RobotConstants.TEAM.BLUE);
+    public static final FieldAprilTag BLUE_LEFT = new FieldAprilTag(21.0, 14.5, 180.0, AprilTagIds.BLUE_LEFT,  RobotConstants.TEAM.BLUE);
 
     public static FieldAprilTag findFromTag(int tagId ){
         switch(tagId){
