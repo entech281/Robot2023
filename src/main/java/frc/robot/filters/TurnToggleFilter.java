@@ -12,7 +12,7 @@ public class TurnToggleFilter extends Filter {
 
     public void filter(DriveInput DI) {
         if (!enable && !DI.getOverrideYawLock()) {
-            DI.setZ(0);
+            DI.setRotation(0);
             return;
         }
     }

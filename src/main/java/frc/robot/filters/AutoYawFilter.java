@@ -26,12 +26,12 @@ public class AutoYawFilter extends Filter {
             return;
         }
 
-        if (Math.abs(DI.getX()) < 0.1 && Math.abs(DI.getY()) < 0.1) {
+        if (Math.abs(DI.getForward()) < 0.1 && Math.abs(DI.getLeft()) < 0.1) {
             PID.reset();
             return;
         }
 
-        double setPoint = Math.toDegrees(Math.atan2(DI.getY(), DI.getX()));
+        double setPoint = Math.toDegrees(Math.atan2(DI.getLeft(), DI.getForward()));
 
         if (Math.abs(setPoint - navX.getAngle()) > 90) {
             setPoint += 180;
@@ -41,6 +41,6 @@ public class AutoYawFilter extends Filter {
         calcValue = Math.round(calcValue);
 
         DI.setOverrideYawLock(true);
-        DI.setZ(Math.max(-0.75, Math.min(calcValue, 0.75)));
+        DI.setRotation(Math.max(-0.75, Math.min(calcValue, 0.75)));
     }
 }

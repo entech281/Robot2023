@@ -20,11 +20,11 @@ public class TestAutoYawFilter {
         while (!(gyro.getAngle() < 1 && gyro.getAngle() > -1)) {
             DI = new DriveInput(0, 1, 0);
             filter.filter(DI);
-            gyro.simulateMove(DI.getZ());
+            gyro.simulateMove(DI.getRotation());
         }
 
         assertEquals(gyro.getAngle(), 0, 1);
-        assertEquals(DI.getZ(), 0, SMALLDIFFERENCE);
+        assertEquals(DI.getRotation(), 0, SMALLDIFFERENCE);
     }
 
     @Test
@@ -38,10 +38,10 @@ public class TestAutoYawFilter {
         while (!(gyro.getAngle() < -44 && gyro.getAngle() > -46)) {
             DI = new DriveInput(1, -1, 0);
             filter.filter(DI);
-            gyro.simulateMove(DI.getZ());
+            gyro.simulateMove(DI.getRotation());
         }
 
         assertEquals(gyro.getAngle(), -45, 1);
-        assertEquals(DI.getZ(), 0, SMALLDIFFERENCE);
+        assertEquals(DI.getRotation(), 0, SMALLDIFFERENCE);
     }
 }

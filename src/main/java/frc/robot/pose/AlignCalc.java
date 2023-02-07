@@ -14,9 +14,9 @@ public class AlignCalc {
         DriveInput fakeJoystick;
         fakeJoystick = new DriveInput(0.,0.,0.);
 
-        fakeJoystick.setZ(scaleToJoystickValues(currentRobotPose.getRotation().getDegrees() - finalRobotPose.getRotation().getDegrees(), 40));
-        fakeJoystick.setX(scaleToJoystickValues(currentRobotPose.getX() - finalRobotPose.getX(), 24));
-        fakeJoystick.setY(scaleToJoystickValues(currentRobotPose.getY() - finalRobotPose.getY(), 24));
+        fakeJoystick.setRotation(scaleToJoystickValues(currentRobotPose.getRotation().getDegrees() - finalRobotPose.getRotation().getDegrees(), 40));
+        fakeJoystick.setForward(scaleToJoystickValues(currentRobotPose.getX() - finalRobotPose.getX(), 24));
+        fakeJoystick.setLeft(scaleToJoystickValues(currentRobotPose.getY() - finalRobotPose.getY(), 24));
         return fakeJoystick;
     }
 
