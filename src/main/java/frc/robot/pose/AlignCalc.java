@@ -13,6 +13,19 @@ public class AlignCalc {
     public static final Pose2d FIELD_ZERO = new Pose2d ( 0.0,0.0,new Rotation2d(0.0));
 
     
+    
+    public static void debug(String message){
+        //this is stupid. we should use log4j. 
+        //and actually, we SHOULD be able to use this code, so that we get the same
+        //data off the real robot in a real match without extra effort
+        
+        //private StringLogEntry debugLog = new StringLogEntry(DataLogManager.getLog(),"/alignment");
+        
+        //this is temporary and HORRIBLE. NEVER EVER do system.out in production code!
+        //i have this here so you can see how we go about debugging
+        System.out.println("AlignCalc:" + message);
+    }
+    
     public AlignmentSolution calculateSolution( ScoringLocation loc , RobotPose rp){
         
         AlignmentSolution as = new AlignmentSolution(loc, rp);
@@ -25,7 +38,7 @@ public class AlignCalc {
         Transform2d deltaToTarget = targetPose.minus(robotBase);        
         double angleToTarget = deltaToTarget.getRotation().getDegrees();
         double distanceToTarget = deltaToTarget.getTranslation().getNorm();
-        
+        debug(String.format("Distance To Target=%.2f, AngleToTarget=%.2f",distanceToTarget ,angleToTarget));
         
         if ( canDeployImmediately(angleToTarget, distanceToTarget)){
             as.addAlignmentInstruction(new DeployInstruction() );
@@ -53,9 +66,13 @@ public class AlignCalc {
     }
     
     protected static boolean isAngleWithinTolerance ( double angleToTarget){
-         return (angleToTarget <= RobotConstants.ALIGNMENT.ANGLE_TOLERANCE_DEGREES);
+        boolean r = (angleToTarget <= RobotConstants.ALIGNMENT.ANGLE_TOLERANCE_DEGREES);
+        debug("isAngleWithinTolerance:" + r);
+        return r;
     }
     public static  boolean isDistanceWithinTolerance ( double distanceToTarget){
-        return (distanceToTarget <= RobotConstants.ALIGNMENT.DISTANCE_TOLERANCE_INCHES);
+        boolean r = (distanceToTarget <= RobotConstants.ALIGNMENT.DISTANCE_TOLERANCE_INCHES);
+        debug("isDistanceWithinTolerance:" + r);
+        return r;
     }
 }
