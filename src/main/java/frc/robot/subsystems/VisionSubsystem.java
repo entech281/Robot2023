@@ -46,7 +46,7 @@ public class VisionSubsystem extends EntechSubsystem {
       VisionPose visionOutput = new VisionPose();
       
       PhotonPipelineResult result = camera.getLatestResult();
-      visionOutput.setLatency(result.getLatencyMillis());
+      visionOutput.setPipelineLatency(result.getLatencyMillis());
       
       /**
        *   Old code using only a single target. See updated version below that does multiple

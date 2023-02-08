@@ -11,17 +11,20 @@ import frc.robot.util.SendableUtil;
  */
 public class NavxPose implements Sendable {
     
-    public NavxPose(double angle, Pose2d newpose){
-        this.yawAngleDegrees = angle;
-        this.basePose = newpose;
-    }
-
     private double yawAngleDegrees = 0.0;
     private Pose2d basePose;
 
 
+    public void setYawAngleDegrees(double yawAngleDegrees){
+        this.yawAngleDegrees = yawAngleDegrees;
+    }
+    
     public double getYawAngleDegrees(){
         return yawAngleDegrees;
+    }
+
+    public void setBasePose(Pose2d basePose){
+        this.basePose = basePose;
     }
 
     public Pose2d getBasePose(){
