@@ -13,6 +13,7 @@ public class ArmSubsystem extends EntechSubsystem{
   public ArmPose getArmOutput(){
       return new ArmPose(true, 0.0, 0.0);
   }
+  
   @Override
   public void initialize() {
     // Create the internal objects here

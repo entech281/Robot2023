@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SubsystemManager;
+import frc.robot.RobotConstants;
 
 /**
  *
@@ -15,12 +16,12 @@ public class CommandFactory {
         this.sm = subsystemManager;
     }
 
-    public Command ButtonFilterFalseCommand(int ButtonNumber) {
-        return new ButtonFilterCommand(sm.getDriveSubsystem(), ButtonNumber, false);
+    public Command ButtonFilterCommand(int buttonNumber, boolean enabled) {
+        return new ButtonFilterCommand(sm.getDriveSubsystem(), buttonNumber, enabled);
     }
 
-    public Command ButtonFilterTrueCommand(int ButtonNumber) {
-        return new ButtonFilterCommand(sm.getDriveSubsystem(), ButtonNumber, true);
+    public Command TurnToggleFilter(boolean enabled) {
+        return ButtonFilterCommand(RobotConstants.DRIVER_STICK.TURN_TOGGLE, enabled);
     }
 
     public Command DriveCommand(Joystick joystick) {

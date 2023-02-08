@@ -31,6 +31,11 @@ public class AutoYawFilter extends Filter {
             return;
         }
 
+        if (DI.getOverrideAutoYaw()) {
+            PID.reset();
+            return;
+        }
+
         double setPoint = Math.toDegrees(Math.atan2(DI.getLeft(), DI.getForward()));
 
         if (Math.abs(setPoint - navX.getAngle()) > 90) {

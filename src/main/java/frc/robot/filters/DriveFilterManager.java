@@ -14,6 +14,11 @@ public class DriveFilterManager {
     private TurnToggleFilter turnToggle;
     private AutoYawFilter autoYaw;
 
+    /**
+     *
+     * 
+     * @param NavX The NavXSubsystem that some filters use
+     */
     public DriveFilterManager(NavXSubSystem NavX) {
         navX = NavX;
 

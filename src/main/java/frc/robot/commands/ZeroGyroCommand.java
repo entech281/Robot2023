@@ -6,46 +6,46 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.NavXSubSystem;
 
-/** An example command that uses an example subsystem. */
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
 public class ZeroGyroCommand extends EntechCommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final NavXSubSystem NavX;
+  private final NavXSubSystem navX;
   private boolean isFinished = false;
 
   /**
+   * Creates a new ZeroGyro Command that will reset the gyro value
    *
-   *
-   * @param subsystem The subsystem used by this command.
+   * 
+   * @param NavX The NavXSubsystem this command runs on.
    */
-  public ZeroGyroCommand(NavXSubSystem subsystem) {
-    super(subsystem);
-    NavX = subsystem;
+  public ZeroGyroCommand(NavXSubSystem NavX) {
+    super(NavX);
+    navX = NavX;
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    NavX.getGyro().reset();
+    navX.getGyro().reset();
     isFinished = true;
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return isFinished;
   }
 
-  // Returns true if this command should run when robot is disabled.
   @Override
   public boolean runsWhenDisabled() {
     return true;

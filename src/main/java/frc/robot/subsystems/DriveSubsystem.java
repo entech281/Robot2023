@@ -19,6 +19,11 @@ import frc.robot.filters.DriveInput;
 import frc.robot.pose.AlignmentSolution;
 import frc.robot.pose.DrivePose;
 
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
 public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontLeftTalon;
   private WPI_TalonSRX rearLeftTalon;
@@ -33,6 +38,11 @@ public class DriveSubsystem extends EntechSubsystem {
 
   private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
   
+  /**
+   *
+   * 
+   * @param NavX The NavXSubsystem that some filters use and the drive in field absolute
+   */
   public DriveSubsystem(NavXSubSystem NavX) {
     navX = NavX;
   }
@@ -65,16 +75,15 @@ public class DriveSubsystem extends EntechSubsystem {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("NavX Angle", navX.getAngle());
 
     SmartDashboard.putNumber("Front Left Talon", frontLeftTalon.get());
     SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
     SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
     SmartDashboard.putNumber("Back Right Talon", rearRightTalon.get());
 
-    SmartDashboard.putNumber("Driver Input X", loggingDriveInput.getForward());
-    SmartDashboard.putNumber("Driver Input Y", loggingDriveInput.getLeft());
-    SmartDashboard.putNumber("Driver Input Z", loggingDriveInput.getRotation());
+    SmartDashboard.putNumber("Driver Input Forward", loggingDriveInput.getForward());
+    SmartDashboard.putNumber("Driver Input Left", loggingDriveInput.getLeft());
+    SmartDashboard.putNumber("Driver Input Rotation", loggingDriveInput.getRotation());
 
     SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
 

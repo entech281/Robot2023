@@ -11,8 +11,17 @@ public class DriveInput {
     private double forward;
     private double left;
     private double rotation;
-    private boolean overrideYawLock = false;
 
+    private boolean overrideYawLock = false;
+    private boolean overrideAutoYaw = false;
+
+    /**
+     *
+     * 
+     * @param Forward the speed level forward for the drive subsystem
+     * @param Left the speed level left for the drive subsystem
+     * @param Right the speed level right for the drive subsystem
+     */
     public DriveInput(double Forward, double Left, double Rotation) {
         forward = Forward;
         left = Left;
@@ -40,6 +49,8 @@ public class DriveInput {
     public boolean getOverrideYawLock() { return overrideYawLock; }
     public void setOverrideYawLock(boolean OverrideYawLock) { overrideYawLock = OverrideYawLock; }
 
+    public boolean getOverrideAutoYaw() { return this.overrideAutoYaw; }
+    public void setOverrideAutoYaw(boolean OverrideAutoYaw) { overrideAutoYaw = OverrideAutoYaw; }
 
     @Override
     public boolean equals(Object o) {

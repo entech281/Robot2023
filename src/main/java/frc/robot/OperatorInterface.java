@@ -17,8 +17,8 @@ public class OperatorInterface {
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
 
         driveStick.button(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
-            .onTrue(commandFactory.ButtonFilterTrueCommand( RobotConstants.DRIVER_STICK.TURN_TOGGLE ))
-            .onFalse(commandFactory.ButtonFilterFalseCommand( RobotConstants.DRIVER_STICK.TURN_TOGGLE ));
+            .onTrue(commandFactory.TurnToggleFilter(true))
+            .onFalse(commandFactory.TurnToggleFilter(false));
 
         driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
             .onTrue(commandFactory.ToggleFieldAbsolute());

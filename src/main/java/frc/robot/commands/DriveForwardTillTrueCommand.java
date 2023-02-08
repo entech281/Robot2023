@@ -9,17 +9,21 @@ import java.util.function.BooleanSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
 public class DriveForwardTillTrueCommand extends EntechCommandBase {
     private final DriveSubsystem drive;
     private final BooleanSupplier condition;
 
     /**
-     * Creates a new ArcadeDrive. This command will drive your robot according to
-     * the joystick
-     * This command does not terminate.
-     *
+     * Creates a new DriveForwardTillTrueCommand that will drive the robot forward until a given condition is true
+     * 
+     * 
      * @param drive The drive subsystem on which this command will run
-     * @param stick Driver joystick object
+     * @param Condition the condition that when true will make the robot stop driving
      */
     public DriveForwardTillTrueCommand(DriveSubsystem Drive, BooleanSupplier Condition) {
         super(Drive);
@@ -27,30 +31,25 @@ public class DriveForwardTillTrueCommand extends EntechCommandBase {
         condition = Condition;
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         drive.drive(new DriveInput(1, 0, 0));
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         drive.brake();
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return condition.getAsBoolean();
     }
 
-    // Returns true if command should run when robot is disabled.
     @Override
     public boolean runsWhenDisabled() {
         return false;

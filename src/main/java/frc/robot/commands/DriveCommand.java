@@ -26,29 +26,24 @@ public class DriveCommand extends EntechCommandBase {
         joystick = Joystick;
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         drive.drive(new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ()));
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return false;
     }
 
-    // Returns true if command should run when robot is disabled.
     @Override
     public boolean runsWhenDisabled() {
         return false;

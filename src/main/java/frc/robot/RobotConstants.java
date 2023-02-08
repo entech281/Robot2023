@@ -26,8 +26,9 @@ public final class RobotConstants {
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
         public static final int TOGGLE_FIELD_ABSOLUTE = 12;
-        public static final int ZERO_GYRO_ANGLE = 11;
+        public static final int ZERO_GYRO_ANGLE = 9;
         public static final int ZERO_ROBOT_ANGLE = 10;
+        public static final int AUTO_YAW_TOGGLE = 11;
         public interface POV {
             public static final int FORWARD = 0;
             public static final int RIGHT = 90;

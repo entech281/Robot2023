@@ -50,7 +50,7 @@ public class NavXSubSystem extends EntechSubsystem {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("NavX value", navX.getYaw());
+        SmartDashboard.putNumber("NavX Yaw", navX.getYaw());
     }
 
     public Gyro getGyro() {

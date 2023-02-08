@@ -18,9 +18,11 @@ public class ButtonFilterCommand extends EntechCommandBase {
     private boolean isFinished = false;
 
     /**
-     * Creates a new ExampleCommand.
+     * 
      *
-     * @param subsystem The subsystem used by this command.
+     * @param Drive The drive subsystem.
+     * @param ButtonNumber The button that has been pressed
+     * @param enabled If you want to set the filter to be on or off 
      */
     public ButtonFilterCommand(DriveSubsystem Drive, int ButtonNumber, boolean enabled) {
         super(Drive);
@@ -29,13 +31,11 @@ public class ButtonFilterCommand extends EntechCommandBase {
         enable = enabled;
     }
 
-    // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         DFM = drive.getDFM();
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         switch (buttonNumber) {
@@ -48,18 +48,15 @@ public class ButtonFilterCommand extends EntechCommandBase {
         isFinished = true;
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return isFinished;
     }
 
-    // Returns true if this command should run when robot is disabled.
     @Override
     public boolean runsWhenDisabled() {
         return true;

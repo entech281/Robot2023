@@ -18,7 +18,11 @@ public class NudgeLeftCommand extends EntechCommandBase {
     private final DriveSubsystem drive;
     private Timer timer;
 
+    private static final double NUDGE_TIME = 0.5;
+    private static final double NUDGE_SPEED = -0.5;
+
     /**
+     * Creates a new NudgeLeftCommand which will move the robot left for 0.5 seconds at half power
      * 
      *
      * @param drive The drive subsystem on which this command will run
@@ -27,34 +31,31 @@ public class NudgeLeftCommand extends EntechCommandBase {
         super(Drive);
         drive = Drive;
     }
-
-    // Called when the command is initially scheduled.    
+    
     @Override
     public void initialize() {
         timer = new Timer();
         timer.start();
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        DriveInput DI = new DriveInput(0, -0.5, 0);
+        DriveInput DI = new DriveInput(0, NUDGE_SPEED, 0);
+        DI.setOverrideAutoYaw(true);
+        
         drive.drive(DI);
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         drive.brake();
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return timer.get() > 1;
+        return timer.get() > NUDGE_TIME;
     }
 
-    // Returns true if command should run when robot is disabled.
     @Override
     public boolean runsWhenDisabled() {
         return false;
