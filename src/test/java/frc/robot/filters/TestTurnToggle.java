@@ -18,7 +18,7 @@ public class TestTurnToggle {
 
         assertEquals(0, DI.getRotation(), SMALLDIFFERENCE);
         assertEquals(0.5, DI.getForward(), SMALLDIFFERENCE);
-        assertEquals(0.75, DI.getLeft(), SMALLDIFFERENCE);
+        assertEquals(0.75, DI.getRight(), SMALLDIFFERENCE);
     }
 
     @Test
@@ -32,6 +32,6 @@ public class TestTurnToggle {
 
         assertEquals(0.6, DI.getRotation(), SMALLDIFFERENCE);
         assertEquals(0.5, DI.getForward(), SMALLDIFFERENCE);
-        assertEquals(0.75, DI.getLeft(), SMALLDIFFERENCE);
+        assertEquals(0.75, DI.getRight(), SMALLDIFFERENCE);
     }
 }

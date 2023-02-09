@@ -9,7 +9,7 @@ import java.util.Objects;
  */
 public class DriveInput {
     private double forward;
-    private double left;
+    private double right;
     private double rotation;
 
     private boolean overrideYawLock = false;
@@ -19,28 +19,28 @@ public class DriveInput {
      *
      * 
      * @param Forward the speed level forward for the drive subsystem
-     * @param Left the speed level left for the drive subsystem
+     * @param Left the speed level right for the drive subsystem
      * @param Right the speed level right for the drive subsystem
      */
-    public DriveInput(double Forward, double Left, double Rotation) {
+    public DriveInput(double Forward, double Right, double Rotation) {
         forward = Forward;
-        left = Left;
+        right = Right;
         rotation = Rotation;
     }
 
     public double getForward() { return forward; }
-    public double getLeft() { return left; }
+    public double getRight() { return right; }
     public double getRotation() { return rotation; }
 
     public void setForward(double Forward) { forward = Forward; }
-    public void setLeft(double Left) { left = Left; }
+    public void setRight(double Right) { right = Right; }
     public void setRotation(double Rotation) { rotation = Rotation; }
 
     public double[] get() {
         double[] output = new double[3];
 
         output[0] = (forward);
-        output[1] = (left);
+        output[1] = (right);
         output[2] = (rotation);
 
         return output;
@@ -60,12 +60,12 @@ public class DriveInput {
             return false;
         }
         DriveInput driveInput = (DriveInput) o;
-        return forward == driveInput.forward && left == driveInput.left && rotation == driveInput.rotation && overrideYawLock == driveInput.overrideYawLock;
+        return forward == driveInput.forward && right == driveInput.right && rotation == driveInput.rotation && overrideYawLock == driveInput.overrideYawLock;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(forward, left, rotation, overrideYawLock);
+        return Objects.hash(forward, right, rotation, overrideYawLock);
     }
 
 }

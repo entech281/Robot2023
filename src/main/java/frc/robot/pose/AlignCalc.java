@@ -16,7 +16,7 @@ public class AlignCalc {
 
         fakeJoystick.setRotation(scaleToJoystickValues(currentRobotPose.getRotation().getDegrees() - finalRobotPose.getRotation().getDegrees(), 40));
         fakeJoystick.setForward(scaleToJoystickValues(currentRobotPose.getX() - finalRobotPose.getX(), 24));
-        fakeJoystick.setLeft(scaleToJoystickValues(currentRobotPose.getY() - finalRobotPose.getY(), 24));
+        fakeJoystick.setRight(scaleToJoystickValues(currentRobotPose.getY() - finalRobotPose.getY(), 24));
         return fakeJoystick;
     }
 
