@@ -43,7 +43,7 @@ public class AutoYawFilter extends Filter {
         }
 
         double calcValue = PID.calculate(navX.getAngle(), setPoint);
-        calcValue = Math.round(calcValue);
+        calcValue = Math.round(calcValue/4) * 4;
 
         DI.setOverrideYawLock(true);
         DI.setRotation(Math.max(-0.75, Math.min(calcValue, 0.75)));
