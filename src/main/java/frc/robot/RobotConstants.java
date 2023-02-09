@@ -48,4 +48,11 @@ public final class RobotConstants {
     public interface DIGITAL_IO {
 
     }
+
+    public interface ARM {
+        // public static final double ARM_MAX_EXTENSION = ; 
+        // public static final double ARM_MIN_EXTENSION = ;
+        // public static final double ARM_MAX_ROTATION = ;
+        // public static final double ARM_MIN_ROTATION = ;
+    }
 }

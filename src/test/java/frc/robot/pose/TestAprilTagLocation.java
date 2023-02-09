@@ -8,13 +8,22 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 
+
 /** Add your docs here. */
 public class TestAprilTagLocation {
+
+    public static double comparisonTolerance = 0.01;
 
     @Test
     public void TestBlueLoading() {
         AprilTagLocation loc = AprilTagLocation.BLUE_LOADING;
-        assertEquals(loc.getX(), 636.96, 0.01);
-        assertEquals(loc.getY(), 265.74, 0.01);
+        assertEquals(loc.getXIn(), 636.96, comparisonTolerance);
+        assertEquals(loc.getYIn(), 265.74, comparisonTolerance);
+    }
+
+    public void TestRedLeft() {
+        AprilTagLocation loc = AprilTagLocation.RED_LEFT;
+        assertEquals(loc.getXIn(), 610.77, comparisonTolerance);
+        assertEquals(loc.getYIn(), 174.19, comparisonTolerance);
     }
 }

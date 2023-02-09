@@ -50,15 +50,15 @@ public class AprilTagLocation {
     this.absoluteTargetZIn = absoluteTargetZIn;
   }
 
-  public double getX() {
+  public double getXIn() {
     return absoluteTargetXIn;
   }
 
-  public double getY() {
+  public double getYIn() {
     return absoluteTargetYIn;
   }
 
-  public double getZ() {
+  public double getZIn() {
     return absoluteTargetZIn;
   }
 }
