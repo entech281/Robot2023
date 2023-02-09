@@ -37,7 +37,7 @@ public class NavXSubSystem extends EntechSubsystem {
     }
 
     public NavxPose getNavxOutput(){
-        return new NavxPose(getAngle(), new Pose2d());
+        return new NavxPose();
     }
     
     public double getAngle() {
