@@ -3,7 +3,11 @@ package frc.robot.pose;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VisionOutput {
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import frc.robot.subsystems.SubsystemStatus;
+
+public class VisionStatus implements SubsystemStatus,Sendable{
     //private Pose2d tagPosesRelativeToCamera;
     //private boolean cameraHasTargets;
     //private int tagIDs;
@@ -61,4 +65,13 @@ public class VisionOutput {
     //public void setTagPosesRelativeToCamera(Pose2d tagPosesRelativeToCamera) {
     //    this.tagPosesRelativeToCamera = tagPosesRelativeToCamera;
     //}    
+    
+    @Override
+    public void initSendable(SendableBuilder sb) {
+        sb.addDoubleProperty("Pipeline Latency",this::getLatency, null);
+        sb.addIntegerProperty("DetectedTargets", ()-> {
+            return recognizedTargets.size();
+        }, null);
+    }
+    
 }

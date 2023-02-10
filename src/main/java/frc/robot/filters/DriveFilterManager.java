@@ -1,7 +1,7 @@
 package frc.robot.filters;
 
-import frc.robot.subsystems.NavXSubSystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.pose.RobotPose;
 
 /**
  *
@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author aheitkamp
  */
 public class DriveFilterManager {
-    private NavXSubSystem navX;
 
     private TurnToggleFilter turnToggle;
     private AutoYawFilter autoYaw;
@@ -19,10 +18,9 @@ public class DriveFilterManager {
      * 
      * @param NavX The NavXSubsystem that some filters use
      */
-    public DriveFilterManager(NavXSubSystem NavX) {
-        navX = NavX;
+    public DriveFilterManager() {
 
-        autoYaw = new AutoYawFilter(navX.getGyro());
+        autoYaw = new AutoYawFilter();
         turnToggle = new TurnToggleFilter();
     }
 
@@ -33,9 +31,9 @@ public class DriveFilterManager {
         SmartDashboard.putBoolean("Auto Yaw Filter", autoYaw.getEnabled());
     }
 
-    public void applyFilters(DriveInput DI) {
-        turnToggle.filter(DI);
-        autoYaw.filter(DI);
+    public void applyFilters(DriveInput di, RobotPose currentPose) {
+        turnToggle.filter(di,currentPose);
+        autoYaw.filter(di,currentPose);
     }
 
     public void clearFilters() {

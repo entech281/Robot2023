@@ -1,14 +1,16 @@
 package frc.robot.pose;
 
+import edu.wpi.first.math.geometry.Pose2d;
+
 /**
  *
  * @author dcowden
  */
 public class PoseCalculator {
     
-    public RobotPose calculatePose ( DrivePose ddo, VisionPose vo, NavxPose no, ArmPose ao){
+    public RobotPose calculatePose ( DriveStatus ds, VisionStatus vs, NavxStatus ns, ArmStatus as){
         RobotPose newPose = new RobotPose();
-        //lots of math needs to be added
+        Pose2d simplePose = new Pose2d( 0, 0, ns.getBasePose().getRotation());
         return newPose;
     }
 }

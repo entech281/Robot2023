@@ -12,11 +12,21 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 public class RobotPose implements Sendable {
 
     private Pose2d calculatedPose;
-    private NavxPose bodyPose;
-    private ArmPose armPose;
-    private VisionPose visionPose;
+    private NavxStatus bodyPose;
+    private ArmStatus armPose;
+    private VisionStatus visionPose;
+    private AlignmentSolution alignmentSolution;
+    
+    
+    public AlignmentSolution getAlignmentSolution() {
+		return alignmentSolution;
+	}
 
-    public void setCalculatedPose(Pose2d calculatedPose) {
+	public void setAlignmentSolution(AlignmentSolution alignmentSolution) {
+		this.alignmentSolution = alignmentSolution;
+	}
+
+	public void setCalculatedPose(Pose2d calculatedPose) {
         this.calculatedPose = calculatedPose;
     }
 
@@ -24,27 +34,27 @@ public class RobotPose implements Sendable {
         return calculatedPose;
     }
 
-    public void setBodyPose(NavxPose bodyPose) {
+    public void setBodyPose(NavxStatus bodyPose) {
         this.bodyPose = bodyPose;
     }
 
-    public NavxPose getBodyPose(){
+    public NavxStatus getBodyPose(){
         return bodyPose;
     }
 
-    public void setArmPose(ArmPose armPose) {
+    public void setArmPose(ArmStatus armPose) {
         this.armPose = armPose;
     }
 
-    public ArmPose getArmPose(){
+    public ArmStatus getArmPose(){
         return armPose;
     }
 
-    public void setVisionPose(VisionPose visionPose) {
+    public void setVisionPose(VisionStatus visionPose) {
         this.visionPose = visionPose;
     }
 
-    public VisionPose getVisionPose(){
+    public VisionStatus getVisionPose(){
         return visionPose;
     }
 

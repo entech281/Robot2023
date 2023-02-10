@@ -3,12 +3,13 @@ package frc.robot.pose;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
+import frc.robot.subsystems.SubsystemStatus;
 
 /**
  *
  * @author dcowden
  */
-public class ArmPose implements Sendable {
+public class ArmStatus implements Sendable, SubsystemStatus{
 
     private boolean clawOpen = RobotConstants.ARM.INIT_CLAW_STATE;
     private double armExtension = RobotConstants.ARM.MIN_EXTENSION_INCHES;

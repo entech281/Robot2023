@@ -3,13 +3,14 @@ package frc.robot.pose;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import frc.robot.subsystems.SubsystemStatus;
 import frc.robot.util.SendableUtil;
 
 /**
  *
  * @author dcowden
  */
-public class NavxPose implements Sendable {
+public class NavxStatus implements Sendable , SubsystemStatus{
     
     private double yawAngleDegrees = 0.0;
     private Pose2d basePose;

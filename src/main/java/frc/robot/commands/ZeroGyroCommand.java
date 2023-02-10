@@ -12,7 +12,7 @@ import frc.robot.subsystems.NavXSubSystem;
  * @author aheitkamp
  */
 public class ZeroGyroCommand extends EntechCommandBase {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+	
   private final NavXSubSystem navX;
   private boolean isFinished = false;
 
@@ -33,7 +33,7 @@ public class ZeroGyroCommand extends EntechCommandBase {
 
   @Override
   public void execute() {
-    navX.getGyro().reset();
+    navX.resetGyro();
     isFinished = true;
   }
 

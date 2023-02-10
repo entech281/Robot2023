@@ -17,7 +17,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.pose.RecognizedAprilTagTarget;
-import frc.robot.pose.VisionPose;
+import frc.robot.pose.VisionStatus;
+
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionSubsystem extends EntechSubsystem {
@@ -43,12 +44,12 @@ public class VisionSubsystem extends EntechSubsystem {
       builder.addDoubleProperty("CameraLatency", () -> { return latency; }, null);
   }
 
-  public VisionPose getVisionOutput(){
+  public VisionStatus getStatus(){
 
-      VisionPose visionOutput = new VisionPose();
+	  VisionStatus visionOutput = new VisionStatus();
       
       PhotonPipelineResult result = camera.getLatestResult();
-      visionOutput.setPipelineLatency(result.getLatencyMillis());
+      visionOutput.setLatency(result.getLatencyMillis());
       
       /**
        *   Old code using only a single target. See updated version below that does multiple
@@ -104,4 +105,5 @@ public class VisionSubsystem extends EntechSubsystem {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
 } 

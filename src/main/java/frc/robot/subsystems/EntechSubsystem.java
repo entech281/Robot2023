@@ -8,18 +8,23 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.pose.RobotPose;
 
-/**
- * Add your docs here.
- */
 public abstract class EntechSubsystem extends SubsystemBase {
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
 
     public EntechSubsystem() {
         CommandScheduler.getInstance().registerSubsystem(this);
     }
-
-    public abstract void initialize();
-
+    private RobotPose robotPose;
+    
+    public RobotPose getCurrentPose() {
+		return robotPose;
+	}
+	public void setRobotPose(RobotPose robotPose) {
+		this.robotPose = robotPose;
+	}
+	public abstract void initialize();
+    public abstract SubsystemStatus getStatus();
+    
+    
 }

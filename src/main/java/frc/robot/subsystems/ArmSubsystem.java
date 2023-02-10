@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.pose.ArmPose;
+import frc.robot.pose.ArmStatus;
 
 /**
  *
@@ -10,8 +10,8 @@ import frc.robot.pose.ArmPose;
 public class ArmSubsystem extends EntechSubsystem{
  
   
-  public ArmPose getArmOutput(){
-      return new ArmPose();
+  public ArmStatus getStatus(){
+      return new ArmStatus();
   }
   
   @Override
@@ -32,5 +32,6 @@ public class ArmSubsystem extends EntechSubsystem{
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-  }    
+  }
+
 }

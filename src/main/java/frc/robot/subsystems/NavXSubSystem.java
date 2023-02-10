@@ -9,16 +9,16 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.pose.NavxPose;
+import frc.robot.pose.NavxStatus;
 /**
  *
  * @author dcowden
  */
-public class NavXSubSystem extends EntechSubsystem {
+public class NavXSubSystem extends EntechSubsystem implements Sendable{
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
     
@@ -35,24 +35,26 @@ public class NavXSubSystem extends EntechSubsystem {
         DriverStation.reportWarning("NavX Initialize Complete", false);
     }
 
-    public NavxPose getNavxOutput(){
-        return new NavxPose();
+    @Override
+    public NavxStatus getStatus(){
+        NavxStatus ns = new NavxStatus();
+        ns.setYawAngleDegrees(getYawAngle());
+        return ns;
     }
-    
-    public double getAngle() {
-        return navX.getYaw();
+ 
+    public void resetGyro() {
+    	navX.reset();
     }
-
+    private double getYawAngle() {
+    	return navX.getAngle();
+    }
     public void zeroYaw() {
         navX.zeroYaw();
     }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("NavX Yaw", navX.getYaw());
-    }
+	@Override
+	public void initSendable(SendableBuilder builder) {
+		builder.addDoubleProperty("NavX Yaw", this::getYawAngle , null);
+	}
 
-    public Gyro getGyro() {
-      return navX;
-    }
 }

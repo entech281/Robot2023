@@ -2,6 +2,8 @@ package frc.robot.filters;
 
 import org.junit.jupiter.api.Test;
 
+import frc.robot.pose.RobotPose;
+
 import static org.junit.Assert.assertEquals;
 
 public class TestTurnToggle {
@@ -10,28 +12,28 @@ public class TestTurnToggle {
     @Test
     public void testTurnToggleOff() {
         TurnToggleFilter filter = new TurnToggleFilter();
-        DriveInput DI = new DriveInput (0.5, 0.75, 0.6);
+        DriveInput di = new DriveInput (0.5, 0.75, 0.6);
 
         filter.setEnabled(false);
 
-        filter.filter(DI);
+        filter.filter(di, new RobotPose());
 
-        assertEquals(0, DI.getRotation(), SMALLDIFFERENCE);
-        assertEquals(0.5, DI.getForward(), SMALLDIFFERENCE);
-        assertEquals(0.75, DI.getRight(), SMALLDIFFERENCE);
+        assertEquals(0, di.getRotation(), SMALLDIFFERENCE);
+        assertEquals(0.5, di.getForward(), SMALLDIFFERENCE);
+        assertEquals(0.75, di.getRight(), SMALLDIFFERENCE);
     }
 
     @Test
     public void testTurnToggleOn() {
         TurnToggleFilter filter = new TurnToggleFilter();
-        DriveInput DI = new DriveInput (0.5, 0.75, 0.6);
+        DriveInput di = new DriveInput (0.5, 0.75, 0.6);
 
         filter.setEnabled(true);
 
-        filter.filter(DI);
+        filter.filter(di,new RobotPose());
 
-        assertEquals(0.6, DI.getRotation(), SMALLDIFFERENCE);
-        assertEquals(0.5, DI.getForward(), SMALLDIFFERENCE);
-        assertEquals(0.75, DI.getRight(), SMALLDIFFERENCE);
+        assertEquals(0.6, di.getRotation(), SMALLDIFFERENCE);
+        assertEquals(0.5, di.getForward(), SMALLDIFFERENCE);
+        assertEquals(0.75, di.getRight(), SMALLDIFFERENCE);
     }
 }

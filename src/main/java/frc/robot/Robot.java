@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+/// Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -7,19 +7,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import frc.robot.subsystems.SubsystemManager;
 import frc.robot.commands.CommandFactory;
 import frc.robot.pose.AlignCalc;
 import frc.robot.pose.AlignmentSolution;
-import frc.robot.pose.ArmPose;
-import frc.robot.pose.DrivePose;
-import frc.robot.pose.NavxPose;
+import frc.robot.pose.ArmStatus;
+import frc.robot.pose.DriveStatus;
+import frc.robot.pose.NavxStatus;
 import frc.robot.pose.PoseCalculator;
 import frc.robot.pose.RobotPose;
 import frc.robot.pose.TargetNode;
-import frc.robot.pose.VisionPose;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.pose.VisionStatus;
+import frc.robot.subsystems.SubsystemManager;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -59,24 +57,23 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    updateAlignment();
+    updateRobotPose();
     CommandScheduler.getInstance().run();
   }
 
   
-  private void updateAlignment(){
-      DriveSubsystem drive = subsystemManager.getDriveSubsystem();
-      DrivePose dro = drive.getDriveOutput();
-      VisionPose vo = subsystemManager.getVisionSubsystem().getVisionOutput();
-      ArmPose ao = subsystemManager.getArmSubsystem().getArmOutput();
-      NavxPose no = subsystemManager.getNavXSubSystem().getNavxOutput();
+  private void updateRobotPose(){
+      DriveStatus drs = subsystemManager.getDriveSubsystem().getStatus();
+      VisionStatus vs = subsystemManager.getVisionSubsystem().getStatus();
+      ArmStatus as = subsystemManager.getArmSubsystem().getStatus();
+      NavxStatus ns = subsystemManager.getNavXSubSystem().getStatus();
       
-      RobotPose rp = new PoseCalculator().calculatePose( dro, vo, no, ao );
+      RobotPose newPose = new PoseCalculator().calculatePose( drs, vs, ns, as );
       TargetNode tn = oi.getTargetNode();
+      AlignmentSolution als = new AlignCalc().calculateSolution(tn, newPose);
+      newPose.setAlignmentSolution(als);
       
-      
-      AlignmentSolution as = new AlignCalc().calculateSolution(tn, rp);
-      drive.activateAlignmentSolution(as);
+      subsystemManager.updateCurrentRobotPose(newPose);
       
   }
   /** This function is called once each time the robot enters Disabled mode. */
