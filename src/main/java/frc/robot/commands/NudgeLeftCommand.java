@@ -4,44 +4,56 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.wpilibj.Timer;
 
-public class DriveCommand extends EntechCommandBase {
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
+public class NudgeLeftCommand extends EntechCommandBase {
+    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
-    private final Joystick joystick;
+    private Timer timer;
+
+    private static final double NUDGE_TIME = 0.5;
+    private static final double NUDGE_SPEED = -0.5;
 
     /**
-     * Creates a new ArcadeDrive. This command will drive your robot according to
-     * the joystick
-     * This command does not terminate.
+     * Creates a new NudgeLeftCommand which will move the robot left for 0.5 seconds at half power
+     * 
      *
      * @param drive The drive subsystem on which this command will run
-     * @param stick Driver joystick object
      */
-    public DriveCommand(DriveSubsystem Drive, Joystick Joystick) {
+    public NudgeLeftCommand(DriveSubsystem Drive) {
         super(Drive);
         drive = Drive;
-        joystick = Joystick;
     }
-
+    
     @Override
     public void initialize() {
+        timer = new Timer();
+        timer.start();
     }
 
     @Override
     public void execute() {
-        drive.drive(new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ()));
+        DriveInput DI = new DriveInput(0, NUDGE_SPEED, 0);
+        DI.setOverrideAutoYaw(true);
+        
+        drive.drive(DI);
     }
 
     @Override
     public void end(boolean interrupted) {
+        drive.brake();
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return timer.get() > NUDGE_TIME;
     }
 
     @Override
