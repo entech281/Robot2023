@@ -1,7 +1,6 @@
 package frc.robot.pose;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import java.util.Objects;
 
 /**
@@ -9,14 +8,21 @@ import java.util.Objects;
  * @author aheitkamp
  */
 public class TargetNode {
+
+    public static double A_ROW_DISTANCE_IN = 8.5;
+    public static double B_ROW_DISTANCE_IN = 25.5;
+
+    public static int LEFT_NODE_HOR_OFSET_IN = 22;
+    public static int MIDDLE_NODE_HOR_OFSET_IN = 0;
+    public static int RIGHT_NODE_HOR_OFSET_IN = 22;
     
-    public static TargetNode A1 = new TargetNode(0,0,0,NodeID.A1);
-    public static TargetNode A2 = new TargetNode(0,0,0,NodeID.A2);
-    public static TargetNode A3 = new TargetNode(0,0,0,NodeID.A3);
-    public static TargetNode B1 = new TargetNode(0,0,0,NodeID.B1);
-    public static TargetNode B2 = new TargetNode(0,0,0,NodeID.B2);
-    public static TargetNode B3 = new TargetNode(0,0,0,NodeID.B3);
-    public static TargetNode NONE = new TargetNode(0,0,0,NodeID.NONE);
+    public static TargetNode A1 = new TargetNode(LEFT_NODE_HOR_OFSET_IN,A_ROW_DISTANCE_IN,NodeID.A1);
+    public static TargetNode A2 = new TargetNode(MIDDLE_NODE_HOR_OFSET_IN,A_ROW_DISTANCE_IN,NodeID.A2);
+    public static TargetNode A3 = new TargetNode(RIGHT_NODE_HOR_OFSET_IN,A_ROW_DISTANCE_IN,NodeID.A3);
+    public static TargetNode B1 = new TargetNode(LEFT_NODE_HOR_OFSET_IN,B_ROW_DISTANCE_IN,NodeID.B1);
+    public static TargetNode B2 = new TargetNode(MIDDLE_NODE_HOR_OFSET_IN,B_ROW_DISTANCE_IN,NodeID.B2);
+    public static TargetNode B3 = new TargetNode(RIGHT_NODE_HOR_OFSET_IN,B_ROW_DISTANCE_IN,NodeID.B3);
+    public static TargetNode NONE = new TargetNode(0,0,NodeID.NONE);
     
     public static enum NodeID {
         A1,
@@ -28,11 +34,11 @@ public class TargetNode {
         NONE
     }    
     
-    private final Pose2d poseToTag;
+    private final Translation2d offsetToTarget;
     private final NodeID id;
 
-    protected TargetNode(double horizontalOffsetInches, double verticalOffsetInches, double Radians, NodeID ID) {
-        poseToTag = new Pose2d(horizontalOffsetInches, verticalOffsetInches, new Rotation2d(Radians));
+    protected TargetNode(double horizontalOffsetInches, double distanceOffsetInches, NodeID ID) {
+        offsetToTarget = new Translation2d(horizontalOffsetInches,distanceOffsetInches);
         id = ID;
     }
 
@@ -40,19 +46,23 @@ public class TargetNode {
         return id; 
     }    
     
-    public Pose2d getPoseToTag() {
-        return poseToTag; 
-    }
-
-    public double getHorizontalOffsetInches() {
-        return poseToTag.getX(); 
-    }
-
-    public double getVerticalOffsetInches() {
-        return poseToTag.getY(); 
+    public Translation2d getOffsetToTarget() {
+        return offsetToTarget; 
     }
 
 
+    public boolean isThirdRow(){
+        return (id == NodeID.A1 || id == NodeID.A2 || id == NodeID.A3);
+    }
+    public boolean is2ndRow(){
+        return (id == NodeID.B1 || id == NodeID.B2 || id == NodeID.B3);
+    }    
+    public boolean isTargetSelected(){
+        return id != NodeID.NONE;
+    }
+    public boolean noTargetSelected(){
+        return id == NodeID.NONE;
+    }
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -61,12 +71,12 @@ public class TargetNode {
             return false;
         }
         TargetNode nodePose = (TargetNode) o;
-        return Objects.equals(poseToTag, nodePose.poseToTag) && Objects.equals(id, nodePose.id);
+        return Objects.equals(offsetToTarget, nodePose.offsetToTarget) && Objects.equals(id, nodePose.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(poseToTag, id);
+        return Objects.hash(offsetToTarget, id);
     }    
     
 }

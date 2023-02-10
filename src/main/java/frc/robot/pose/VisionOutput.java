@@ -5,7 +5,7 @@ import java.util.List;
 public class VisionOutput {
 
     private double latency;
-    private List <AprilTagLocation> aprilTagLocations = new ArrayList<>();
+//    private List <AprilTagLocation> aprilTagLocations = new ArrayList<>();
     private final List<RecognizedAprilTagTarget> recognizedTargets = new ArrayList<>();
 
     public List<RecognizedAprilTagTarget> getRecognizedTargets() {
@@ -28,12 +28,12 @@ public class VisionOutput {
         return !recognizedTargets.isEmpty();
     }
 
-    public List<AprilTagLocation> getAprilTagLocations() {
-        return this.aprilTagLocations;
-    }
+    // public List<AprilTagLocation> getAprilTagLocations() {
+    //     return this.aprilTagLocations;
+    // }
 
-    public void setAprilTagLocations(List<AprilTagLocation> aprilTagLocations) {
-        this.aprilTagLocations = aprilTagLocations;
-    }
+    // public void setAprilTagLocations(List<AprilTagLocation> aprilTagLocations) {
+    //     this.aprilTagLocations = aprilTagLocations;
+    // }
 
 }

@@ -19,6 +19,7 @@ public final class RobotConstants {
     }
     public interface VISION {
         public static final String PHOTON_HOST = "photonvision";
+        public static final double CAMERA_TO_BUMPER = 17.785;
         
         public interface APRILTAGIDS {
             public static final int BLUE_LOADING = 4;
@@ -55,4 +56,8 @@ public final class RobotConstants {
         // public static final double ARM_MAX_ROTATION = ;
         // public static final double ARM_MIN_ROTATION = ;
     }
+
+    // public interface ROBOT {
+    //     public static final 
+    // }
 }
