@@ -8,7 +8,17 @@ package frc.robot.filters;
 public abstract class Filter {
     protected boolean enable;
 
-    public abstract void filter(DriveInput DI);
+    protected abstract void doFilter(DriveInput di);
+    protected abstract void resetVariables();
+
+    public final void filter(DriveInput di) {
+        if (!enable) {
+            resetVariables();
+            return;
+        }
+
+        doFilter(di);
+    };
 
     public void setEnabled(boolean enabled) {
         enable = enabled;

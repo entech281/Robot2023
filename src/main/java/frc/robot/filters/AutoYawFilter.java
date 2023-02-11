@@ -10,42 +10,43 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
  */
 public class AutoYawFilter extends Filter {
     private Gyro navX;
-    private PIDController PID;
+    private PIDController pid;
 
     public AutoYawFilter(Gyro NavX) {
         navX = NavX;
 
-        PID = new PIDController(0.095, 0.15, 0.0085);
-        PID.setTolerance(2);
-        PID.enableContinuousInput(-180, 180);
+        pid = new PIDController(0.095, 0.15, 0.0085);
+        pid.setTolerance(2);
+        pid.enableContinuousInput(-180, 180);
     }
 
-    public void filter(DriveInput DI) {
-        if (!enable) {
-            PID.reset();
+    @Override
+    protected void doFilter(DriveInput di) {
+        if (Math.abs(di.getForward()) < 0.1 && Math.abs(di.getRight()) < 0.1) {
+            resetVariables();
             return;
         }
 
-        if (Math.abs(DI.getForward()) < 0.1 && Math.abs(DI.getRight()) < 0.1) {
-            PID.reset();
+        if (di.getOverrideAutoYaw()) {
+            resetVariables();
             return;
         }
 
-        if (DI.getOverrideAutoYaw()) {
-            PID.reset();
-            return;
-        }
-
-        double setPoint = Math.toDegrees(Math.atan2(DI.getRight(), DI.getForward()));
+        double setPoint = Math.toDegrees(Math.atan2(di.getRight(), di.getForward()));
 
         if (Math.abs(setPoint - navX.getAngle()) > 90) {
             setPoint += 180;
         }
 
-        double calcValue = PID.calculate(navX.getAngle(), setPoint);
+        double calcValue = pid.calculate(navX.getAngle(), setPoint);
         calcValue = Math.round(calcValue/4) * 4;
 
-        DI.setOverrideYawLock(true);
-        DI.setRotation(Math.max(-0.75, Math.min(calcValue, 0.75)));
+        di.setOverrideYawLock(true);
+        di.setRotation(Math.max(-0.75, Math.min(calcValue, 0.75)));
+    }
+
+    @Override
+    protected void resetVariables() {
+        pid.reset();
     }
 }

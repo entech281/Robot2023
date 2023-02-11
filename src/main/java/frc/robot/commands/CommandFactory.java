@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SubsystemManager;
 import frc.robot.RobotConstants;
+import frc.robot.commands.nudge.NudgeDirectionCommand;
+import frc.robot.commands.nudge.NudgeYawCommand;
 
 /**
  *
@@ -45,10 +47,26 @@ public class CommandFactory {
     }
 
     public Command NudgeLeftCommand() {
-        return new NudgeLeftCommand(sm.getDriveSubsystem());
+        return new NudgeDirectionCommand(sm.getDriveSubsystem(), NudgeDirectionCommand.DIRECTION.LEFT);
     }
 
     public Command NudgeRightCommand() {
-        return new NudgeRightCommand(sm.getDriveSubsystem());
+        return new NudgeDirectionCommand(sm.getDriveSubsystem(), NudgeDirectionCommand.DIRECTION.RIGHT);
+    }
+
+    public Command nudgeForwardCommand() {
+        return new NudgeDirectionCommand(sm.getDriveSubsystem(), NudgeDirectionCommand.DIRECTION.FORWARD);
+    }
+
+    public Command nudgeBackwardCommand() {
+        return new NudgeDirectionCommand(sm.getDriveSubsystem(), NudgeDirectionCommand.DIRECTION.BACKWARD);
+    }
+
+    public Command nudgeYawLeftCommand() {
+        return new NudgeYawCommand(sm.getDriveSubsystem(), NudgeYawCommand.DIRECTION.LEFT);
+    }
+
+    public Command nudgeYawRightCommand() {
+        return new NudgeYawCommand(sm.getDriveSubsystem(), NudgeYawCommand.DIRECTION.RIGHT);
     }
 }
