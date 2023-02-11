@@ -2,8 +2,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.function.Supplier;
+
 import frc.robot.subsystems.SubsystemManager;
 import frc.robot.RobotConstants;
+import frc.robot.pose.RobotPose;
+
+import frc.robot.pose.PoseCalculator;
 
 /**
  *
@@ -12,8 +17,19 @@ import frc.robot.RobotConstants;
 public class CommandFactory {
 
     private final SubsystemManager sm;
+    private final Supplier<RobotPose> latestRobotPose;
+
     public CommandFactory(SubsystemManager subsystemManager){
         this.sm = subsystemManager;
+
+        this.latestRobotPose = () -> { return new PoseCalculator()
+            .calculatePose(
+                sm.getDriveSubsystem().getDriveOutput(), 
+                sm.getVisionSubsystem().getVisionOutput(), 
+                sm.getNavXSubSystem().getNavxOutput(), 
+                sm.getArmSubsystem().getArmOutput()
+            ); 
+        };
     }
 
     public Command ButtonFilterCommand(int buttonNumber, boolean enabled) {
@@ -33,7 +49,7 @@ public class CommandFactory {
     }
 
     public Command SnapYawDegreesCommand(double Angle) {
-        return new SnapYawDegreesCommand(sm.getDriveSubsystem(), sm.getNavXSubSystem(), Angle);
+        return new SnapYawDegreesCommand(sm.getDriveSubsystem(), latestRobotPose, Angle);
     }
 
     public Command getAutonomousCommand() {

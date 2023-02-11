@@ -20,10 +20,10 @@ public class DriveCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public DriveCommand(DriveSubsystem Drive, Joystick Joystick) {
-        super(Drive);
-        drive = Drive;
-        joystick = Joystick;
+    public DriveCommand(DriveSubsystem drive, Joystick joystick) {
+        super(drive);
+        this.drive = drive;
+        this.joystick = joystick;
     }
 
     @Override

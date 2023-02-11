@@ -4,10 +4,12 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
 import edu.wpi.first.math.controller.PIDController;
+
 import frc.robot.filters.DriveInput;
+import frc.robot.pose.RobotPose;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.NavXSubSystem;
 
 /**
  *
@@ -17,27 +19,27 @@ import frc.robot.subsystems.NavXSubSystem;
 public class SnapYawDegreesCommand extends EntechCommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
-    private final PIDController PID;
-    private final NavXSubSystem navX;
+    private final PIDController pid;
+    private final Supplier<RobotPose> latestPose;
     private int stoppingCounter = 0;
 
     /**
      * Creates a new snap yaw degrees command that will snap the robot to the specified angle
      * 
      *
-     * @param Drive The drive subsystem on which this command will run
-     * @param NavX  The NavX subsystem the command will use
-     * @param Angle The angle you want to snap to
+     * @param drive The drive subsystem on which this command will run
+     * @param latestPose  The supplier of latest pose of the robot to get the current yaw
+     * @param angle The angle you want to snap to
      */
-    public SnapYawDegreesCommand(DriveSubsystem Drive, NavXSubSystem NavX, double Angle) {
-        super(Drive);
-        drive = Drive;
-        navX = NavX;
+    public SnapYawDegreesCommand(DriveSubsystem drive, Supplier<RobotPose> latestPose, double angle) {
+        super(drive);
+        this.drive = drive;
+        this.latestPose = latestPose;
 
-        PID = new PIDController(0.0865, 0.5, 0.0075);
-        PID.enableContinuousInput(-180, 180);
-        PID.setTolerance(1);
-        PID.setSetpoint(Angle);
+        pid = new PIDController(0.0865, 0.5, 0.0075);
+        pid.enableContinuousInput(-180, 180);
+        pid.setTolerance(1);
+        pid.setSetpoint(angle);
     }
 
     @Override
@@ -46,11 +48,11 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        double calcValue = Math.max(-0.75, Math.min(PID.calculate(navX.getAngle()), 0.75));
-        DriveInput DI = new DriveInput(0, 0, calcValue);
-        DI.setOverrideYawLock(true);
+        double calcValue = Math.max(-0.75, Math.min(pid.calculate(latestPose.get().getCalculatedPose().getRotation().getDegrees()), 0.75));
+        DriveInput di = new DriveInput(0, 0, calcValue);
+        di.setOverrideYawLock(true);
 
-        drive.drive(DI);
+        drive.drive(di);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     @Override
     public boolean isFinished() {
-        if (PID.atSetpoint()) {
+        if (pid.atSetpoint()) {
             stoppingCounter++;
         } else {
             stoppingCounter = 0;

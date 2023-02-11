@@ -27,9 +27,9 @@ public class NudgeRightCommand extends EntechCommandBase {
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeRightCommand(DriveSubsystem Drive) {
-        super(Drive);
-        drive = Drive;
+    public NudgeRightCommand(DriveSubsystem drive) {
+        super(drive);
+        this.drive = drive;
     }
    
     @Override
@@ -40,9 +40,9 @@ public class NudgeRightCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        DriveInput DI = new DriveInput(0, NUDGE_SPEED, 0);
-        DI.setOverrideAutoYaw(true);
-        drive.drive(DI);
+        DriveInput di = new DriveInput(0, NUDGE_SPEED, 0);
+        di.setOverrideAutoYaw(true);
+        drive.drive(di);
     }
     
     @Override

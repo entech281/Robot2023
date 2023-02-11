@@ -9,43 +9,50 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
  * @author aheitkamp
  */
 public class AutoYawFilter extends Filter {
+    private static final double P_GAIN = 0.095;
+    private static final double I_GAIN = 0.15;
+    private static final double D_GAIN = 0.0085;
+    private static final double ANGLE_TOLERANCE = 2;
+    private static final double SPEED_LIMIT = 0.75;
+    private static final double JITTER_ROUNDING = 4;
+
     private Gyro navX;
-    private PIDController PID;
+    private PIDController pid;
 
     public AutoYawFilter(Gyro NavX) {
         navX = NavX;
 
-        PID = new PIDController(0.095, 0.15, 0.0085);
-        PID.setTolerance(2);
-        PID.enableContinuousInput(-180, 180);
+        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
+        pid.setTolerance(ANGLE_TOLERANCE);
+        pid.enableContinuousInput(-180, 180);
     }
 
-    public void filter(DriveInput DI) {
+    public void filter(DriveInput di) {
         if (!enable) {
-            PID.reset();
+            pid.reset();
             return;
         }
 
-        if (Math.abs(DI.getForward()) < 0.1 && Math.abs(DI.getRight()) < 0.1) {
-            PID.reset();
+        if (Math.abs(di.getForward()) < 0.1 && Math.abs(di.getRight()) < 0.1) {
+            pid.reset();
             return;
         }
 
-        if (DI.getOverrideAutoYaw()) {
-            PID.reset();
+        if (di.getOverrideAutoYaw()) {
+            pid.reset();
             return;
         }
 
-        double setPoint = Math.toDegrees(Math.atan2(DI.getRight(), DI.getForward()));
+        double setPoint = Math.toDegrees(Math.atan2(di.getRight(), di.getForward()));
 
         if (Math.abs(setPoint - navX.getAngle()) > 90) {
             setPoint += 180;
         }
 
-        double calcValue = PID.calculate(navX.getAngle(), setPoint);
-        calcValue = Math.round(calcValue/4) * 4;
+        double calcValue = pid.calculate(navX.getAngle(), setPoint);
+        calcValue = Math.round(calcValue/JITTER_ROUNDING) * JITTER_ROUNDING;
 
-        DI.setOverrideYawLock(true);
-        DI.setRotation(Math.max(-0.75, Math.min(calcValue, 0.75)));
+        di.setOverrideYawLock(true);
+        di.setRotation(Math.max(-SPEED_LIMIT, Math.min(calcValue, SPEED_LIMIT)));
     }
 }

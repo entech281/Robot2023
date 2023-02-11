@@ -23,12 +23,12 @@ public class DriveForwardTillTrueCommand extends EntechCommandBase {
      * 
      * 
      * @param drive The drive subsystem on which this command will run
-     * @param Condition the condition that when true will make the robot stop driving
+     * @param condition the condition that when true will make the robot stop driving
      */
-    public DriveForwardTillTrueCommand(DriveSubsystem Drive, BooleanSupplier Condition) {
-        super(Drive);
-        drive = Drive;
-        condition = Condition;
+    public DriveForwardTillTrueCommand(DriveSubsystem drive, BooleanSupplier condition) {
+        super(drive);
+        this.drive = drive;
+        this.condition = condition;
     }
 
     @Override

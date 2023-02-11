@@ -27,9 +27,9 @@ public class NudgeLeftCommand extends EntechCommandBase {
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeLeftCommand(DriveSubsystem Drive) {
-        super(Drive);
-        drive = Drive;
+    public NudgeLeftCommand(DriveSubsystem drive) {
+        super(drive);
+        this.drive = drive;
     }
     
     @Override

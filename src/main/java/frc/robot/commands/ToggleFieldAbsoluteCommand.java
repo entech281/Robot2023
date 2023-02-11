@@ -15,11 +15,11 @@ public class ToggleFieldAbsoluteCommand extends EntechCommandBase {
   /**
    * Creates a new ToggleFieldAbsoluteCommand.
    *
-   * @param Drive The subsystem used by this command.
+   * @param drive The subsystem used by this command.
    */
-  public ToggleFieldAbsoluteCommand(DriveSubsystem Drive) {
-    super(Drive);
-    drive = Drive;
+  public ToggleFieldAbsoluteCommand(DriveSubsystem drive) {
+    super(drive);
+    this.drive = drive;
   }
 
   @Override

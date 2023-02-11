@@ -30,7 +30,7 @@ public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontRightTalon;
   private WPI_TalonSRX rearRightTalon;
   private MecanumDrive robotDrive;
-  private DriveFilterManager DFM;
+  private DriveFilterManager dfm;
 
   private boolean useFieldAbsolute = false;
 
@@ -41,10 +41,10 @@ public class DriveSubsystem extends EntechSubsystem {
   /**
    *
    * 
-   * @param NavX The NavXSubsystem that some filters use and the drive in field absolute
+   * @param navX The NavXSubsystem that some filters use and the drive in field absolute
    */
-  public DriveSubsystem(NavXSubSystem NavX) {
-    navX = NavX;
+  public DriveSubsystem(NavXSubSystem navX) {
+    this.navX = navX;
   }
 
   public DrivePose getDriveOutput(){
@@ -58,7 +58,7 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightTalon = new WPI_TalonSRX(RobotConstants.CAN.FRONT_RIGHT_MOTOR);
     rearRightTalon  = new WPI_TalonSRX(RobotConstants.CAN.REAR_RIGHT_MOTOR);
     robotDrive      = new MecanumDrive(frontLeftTalon, rearLeftTalon, frontRightTalon, rearRightTalon);
-    DFM             = new DriveFilterManager(navX);
+    dfm             = new DriveFilterManager(navX);
 
     robotDrive.setDeadband(0.1);
 
@@ -88,18 +88,18 @@ public class DriveSubsystem extends EntechSubsystem {
     SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
 
 
-    DFM.refreshFilterEnable(isFieldAbsoluteActive());
+    dfm.refreshFilterEnable(isFieldAbsoluteActive());
     robotDrive.feed();
     robotDrive.feedWatchdog();
   }
 
-  public void drive(DriveInput DI) {
-    loggingDriveInput = DI;
-    DFM.applyFilters(DI);
+  public void drive(DriveInput di) {
+    loggingDriveInput = di;
+    dfm.applyFilters(di);
     if (isFieldAbsoluteActive()) {
-      robotDrive.driveCartesian(DI.getForward(), DI.getRight(), DI.getRotation(), Rotation2d.fromDegrees(navX.getAngle()));
+      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(navX.getAngle()));
     } else {
-      robotDrive.driveCartesian(DI.getForward(), DI.getRight(), DI.getRotation());
+      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation());
     }
   }
 
@@ -108,7 +108,7 @@ public class DriveSubsystem extends EntechSubsystem {
   }
 
   public DriveFilterManager getDFM() {
-    return DFM;
+    return dfm;
   }
 
   public boolean isFieldAbsoluteActive() {

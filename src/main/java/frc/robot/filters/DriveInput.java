@@ -18,23 +18,23 @@ public class DriveInput {
     /**
      *
      * 
-     * @param Forward the speed level forward for the drive subsystem
-     * @param Left the speed level right for the drive subsystem
-     * @param Right the speed level right for the drive subsystem
+     * @param forward the speed level forward for the drive subsystem
+     * @param left the speed level right for the drive subsystem
+     * @param right the speed level right for the drive subsystem
      */
-    public DriveInput(double Forward, double Right, double Rotation) {
-        forward = Forward;
-        right = Right;
-        rotation = Rotation;
+    public DriveInput(double forward, double right, double rotation) {
+        this.forward = forward;
+        this.right = right;
+        this.rotation = rotation;
     }
 
     public double getForward() { return forward; }
     public double getRight() { return right; }
     public double getRotation() { return rotation; }
 
-    public void setForward(double Forward) { forward = Forward; }
-    public void setRight(double Right) { right = Right; }
-    public void setRotation(double Rotation) { rotation = Rotation; }
+    public void setForward(double forward) { this.forward = forward; }
+    public void setRight(double right) { this.right = right; }
+    public void setRotation(double rotation) { this.rotation = rotation; }
 
     public double[] get() {
         double[] output = new double[3];
@@ -47,10 +47,10 @@ public class DriveInput {
     }
 
     public boolean getOverrideYawLock() { return overrideYawLock; }
-    public void setOverrideYawLock(boolean OverrideYawLock) { overrideYawLock = OverrideYawLock; }
+    public void setOverrideYawLock(boolean overrideYawLock) { this.overrideYawLock = overrideYawLock; }
 
     public boolean getOverrideAutoYaw() { return this.overrideAutoYaw; }
-    public void setOverrideAutoYaw(boolean OverrideAutoYaw) { overrideAutoYaw = OverrideAutoYaw; }
+    public void setOverrideAutoYaw(boolean overrideAutoYaw) { this.overrideAutoYaw = overrideAutoYaw; }
 
     @Override
     public boolean equals(Object o) {
