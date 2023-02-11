@@ -2,35 +2,55 @@ package frc.robot.filters;
 
 import java.util.Objects;
 
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
 public class DriveInput {
-    private double x;
-    private double y;
-    private double z;
+    private double forward;
+    private double right;
+    private double rotation;
 
-    public DriveInput(double X, double Y, double Z) {
-        x = X;
-        y = Y;
-        z = Z;
+    private boolean overrideYawLock = false;
+    private boolean overrideAutoYaw = false;
+
+    /**
+     *
+     * 
+     * @param Forward the speed level forward for the drive subsystem
+     * @param Left the speed level right for the drive subsystem
+     * @param Right the speed level right for the drive subsystem
+     */
+    public DriveInput(double Forward, double Right, double Rotation) {
+        forward = Forward;
+        right = Right;
+        rotation = Rotation;
     }
 
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public double getZ() { return z; }
+    public double getForward() { return forward; }
+    public double getRight() { return right; }
+    public double getRotation() { return rotation; }
 
-    public void setX(double X) { x = X; }
-    public void setY(double Y) { y = Y; }
-    public void setZ(double Z) { z = Z; }
+    public void setForward(double Forward) { forward = Forward; }
+    public void setRight(double Right) { right = Right; }
+    public void setRotation(double Rotation) { rotation = Rotation; }
 
     public double[] get() {
         double[] output = new double[3];
 
-        output[0] = (x);
-        output[1] = (y);
-        output[2] = (z);
+        output[0] = (forward);
+        output[1] = (right);
+        output[2] = (rotation);
 
         return output;
     }
 
+    public boolean getOverrideYawLock() { return overrideYawLock; }
+    public void setOverrideYawLock(boolean OverrideYawLock) { overrideYawLock = OverrideYawLock; }
+
+    public boolean getOverrideAutoYaw() { return this.overrideAutoYaw; }
+    public void setOverrideAutoYaw(boolean OverrideAutoYaw) { overrideAutoYaw = OverrideAutoYaw; }
 
     @Override
     public boolean equals(Object o) {
@@ -40,12 +60,12 @@ public class DriveInput {
             return false;
         }
         DriveInput driveInput = (DriveInput) o;
-        return x == driveInput.x && y == driveInput.y && z == driveInput.z;
+        return forward == driveInput.forward && right == driveInput.right && rotation == driveInput.rotation && overrideYawLock == driveInput.overrideYawLock;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, z);
+        return Objects.hash(forward, right, rotation, overrideYawLock);
     }
 
 }

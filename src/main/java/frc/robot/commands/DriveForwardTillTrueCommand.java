@@ -4,26 +4,31 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
+import java.util.function.BooleanSupplier;
+
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class DriveCommand extends EntechCommandBase {
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
+public class DriveForwardTillTrueCommand extends EntechCommandBase {
     private final DriveSubsystem drive;
-    private final Joystick joystick;
+    private final BooleanSupplier condition;
 
     /**
-     * Creates a new ArcadeDrive. This command will drive your robot according to
-     * the joystick
-     * This command does not terminate.
-     *
+     * Creates a new DriveForwardTillTrueCommand that will drive the robot forward until a given condition is true
+     * 
+     * 
      * @param drive The drive subsystem on which this command will run
-     * @param stick Driver joystick object
+     * @param Condition the condition that when true will make the robot stop driving
      */
-    public DriveCommand(DriveSubsystem Drive, Joystick Joystick) {
+    public DriveForwardTillTrueCommand(DriveSubsystem Drive, BooleanSupplier Condition) {
         super(Drive);
         drive = Drive;
-        joystick = Joystick;
+        condition = Condition;
     }
 
     @Override
@@ -32,16 +37,17 @@ public class DriveCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        drive.drive(new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ()));
+        drive.drive(new DriveInput(1, 0, 0));
     }
 
     @Override
     public void end(boolean interrupted) {
+        drive.brake();
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return condition.getAsBoolean();
     }
 
     @Override
