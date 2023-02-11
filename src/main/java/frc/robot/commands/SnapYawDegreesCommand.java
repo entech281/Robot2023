@@ -7,6 +7,8 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.MathUtil;
 
 import frc.robot.filters.DriveInput;
 import frc.robot.pose.RobotPose;
@@ -25,7 +27,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
     private static final double D_GAIN = 0.0075;
     private static final double ANGLE_TOLERANCE = 1;
     private static final double SPEED_LIMIT = 0.75;
-    private static final double STOPPING_COUNT = 4;
+    private static final double STOP_COUNT = 4;
 
     private final DriveSubsystem drive;
     private final PIDController pid;
@@ -57,7 +59,13 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        double calcValue = Math.max(-SPEED_LIMIT, Math.min(pid.calculate(latestPose.get().getCalculatedPose().getRotation().getDegrees()), SPEED_LIMIT));
+        double calcValue = Math.max(
+            -SPEED_LIMIT, 
+            Math.min(
+                pid.calculate(MathUtil.inputModulus(latestPose.get().getCalculatedPose().getRotation().getDegrees(), -180, 180)), 
+                SPEED_LIMIT
+            )
+        );
         DriveInput di = new DriveInput(0, 0, calcValue);
         di.setOverrideYawLock(true);
 
@@ -76,7 +84,8 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
         } else {
             stoppingCounter = 0;
         }
-        return stoppingCounter >= STOPPING_COUNT;
+        SmartDashboard.putNumber("Counter", stoppingCounter);
+        return stoppingCounter >= STOP_COUNT;
     }
 
     @Override
