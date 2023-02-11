@@ -12,6 +12,8 @@ package frc.robot.pose;
  * @author dcowden
  */
 public class AlignmentSolution {
+    private double neededAngle = 0;
+
     public enum AlignmentStrategy{
         HOPELESS_I_GIVE_UP,
         ROTATE_AND_DEPLOY,
@@ -45,5 +47,14 @@ public class AlignmentSolution {
 
     public void setStrategy(AlignmentStrategy strategy) {
         this.strategy = strategy;
+    }
+
+    public void setNeededAngle(double neededAngle) {
+        this.neededAngle = neededAngle;
+    }
+
+
+    public double getNeededAngle() {
+        return neededAngle;
     }
 }

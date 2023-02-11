@@ -35,6 +35,8 @@ public class DriveSubsystem extends EntechSubsystem {
   private boolean useFieldAbsolute = false;
 
   private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
+
+  private double autoAlignAngle = 0.0;
   
   /**
    *
@@ -101,7 +103,11 @@ public class DriveSubsystem extends EntechSubsystem {
   }
 
   public void activateAlignmentSolution ( AlignmentSolution solution ){
-      //use the solution to affect the drive
+      autoAlignAngle = solution.getNeededAngle();
+  }
+
+  public double getAlignmentAngle() {
+    return autoAlignAngle; 
   }
 
   public DriveFilterManager getDFM() {

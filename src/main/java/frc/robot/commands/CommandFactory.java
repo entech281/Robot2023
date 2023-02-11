@@ -76,4 +76,8 @@ public class CommandFactory {
     public Command nudgeYawRightCommand() {
         return new NudgeYawCommand(sm.getDriveSubsystem(), NudgeYawCommand.DIRECTION.RIGHT, latestRobotPose);
     }
+
+    public Command autoAlignDrive(Joystick joystick) {
+        return new AutoAlignCommand(sm.getDriveSubsystem(), latestRobotPose, joystick);
+    }
 }

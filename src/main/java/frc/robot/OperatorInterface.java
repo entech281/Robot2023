@@ -20,6 +20,10 @@ public class OperatorInterface {
             .onTrue(commandFactory.turnToggleFilter(false))
             .onFalse(commandFactory.turnToggleFilter(true));
 
+        driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
+            .onTrue(commandFactory.autoAlignDrive(driveStick.getHID()))
+            .onFalse(commandFactory.driveCommand(driveStick.getHID()));
+
         driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
             .onTrue(commandFactory.toggleFieldAbsolute());
 
