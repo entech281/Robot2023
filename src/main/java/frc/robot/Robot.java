@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -32,6 +34,8 @@ public class Robot extends TimedRobot {
   private OperatorInterface oi;
   private CommandFactory commandFactory;
   private Command autoCommand;
+  private Supplier<RobotPose> latestRobotPoseSupplier;
+  private RobotPose latestRobotPose;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -42,7 +46,16 @@ public class Robot extends TimedRobot {
     subsystemManager = new SubsystemManager();
     subsystemManager.initAll();
 
-    commandFactory = new CommandFactory(subsystemManager);
+    latestRobotPose = new PoseCalculator().calculatePose(
+      subsystemManager.getDriveSubsystem().getDriveOutput(), 
+      subsystemManager.getVisionSubsystem().getVisionOutput(), 
+      subsystemManager.getNavXSubSystem().getNavxOutput(), 
+      subsystemManager.getArmSubsystem().getArmOutput()
+    );
+
+    latestRobotPoseSupplier = () -> { return latestRobotPose; };
+
+    commandFactory = new CommandFactory(subsystemManager, latestRobotPoseSupplier);
     oi = new OperatorInterface(subsystemManager,commandFactory);
   }
 
@@ -59,6 +72,13 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    latestRobotPose = new PoseCalculator().calculatePose(
+      subsystemManager.getDriveSubsystem().getDriveOutput(), 
+      subsystemManager.getVisionSubsystem().getVisionOutput(), 
+      subsystemManager.getNavXSubSystem().getNavxOutput(), 
+      subsystemManager.getArmSubsystem().getArmOutput()
+    );
+
     updateAlignment();
     CommandScheduler.getInstance().run();
   }

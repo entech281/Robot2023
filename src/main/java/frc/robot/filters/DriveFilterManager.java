@@ -18,7 +18,7 @@ public class DriveFilterManager {
     }
 
     public void refreshFilterEnable(boolean fieldAligned) {
-        //autoYaw.setEnabled(fieldAligned && !(turnToggle.getEnabled()));
+        autoYaw.setEnabled(fieldAligned && !(turnToggle.getEnabled()));
 
         SmartDashboard.putBoolean("Turn Toggle Filter", turnToggle.getEnabled());
         SmartDashboard.putBoolean("Auto Yaw Filter", autoYaw.getEnabled());
