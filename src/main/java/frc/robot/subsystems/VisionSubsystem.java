@@ -69,17 +69,15 @@ public class VisionSubsystem extends EntechSubsystem {
       */
       
       for ( PhotonTrackedTarget t: result.getTargets()){
-          
+        
           Transform3d t3d = t.getBestCameraToTarget();
           Pose2d p = new Pose2d(t3d.getX(),t3d.getY(), t3d.getRotation().toRotation2d());
           RecognizedAprilTagTarget rat = new RecognizedAprilTagTarget(p,t.getFiducialId());
           visionOutput.addRecognizedTarget(rat);
       }
-
-
       return visionOutput;
   }
-  
+
   @Override
   public void periodic() {
     var result = camera.getLatestResult();
@@ -104,4 +102,4 @@ public class VisionSubsystem extends EntechSubsystem {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
-} 
+}
