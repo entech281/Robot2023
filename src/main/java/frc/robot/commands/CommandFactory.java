@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 import frc.robot.subsystems.SubsystemManager;
 import frc.robot.RobotConstants;
 import frc.robot.pose.RobotPose;
+import frc.robot.commands.nudge.NudgeDirectionCommand;
+import frc.robot.commands.nudge.NudgeYawCommand;
 
 /**
  *
@@ -52,10 +54,26 @@ public class CommandFactory {
     }
 
     public Command nudgeLeftCommand() {
-        return new NudgeLeftCommand(sm.getDriveSubsystem(), latestRobotPose);
+        return new NudgeDirectionCommand(sm.getDriveSubsystem(), NudgeDirectionCommand.DIRECTION.LEFT, latestRobotPose);
     }
 
     public Command nudgeRightCommand() {
-        return new NudgeRightCommand(sm.getDriveSubsystem(), latestRobotPose);
+        return new NudgeDirectionCommand(sm.getDriveSubsystem(), NudgeDirectionCommand.DIRECTION.RIGHT, latestRobotPose);
+    }
+
+    public Command nudgeForwardCommand() {
+        return new NudgeDirectionCommand(sm.getDriveSubsystem(), NudgeDirectionCommand.DIRECTION.FORWARD, latestRobotPose);
+    }
+
+    public Command nudgeBackwardCommand() {
+        return new NudgeDirectionCommand(sm.getDriveSubsystem(), NudgeDirectionCommand.DIRECTION.BACKWARD, latestRobotPose);
+    }
+
+    public Command nudgeYawLeftCommand() {
+        return new NudgeYawCommand(sm.getDriveSubsystem(), NudgeYawCommand.DIRECTION.LEFT, latestRobotPose);
+    }
+
+    public Command nudgeYawRightCommand() {
+        return new NudgeYawCommand(sm.getDriveSubsystem(), NudgeYawCommand.DIRECTION.RIGHT, latestRobotPose);
     }
 }

@@ -2,8 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.nudge;
 
+import frc.robot.commands.EntechCommandBase;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.pose.RobotPose;
@@ -17,27 +18,36 @@ import edu.wpi.first.wpilibj.Timer;
  * 
  * @author aheitkamp
  */
-public class NudgeRightCommand extends EntechCommandBase {
+public class NudgeDirectionCommand extends EntechCommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
     private Timer timer;
     private final Supplier<RobotPose> latestPose;
+    private final DriveInput direction;
 
-    private static final double NUDGE_TIME = 0.5;
-    private static final double NUDGE_SPEED = 0.5;
+    private static final double NUDGE_TIME = 0.4;
+    
+    public interface DIRECTION {
+        public static final DriveInput LEFT = new DriveInput(0, -0.5, 0);
+        public static final DriveInput RIGHT = new DriveInput(0, 0.5, 0);
+        public static final DriveInput FORWARD = new DriveInput(0.5, 0, 0);
+        public static final DriveInput BACKWARD = new DriveInput(-0.5, 0, 0);
+    }
 
     /**
-     * Creates a new NudgeRightCommand which will move the robot right for 0.5 seconds at half power
+     * Creates a new NudgeLeftCommand which will move the robot left for 0.5 seconds at half power
      * 
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeRightCommand(DriveSubsystem drive, Supplier<RobotPose> latestPose) {
+    public NudgeDirectionCommand(DriveSubsystem drive, DriveInput direction, Supplier<RobotPose> latestPose) {
         super(drive);
         this.drive = drive;
         this.latestPose = latestPose;
+        this.direction = direction.clone();
+        this.direction.setOverrideAutoYaw(true);
     }
-   
+    
     @Override
     public void initialize() {
         timer = new Timer();
@@ -46,11 +56,9 @@ public class NudgeRightCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        DriveInput di = new DriveInput(0, NUDGE_SPEED, 0);
-        di.setOverrideAutoYaw(true);
-        drive.drive(di, latestPose.get());
+        drive.drive(direction.clone(), latestPose.get());
     }
-    
+
     @Override
     public void end(boolean interrupted) {
         drive.brake();

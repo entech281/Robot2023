@@ -24,21 +24,16 @@ public class AutoYawFilter extends Filter {
         pid.enableContinuousInput(-180, 180);
     }
 
-    public void filter(DriveInput di, RobotPose rp) {
+    public void doFilter(DriveInput di, RobotPose rp) {
         double currentYaw = rp.getCalculatedPose().getRotation().getDegrees();
 
-        if (!enable) {
-            pid.reset();
-            return;
-        }
-
         if (Math.abs(di.getForward()) < 0.1 && Math.abs(di.getRight()) < 0.1) {
-            pid.reset();
+            resetVariables();
             return;
         }
 
         if (di.getOverrideAutoYaw()) {
-            pid.reset();
+            resetVariables();
             return;
         }
 
@@ -53,5 +48,10 @@ public class AutoYawFilter extends Filter {
 
         di.setOverrideYawLock(true);
         di.setRotation(Math.max(-SPEED_LIMIT, Math.min(calcValue, SPEED_LIMIT)));
+    }
+
+    @Override
+    protected void resetVariables() {
+        pid.reset();
     }
 }

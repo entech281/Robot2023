@@ -2,8 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.nudge;
 
+import frc.robot.commands.EntechCommandBase;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.pose.RobotPose;
@@ -17,14 +18,19 @@ import edu.wpi.first.wpilibj.Timer;
  * 
  * @author aheitkamp
  */
-public class NudgeLeftCommand extends EntechCommandBase {
+public class NudgeYawCommand extends EntechCommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
     private Timer timer;
     private final Supplier<RobotPose> latestPose;
+    private final DriveInput direction;
 
-    private static final double NUDGE_TIME = 0.5;
-    private static final double NUDGE_SPEED = -0.5;
+    private static final double NUDGE_TIME = 0.25;
+    
+    public interface DIRECTION {
+        public static final DriveInput LEFT = new DriveInput(0, 0, 0.5);
+        public static final DriveInput RIGHT = new DriveInput(0, 0, -0.5);
+    }
 
     /**
      * Creates a new NudgeRightCommand which will move the robot right for 0.5 seconds at half power
@@ -32,9 +38,12 @@ public class NudgeLeftCommand extends EntechCommandBase {
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeLeftCommand(DriveSubsystem drive, Supplier<RobotPose> latestPose) {
+    public NudgeYawCommand(DriveSubsystem drive, DriveInput direction, Supplier<RobotPose> latestPose) {
         super(drive);
         this.drive = drive;
+        this.direction = direction.clone();
+        this.direction.setOverrideAutoYaw(true);
+        this.direction.setOverrideYawLock(true);
         this.latestPose = latestPose;
     }
    
@@ -46,9 +55,7 @@ public class NudgeLeftCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        DriveInput di = new DriveInput(0, NUDGE_SPEED, 0);
-        di.setOverrideAutoYaw(true);
-        drive.drive(di, latestPose.get());
+        drive.drive(direction.clone(), latestPose.get());
     }
     
     @Override

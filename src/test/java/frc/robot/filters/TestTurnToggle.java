@@ -8,11 +8,11 @@ public class TestTurnToggle {
     private static final double SMALLDIFFERENCE = 0.01;
     
     @Test
-    public void testTurnToggleOff() {
+    public void testTurnToggleOn() {
         TurnToggleFilter filter = new TurnToggleFilter();
         DriveInput di = new DriveInput (0.5, 0.75, 0.6);
 
-        filter.setEnabled(false);
+        filter.setEnabled(true);
 
         filter.filter(di, null);
 
@@ -22,11 +22,11 @@ public class TestTurnToggle {
     }
 
     @Test
-    public void testTurnToggleOn() {
+    public void testTurnToggleOff() {
         TurnToggleFilter filter = new TurnToggleFilter();
         DriveInput di = new DriveInput (0.5, 0.75, 0.6);
 
-        filter.setEnabled(true);
+        filter.setEnabled(false);
 
         filter.filter(di, null);
 

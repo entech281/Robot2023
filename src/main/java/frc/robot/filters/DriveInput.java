@@ -68,4 +68,10 @@ public class DriveInput {
         return Objects.hash(forward, right, rotation, overrideYawLock);
     }
 
+    public DriveInput clone() {
+        DriveInput clone = new DriveInput(forward, right, rotation);
+        clone.setOverrideAutoYaw(overrideAutoYaw);
+        clone.setOverrideYawLock(overrideYawLock);
+        return clone;
+    }
 }
