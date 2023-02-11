@@ -21,20 +21,20 @@ public class ScoringLocation {
      * @return 
      */
 
-    // public boolean is2ndRow(){
-    //     return (selectedNode.is2ndRow());
-    // }
+    public boolean is2ndRow(){
+        return (selectedNode.is2ndRow());
+    }
     
-    // public boolean isThirdRow(){
-    //     return selectedNode.isThirdRow();
-    // }
+    public boolean isThirdRow(){
+        return selectedNode.isThirdRow();
+    }
     
-    // public boolean isTargetSelected(){
-    //     return selectedNode.isTargetSelected();
-    // }
-    // public boolean noTargetSelected(){
-    //     return selectedNode.noTargetSelected();
-    // }
+    public boolean isTargetSelected(){
+        return selectedNode.isTargetSelected();
+    }
+    public boolean noTargetSelected(){
+        return selectedNode.noTargetSelected();
+    }
 
     public FieldAprilTag getSelectedTag() {
         return selectedTag;
