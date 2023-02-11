@@ -17,14 +17,23 @@ public class OperatorInterface {
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
 
         driveStick.button(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
-            .onTrue(commandFactory.ButtonFilterTrueCommand( RobotConstants.DRIVER_STICK.TURN_TOGGLE ))
-            .onFalse(commandFactory.ButtonFilterFalseCommand( RobotConstants.DRIVER_STICK.TURN_TOGGLE ));
+            .onTrue(commandFactory.TurnToggleFilter(true))
+            .onFalse(commandFactory.TurnToggleFilter(false));
 
         driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
-            .onTrue(commandFactory.getToggleFieldAbsolute());
+            .onTrue(commandFactory.ToggleFieldAbsolute());
 
         driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
             .onTrue(commandFactory.getZeroGyro());
+
+        driveStick.button(RobotConstants.DRIVER_STICK.ZERO_ROBOT_ANGLE)
+            .onTrue(commandFactory.SnapYawDegreesCommand(0));
+
+        driveStick.pov(RobotConstants.DRIVER_STICK.POV.RIGHT)
+            .onTrue(commandFactory.NudgeRightCommand());
+
+        driveStick.pov(RobotConstants.DRIVER_STICK.POV.LEFT)
+            .onTrue(commandFactory.NudgeLeftCommand());
             
         subsystemManager.getDriveSubsystem().setDefaultCommand(commandFactory.DriveCommand(driveStick.getHID()));
     }

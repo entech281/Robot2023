@@ -1,5 +1,10 @@
 package frc.robot.filters;
 
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
 public abstract class Filter {
     protected boolean enable;
 

@@ -17,16 +17,42 @@ public final class RobotConstants {
         public static final int PWM_0 = 0;
         public static final int PWM_1 = 1;
     }
+    public enum TEAM{
+        RED,
+        BLUE
+    }
     public interface VISION {
-        public static final String PHOTON_HOST = "photonvision";
+        public static final String PHOTON_HOST = "photonvision";  
+        public static final double MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES = 40.0;
+        public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
+    }
+    public interface ARM{
+        public static final double MIN_ANGLE_DEGREES = 0.0;
+        public static final double MAX_ANGLE_DEGREES = 90.0;
+        public static final boolean INIT_CLAW_STATE = false;
+        public static final double MIN_EXTENSION_INCHES = 0.0;
+        public static final double MAX_EXTENSION_INCHES = 200.0;
+        public static final double ARM_MAX_REACH_INCHES = 32; //from center of robot base!!!
+    }
+    public interface ALIGNMENT{
+        public static final double ANGLE_TOLERANCE_DEGREES=2.0;
+        public static final double DISTANCE_TOLERANCE_INCHES=2.0;
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
     }
     public interface DRIVER_STICK {
-        public static final int TURN_TOGGLE = 2;
+        public static final int TURN_TOGGLE = 1;
         public static final int TOGGLE_FIELD_ABSOLUTE = 12;
-        public static final int ZERO_GYRO_ANGLE = 11;
+        public static final int ZERO_GYRO_ANGLE = 9;
+        public static final int ZERO_ROBOT_ANGLE = 10;
+        public static final int AUTO_YAW_TOGGLE = 11;
+        public interface POV {
+            public static final int FORWARD = 0;
+            public static final int RIGHT = 90;
+            public static final int BACKWARD = 180;
+            public static final int LEFT = 270;
+        }
     }
     public interface CAN {
         public static final int FRONT_LEFT_MOTOR = 5;

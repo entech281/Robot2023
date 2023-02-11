@@ -1,32 +1,46 @@
 package frc.robot.filters;
 
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.robot.subsystems.NavXSubSystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import frc.robot.RobotConstants;
-
+/**
+ *
+ * 
+ * @author aheitkamp
+ */
 public class DriveFilterManager {
-    private Gyro gyro;
+    private NavXSubSystem navX;
 
-    private LockZFilter lockZ;
     private TurnToggleFilter turnToggle;
+    private AutoYawFilter autoYaw;
 
-    public DriveFilterManager(Gyro Gyro) {
-        gyro = Gyro;
-        lockZ = new LockZFilter(gyro);
+    /**
+     *
+     * 
+     * @param NavX The NavXSubsystem that some filters use
+     */
+    public DriveFilterManager(NavXSubSystem NavX) {
+        navX = NavX;
+
+        autoYaw = new AutoYawFilter(navX.getGyro());
         turnToggle = new TurnToggleFilter();
     }
 
-    public void refreshFilterEnable() {
+    public void refreshFilterEnable(boolean fieldAligned) {
+        autoYaw.setEnabled(fieldAligned && !(turnToggle.getEnabled()));
 
+        SmartDashboard.putBoolean("Turn Toggle Filter", turnToggle.getEnabled());
+        SmartDashboard.putBoolean("Auto Yaw Filter", autoYaw.getEnabled());
     }
 
     public void applyFilters(DriveInput DI) {
-        lockZ.filter(DI);
         turnToggle.filter(DI);
+        autoYaw.filter(DI);
     }
 
     public void clearFilters() {
-        lockZ.setEnabled(false);
+        turnToggle.setEnabled(false);
+        autoYaw.setEnabled(false);
     }
 
     public Filter getTurnToggle() {

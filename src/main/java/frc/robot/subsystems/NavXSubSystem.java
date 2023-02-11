@@ -19,13 +19,13 @@ import frc.robot.pose.NavxPose;
 /**
  *
  * @author mandrews
- * 
+ *
  * This code implements the NavX sensor into proper right handed ROBOT coordinate systems
- *   X => +forward/-reverse, Y => +left/-right, Z => +up/-down, rotX (roll) => +rollRight, rotY (pitch) => +noseDown, rotZ (yaw) => +ccw  
+ *   X => +forward/-reverse, Y => +left/-right, Z => +up/-down, rotX (roll) => +rollRight, rotY (pitch) => +noseDown, rotZ (yaw) => +ccw
  * Assumes the following robot and NavX installation.  MXP shows location of MXP connection on NavX
- * 
+ *
  *              ^ +X
- *              | 
+ *              |
  *       \\+---------+//
  *         |  +---+  |
  *   +Y    |  |MXP|  |
@@ -38,7 +38,7 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
     private double initialYawAngle = 0.0;
-    
+
     public NavXSubSystem() {
     }
 
@@ -53,7 +53,7 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
     }
 
     public NavxPose getNavxOutput(){
-        return new NavxPose(getAngle(), new Pose2d());
+        return new NavxPose();
     }
 
     public void zeroYaw() {
@@ -72,22 +72,22 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
       return -navX.getYaw() + initialYawAngle;
     }
 
-    public double getX() {
+    public double getForward() {
       return navX.getDisplacementX();
     }
 
-    public double getY() {
+    public double getRight() {
       return navX.getDisplacementY();
     }
 
-    public double getZ() {
+    public double getUp() {
       return navX.getDisplacementZ();
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("NavX", getYaw());
-    }    
+    }
 
     public static double findNearestQuadrant(double angle){
         if (angle <= -135.0) {
@@ -100,7 +100,7 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
           return 90.0;
         } else {
           return 180.0;
-        }        
+        }
     }
 
     @Override

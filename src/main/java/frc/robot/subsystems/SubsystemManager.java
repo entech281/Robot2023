@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-// Exercise 2: Add the OnboardIO subsystem to the subsystem manager.  
+// Exercise 2: Add the OnboardIO subsystem to the subsystem manager.
 // This involves storing the subsystem privately in this class, initializing it, and providing a get method.
 // You can use the drive subsystem as an example.
 
@@ -11,7 +11,7 @@ public class SubsystemManager {
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
     private ArmSubsystem armSubsystem;
-    
+
     public SubsystemManager() {
     }
 
@@ -29,19 +29,19 @@ public class SubsystemManager {
     public ArmSubsystem getArmSubsystem(){
         return armSubsystem;
     }
-    
+
     public void initAll() {
         navXSubSystem  = new NavXSubSystem();
-        driveSubsystem = new DriveSubsystem(navXSubSystem);
+        driveSubsystem = new DriveSubsystem(getNavXSubSystem());
         visionSubsystem = new VisionSubsystem();
         armSubsystem = new ArmSubsystem();
-        
+
         // Initialize the known subsystems
         navXSubSystem.initialize();
         driveSubsystem.initialize();
         visionSubsystem.initialize();
         armSubsystem.initialize();
-        
+
         // Make sure they all send their logging data
         SmartDashboard.putData(navXSubSystem);
         SmartDashboard.putData(driveSubsystem);
