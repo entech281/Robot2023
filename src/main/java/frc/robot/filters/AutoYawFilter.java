@@ -2,6 +2,7 @@ package frc.robot.filters;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.robot.subsystems.NavXSubSystem;
 
 /**
  *
@@ -9,11 +10,11 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
  * @author aheitkamp
  */
 public class AutoYawFilter extends Filter {
-    private Gyro navX;
+    private Gyro gyro;
     private PIDController PID;
 
-    public AutoYawFilter(Gyro NavX) {
-        navX = NavX;
+    public AutoYawFilter(Gyro gyro) {
+        this.gyro = gyro;
 
         PID = new PIDController(0.095, 0.15, 0.0085);
         PID.setTolerance(2);
@@ -38,11 +39,11 @@ public class AutoYawFilter extends Filter {
 
         double setPoint = Math.toDegrees(Math.atan2(DI.getRight(), DI.getForward()));
 
-        if (Math.abs(setPoint - navX.getAngle()) > 90) {
+        if (Math.abs(setPoint - gyro.getAngle()) > 90) {
             setPoint += 180;
         }
 
-        double calcValue = PID.calculate(navX.getAngle(), setPoint);
+        double calcValue = PID.calculate(gyro.getAngle(), setPoint);
         calcValue = Math.round(calcValue/4) * 4;
 
         DI.setOverrideYawLock(true);

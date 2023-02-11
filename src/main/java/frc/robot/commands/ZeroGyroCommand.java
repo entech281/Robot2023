@@ -33,7 +33,7 @@ public class ZeroGyroCommand extends EntechCommandBase {
 
   @Override
   public void execute() {
-    NavX.zeroYaw();
+    navX.zeroYaw();
     isFinished = true;
   }
 

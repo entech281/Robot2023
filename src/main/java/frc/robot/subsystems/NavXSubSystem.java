@@ -109,9 +109,9 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
         builder.addDoubleProperty("NavX Yaw", this::getYaw, null);
         builder.addDoubleProperty("NavX Pitch", this::getPitch, null);
         builder.addDoubleProperty("NavX Roll", this::getRoll, null);
-        builder.addDoubleProperty("NavX X", this::getX, null);
-        builder.addDoubleProperty("NavX Y", this::getY, null);
-        builder.addDoubleProperty("NavX Z", this::getZ, null);
+        builder.addDoubleProperty("NavX X", this::getForward, null);
+        builder.addDoubleProperty("NavX Y", this::getRight, null);
+        builder.addDoubleProperty("NavX Z", this::getUp, null);
     }
 
     @Override
