@@ -26,4 +26,5 @@ public class TestPoseCalcs {
         var pose2dStraight = new Pose2d(0,1000,Rotation2d.fromDegrees(0));
 
         assertEquals(new DriveInput(0,-1,0), AlignCalc.CalculateDrive(pose2dInit, pose2dStraight));
-    }}
+    }
+}
