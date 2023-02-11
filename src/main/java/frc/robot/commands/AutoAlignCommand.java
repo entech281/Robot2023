@@ -58,25 +58,31 @@ public class AutoAlignCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        double calcValue = Math.max(
-            -SPEED_LIMIT, 
-            Math.min(
-                pid.calculate(
-                    MathUtil.inputModulus(
-                        latestPose
-                            .get()
-                            .getBodyPose()
-                            .getYawAngleDegrees(), 
-                        -180, 
-                        180
+        DriveInput di;
+        if (drive.getCanAutoAlign()) {
+            double calcValue = Math.max(
+                -SPEED_LIMIT, 
+                Math.min(
+                    pid.calculate(
+                        MathUtil.inputModulus(
+                            latestPose
+                                .get()
+                                .getBodyPose()
+                                .getYawAngleDegrees(), 
+                            -180, 
+                            180
+                        ), 
+                        drive.getAlignmentAngle()
                     ), 
-                    drive.getAlignmentAngle()
-                ), 
-                SPEED_LIMIT
-            )
-        );
-        DriveInput di = new DriveInput(-joystick.getY(), joystick.getX(), calcValue);
-        di.setOverrideYawLock(true);
+                    SPEED_LIMIT
+                )
+            );
+            di = new DriveInput(-joystick.getY(), joystick.getX(), calcValue);
+            di.setOverrideYawLock(true);
+            di.setOverrideAutoYaw(true);
+        } else {
+            di = new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ());
+        }
 
         drive.drive(di, latestPose.get());
     }

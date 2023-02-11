@@ -11,7 +11,14 @@ public class PoseCalculator {
 
         newPose.setBodyPose(no);
 
-        newPose.setCalculatedPose(vo.getMostCentralAprilTag().getPositionInches());
+        FieldAprilTag fat = vo.getMostCentralAprilTag(); //could be null if we have no target
+        if ( fat != null){
+            newPose.setCalculatedPose(vo.getPoseRelativeToTag());
+        }
+        else{
+            newPose.setCalculatedPose(null);
+        }
+        
         //lots of math needs to be added
         return newPose;
     }

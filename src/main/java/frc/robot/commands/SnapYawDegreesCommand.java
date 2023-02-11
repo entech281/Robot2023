@@ -68,6 +68,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
         );
         DriveInput di = new DriveInput(0, 0, calcValue);
         di.setOverrideYawLock(true);
+        di.setOverrideAutoYaw(true);
 
         drive.drive(di, latestPose.get());
     }

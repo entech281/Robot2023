@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -37,6 +38,7 @@ public class DriveSubsystem extends EntechSubsystem {
   private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
 
   private double autoAlignAngle = 0.0;
+  private boolean canAutoAlign = false;
   
   /**
    *
@@ -98,7 +100,7 @@ public class DriveSubsystem extends EntechSubsystem {
     loggingDriveInput = di;
     dfm.applyFilters(di, rp);
     if (isFieldAbsoluteActive()) {
-      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), rp.getCalculatedPose().getRotation());
+      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(rp.getBodyPose().getYawAngleDegrees()));
     } else {
       robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation());
     }
@@ -106,14 +108,15 @@ public class DriveSubsystem extends EntechSubsystem {
 
   public void activateAlignmentSolution ( AlignmentSolution solution ){
       autoAlignAngle = solution.getTempAngle();
-  }
-
-  public void setAlignmentAngle(double angle) {
-    autoAlignAngle = angle;
+      canAutoAlign = solution.getHasTempAngle();
   }
 
   public double getAlignmentAngle() {
     return autoAlignAngle; 
+  }
+
+  public boolean getCanAutoAlign() {
+    return canAutoAlign;
   }
 
   public DriveFilterManager getDFM() {

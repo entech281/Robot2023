@@ -26,6 +26,20 @@ public class AlignmentSolution {
     private RobotPose startingPose;
     private double tempAngle =0.0;
 
+    private boolean hasTempAngle = false;
+
+    public boolean isHasTempAngle() {
+        return this.hasTempAngle;
+    }
+
+    public boolean getHasTempAngle() {
+        return this.hasTempAngle;
+    }
+
+    public void setHasTempAngle(boolean hasTempAngle) {
+        this.hasTempAngle = hasTempAngle;
+    }
+
     public double getTempAngle(){
         return tempAngle;
     }

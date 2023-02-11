@@ -1,6 +1,7 @@
 package frc.robot.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.filters.DriveInput;
 
 public class AlignCalc {
@@ -9,12 +10,23 @@ public class AlignCalc {
     public AlignmentSolution calculateSolution( TargetNode tn, RobotPose rp){
         AlignmentSolution s = new AlignmentSolution();
 
-        Pose2d robotPose = rp.getCalculatedPose();
-        TargetNode selectedNode = TargetNode.A1;
-        Double robotToNodeX = selectedNode.getXIn() + robotPose.getX();
-        Double robotToNodeY = selectedNode.getYIn() - robotPose.getY();
-        Double turnAngle = Math.atan2(robotToNodeY,robotToNodeX);
-        s.setTempAngle(turnAngle);
+        Pose2d robotPose = rp.getCalculatedPose(); //could be null
+        if ( robotPose != null){
+            TargetNode selectedNode = TargetNode.A1;
+            Double robotToNodeX = selectedNode.getXIn() + robotPose.getX();
+            Double robotToNodeY = selectedNode.getYIn() - robotPose.getY();
+            Double turnAngle = Math.toDegrees(Math.atan2(robotToNodeY,robotToNodeX)) + 180;
+            
+            SmartDashboard.putNumber("RobotToNodeX", robotToNodeX);
+            SmartDashboard.putNumber("RobotToNodeY", robotToNodeY);
+
+            s.setTempAngle(turnAngle);
+            s.setHasTempAngle(true);
+        }
+        else{
+            s.setHasTempAngle(false);
+        }
+ 
         return s;
     }    
     
