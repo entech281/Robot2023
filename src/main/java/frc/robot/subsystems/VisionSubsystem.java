@@ -49,24 +49,7 @@ public class VisionSubsystem extends EntechSubsystem {
       
       PhotonPipelineResult result = camera.getLatestResult();
       visionOutput.setPipelineLatency(result.getLatencyMillis());
-      
-      /**
-       *   Old code using only a single target. See updated version below that does multiple
-            Boolean cameraHasTargets = result.hasTargets();
-            visionOutput.setCameraHasTargets(cameraHasTargets);
 
-            int tagIDs = target.getFiducialId();
-            visionOutput.setTagIDs(tagIDs);
-
-
-
-            PhotonTrackedTarget t = result.getBestTarget();
-            bestTarget = result.getBestTarget();
-            target3D = t.getBestCameraToTarget();
-            double targetXin = target3D.getX();
-            double targetYin = target3D.getY();
-            visionOutput.setTagPosesRelativeToCamera(new Pose2d(targetXin, targetYin, null));
-      */
       
       for ( PhotonTrackedTarget t: result.getTargets()){
         
@@ -80,8 +63,9 @@ public class VisionSubsystem extends EntechSubsystem {
 
   @Override
   public void periodic() {
-    var result = camera.getLatestResult();
+    PhotonPipelineResult result = camera.getLatestResult();
     latency = camera.getLatestResult().getLatencyMillis();
+    SmartDashboard.putBoolean("hasTargets", result.hasTargets());
     if (result.hasTargets()){
       PhotonTrackedTarget t = result.getBestTarget();
       bestTarget = result.getBestTarget();
@@ -94,7 +78,6 @@ public class VisionSubsystem extends EntechSubsystem {
       SmartDashboard.putNumber("getcameraPitch", bestTarget.getPitch());
       SmartDashboard.putNumber("getcameraSkew", bestTarget.getSkew());
       SmartDashboard.putNumber("getcameraYaw", bestTarget.getYaw());
-      SmartDashboard.putBoolean("getNumberOfTags", result.hasTargets());
     }
   }
 
