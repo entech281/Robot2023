@@ -1,5 +1,7 @@
 package frc.robot.filters;
 
+import frc.robot.pose.RobotPose;
+
 /**
  *
  * 
@@ -8,7 +10,7 @@ package frc.robot.filters;
 public abstract class Filter {
     protected boolean enable;
 
-    public abstract void filter(DriveInput DI);
+    public abstract void filter(DriveInput di, RobotPose rp);
 
     public void setEnabled(boolean enabled) {
         enable = enabled;

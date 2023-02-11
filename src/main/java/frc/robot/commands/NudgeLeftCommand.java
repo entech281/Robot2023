@@ -6,6 +6,10 @@ package frc.robot.commands;
 
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.pose.RobotPose;
+
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -17,21 +21,23 @@ public class NudgeLeftCommand extends EntechCommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
     private Timer timer;
+    private final Supplier<RobotPose> latestPose;
 
     private static final double NUDGE_TIME = 0.5;
     private static final double NUDGE_SPEED = -0.5;
 
     /**
-     * Creates a new NudgeLeftCommand which will move the robot left for 0.5 seconds at half power
+     * Creates a new NudgeRightCommand which will move the robot right for 0.5 seconds at half power
      * 
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeLeftCommand(DriveSubsystem drive) {
+    public NudgeLeftCommand(DriveSubsystem drive, Supplier<RobotPose> latestPose) {
         super(drive);
         this.drive = drive;
+        this.latestPose = latestPose;
     }
-    
+   
     @Override
     public void initialize() {
         timer = new Timer();
@@ -40,12 +46,11 @@ public class NudgeLeftCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        DriveInput DI = new DriveInput(0, NUDGE_SPEED, 0);
-        DI.setOverrideAutoYaw(true);
-        
-        drive.drive(DI);
+        DriveInput di = new DriveInput(0, NUDGE_SPEED, 0);
+        di.setOverrideAutoYaw(true);
+        drive.drive(di, latestPose.get());
     }
-
+    
     @Override
     public void end(boolean interrupted) {
         drive.brake();

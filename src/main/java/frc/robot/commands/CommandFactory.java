@@ -41,7 +41,7 @@ public class CommandFactory {
     }
 
     public Command DriveCommand(Joystick joystick) {
-        return new DriveCommand(sm.getDriveSubsystem(), joystick);
+        return new DriveCommand(sm.getDriveSubsystem(), joystick, latestRobotPose);
     }
 
     public Command ToggleFieldAbsolute() {
@@ -61,10 +61,10 @@ public class CommandFactory {
     }
 
     public Command NudgeLeftCommand() {
-        return new NudgeLeftCommand(sm.getDriveSubsystem());
+        return new NudgeLeftCommand(sm.getDriveSubsystem(), latestRobotPose);
     }
 
     public Command NudgeRightCommand() {
-        return new NudgeRightCommand(sm.getDriveSubsystem());
+        return new NudgeRightCommand(sm.getDriveSubsystem(), latestRobotPose);
     }
 }

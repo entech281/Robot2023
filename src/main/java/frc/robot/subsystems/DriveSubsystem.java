@@ -9,7 +9,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,6 +17,7 @@ import frc.robot.filters.DriveFilterManager;
 import frc.robot.filters.DriveInput;
 import frc.robot.pose.AlignmentSolution;
 import frc.robot.pose.DrivePose;
+import frc.robot.pose.RobotPose;
 
 /**
  *
@@ -34,8 +34,6 @@ public class DriveSubsystem extends EntechSubsystem {
 
   private boolean useFieldAbsolute = false;
 
-  private NavXSubSystem navX; 
-
   private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
   
   /**
@@ -43,8 +41,7 @@ public class DriveSubsystem extends EntechSubsystem {
    * 
    * @param navX The NavXSubsystem that some filters use and the drive in field absolute
    */
-  public DriveSubsystem(NavXSubSystem navX) {
-    this.navX = navX;
+  public DriveSubsystem() {
   }
 
   public DrivePose getDriveOutput(){
@@ -58,7 +55,7 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightTalon = new WPI_TalonSRX(RobotConstants.CAN.FRONT_RIGHT_MOTOR);
     rearRightTalon  = new WPI_TalonSRX(RobotConstants.CAN.REAR_RIGHT_MOTOR);
     robotDrive      = new MecanumDrive(frontLeftTalon, rearLeftTalon, frontRightTalon, rearRightTalon);
-    dfm             = new DriveFilterManager(navX);
+    dfm             = new DriveFilterManager();
 
     robotDrive.setDeadband(0.1);
 
@@ -93,11 +90,11 @@ public class DriveSubsystem extends EntechSubsystem {
     robotDrive.feedWatchdog();
   }
 
-  public void drive(DriveInput di) {
+  public void drive(DriveInput di, RobotPose rp) {
     loggingDriveInput = di;
-    dfm.applyFilters(di);
+    dfm.applyFilters(di, rp);
     if (isFieldAbsoluteActive()) {
-      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(navX.getAngle()));
+      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), rp.getCalculatedPose().getRotation());
     } else {
       robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation());
     }

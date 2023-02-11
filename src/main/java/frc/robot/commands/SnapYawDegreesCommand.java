@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import java.util.function.Supplier;
+
 import edu.wpi.first.math.controller.PIDController;
 
 import frc.robot.filters.DriveInput;
@@ -18,6 +19,14 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class SnapYawDegreesCommand extends EntechCommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+
+    private static final double P_GAIN = 0.0865;
+    private static final double I_GAIN = 0.5;
+    private static final double D_GAIN = 0.0075;
+    private static final double ANGLE_TOLERANCE = 1;
+    private static final double SPEED_LIMIT = 0.75;
+    private static final double STOPPING_COUNT = 4;
+
     private final DriveSubsystem drive;
     private final PIDController pid;
     private final Supplier<RobotPose> latestPose;
@@ -36,9 +45,9 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
         this.drive = drive;
         this.latestPose = latestPose;
 
-        pid = new PIDController(0.0865, 0.5, 0.0075);
+        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
         pid.enableContinuousInput(-180, 180);
-        pid.setTolerance(1);
+        pid.setTolerance(ANGLE_TOLERANCE);
         pid.setSetpoint(angle);
     }
 
@@ -48,11 +57,11 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        double calcValue = Math.max(-0.75, Math.min(pid.calculate(latestPose.get().getCalculatedPose().getRotation().getDegrees()), 0.75));
+        double calcValue = Math.max(-SPEED_LIMIT, Math.min(pid.calculate(latestPose.get().getCalculatedPose().getRotation().getDegrees()), SPEED_LIMIT));
         DriveInput di = new DriveInput(0, 0, calcValue);
         di.setOverrideYawLock(true);
 
-        drive.drive(di);
+        drive.drive(di, latestPose.get());
     }
 
     @Override
@@ -67,7 +76,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
         } else {
             stoppingCounter = 0;
         }
-        return stoppingCounter >= 4;
+        return stoppingCounter >= STOPPING_COUNT;
     }
 
     @Override

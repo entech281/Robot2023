@@ -1,7 +1,7 @@
 package frc.robot.filters;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.robot.pose.RobotPose;
 
 /**
  *
@@ -16,18 +16,17 @@ public class AutoYawFilter extends Filter {
     private static final double SPEED_LIMIT = 0.75;
     private static final double JITTER_ROUNDING = 4;
 
-    private Gyro navX;
     private PIDController pid;
 
-    public AutoYawFilter(Gyro NavX) {
-        navX = NavX;
-
+    public AutoYawFilter() {
         pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
         pid.setTolerance(ANGLE_TOLERANCE);
         pid.enableContinuousInput(-180, 180);
     }
 
-    public void filter(DriveInput di) {
+    public void filter(DriveInput di, RobotPose rp) {
+        double currentYaw = rp.getCalculatedPose().getRotation().getDegrees();
+
         if (!enable) {
             pid.reset();
             return;
@@ -45,11 +44,11 @@ public class AutoYawFilter extends Filter {
 
         double setPoint = Math.toDegrees(Math.atan2(di.getRight(), di.getForward()));
 
-        if (Math.abs(setPoint - navX.getAngle()) > 90) {
+        if (Math.abs(setPoint - currentYaw) > 90) {
             setPoint += 180;
         }
 
-        double calcValue = pid.calculate(navX.getAngle(), setPoint);
+        double calcValue = pid.calculate(currentYaw, setPoint);
         calcValue = Math.round(calcValue/JITTER_ROUNDING) * JITTER_ROUNDING;
 
         di.setOverrideYawLock(true);
