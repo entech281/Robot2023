@@ -1,6 +1,9 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
 
 package frc.robot.subsystems;
 
@@ -14,7 +17,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.pose.RecognizedAprilTagTarget;
-import frc.robot.pose.VisionOutput;
+import frc.robot.pose.VisionPose;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class VisionSubsystem extends EntechSubsystem {
@@ -37,16 +40,34 @@ public class VisionSubsystem extends EntechSubsystem {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-
-      builder.addDoubleProperty("CameraLatency", () -> {return latency; }, null);
+      builder.addDoubleProperty("CameraLatency", () -> { return latency; }, null);
   }
 
-  public VisionOutput getVisionOutput() {
+  public VisionPose getVisionOutput(){
 
-      VisionOutput visionOutput = new VisionOutput();
+      VisionPose visionOutput = new VisionPose();
       
       PhotonPipelineResult result = camera.getLatestResult();
-      visionOutput.setLatency(result.getLatencyMillis());
+      visionOutput.setPipelineLatency(result.getLatencyMillis());
+      
+      /**
+       *   Old code using only a single target. See updated version below that does multiple
+            Boolean cameraHasTargets = result.hasTargets();
+            visionOutput.setCameraHasTargets(cameraHasTargets);
+
+            int tagIDs = target.getFiducialId();
+            visionOutput.setTagIDs(tagIDs);
+
+
+
+            PhotonTrackedTarget t = result.getBestTarget();
+            bestTarget = result.getBestTarget();
+            target3D = t.getBestCameraToTarget();
+            double targetXin = target3D.getX();
+            double targetYin = target3D.getY();
+            visionOutput.setTagPosesRelativeToCamera(new Pose2d(targetXin, targetYin, null));
+      */
+      
       for ( PhotonTrackedTarget t: result.getTargets()){
         
           Transform3d t3d = t.getBestCameraToTarget();

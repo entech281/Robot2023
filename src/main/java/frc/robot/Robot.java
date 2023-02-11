@@ -7,17 +7,18 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import frc.robot.subsystems.SubsystemManager;
 import frc.robot.commands.CommandFactory;
 import frc.robot.pose.AlignCalc;
 import frc.robot.pose.AlignmentSolution;
-import frc.robot.pose.ArmOutput;
-import frc.robot.pose.DriveOutput;
-import frc.robot.pose.NavxOutput;
+import frc.robot.pose.ArmPose;
+import frc.robot.pose.DrivePose;
+import frc.robot.pose.NavxPose;
 import frc.robot.pose.PoseCalculator;
 import frc.robot.pose.RobotPose;
 import frc.robot.pose.TargetNode;
-import frc.robot.pose.VisionOutput;
+import frc.robot.pose.VisionPose;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -65,10 +66,10 @@ public class Robot extends TimedRobot {
   
   private void updateAlignment(){
       DriveSubsystem drive = subsystemManager.getDriveSubsystem();
-      DriveOutput dro = drive.getDriveOutput();
-      VisionOutput vo = subsystemManager.getVisionSubsystem().getVisionOutput();
-      ArmOutput ao = subsystemManager.getArmSubsystem().getArmOutput();
-      NavxOutput no = subsystemManager.getNavXSubSystem().getNavxOutput();
+      DrivePose dro = drive.getDriveOutput();
+      VisionPose vo = subsystemManager.getVisionSubsystem().getVisionOutput();
+      ArmPose ao = subsystemManager.getArmSubsystem().getArmOutput();
+      NavxPose no = subsystemManager.getNavXSubSystem().getNavxOutput();
       
       RobotPose rp = new PoseCalculator().calculatePose( dro, vo, no, ao );
       TargetNode tn = oi.getTargetNode();

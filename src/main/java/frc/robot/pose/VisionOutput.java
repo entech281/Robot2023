@@ -36,4 +36,11 @@ public class VisionOutput {
     //     this.aprilTagLocations = aprilTagLocations;
     // }
 
+    //public Pose2d getTagPosesRelativeToCamera() {
+    //    return this.tagPosesRelativeToCamera;
+    //}
+
+    //public void setTagPosesRelativeToCamera(Pose2d tagPosesRelativeToCamera) {
+    //    this.tagPosesRelativeToCamera = tagPosesRelativeToCamera;
+    //}    
 }
