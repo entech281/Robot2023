@@ -48,10 +48,11 @@ public class ScoringLocation {
     private final TargetNode selectedNode;
 
     public  Pose2d computeAbsolutePose( ){
-        Translation2d offsetToTargetPoint = new Translation2d(selectedNode.getHorizontalOffsetInches(), selectedNode.getVerticalOffsetInches());
-        Transform2d offsetToTargetVector = new Transform2d(offsetToTargetPoint, Rotation2d.fromDegrees(0.0));
-        return selectedTag.getPositionInches().plus(offsetToTargetVector);
-    }    
-
+        Pose2d tagPose = selectedTag.getPositionInches();
+        Translation2d nodeTranslation = selectedNode.getOffsetToTarget(); 
+        //calaculates absoluteNodePosition correctly 
+        Pose2d absoluteNodePosition = new Pose2d((tagPose.getTranslation().plus(nodeTranslation)), tagPose.getRotation());
+        return absoluteNodePosition;
+    }
     
-}
+}   
