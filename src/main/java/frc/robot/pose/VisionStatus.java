@@ -2,30 +2,19 @@ package frc.robot.pose;
 
 import java.util.ArrayList;
 import java.util.List;
+public class VisionOutput {
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.subsystems.SubsystemStatus;
-
-public class VisionStatus implements SubsystemStatus,Sendable{
-    //private Pose2d tagPosesRelativeToCamera;
-    //private boolean cameraHasTargets;
-    //private int tagIDs;
     private double latency;
+//    private List <AprilTagLocation> aprilTagLocations = new ArrayList<>();
     private final List<RecognizedAprilTagTarget> recognizedTargets = new ArrayList<>();
-    
-    public List<RecognizedAprilTagTarget> getRecognizedTargets(){
+
+    public List<RecognizedAprilTagTarget> getRecognizedTargets() {
         return recognizedTargets;
     }
-    
-    //public PhotonTrackedTarget getNumberOfTargets() {
-    //    return this.NumberOfTargets;
-    //}
 
-    //public void setNumberOfTargets(PhotonTrackedTarget NumberOfTargets) {
-    //    this.NumberOfTargets = NumberOfTargets;
-    //}
-    //private PhotonTrackedTarget NumberOfTargets;
+    public void addRecognizedTarget( RecognizedAprilTagTarget targetToAdd) {
+        recognizedTargets.add(targetToAdd);
+    }
 
     public double getLatency() {
         return this.latency;
@@ -35,28 +24,17 @@ public class VisionStatus implements SubsystemStatus,Sendable{
         this.latency = latency;
     }
 
-    //public int getTagIDs() {
-    //    return this.tagIDs;
-    //}
-
-    //public void setTagIDs(int tagIDs) {
-    //    this.tagIDs = tagIDs;
-    //}
-
-    public void addRecognizedTarget( RecognizedAprilTagTarget targetToAdd){
-        recognizedTargets.add(targetToAdd);
-    }
     public boolean hasTargets() {
         return !recognizedTargets.isEmpty();
     }
 
-    //public boolean getCameraHasTargets() {
-    //    return this.cameraHasTargets;
-    //}
+    // public List<AprilTagLocation> getAprilTagLocations() {
+    //     return this.aprilTagLocations;
+    // }
 
-    //public void setCameraHasTargets(boolean cameraHasTargets) {
-    //    this.cameraHasTargets = cameraHasTargets;
-    //}
+    // public void setAprilTagLocations(List<AprilTagLocation> aprilTagLocations) {
+    //     this.aprilTagLocations = aprilTagLocations;
+    // }
 
     //public Pose2d getTagPosesRelativeToCamera() {
     //    return this.tagPosesRelativeToCamera;
