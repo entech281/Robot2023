@@ -25,7 +25,7 @@ public class AutoYawFilter extends Filter {
     }
 
     public void doFilter(DriveInput di, RobotPose rp) {
-        double currentYaw = rp.getCalculatedPose().getRotation().getDegrees();
+        double currentYaw = rp.getBodyPose().getYawAngleDegrees();
 
         if (Math.abs(di.getForward()) < 0.1 && Math.abs(di.getRight()) < 0.1) {
             resetVariables();

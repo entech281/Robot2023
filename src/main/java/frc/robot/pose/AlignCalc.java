@@ -7,7 +7,15 @@ public class AlignCalc {
 
 
     public AlignmentSolution calculateSolution( TargetNode tn, RobotPose rp){
-        return new AlignmentSolution();
+        AlignmentSolution s = new AlignmentSolution();
+
+        Pose2d robotPose = rp.getCalculatedPose();
+        TargetNode selectedNode = TargetNode.A1;
+        Double robotToNodeX = selectedNode.getXIn() + robotPose.getX();
+        Double robotToNodeY = selectedNode.getYIn() - robotPose.getY();
+        Double turnAngle = Math.atan2(robotToNodeY,robotToNodeX);
+        s.setTempAngle(turnAngle);
+        return s;
     }    
     
     static public DriveInput CalculateDrive(Pose2d currentRobotPose, Pose2d finalRobotPose) {
@@ -26,16 +34,4 @@ public class AlignCalc {
         if (axis < -1.0) axis = -1.0;
         return axis;
     }
-
-    public double AlignToNode() {
-        AprilTagLocation aprilTagLocation = AprilTagLocation.findFromTag(1);
-        TargetNode selectedNode = TargetNode.A1;
-
-        Double robotToNodeX = selectedNode.getXIn() + aprilTagLocation.getXIn();
-        Double robotToNodeY = selectedNode.getYIn() - aprilTagLocation.getYIn();
-        Double turnAngle = Math.atan2(robotToNodeY,robotToNodeX);
-
-        return turnAngle;
-    }
-    
 }

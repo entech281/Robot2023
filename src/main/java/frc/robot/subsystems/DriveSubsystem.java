@@ -105,7 +105,7 @@ public class DriveSubsystem extends EntechSubsystem {
   }
 
   public void activateAlignmentSolution ( AlignmentSolution solution ){
-      autoAlignAngle = solution.getNeededAngle();
+      autoAlignAngle = solution.getTempAngle();
   }
 
   public void setAlignmentAngle(double angle) {

@@ -65,9 +65,8 @@ public class AutoAlignCommand extends EntechCommandBase {
                     MathUtil.inputModulus(
                         latestPose
                             .get()
-                            .getCalculatedPose()
-                            .getRotation()
-                            .getDegrees(), 
+                            .getBodyPose()
+                            .getYawAngleDegrees(), 
                         -180, 
                         180
                     ), 

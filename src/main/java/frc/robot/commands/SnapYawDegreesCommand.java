@@ -62,7 +62,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
         double calcValue = Math.max(
             -SPEED_LIMIT, 
             Math.min(
-                pid.calculate(MathUtil.inputModulus(latestPose.get().getCalculatedPose().getRotation().getDegrees(), -180, 180)), 
+                pid.calculate(MathUtil.inputModulus(latestPose.get().getBodyPose().getYawAngleDegrees(), -180, 180)), 
                 SPEED_LIMIT
             )
         );

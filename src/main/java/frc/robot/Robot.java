@@ -80,8 +80,8 @@ public class Robot extends TimedRobot {
     );
 
     subsystemManager.getDriveSubsystem()
-      .setAlignmentAngle(
-        new AlignCalc().AlignToNode()
+      .activateAlignmentSolution(
+        new AlignCalc().calculateSolution(TargetNode.A1, latestRobotPose)
       );
 
     updateAlignment();
