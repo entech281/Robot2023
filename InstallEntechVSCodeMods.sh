@@ -1,6 +1,7 @@
 #!/bin/bash
 
-INSTALL_DIR=${HOME}/wpilib/2023/vscode/VSCode-linux-x64/data/extensions/wpilibsuite.vscode-wpilib-2023.1.1/resources/java/src/commands
+VERSION=2023.3.2
+INSTALL_DIR=${HOME}/wpilib/2023/vscode/VSCode-linux-x64/data/extensions/wpilibsuite.vscode-wpilib-${VERSION}/resources/java/src/commands
 
 if [ ! -d "${INSTALL_DIR}" ]
 then
