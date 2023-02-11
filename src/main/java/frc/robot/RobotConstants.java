@@ -34,7 +34,7 @@ public final class RobotConstants {
             public static final int RED_RIGHT = 1;
             public static final int RED_LEFT = 3; 
         }
-        public static final String PHOTON_HOST = "photonvision";  
+        public static final String PHOTON_HOST = "photonvision-3B";  
         public static final double MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES = 40.0;
         public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
     }

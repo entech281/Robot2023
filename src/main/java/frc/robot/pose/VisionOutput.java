@@ -27,20 +27,4 @@ public class VisionOutput {
     public boolean hasTargets() {
         return !recognizedTargets.isEmpty();
     }
-
-    // public List<AprilTagLocation> getAprilTagLocations() {
-    //     return this.aprilTagLocations;
-    // }
-
-    // public void setAprilTagLocations(List<AprilTagLocation> aprilTagLocations) {
-    //     this.aprilTagLocations = aprilTagLocations;
-    // }
-
-    //public Pose2d getTagPosesRelativeToCamera() {
-    //    return this.tagPosesRelativeToCamera;
-    //}
-
-    //public void setTagPosesRelativeToCamera(Pose2d tagPosesRelativeToCamera) {
-    //    this.tagPosesRelativeToCamera = tagPosesRelativeToCamera;
-    //}    
 }
