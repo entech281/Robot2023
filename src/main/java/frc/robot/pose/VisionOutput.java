@@ -5,12 +5,13 @@ import java.util.List;
 public class VisionOutput {
 
     private double latency;
-//    private List <AprilTagLocation> aprilTagLocations = new ArrayList<>();
+    private AprilTagLocation aprilTagLocation;
     private final List<RecognizedAprilTagTarget> recognizedTargets = new ArrayList<>();
 
     public List<RecognizedAprilTagTarget> getRecognizedTargets() {
         return recognizedTargets;
     }
+
 
     public void addRecognizedTarget( RecognizedAprilTagTarget targetToAdd) {
         recognizedTargets.add(targetToAdd);
@@ -28,13 +29,13 @@ public class VisionOutput {
         return !recognizedTargets.isEmpty();
     }
 
-    // public List<AprilTagLocation> getAprilTagLocations() {
-    //     return this.aprilTagLocations;
-    // }
+    public AprilTagLocation getAprilTagLocation() {
+        return this.aprilTagLocation;
+    }
 
-    // public void setAprilTagLocations(List<AprilTagLocation> aprilTagLocations) {
-    //     this.aprilTagLocations = aprilTagLocations;
-    // }
+    public void setAprilTagLocation(AprilTagLocation aprilTagLocation) {
+        this.aprilTagLocation = aprilTagLocation;
+    }
 
     //public Pose2d getTagPosesRelativeToCamera() {
     //    return this.tagPosesRelativeToCamera;

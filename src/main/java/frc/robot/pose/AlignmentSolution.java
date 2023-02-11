@@ -22,7 +22,15 @@ public class AlignmentSolution {
     private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
     private TargetNode target;
     private RobotPose startingPose;
+    private double tempAngle =0.0;
 
+    public double getTempAngle(){
+        return tempAngle;
+    }
+    public void setTempAngle(double newTempAngle){
+        this.tempAngle = newTempAngle;
+    }
+    
     public RobotPose getStartingPose() {
         return startingPose;
     }
