@@ -18,7 +18,6 @@ public class TestScoringLocation {
        Translation2d node = new Translation2d(25.5, -18.5);
        //calculate absolute node position
        Pose2d absoluteNodePosition = new Pose2d((tag.getTranslation().plus(node)), tag.getRotation());
-       System.out.println("Absilute nod pos" + absoluteNodePosition);
        //testing against expected node position
        Pose2d expectedNodePosition = new Pose2d(636.27, 23.69, Rotation2d.fromDegrees(180));
 
@@ -32,10 +31,18 @@ public class TestScoringLocation {
         //TargetNode B3;
         ScoringLocation testScoringLocation = new ScoringLocation(tag, node);
         Pose2d testAbsolutePose = testScoringLocation.computeAbsolutePose();
-        System.out.println(testAbsolutePose.toString());
         Pose2d expectedNodePosition = new Pose2d(636.27, 23.69, Rotation2d.fromDegrees(180));
 
         assertEquals(expectedNodePosition, testAbsolutePose);
+    }
+
+    @Test
+    public void testAprilTagScoringLocation() {
+        
+        //verifies pulling of tag 1
+        AprilTagLocation tagInformation = AprilTagLocation.findFromTag(1);
+        assertEquals(tagInformation.getXIn(), 610.77, 0.01);
+        assertEquals(tagInformation.getYIn(), 42.19, 0.01);
     }
 
 }

@@ -79,6 +79,11 @@ public class Robot extends TimedRobot {
       subsystemManager.getArmSubsystem().getArmOutput()
     );
 
+    subsystemManager.getDriveSubsystem()
+      .setAlignmentAngle(
+        new AlignCalc().AlignToNode()
+      );
+
     updateAlignment();
     CommandScheduler.getInstance().run();
   }

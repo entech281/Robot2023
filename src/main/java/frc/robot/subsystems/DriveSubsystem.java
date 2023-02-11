@@ -86,6 +86,8 @@ public class DriveSubsystem extends EntechSubsystem {
 
     SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
 
+    SmartDashboard.putNumber("Auto Align Angle", autoAlignAngle);
+
 
     dfm.refreshFilterEnable(isFieldAbsoluteActive());
     robotDrive.feed();
@@ -104,6 +106,10 @@ public class DriveSubsystem extends EntechSubsystem {
 
   public void activateAlignmentSolution ( AlignmentSolution solution ){
       autoAlignAngle = solution.getNeededAngle();
+  }
+
+  public void setAlignmentAngle(double angle) {
+    autoAlignAngle = angle;
   }
 
   public double getAlignmentAngle() {
