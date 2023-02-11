@@ -27,5 +27,15 @@ public class AlignCalc {
         return axis;
     }
 
+    public double AlignToNode(){
+        AprilTagLocation aprilTagLocation = AprilTagLocation.findFromTag(1);
+        TargetNode selectedNode = TargetNode.A1;
+
+        Double robotToNodeX = selectedNode.getXIn() + aprilTagLocation.getXIn();
+        Double robotToNodeY = selectedNode.getYIn() - aprilTagLocation.getYIn();
+        Double turnAngle = Math.atan2(robotToNodeY,robotToNodeX);
+
+        return turnAngle;
+    }
     
 }

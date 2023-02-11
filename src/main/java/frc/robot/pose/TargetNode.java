@@ -9,19 +9,21 @@ import java.util.Objects;
  */
 public class TargetNode {
 
-    public static double A_ROW_DISTANCE_IN = 8.5;
-    public static double B_ROW_DISTANCE_IN = 25.5;
+    public double absoluteNodeX;
 
-    public static int LEFT_NODE_HOR_OFSET_IN = 22;
-    public static int MIDDLE_NODE_HOR_OFSET_IN = 0;
-    public static int RIGHT_NODE_HOR_OFSET_IN = 22;
+    public static double A_ROW_X_IN = 8.5;
+    public static double B_ROW_X_IN = 25.5;
+
+    public static int LEFT_NODE_Y_OFSET_IN = 22;
+    public static int MIDDLE_NODE_Y_OFSET_IN = 0;
+    public static int RIGHT_NODE_Y_OFSET_IN = 22;
     
-    public static TargetNode A1 = new TargetNode(LEFT_NODE_HOR_OFSET_IN,A_ROW_DISTANCE_IN,NodeID.A1);
-    public static TargetNode A2 = new TargetNode(MIDDLE_NODE_HOR_OFSET_IN,A_ROW_DISTANCE_IN,NodeID.A2);
-    public static TargetNode A3 = new TargetNode(RIGHT_NODE_HOR_OFSET_IN,A_ROW_DISTANCE_IN,NodeID.A3);
-    public static TargetNode B1 = new TargetNode(LEFT_NODE_HOR_OFSET_IN,B_ROW_DISTANCE_IN,NodeID.B1);
-    public static TargetNode B2 = new TargetNode(MIDDLE_NODE_HOR_OFSET_IN,B_ROW_DISTANCE_IN,NodeID.B2);
-    public static TargetNode B3 = new TargetNode(RIGHT_NODE_HOR_OFSET_IN,B_ROW_DISTANCE_IN,NodeID.B3);
+    public static TargetNode A1 = new TargetNode(LEFT_NODE_Y_OFSET_IN,A_ROW_X_IN,NodeID.A1);
+    public static TargetNode A2 = new TargetNode(MIDDLE_NODE_Y_OFSET_IN,A_ROW_X_IN,NodeID.A2);
+    public static TargetNode A3 = new TargetNode(RIGHT_NODE_Y_OFSET_IN,A_ROW_X_IN,NodeID.A3);
+    public static TargetNode B1 = new TargetNode(LEFT_NODE_Y_OFSET_IN,B_ROW_X_IN,NodeID.B1);
+    public static TargetNode B2 = new TargetNode(MIDDLE_NODE_Y_OFSET_IN,B_ROW_X_IN,NodeID.B2);
+    public static TargetNode B3 = new TargetNode(RIGHT_NODE_Y_OFSET_IN,B_ROW_X_IN,NodeID.B3);
     public static TargetNode NONE = new TargetNode(0,0,NodeID.NONE);
     
     public static enum NodeID {
@@ -78,5 +80,13 @@ public class TargetNode {
     public int hashCode() {
         return Objects.hash(offsetToTarget, id);
     }    
+
+    public double getXIn(){
+        return offsetToTarget.getX();
+    }
     
+    public double getYIn(){
+        return offsetToTarget.getY();
+    }
+
 }
