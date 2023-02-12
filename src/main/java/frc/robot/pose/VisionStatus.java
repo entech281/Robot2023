@@ -2,18 +2,33 @@ package frc.robot.pose;
 
 import java.util.ArrayList;
 import java.util.List;
-public class VisionOutput {
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import frc.robot.subsystems.SubsystemStatus;
+
+public class VisionStatus implements SubsystemStatus,Sendable{
 
     private double latency;
-//    private List <AprilTagLocation> aprilTagLocations = new ArrayList<>();
-    private final List<RecognizedAprilTagTarget> recognizedTargets = new ArrayList<>();
+    private RecognizedAprilTagTarget bestTarget;
+    private final List<RecognizedAprilTagTarget> targets = new ArrayList<>();
+    private Pose3d photonEstimatedPose;
+    
+    public Pose3d getPhotonEstimatedPose() {
+		return photonEstimatedPose;
+	}
 
-    public List<RecognizedAprilTagTarget> getRecognizedTargets() {
-        return recognizedTargets;
+	public void setPhotonEstimatedPose(Pose3d photonEstimatedPose) {
+		this.photonEstimatedPose = photonEstimatedPose;
+	}
+
+	public List<RecognizedAprilTagTarget> getRecognizedTargets() {
+        return targets;
     }
 
     public void addRecognizedTarget( RecognizedAprilTagTarget targetToAdd) {
-        recognizedTargets.add(targetToAdd);
+    	targets.add(targetToAdd);
     }
 
     public double getLatency() {
@@ -25,31 +40,23 @@ public class VisionOutput {
     }
 
     public boolean hasTargets() {
-        return !recognizedTargets.isEmpty();
+        return !targets.isEmpty();
     }
 
-    // public List<AprilTagLocation> getAprilTagLocations() {
-    //     return this.aprilTagLocations;
-    // }
-
-    // public void setAprilTagLocations(List<AprilTagLocation> aprilTagLocations) {
-    //     this.aprilTagLocations = aprilTagLocations;
-    // }
-
-    //public Pose2d getTagPosesRelativeToCamera() {
-    //    return this.tagPosesRelativeToCamera;
-    //}
-
-    //public void setTagPosesRelativeToCamera(Pose2d tagPosesRelativeToCamera) {
-    //    this.tagPosesRelativeToCamera = tagPosesRelativeToCamera;
-    //}    
-    
-    @Override
-    public void initSendable(SendableBuilder sb) {
-        sb.addDoubleProperty("Pipeline Latency",this::getLatency, null);
-        sb.addIntegerProperty("DetectedTargets", ()-> {
-            return recognizedTargets.size();
-        }, null);
+    public RecognizedAprilTagTarget getBestAprilTagTarget() {
+        return this.bestTarget;
     }
-    
+
+    public void setBestTarget(RecognizedAprilTagTarget target) {
+        this.bestTarget = target;
+    }
+    public boolean hasBestTarget() {
+    	return this.bestTarget != null;
+    }
+
+
+	@Override
+	public void initSendable(SendableBuilder builder) {
+		// TODO Auto-generated method stub
+	}
 }

@@ -8,20 +8,36 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.pose.NavxStatus;
 /**
  *
- * @author dcowden
+ * @author mandrews
+ *
+ * This code implements the NavX sensor into proper right handed ROBOT coordinate systems
+ *   X => +forward/-reverse, Y => +left/-right, Z => +up/-down, rotX (roll) => +rollRight, rotY (pitch) => +noseDown, rotZ (yaw) => +ccw
+ * Assumes the following robot and NavX installation.  MXP shows location of MXP connection on NavX
+ *
+ *              ^ +X
+ *              |
+ *       \\+---------+//
+ *         |  +---+  |
+ *   +Y    |  |MXP|  |
+ *   <---- |  |   |  |
+ *         |  |   |  |
+ *         |  +---+  |
+ *       //+---------+\\
  */
-public class NavXSubSystem extends EntechSubsystem implements Sendable{
+public class NavXSubSystem extends EntechSubsystem implements Gyro {
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
-    
+    private double initialYawAngle = 0.0;
+
     public NavXSubSystem() {
     }
 
@@ -35,26 +51,92 @@ public class NavXSubSystem extends EntechSubsystem implements Sendable{
         DriverStation.reportWarning("NavX Initialize Complete", false);
     }
 
-    @Override
     public NavxStatus getStatus(){
-        NavxStatus ns = new NavxStatus();
-        ns.setYawAngleDegrees(getYawAngle());
-        return ns;
-    }
- 
-    public void resetGyro() {
-    	navX.reset();
-    }
-    private double getYawAngle() {
-    	return navX.getAngle();
+    	NavxStatus newPose = new NavxStatus();
+        newPose.setYawAngleDegrees(getAngle());
+        return newPose;
     }
     public void zeroYaw() {
         navX.zeroYaw();
     }
 
-	@Override
-	public void initSendable(SendableBuilder builder) {
-		builder.addDoubleProperty("NavX Yaw", this::getYawAngle , null);
-	}
+    public double getRoll() {
+      return navX.getPitch();
+    }
+
+    public double getPitch() {
+      return -navX.getRoll();
+    }
+
+    public double getYaw() {
+      return -navX.getYaw() + initialYawAngle;
+    }
+
+    public double getForward() {
+      return navX.getDisplacementX();
+    }
+
+    public double getRight() {
+      return navX.getDisplacementY();
+    }
+
+    public double getUp() {
+      return navX.getDisplacementZ();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("NavX", getYaw());
+    }
+
+    public static double findNearestQuadrant(double angle){
+        if (angle <= -135.0) {
+          return -180.0;
+        } else if (angle <= -45.0) {
+          return -90.0;
+        } else if (angle <= 45.0) {
+          return 0.0;
+        } else if (angle <= 135.0) {
+          return 90.0;
+        } else {
+          return 180.0;
+        }
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType(getName());
+        builder.addDoubleProperty("NavX Yaw", this::getYaw, null);
+        builder.addDoubleProperty("NavX Pitch", this::getPitch, null);
+        builder.addDoubleProperty("NavX Roll", this::getRoll, null);
+        builder.addDoubleProperty("NavX X", this::getForward, null);
+        builder.addDoubleProperty("NavX Y", this::getRight, null);
+        builder.addDoubleProperty("NavX Z", this::getUp, null);
+    }
+
+    @Override
+    public void close() throws Exception {
+      navX.close();
+    }
+
+    @Override
+    public void calibrate() {
+      navX.calibrate();
+    }
+
+    @Override
+    public void reset() {
+      navX.reset();
+    }
+
+    @Override
+    public double getRate() {
+      return navX.getRate();
+    }
+
+    @Override
+    public double getAngle() {
+      return navX.getAngle();
+    }
 
 }

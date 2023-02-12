@@ -8,15 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CommandFactory;
-import frc.robot.pose.AlignCalc;
-import frc.robot.pose.AlignmentSolution;
-import frc.robot.pose.ArmStatus;
-import frc.robot.pose.DriveStatus;
-import frc.robot.pose.NavxStatus;
-import frc.robot.pose.PoseCalculator;
-import frc.robot.pose.RobotPose;
-import frc.robot.pose.TargetNode;
-import frc.robot.pose.VisionStatus;
+import frc.robot.pose.VisionFirstNavxAsBackupPoseCalculator;
 import frc.robot.subsystems.SubsystemManager;
 
 /**
@@ -25,8 +17,7 @@ import frc.robot.subsystems.SubsystemManager;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
-  private SubsystemManager subsystemManager;
+public class Robot extends TimedRobot {  
   private OperatorInterface oi;
   private CommandFactory commandFactory;
   private Command autoCommand;
@@ -37,11 +28,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    subsystemManager = new SubsystemManager();
+	SubsystemManager subsystemManager = new SubsystemManager();
     subsystemManager.initAll();
-
-    commandFactory = new CommandFactory(subsystemManager);
-    oi = new OperatorInterface(subsystemManager,commandFactory);
+    commandFactory = new CommandFactory(subsystemManager,new VisionFirstNavxAsBackupPoseCalculator());
+    oi = new OperatorInterface(commandFactory);
   }
 
   /**
@@ -57,25 +47,11 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    updateRobotPose();
+
+	commandFactory.periodic();
     CommandScheduler.getInstance().run();
   }
-
   
-  private void updateRobotPose(){
-      DriveStatus drs = subsystemManager.getDriveSubsystem().getStatus();
-      VisionStatus vs = subsystemManager.getVisionSubsystem().getStatus();
-      ArmStatus as = subsystemManager.getArmSubsystem().getStatus();
-      NavxStatus ns = subsystemManager.getNavXSubSystem().getStatus();
-      
-      RobotPose newPose = new PoseCalculator().calculatePose( drs, vs, ns, as );
-      TargetNode tn = oi.getTargetNode();
-      AlignmentSolution als = new AlignCalc().calculateSolution(tn, newPose);
-      newPose.setAlignmentSolution(als);
-      
-      subsystemManager.updateCurrentRobotPose(newPose);
-      
-  }
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {}

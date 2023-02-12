@@ -9,19 +9,21 @@ import edu.wpi.first.math.geometry.Pose2d;
  */
 public class RecognizedAprilTagTarget {
     
-    public RecognizedAprilTagTarget(Pose2d relativeCamera, int tagId) {
-        this.tagId = tagId;
+    public RecognizedAprilTagTarget(Pose2d relativeCamera, AprilTagLocation tagLocation) {
+        this.tagLocation = tagLocation;
         this.offsetFromCamera = relativeCamera;
     }
     
-    Pose2d offsetFromCamera;    
-    private int tagId = 0;
+    Pose2d offsetFromCamera;
+    Pose2d photonVisionEstimatedPose;
+    
+    private AprilTagLocation tagLocation;
 
-    public int getTagId() {
-        return tagId;
-    }
+    public AprilTagLocation getTagLocation() {
+		return tagLocation;
+	}
 
-    public Pose2d getOffsetFromCamera() {
+	public Pose2d getOffsetFromCamera() {
         return offsetFromCamera;
     }
 

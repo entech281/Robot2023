@@ -11,30 +11,89 @@ public class DriveInput {
     private double forward;
     private double right;
     private double rotation;
+    private double yawAngleDegrees = 0.0; //only for field absolute driving
+    public double getYawAngleDegrees() {
+		return yawAngleDegrees;
+	}
 
-    private boolean overrideYawLock = false;
+	public void setYawAngleDegrees(double yawAngleDegrees) {
+		this.yawAngleDegrees = yawAngleDegrees;
+	}
+
+	private boolean overrideYawLock = false;
     private boolean overrideAutoYaw = false;
 
     /**
      *
      * 
-     * @param Forward the speed level forward for the drive subsystem
-     * @param Left the speed level right for the drive subsystem
-     * @param Right the speed level right for the drive subsystem
+     * @param forward the speed level forward for the drive subsystem
+     * @param left the speed level right for the drive subsystem
+     * @param right the speed level right for the drive subsystem
      */
-    public DriveInput(double Forward, double Right, double Rotation) {
-        forward = Forward;
-        right = Right;
-        rotation = Rotation;
+    public DriveInput(double forward, double right, double rotation) {
+        this.forward = forward;
+        this.right = right;
+        this.rotation = rotation;
+    }
+    
+    /**
+    *
+    * 
+    * @param forward the speed level forward for the drive subsystem
+    * @param left the speed level right for the drive subsystem
+    * @param right the speed level right for the drive subsystem
+    * @param current yaw angle, for field absolute driving
+    */    
+    public DriveInput(double forward, double right, double rotation, double yawAngleDegrees) {
+    	this(forward,right,rotation);
+    	this.yawAngleDegrees = yawAngleDegrees;
     }
 
-    public double getForward() { return forward; }
-    public double getRight() { return right; }
-    public double getRotation() { return rotation; }
+    //copy constructor
+	public DriveInput(DriveInput original) {
+		super();
+		this.forward = original.forward;
+		this.right = original.right;
+		this.rotation = original.rotation;
+		this.yawAngleDegrees = original.yawAngleDegrees;
+		this.overrideYawLock = original.overrideYawLock;
+		this.overrideAutoYaw = original.overrideAutoYaw;
+	}
 
-    public void setForward(double Forward) { forward = Forward; }
-    public void setRight(double Right) { right = Right; }
-    public void setRotation(double Rotation) { rotation = Rotation; }
+	public DriveInput(double forward, double right, double rotation, double yawAngleDegrees, boolean overrideYawLock,
+			boolean overrideAutoYaw) {
+		super();
+		this.forward = forward;
+		this.right = right;
+		this.rotation = rotation;
+		this.yawAngleDegrees = yawAngleDegrees;
+		this.overrideYawLock = overrideYawLock;
+		this.overrideAutoYaw = overrideAutoYaw;
+	}
+
+	public double getForward() {
+		return forward;
+	}
+
+	public double getRight() {
+		return right;
+	}
+
+	public double getRotation() {
+		return rotation;
+	}
+
+	public void setForward(double forward) {
+		this.forward = forward;
+	}
+
+	public void setRight(double right) {
+		this.right = right;
+	}
+
+	public void setRotation(double rotation) {
+		this.rotation = rotation;
+	}
 
     public double[] get() {
         double[] output = new double[3];
@@ -47,10 +106,10 @@ public class DriveInput {
     }
 
     public boolean getOverrideYawLock() { return overrideYawLock; }
-    public void setOverrideYawLock(boolean OverrideYawLock) { overrideYawLock = OverrideYawLock; }
+    public void setOverrideYawLock(boolean overrideYawLock) { this.overrideYawLock = overrideYawLock; }
 
     public boolean getOverrideAutoYaw() { return this.overrideAutoYaw; }
-    public void setOverrideAutoYaw(boolean OverrideAutoYaw) { overrideAutoYaw = OverrideAutoYaw; }
+    public void setOverrideAutoYaw(boolean overrideAutoYaw) { this.overrideAutoYaw = overrideAutoYaw; }
 
     @Override
     public boolean equals(Object o) {
@@ -68,4 +127,10 @@ public class DriveInput {
         return Objects.hash(forward, right, rotation, overrideYawLock);
     }
 
+    public DriveInput clone() {
+        DriveInput clone = new DriveInput(forward, right, rotation);
+        clone.setOverrideAutoYaw(overrideAutoYaw);
+        clone.setOverrideYawLock(overrideYawLock);
+        return clone;
+    }
 }

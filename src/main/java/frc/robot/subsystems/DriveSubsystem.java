@@ -18,10 +18,11 @@ import frc.robot.filters.DriveFilterManager;
 import frc.robot.filters.DriveInput;
 import frc.robot.pose.AlignmentSolution;
 import frc.robot.pose.DriveStatus;
+import frc.robot.pose.RobotCalculations;
 
 /**
  *
- * 
+ *
  * @author aheitkamp
  */
 public class DriveSubsystem extends EntechSubsystem {
@@ -30,26 +31,26 @@ public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontRightTalon;
   private WPI_TalonSRX rearRightTalon;
   private MecanumDrive robotDrive;
-  private DriveFilterManager driveFilterManagerM;
+  //private DriveFilterManager dfm;
 
   private boolean useFieldAbsolute = false;
+  //private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
 
-
-  private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
+  //private double autoAlignAngle = 0.0;
+  //private boolean canAutoAlign = false;
   
   /**
    *
    * 
-   * @param NavX The NavXSubsystem that some filters use and the drive in field absolute
+   * @param navX The NavXSubsystem that some filters use and the drive in field absolute
    */
-  public DriveSubsystem(NavXSubSystem NavX) {
-
+  public DriveSubsystem() {
   }
 
   public DriveStatus getStatus(){
       return new DriveStatus();
   }
-  
+
   @Override
   public void initialize() {
     frontLeftTalon  = new WPI_TalonSRX(RobotConstants.CAN.FRONT_LEFT_MOTOR);
@@ -57,7 +58,7 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightTalon = new WPI_TalonSRX(RobotConstants.CAN.FRONT_RIGHT_MOTOR);
     rearRightTalon  = new WPI_TalonSRX(RobotConstants.CAN.REAR_RIGHT_MOTOR);
     robotDrive      = new MecanumDrive(frontLeftTalon, rearLeftTalon, frontRightTalon, rearRightTalon);
-    driveFilterManagerM  = new DriveFilterManager();
+    //dfm             = new DriveFilterManager();
 
     robotDrive.setDeadband(0.1);
 
@@ -65,7 +66,7 @@ public class DriveSubsystem extends EntechSubsystem {
     rearLeftTalon.setInverted(false);
     frontRightTalon.setInverted(true);
     rearRightTalon.setInverted(true);
-    
+
     frontLeftTalon.enableCurrentLimit(false);
     rearLeftTalon.enableCurrentLimit(false);
     frontRightTalon.enableCurrentLimit(false);
@@ -74,45 +75,50 @@ public class DriveSubsystem extends EntechSubsystem {
 
   @Override
   public void periodic() {
-
     SmartDashboard.putNumber("Front Left Talon", frontLeftTalon.get());
     SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
     SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
     SmartDashboard.putNumber("Back Right Talon", rearRightTalon.get());
-
-    SmartDashboard.putNumber("Driver Input Forward", loggingDriveInput.getForward());
-    SmartDashboard.putNumber("Driver Input Left", loggingDriveInput.getRight());
-    SmartDashboard.putNumber("Driver Input Rotation", loggingDriveInput.getRotation());
-
+    //SmartDashboard.putNumber("Driver Input Forward", loggingDriveInput.getForward());
+    //SmartDashboard.putNumber("Driver Input Left", loggingDriveInput.getRight());
+    //SmartDashboard.putNumber("Driver Input Rotation", loggingDriveInput.getRotation());
     SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
+    //SmartDashboard.putNumber("Auto Align Angle", autoAlignAngle);
 
 
-    driveFilterManagerM.refreshFilterEnable(isFieldAbsoluteActive());
+    //dfm.refreshFilterEnable(isFieldAbsoluteActive());
     robotDrive.feed();
     robotDrive.feedWatchdog();
   }
 
+  public void driveFieldAbsolute( DriveInput di, double yawAngleDegrees) {
+      	  
+  }
+  
   public void drive(DriveInput di) {
-    loggingDriveInput = di;
-    driveFilterManagerM.applyFilters(di, getCurrentPose());
-    
-    double currentRobotAngle = getCurrentPose().getCalculatedPose().getRotation().getDegrees();
-    
+	//RobotCalculations rp = this.getCurrentPose();
+    //loggingDriveInput = di;
+    //dfm.applyFilters(di, rp);
     if (isFieldAbsoluteActive()) {
-      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(currentRobotAngle));
+    	robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
     } else {
-      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation());
+    	robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation());
     }
   }
 
-  public void activateAlignmentSolution ( AlignmentSolution solution ){
-      //use the solution to affect the drive
-  }
 
-  public DriveFilterManager getDFM() {
-    return driveFilterManagerM;
-  }
-
+//  public double getAlignmentAngle() {
+//    return autoAlignAngle; 
+//  }
+//
+//  public boolean getCanAutoAlign() {
+//    return canAutoAlign;
+//  }
+//
+//  public DriveFilterManager getDFM() {
+//    return dfm;
+//  }
+//
   public boolean isFieldAbsoluteActive() {
     return useFieldAbsolute;
   }

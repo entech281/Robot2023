@@ -2,10 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.nudge;
 
+import frc.robot.commands.EntechCommandBase;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
+
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -13,13 +17,17 @@ import edu.wpi.first.wpilibj.Timer;
  * 
  * @author aheitkamp
  */
-public class NudgeRightCommand extends EntechCommandBase {
-    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+public class NudgeYawCommand extends EntechCommandBase {
     private final DriveSubsystem drive;
     private Timer timer;
-
-    private static final double NUDGE_TIME = 0.5;
-    private static final double NUDGE_SPEED = 0.5;
+    private final DriveInput direction;
+    private final Supplier<Double> yawAngleSupplier;
+    private static final double NUDGE_TIME = 0.25;
+    
+    public interface DIRECTION {
+        public static final DriveInput LEFT = new DriveInput(0, 0, 0.5);
+        public static final DriveInput RIGHT = new DriveInput(0, 0, -0.5);
+    }
 
     /**
      * Creates a new NudgeRightCommand which will move the robot right for 0.5 seconds at half power
@@ -27,9 +35,13 @@ public class NudgeRightCommand extends EntechCommandBase {
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeRightCommand(DriveSubsystem Drive) {
-        super(Drive);
-        drive = Drive;
+    public NudgeYawCommand(DriveSubsystem drive, DriveInput direction, Supplier<Double>yawAngleSupplier) {
+        super(drive);
+        this.drive = drive;
+        this.yawAngleSupplier = yawAngleSupplier;
+        this.direction = direction.clone();
+        this.direction.setOverrideAutoYaw(true);
+        this.direction.setOverrideYawLock(true);
     }
    
     @Override
@@ -40,9 +52,9 @@ public class NudgeRightCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        DriveInput DI = new DriveInput(0, NUDGE_SPEED, 0);
-        DI.setOverrideAutoYaw(true);
-        drive.drive(DI);
+    	DriveInput di = direction.clone();
+    	di.setYawAngleDegrees(yawAngleSupplier.get());
+        drive.drive(di );
     }
     
     @Override

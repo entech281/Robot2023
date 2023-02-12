@@ -1,8 +1,6 @@
 package frc.robot.filters;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import frc.robot.pose.RobotPose;
 
 /**
  *
@@ -10,49 +8,58 @@ import frc.robot.pose.RobotPose;
  * @author aheitkamp
  */
 public class AutoYawFilter extends Filter {
-    private PIDController PID;
 
-    public static final double P_GAIN = 0.095;
-    public static final double I_GAIN = 0.15;
-    public static final double D_GAIN = 0.0085;
-    public static final double MOVE_TOLERANCE_DEGREES = 2.0;
-    public static final double ROTATION_TOLERANCE_DEGREES = 0.1;
-    public static final double ROTATION_THRESHOLD = 0.75;
-    
+    private static final double P_GAIN = 0.095;
+    private static final double I_GAIN = 0.15;
+    private static final double D_GAIN = 0.0085;
+    private static final double ANGLE_TOLERANCE = 2;
+    private static final double SPEED_LIMIT = 0.75;
+    private static final double JITTER_ROUNDING = 4;
+
+    private PIDController pid;
+
     public AutoYawFilter() {
-
-        PID = new PIDController(P_GAIN, I_GAIN, D_GAIN);
-        PID.setTolerance(MOVE_TOLERANCE_DEGREES);
-        PID.enableContinuousInput(-180, 180);
+        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
+        pid.setTolerance(ANGLE_TOLERANCE);
+        pid.enableContinuousInput(-180, 180);
     }
 
-    public void filter(DriveInput di, RobotPose currentPose) {
-    	double currentAngle = currentPose.getCalculatedPose().getRotation().getDegrees();
-        if (!enable) {
-            PID.reset();
-            return;
+    public DriveInput doFilter(DriveInput original) {
+
+        if (Math.abs(original.getForward()) < 0.1 && Math.abs(original.getRight()) < 0.1) {
+            resetVariables();
+            return original;
         }
 
-        if (Math.abs(di.getForward()) < ROTATION_TOLERANCE_DEGREES && Math.abs(di.getRight()) < ROTATION_TOLERANCE_DEGREES) {
-            PID.reset();
-            return;
+        if (original.getOverrideAutoYaw()) {
+            resetVariables();
+            return original;
         }
 
-        if (di.getOverrideAutoYaw()) {
-            PID.reset();
-            return;
-        }
+        double setPoint = computeSetPoint(original);
 
-        double setPoint = Math.toDegrees(Math.atan2(di.getRight(), di.getForward()));
+        double calcValue = pid.calculate(original.getYawAngleDegrees(), setPoint);
+        calcValue = Math.round(calcValue/JITTER_ROUNDING) * JITTER_ROUNDING;
 
-        if (Math.abs(setPoint - currentAngle) > 90) {
+        DriveInput newDi = new DriveInput(original);        		
+        		
+        newDi.setOverrideYawLock(true);
+        newDi.setRotation(Math.max(-SPEED_LIMIT, Math.min(calcValue, SPEED_LIMIT)));
+        return newDi;
+    }
+
+
+    private double computeSetPoint( DriveInput original ) {
+        double setPoint = Math.toDegrees(Math.atan2(original.getRight(), original.getForward()));
+
+        if (Math.abs(setPoint - original.getYawAngleDegrees()) > 90) {
             setPoint += 180;
         }
-
-        double calcValue = PID.calculate(currentAngle, setPoint);
-        calcValue = Math.round(calcValue/4) * 4;  //what?
-
-        di.setOverrideYawLock(true);
-        di.setRotation(Math.max(-ROTATION_THRESHOLD, Math.min(calcValue, ROTATION_THRESHOLD)));
+        return setPoint;
+    }
+    
+    @Override
+    protected void resetVariables() {
+        pid.reset();
     }
 }
