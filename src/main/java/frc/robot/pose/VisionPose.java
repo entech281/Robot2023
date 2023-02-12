@@ -4,10 +4,12 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import edu.wpi.first.math.geometry.Pose2d;
 
 public class VisionPose implements Sendable {
     
     private double pipelineLatency;
+    private Pose2d poseRelativeToTag;
     private final List<RecognizedAprilTagTarget> recognizedTargets = new ArrayList<>();
     
     public List<RecognizedAprilTagTarget> getRecognizedTargets(){
@@ -43,5 +45,13 @@ public class VisionPose implements Sendable {
             return recognizedTargets.size();
         }, null);
     }
+
+    public Pose2d getPoseRelativeToTag() {
+        return this.poseRelativeToTag;
+     }
+ 
+     public void setPoseRelativeToTag(Pose2d poseRelativeToTag) {
+        this.poseRelativeToTag = poseRelativeToTag;
+     }    
 
 }

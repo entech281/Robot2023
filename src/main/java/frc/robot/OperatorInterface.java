@@ -17,25 +17,42 @@ public class OperatorInterface {
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
 
         driveStick.button(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
-            .onTrue(commandFactory.TurnToggleFilter(true))
-            .onFalse(commandFactory.TurnToggleFilter(false));
+            .onTrue(commandFactory.turnToggleFilter(false))
+            .onFalse(commandFactory.turnToggleFilter(true));
+
+        driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
+            .onTrue(commandFactory.autoAlignDrive(driveStick.getHID()))
+            .onFalse(commandFactory.driveCommand(driveStick.getHID()));
 
         driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
-            .onTrue(commandFactory.ToggleFieldAbsolute());
+            .onTrue(commandFactory.toggleFieldAbsolute());
 
         driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
             .onTrue(commandFactory.getZeroGyro());
 
         driveStick.button(RobotConstants.DRIVER_STICK.ZERO_ROBOT_ANGLE)
-            .onTrue(commandFactory.SnapYawDegreesCommand(0));
+            .onTrue(commandFactory.snapYawDegreesCommand(0));
 
         driveStick.pov(RobotConstants.DRIVER_STICK.POV.RIGHT)
-            .onTrue(commandFactory.NudgeRightCommand());
+            .onTrue(commandFactory.nudgeRightCommand());
 
         driveStick.pov(RobotConstants.DRIVER_STICK.POV.LEFT)
-            .onTrue(commandFactory.NudgeLeftCommand());
+            .onTrue(commandFactory.nudgeLeftCommand());
+
+        driveStick.pov(RobotConstants.DRIVER_STICK.POV.FORWARD)
+            .onTrue(commandFactory.nudgeForwardCommand());
+
+        driveStick.pov(RobotConstants.DRIVER_STICK.POV.BACKWARD)
+            .onTrue(commandFactory.nudgeBackwardCommand());
+
+        driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_LEFT)
+            .onTrue(commandFactory.nudgeYawLeftCommand());
+
+        driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_RIGHT)
+            .onTrue(commandFactory.nudgeYawRightCommand());
+    
             
-        subsystemManager.getDriveSubsystem().setDefaultCommand(commandFactory.DriveCommand(driveStick.getHID()));
+        subsystemManager.getDriveSubsystem().setDefaultCommand(commandFactory.driveCommand(driveStick.getHID()));
     }
     
     public TargetNode getTargetNode(){

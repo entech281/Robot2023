@@ -19,12 +19,12 @@ public class ZeroGyroCommand extends EntechCommandBase {
   /**
    * Creates a new ZeroGyro Command that will reset the gyro value
    *
-   *
-   * @param NavX The NavXSubsystem this command runs on.
+   * 
+   * @param navX The NavXSubsystem this command runs on.
    */
-  public ZeroGyroCommand(NavXSubSystem NavX) {
-    super(NavX);
-    navX = NavX;
+  public ZeroGyroCommand(NavXSubSystem navX) {
+    super(navX);
+    this.navX = navX;
   }
 
   @Override

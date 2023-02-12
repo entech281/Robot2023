@@ -1,6 +1,7 @@
 package frc.robot.filters;
 
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.pose.RobotPose;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.subsystems.NavXSubSystem;
 
@@ -10,43 +11,51 @@ import frc.robot.subsystems.NavXSubSystem;
  * @author aheitkamp
  */
 public class AutoYawFilter extends Filter {
-    private Gyro gyro;
-    private PIDController PID;
 
-    public AutoYawFilter(Gyro gyro) {
-        this.gyro = gyro;
+    private static final double P_GAIN = 0.095;
+    private static final double I_GAIN = 0.15;
+    private static final double D_GAIN = 0.0085;
+    private static final double ANGLE_TOLERANCE = 2;
+    private static final double SPEED_LIMIT = 0.75;
+    private static final double JITTER_ROUNDING = 4;
 
-        PID = new PIDController(0.095, 0.15, 0.0085);
-        PID.setTolerance(2);
-        PID.enableContinuousInput(-180, 180);
+    private PIDController pid;
+
+    public AutoYawFilter() {
+        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
+        pid.setTolerance(ANGLE_TOLERANCE);
+        pid.enableContinuousInput(-180, 180);
     }
 
-    public void filter(DriveInput DI) {
-        if (!enable) {
-            PID.reset();
+    public void doFilter(DriveInput di, RobotPose rp) {
+        double currentYaw = rp.getBodyPose().getYawAngleDegrees();
+
+        if (Math.abs(di.getForward()) < 0.1 && Math.abs(di.getRight()) < 0.1) {
+            resetVariables();
             return;
         }
 
-        if (Math.abs(DI.getForward()) < 0.1 && Math.abs(DI.getRight()) < 0.1) {
-            PID.reset();
+        if (di.getOverrideAutoYaw()) {
+            resetVariables();
             return;
         }
 
-        if (DI.getOverrideAutoYaw()) {
-            PID.reset();
-            return;
-        }
+        double setPoint = Math.toDegrees(Math.atan2(di.getRight(), di.getForward()));
 
-        double setPoint = Math.toDegrees(Math.atan2(DI.getRight(), DI.getForward()));
-
-        if (Math.abs(setPoint - gyro.getAngle()) > 90) {
+        if (Math.abs(setPoint - currentYaw) > 90) {
             setPoint += 180;
         }
 
-        double calcValue = PID.calculate(gyro.getAngle(), setPoint);
-        calcValue = Math.round(calcValue/4) * 4;
+        double calcValue = pid.calculate(currentYaw, setPoint);
+        calcValue = Math.round(calcValue/JITTER_ROUNDING) * JITTER_ROUNDING;
 
-        DI.setOverrideYawLock(true);
-        DI.setRotation(Math.max(-0.75, Math.min(calcValue, 0.75)));
+        di.setOverrideYawLock(true);
+        di.setRotation(Math.max(-SPEED_LIMIT, Math.min(calcValue, SPEED_LIMIT)));
+    }
+
+
+    @Override
+    protected void resetVariables() {
+        pid.reset();
     }
 }

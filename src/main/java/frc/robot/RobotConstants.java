@@ -34,7 +34,7 @@ public final class RobotConstants {
             public static final int RED_RIGHT = 1;
             public static final int RED_LEFT = 3; 
         }
-        public static final String PHOTON_HOST = "photonvision";  
+        public static final String PHOTON_HOST = "photonvision-3B";  
         public static final double MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES = 40.0;
         public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
     }
@@ -59,6 +59,9 @@ public final class RobotConstants {
         public static final int ZERO_GYRO_ANGLE = 9;
         public static final int ZERO_ROBOT_ANGLE = 10;
         public static final int AUTO_YAW_TOGGLE = 11;
+        public static final int NUDGE_YAW_LEFT = 3;
+        public static final int NUDGE_YAW_RIGHT = 4;
+        public static final int AUTO_ALIGN_DRIVE = 2;
         public interface POV {
             public static final int FORWARD = 0;
             public static final int RIGHT = 90;

@@ -32,7 +32,7 @@ public class SubsystemManager {
 
     public void initAll() {
         navXSubSystem  = new NavXSubSystem();
-        driveSubsystem = new DriveSubsystem(getNavXSubSystem());
+        driveSubsystem = new DriveSubsystem();
         visionSubsystem = new VisionSubsystem();
         armSubsystem = new ArmSubsystem();
 

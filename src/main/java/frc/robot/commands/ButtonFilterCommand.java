@@ -12,7 +12,7 @@ import frc.robot.filters.DriveFilterManager;
 public class ButtonFilterCommand extends EntechCommandBase {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
-    private DriveFilterManager DFM;
+    private DriveFilterManager dfm;
     private int buttonNumber;
     private boolean enable;
     private boolean isFinished = false;
@@ -20,27 +20,27 @@ public class ButtonFilterCommand extends EntechCommandBase {
     /**
      * 
      *
-     * @param Drive The drive subsystem.
-     * @param ButtonNumber The button that has been pressed
+     * @param drive The drive subsystem.
+     * @param buttonNumber The button that has been pressed
      * @param enabled If you want to set the filter to be on or off 
      */
-    public ButtonFilterCommand(DriveSubsystem Drive, int ButtonNumber, boolean enabled) {
-        super(Drive);
-        drive = Drive;
-        buttonNumber = ButtonNumber;
-        enable = enabled;
+    public ButtonFilterCommand(DriveSubsystem drive, int buttonNumber, boolean enable) {
+        super(drive);
+        this.drive = drive;
+        this.buttonNumber = buttonNumber;
+        this.enable = enable;
     }
 
     @Override
     public void initialize() {
-        DFM = drive.getDFM();
+        dfm = drive.getDFM();
     }
 
     @Override
     public void execute() {
         switch (buttonNumber) {
             case RobotConstants.DRIVER_STICK.TURN_TOGGLE:
-                DFM.getTurnToggle().setEnabled(enable);
+                dfm.getTurnToggle().setEnabled(enable);
                 break;
             default:
                 return;

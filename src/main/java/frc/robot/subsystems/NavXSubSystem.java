@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.pose.NavxPose;
 /**
  *
@@ -53,7 +54,9 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
     }
 
     public NavxPose getNavxOutput(){
-        return new NavxPose();
+        NavxPose newPose = new NavxPose();
+        newPose.setYawAngleDegrees(getAngle());
+        return newPose;
     }
 
     public void zeroYaw() {

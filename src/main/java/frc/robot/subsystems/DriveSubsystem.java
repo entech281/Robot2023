@@ -18,6 +18,7 @@ import frc.robot.filters.DriveFilterManager;
 import frc.robot.filters.DriveInput;
 import frc.robot.pose.AlignmentSolution;
 import frc.robot.pose.DrivePose;
+import frc.robot.pose.RobotPose;
 
 /**
  *
@@ -30,16 +31,20 @@ public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontRightTalon;
   private WPI_TalonSRX rearRightTalon;
   private MecanumDrive robotDrive;
-  private DriveFilterManager DFM;
+  private DriveFilterManager dfm;
 
   private boolean useFieldAbsolute = false;
-
-  private NavXSubSystem navX;
-
   private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
 
-  public DriveSubsystem(NavXSubSystem navx) {
-    navX = navx;
+  private double autoAlignAngle = 0.0;
+  private boolean canAutoAlign = false;
+  
+  /**
+   *
+   * 
+   * @param navX The NavXSubsystem that some filters use and the drive in field absolute
+   */
+  public DriveSubsystem() {
   }
 
   public DrivePose getDriveOutput(){
@@ -53,7 +58,7 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightTalon = new WPI_TalonSRX(RobotConstants.CAN.FRONT_RIGHT_MOTOR);
     rearRightTalon  = new WPI_TalonSRX(RobotConstants.CAN.REAR_RIGHT_MOTOR);
     robotDrive      = new MecanumDrive(frontLeftTalon, rearLeftTalon, frontRightTalon, rearRightTalon);
-    DFM             = new DriveFilterManager(navX);
+    dfm             = new DriveFilterManager();
 
     robotDrive.setDeadband(0.1);
 
@@ -81,28 +86,40 @@ public class DriveSubsystem extends EntechSubsystem {
 
     SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
 
+    SmartDashboard.putNumber("Auto Align Angle", autoAlignAngle);
 
-    DFM.refreshFilterEnable(isFieldAbsoluteActive());
+
+    dfm.refreshFilterEnable(isFieldAbsoluteActive());
     robotDrive.feed();
     robotDrive.feedWatchdog();
   }
 
-  public void drive(DriveInput DI) {
-    loggingDriveInput = DI;
-    DFM.applyFilters(DI);
+  public void drive(DriveInput di, RobotPose rp) {
+    loggingDriveInput = di;
+    dfm.applyFilters(di, rp);
     if (isFieldAbsoluteActive()) {
-      robotDrive.driveCartesian(DI.getForward(), DI.getRight(), DI.getRotation(), Rotation2d.fromDegrees(navX.getYaw()));
+      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(rp.getBodyPose().getYawAngleDegrees()));
+
     } else {
-      robotDrive.driveCartesian(DI.getForward(), DI.getRight(), DI.getRotation());
+      robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation());
     }
   }
 
   public void activateAlignmentSolution ( AlignmentSolution solution ){
-      //use the solution to affect the drive
+      autoAlignAngle = solution.getTempAngle();
+      canAutoAlign = solution.getHasTempAngle();
+  }
+
+  public double getAlignmentAngle() {
+    return autoAlignAngle; 
+  }
+
+  public boolean getCanAutoAlign() {
+    return canAutoAlign;
   }
 
   public DriveFilterManager getDFM() {
-    return DFM;
+    return dfm;
   }
 
   public boolean isFieldAbsoluteActive() {
