@@ -2,6 +2,8 @@ package frc.robot.filters;
 
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.pose.RobotPose;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.robot.subsystems.NavXSubSystem;
 
 /**
  *
@@ -9,6 +11,7 @@ import frc.robot.pose.RobotPose;
  * @author aheitkamp
  */
 public class AutoYawFilter extends Filter {
+
     private static final double P_GAIN = 0.095;
     private static final double I_GAIN = 0.15;
     private static final double D_GAIN = 0.0085;
@@ -49,6 +52,7 @@ public class AutoYawFilter extends Filter {
         di.setOverrideYawLock(true);
         di.setRotation(Math.max(-SPEED_LIMIT, Math.min(calcValue, SPEED_LIMIT)));
     }
+
 
     @Override
     protected void resetVariables() {

@@ -51,6 +51,7 @@
             "groupId": "com.ctre.phoenixpro",
             "artifactId": "tools",
             "version": "23.0.7",
+
             "isJar": false,
             "skipInvalidPlatforms": true,
             "validPlatforms": [

@@ -14,6 +14,7 @@ public class DriveFilterManager {
 
     public DriveFilterManager() {
         autoYaw = new AutoYawFilter();
+
         turnToggle = new TurnToggleFilter();
     }
 

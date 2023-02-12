@@ -8,7 +8,7 @@ import frc.robot.subsystems.NavXSubSystem;
 
 /**
  *
- * 
+ *
  * @author aheitkamp
  */
 public class ZeroGyroCommand extends EntechCommandBase {
@@ -33,7 +33,7 @@ public class ZeroGyroCommand extends EntechCommandBase {
 
   @Override
   public void execute() {
-    navX.getGyro().reset();
+    navX.zeroYaw();
     isFinished = true;
   }
 

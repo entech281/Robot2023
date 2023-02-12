@@ -22,7 +22,7 @@ import frc.robot.pose.RobotPose;
 
 /**
  *
- * 
+ *
  * @author aheitkamp
  */
 public class DriveSubsystem extends EntechSubsystem {
@@ -34,7 +34,6 @@ public class DriveSubsystem extends EntechSubsystem {
   private DriveFilterManager dfm;
 
   private boolean useFieldAbsolute = false;
-
   private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
 
   private double autoAlignAngle = 0.0;
@@ -51,7 +50,7 @@ public class DriveSubsystem extends EntechSubsystem {
   public DrivePose getDriveOutput(){
       return new DrivePose();
   }
-  
+
   @Override
   public void initialize() {
     frontLeftTalon  = new WPI_TalonSRX(RobotConstants.CAN.FRONT_LEFT_MOTOR);
@@ -67,7 +66,7 @@ public class DriveSubsystem extends EntechSubsystem {
     rearLeftTalon.setInverted(false);
     frontRightTalon.setInverted(true);
     rearRightTalon.setInverted(true);
-    
+
     frontLeftTalon.enableCurrentLimit(false);
     rearLeftTalon.enableCurrentLimit(false);
     frontRightTalon.enableCurrentLimit(false);
@@ -76,7 +75,6 @@ public class DriveSubsystem extends EntechSubsystem {
 
   @Override
   public void periodic() {
-
     SmartDashboard.putNumber("Front Left Talon", frontLeftTalon.get());
     SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
     SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
@@ -101,6 +99,7 @@ public class DriveSubsystem extends EntechSubsystem {
     dfm.applyFilters(di, rp);
     if (isFieldAbsoluteActive()) {
       robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(rp.getBodyPose().getYawAngleDegrees()));
+
     } else {
       robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation());
     }
