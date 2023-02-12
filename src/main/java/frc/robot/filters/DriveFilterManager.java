@@ -22,7 +22,7 @@ public class DriveFilterManager {
     public DriveFilterManager(NavXSubSystem NavX) {
         navX = NavX;
 
-        autoYaw = new AutoYawFilter(navX.getGyro());
+        autoYaw = new AutoYawFilter(navX);
         turnToggle = new TurnToggleFilter();
     }
 

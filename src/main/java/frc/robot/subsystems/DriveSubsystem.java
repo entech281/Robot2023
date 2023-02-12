@@ -21,7 +21,7 @@ import frc.robot.pose.DrivePose;
 
 /**
  *
- * 
+ *
  * @author aheitkamp
  */
 public class DriveSubsystem extends EntechSubsystem {
@@ -34,23 +34,18 @@ public class DriveSubsystem extends EntechSubsystem {
 
   private boolean useFieldAbsolute = false;
 
-  private NavXSubSystem navX; 
+  private NavXSubSystem navX;
 
   private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
-  
-  /**
-   *
-   * 
-   * @param NavX The NavXSubsystem that some filters use and the drive in field absolute
-   */
-  public DriveSubsystem(NavXSubSystem NavX) {
-    navX = NavX;
+
+  public DriveSubsystem(NavXSubSystem navx) {
+    navX = navx;
   }
 
   public DrivePose getDriveOutput(){
       return new DrivePose();
   }
-  
+
   @Override
   public void initialize() {
     frontLeftTalon  = new WPI_TalonSRX(RobotConstants.CAN.FRONT_LEFT_MOTOR);
@@ -66,7 +61,7 @@ public class DriveSubsystem extends EntechSubsystem {
     rearLeftTalon.setInverted(false);
     frontRightTalon.setInverted(true);
     rearRightTalon.setInverted(true);
-    
+
     frontLeftTalon.enableCurrentLimit(false);
     rearLeftTalon.enableCurrentLimit(false);
     frontRightTalon.enableCurrentLimit(false);
@@ -75,7 +70,6 @@ public class DriveSubsystem extends EntechSubsystem {
 
   @Override
   public void periodic() {
-
     SmartDashboard.putNumber("Front Left Talon", frontLeftTalon.get());
     SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
     SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
@@ -97,7 +91,7 @@ public class DriveSubsystem extends EntechSubsystem {
     loggingDriveInput = DI;
     DFM.applyFilters(DI);
     if (isFieldAbsoluteActive()) {
-      robotDrive.driveCartesian(DI.getForward(), DI.getRight(), DI.getRotation(), Rotation2d.fromDegrees(navX.getAngle()));
+      robotDrive.driveCartesian(DI.getForward(), DI.getRight(), DI.getRotation(), Rotation2d.fromDegrees(navX.getYaw()));
     } else {
       robotDrive.driveCartesian(DI.getForward(), DI.getRight(), DI.getRotation());
     }
