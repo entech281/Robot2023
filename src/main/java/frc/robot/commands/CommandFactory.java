@@ -2,11 +2,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotConstants;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
+import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.DriveStatus;
 import frc.robot.pose.NavxStatus;
 import frc.robot.pose.PoseEstimator;
@@ -37,12 +39,29 @@ public class CommandFactory {
     	DriveStatus ds = sm.getDriveSubsystem().getStatus();
     	VisionStatus vs = sm.getVisionSubsystem().getStatus();
     	NavxStatus ns = sm.getNavXSubSystem().getStatus();
-        estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);        
+    	
+    	//this is where we estimate robot pose from various sources.
+    	//set which estimator we use in Robot.robotInit()
+        estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
+        
+        
+        /**
+         * TEMPORARY Code, just so that we can see 
+         * How things look before doing actual control
+         * once we like this, it belongs inside of whatever command we run
+         */
+         AlignmentCalculator calc = new AlignmentCalculator();
+         double alignAngle = calc.calculateAngleToScoringLocation(vs, TargetNode.A3, estimatedRobotPose);
+         SmartDashboard.putNumber("AlignAngle", alignAngle);
     }
+    
+    
+    //private because this is just a provider for drive commands
     private Pose2d getCurrentEstimatedPose() {
     	return estimatedRobotPose;
     }
- 
+    
+    //private because this is just a provider for drive commands
     private double getCurrentYawDegrees() {
     	return estimatedRobotPose.getRotation().getDegrees();
     }
@@ -58,7 +77,9 @@ public class CommandFactory {
     public Command turnToggleFilter(boolean enabled) {
         return buttonFilterCommand(RobotConstants.DRIVER_STICK.TURN_TOGGLE, enabled);
     }
-
+    public Command filteredDriveComamnd(Joystick joystick) {
+    	return new FilteredDriveCommand(sm.getDriveSubsystem(),joystick,this::getCurrentYawDegrees);
+    }
     public Command driveCommand(Joystick joystick) {
         return new DriveCommand(sm.getDriveSubsystem(), joystick,this::getCurrentYawDegrees);
     }

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CommandFactory;
-import frc.robot.pose.VisionFirstNavxAsBackupPoseCalculator;
+import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.SubsystemManager;
 
 /**
@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 	SubsystemManager subsystemManager = new SubsystemManager();
     subsystemManager.initAll();
-    commandFactory = new CommandFactory(subsystemManager,new VisionFirstNavxAsBackupPoseCalculator());
+    commandFactory = new CommandFactory(subsystemManager,new VisionFirstNavxAsBackupPoseEstimator());
     oi = new OperatorInterface(commandFactory);
   }
 
@@ -85,6 +85,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
+    oi.setDefaultDriveCommand();
   }
 
   /** This function is called periodically during operator control. */

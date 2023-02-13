@@ -49,8 +49,11 @@ public class OperatorInterface {
         driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_RIGHT)
             .onTrue(commandFactory.nudgeYawRightCommand());
             
-        commandFactory.setDefaultDriveCommand(commandFactory.driveCommand(driveStick.getHID()));
 
+    }
+
+    public void setDefaultDriveCommand() {
+    	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveComamnd(driveStick.getHID()));
     }
     
     public boolean hasSelectedTarget() {

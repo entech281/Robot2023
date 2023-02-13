@@ -4,6 +4,7 @@ import frc.robot.RobotConstants;
 import java.util.NoSuchElementException;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class AprilTagLocation {
@@ -59,6 +60,10 @@ public class AprilTagLocation {
 
   public Pose2d asPose2d() {
 	  return new Pose2d(getXIn(), getYIn(), Rotation2d.fromDegrees(absoluteTargetAngleDegrees));
+  }
+  
+  public Pose3d asPose3d() {
+	  return new Pose3d(asPose2d());
   }
   
   public int getId() {

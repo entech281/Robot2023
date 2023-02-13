@@ -19,7 +19,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -102,9 +101,8 @@ public class VisionSubsystem extends EntechSubsystem {
   public static RecognizedAprilTagTarget createRecognizedTarget(PhotonTrackedTarget t) {
 	  
       Transform3d t3d = t.getBestCameraToTarget();
-      Pose2d p = new Pose2d(t3d.getX(),t3d.getY(), t3d.getRotation().toRotation2d());
       AprilTagLocation loc = AprilTagLocation.findFromTag(t.getFiducialId());
-      return new RecognizedAprilTagTarget (p,loc);
+      return new RecognizedAprilTagTarget (t3d,loc);
   }
   
   @Override
