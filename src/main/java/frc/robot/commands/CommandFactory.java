@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotConstants;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
+import frc.robot.logging.PoseLogger;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.PoseEstimator;
 import frc.robot.pose.RecognizedAprilTagTarget;
@@ -28,7 +29,7 @@ public class CommandFactory {
     private final SubsystemManager sm;
     private PoseEstimator poseEstimator;
     private Pose2d estimatedRobotPose;
-
+    private static PoseLogger poseLogger = new PoseLogger();
     
     public CommandFactory(SubsystemManager subsystemManager,  PoseEstimator poseEstimator){
         this.sm = subsystemManager;
@@ -44,15 +45,22 @@ public class CommandFactory {
     	//set which estimator we use in Robot.robotInit()
         estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
         
+        poseLogger.logPose2d("pose-us", estimatedRobotPose);        
+        poseLogger.logPose2d("pose-photon", vs.getPhotonEstimatedPose().toPose2d());
+
         
         /**
          * TEMPORARY Code, just so that we can see 
          * How things look before doing actual control
          * once we like this, it belongs inside of whatever command we run
+         * 
+         * Also we are TEMPORARILY printing out what we get from MagicPhotonVisionEstimator
          */
+         
          AlignmentCalculator calc = new AlignmentCalculator();
          double alignAngle = calc.calculateAngleToScoringLocation(vs, TargetNode.A3, estimatedRobotPose);
          SmartDashboard.putNumber("AlignAngle", alignAngle);
+         
     }
     
     
