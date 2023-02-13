@@ -26,7 +26,6 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
 import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;
-import frc.robot.pose.VisionStatus;
 
 public class VisionSubsystem extends EntechSubsystem {
 

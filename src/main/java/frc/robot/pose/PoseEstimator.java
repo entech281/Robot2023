@@ -1,6 +1,9 @@
 package frc.robot.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.subsystems.DriveStatus;
+import frc.robot.subsystems.NavxStatus;
+import frc.robot.subsystems.VisionStatus;
 
 public interface PoseEstimator {
 

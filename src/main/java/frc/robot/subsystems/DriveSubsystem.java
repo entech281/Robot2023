@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
-import frc.robot.pose.DriveStatus;
 
 /**
  *

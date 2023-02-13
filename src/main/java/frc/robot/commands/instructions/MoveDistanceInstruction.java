@@ -1,4 +1,4 @@
-package frc.robot.pose.instructions;
+package frc.robot.commands.instructions;
 
 public class MoveDistanceInstruction extends AlignmentInstruction {
 

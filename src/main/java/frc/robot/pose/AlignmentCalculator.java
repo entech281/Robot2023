@@ -1,6 +1,7 @@
 package frc.robot.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.subsystems.VisionStatus;
 
 public class AlignmentCalculator {
 

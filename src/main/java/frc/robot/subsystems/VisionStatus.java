@@ -1,4 +1,4 @@
-package frc.robot.pose;
+package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.subsystems.SubsystemStatus;
+import frc.robot.pose.RecognizedAprilTagTarget;
 
 public class VisionStatus implements SubsystemStatus,Sendable{
 

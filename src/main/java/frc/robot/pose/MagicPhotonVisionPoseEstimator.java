@@ -2,6 +2,9 @@ package frc.robot.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import frc.robot.subsystems.DriveStatus;
+import frc.robot.subsystems.NavxStatus;
+import frc.robot.subsystems.VisionStatus;
 
 /**
  * this estimator  uses only PhotonVision's pose estimate.

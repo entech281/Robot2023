@@ -1,6 +1,4 @@
-package frc.robot.pose;
-
-import frc.robot.subsystems.SubsystemStatus;
+package frc.robot.subsystems;
 
 /**
  *

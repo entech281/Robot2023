@@ -26,7 +26,6 @@ public class TestStoppingCounter {
 	public void testStopperResets() {
 		final int NUM_COUNTS = 4;
 		
-		Supplier<Boolean> giveTrue = () -> true;
 		
 		StoppingCounter sc = new StoppingCounter("quicketest", NUM_COUNTS);
 		assertFalse(sc.isFinished(true));

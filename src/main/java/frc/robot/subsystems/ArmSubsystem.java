@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.pose.ArmStatus;
 
 /**
  *

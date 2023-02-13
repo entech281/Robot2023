@@ -2,10 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.pose.AlignmentSolution;
-import frc.robot.pose.ArmStatus;
-import frc.robot.pose.DriveStatus;
-import frc.robot.pose.NavxStatus;
-import frc.robot.pose.VisionStatus;
+import frc.robot.subsystems.ArmStatus;
+import frc.robot.subsystems.DriveStatus;
+import frc.robot.subsystems.NavxStatus;
+import frc.robot.subsystems.VisionStatus;
 
 public class CommandContext {
 

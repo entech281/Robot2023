@@ -9,14 +9,14 @@ import frc.robot.RobotConstants;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.pose.AlignmentCalculator;
-import frc.robot.pose.DriveStatus;
-import frc.robot.pose.NavxStatus;
 import frc.robot.pose.PoseEstimator;
 import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.pose.TargetNode;
-import frc.robot.pose.VisionStatus;
+import frc.robot.subsystems.DriveStatus;
+import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.SubsystemManager;
+import frc.robot.subsystems.VisionStatus;
 
 /**
  *
