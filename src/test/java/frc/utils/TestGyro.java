@@ -1,7 +1,6 @@
 package frc.utils;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import frc.robot.pose.RobotCalculations;
 
 public class TestGyro implements Gyro {
     private double anglePose;
