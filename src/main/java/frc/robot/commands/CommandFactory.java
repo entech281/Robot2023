@@ -81,7 +81,7 @@ public class CommandFactory {
     }    
     
     public Command snapYawDegreesCommand(double angle) {
-        return new SnapYawDegreesCommand(sm.getDriveSubsystem(),angle,this::getCurrentYawDegrees );
+        return new SnapYawDegreesCommand(sm.getDriveSubsystem(), angle,this::getCurrentYawDegrees );
     }
 
     public Command getAutonomousCommand() {

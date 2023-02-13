@@ -40,7 +40,6 @@ public class VisionSubsystem extends EntechSubsystem {
 				  RobotConstants.VISION.CAMERA_POSITION.UP_METERS), new Rotation3d(0,0,0));
   private PhotonPoseEstimator photonPoseEstimator;
   
-  // Entech does all the creation work in the initialize method
   @Override
   public void initialize() {
     camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);

@@ -1,6 +1,8 @@
 
 package frc.robot;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
 
@@ -17,8 +19,10 @@ public class TestThatTestsRun {
     
     @Test
     public void testThatThisBreaks(){
-        //throw new RuntimeException("Error");
-    }
-    
-    
+    	
+    	assertThrows(RuntimeException.class, () -> {
+    		throw new RuntimeException("Error");
+    	});
+        
+    }        
 }

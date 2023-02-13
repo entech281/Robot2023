@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.util.PoseUtils;
+import frc.robot.util.PoseUtil;
 
 public class TestOurAprilTagsMatchFirstOnes {
 
@@ -33,7 +33,7 @@ public class TestOurAprilTagsMatchFirstOnes {
 		Pose2d wpi_tag = WPI_2023_LAYOUT.getTagPose(input_tag).get().toPose2d();
 
 		Pose2d our_tag_inches = AprilTagLocation.findFromTag(input_tag).asPose2d();
-		Pose2d our_tag_meters = PoseUtils.inchesToMeters(our_tag_inches);
+		Pose2d our_tag_meters = PoseUtil.inchesToMeters(our_tag_inches);
 		assertEquals(wpi_tag, our_tag_meters);
 	}
 }
