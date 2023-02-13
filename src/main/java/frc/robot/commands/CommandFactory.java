@@ -45,8 +45,10 @@ public class CommandFactory {
     	//set which estimator we use in Robot.robotInit()
         estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
         
-        poseLogger.logPose2d("pose-us", estimatedRobotPose);        
-        poseLogger.logPose2d("pose-photon", vs.getPhotonEstimatedPose().toPose2d());
+        poseLogger.logPose2d("pose-us", estimatedRobotPose);   
+        if (vs.getPhotonEstimatedPose() != null) {
+            poseLogger.logPose2d("pose-photon", vs.getPhotonEstimatedPose().toPose2d());
+        }     
 
         
         /**

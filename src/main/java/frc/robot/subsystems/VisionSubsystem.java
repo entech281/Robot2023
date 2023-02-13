@@ -30,7 +30,7 @@ import frc.robot.pose.RecognizedAprilTagTarget;
 public class VisionSubsystem extends EntechSubsystem {
 
   private PhotonCamera camera;
-  private VisionStatus currentStatus;
+  private VisionStatus currentStatus = new VisionStatus();
   private final Transform3d ROBOT_TO_CAM = new Transform3d( 
 		  new Translation3d( 
 				  RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS,
