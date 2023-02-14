@@ -19,7 +19,7 @@ public class OperatorInterface {
             .onFalse(commandFactory.turnToggleFilter(true));
 
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
-            .onTrue(commandFactory.alignToScoringLocation(getSelectedTargetNode(),driveStick.getHID()))
+            .onTrue(commandFactory.alignToScoringLocation(driveStick.getHID()))
             .onFalse(commandFactory.driveCommand(driveStick.getHID()));
         
         driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
@@ -56,12 +56,4 @@ public class OperatorInterface {
     	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveComamnd(driveStick.getHID()));
     }
     
-    public boolean hasSelectedTarget() {
-    	return true;
-    }
-    public TargetNode getSelectedTargetNode(){
-    	//TODO: replace with code that gets the selected one
-        return  TargetNode.A3;
-    }
-
 }

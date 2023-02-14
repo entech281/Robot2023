@@ -43,8 +43,8 @@ public class SnapYawDegreesCommand extends BaseDrivePIDCommand {
             )
         );
         DriveInput di = new DriveInput(0, 0, calcValue);
-        di.setOverrideYawLock(true);
-        di.setOverrideAutoYaw(true);
+        //di.setOverrideYawLock(true);
+        //di.setOverrideAutoYaw(true);
         
         //TODO: should we pass yawAngleDegrees into the drive input, to support different behavior
         //in field absolute vs not?

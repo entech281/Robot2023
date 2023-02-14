@@ -5,26 +5,26 @@ package frc.robot.filters;
  * 
  * @author aheitkamp
  */
-public abstract class Filter {
-    protected boolean enable;
+public abstract class DriveInputFilter {
+    protected boolean enabled = true;
 
     protected abstract DriveInput doFilter(DriveInput di);
-    protected abstract void resetVariables();
 
     public final DriveInput filter(DriveInput original) {
-        if (!enable) {
-            resetVariables();
-            return original;
-        }
-
-        return doFilter(original);
+    	if ( enabled ) {
+    		return doFilter(original);
+    	}
+    	else {
+    		return original;
+    	}
+        
     };
 
     public void setEnabled(boolean enabled) {
-        enable = enabled;
+    	this.enabled = enabled;
     }
 
     public boolean getEnabled() {
-        return enable;
+        return enabled;
     };
 }

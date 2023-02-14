@@ -40,10 +40,6 @@ public abstract class BaseDrivePIDCommand extends EntechCommandBase {
     }
 
     @Override
-    public void initialize() {
-    }
-
-    @Override
     public abstract void execute();
     
     @Override

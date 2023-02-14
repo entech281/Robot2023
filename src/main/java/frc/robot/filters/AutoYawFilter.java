@@ -7,7 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
  * 
  * @author aheitkamp
  */
-public class AutoYawFilter extends Filter {
+public class AutoYawFilter extends DriveInputFilter {
 
     private static final double P_GAIN = 0.095;
     private static final double I_GAIN = 0.15;
@@ -27,14 +27,14 @@ public class AutoYawFilter extends Filter {
     public DriveInput doFilter(DriveInput original) {
 
         if (Math.abs(original.getForward()) < 0.1 && Math.abs(original.getRight()) < 0.1) {
-            resetVariables();
+//            resetVariables();
             return original;
         }
 
-        if (original.getOverrideAutoYaw()) {
-            resetVariables();
-            return original;
-        }
+//        if (original.getOverrideAutoYaw()) {
+//            resetVariables();
+//            return original;
+//        }
 
         double setPoint = computeSetPoint(original);
 
@@ -43,7 +43,7 @@ public class AutoYawFilter extends Filter {
 
         DriveInput newDi = new DriveInput(original);        		
         		
-        newDi.setOverrideYawLock(true);
+//        newDi.setOverrideYawLock(true);
         newDi.setRotation(Math.max(-SPEED_LIMIT, Math.min(calcValue, SPEED_LIMIT)));
         return newDi;
     }
@@ -58,8 +58,8 @@ public class AutoYawFilter extends Filter {
         return setPoint;
     }
     
-    @Override
-    protected void resetVariables() {
-        pid.reset();
-    }
+//    @Override
+//    protected void resetVariables() {
+//        pid.reset();
+//    }
 }
