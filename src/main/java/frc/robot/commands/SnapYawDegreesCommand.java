@@ -49,7 +49,7 @@ public class SnapYawDegreesCommand extends BaseDrivePIDCommand {
         //TODO: should we pass yawAngleDegrees into the drive input, to support different behavior
         //in field absolute vs not?
         
-        drive.drive(di );
+        drive.drive(di);
     }
 
 }

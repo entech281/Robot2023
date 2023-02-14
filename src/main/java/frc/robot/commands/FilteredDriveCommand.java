@@ -32,7 +32,7 @@ public class FilteredDriveCommand extends DriveCommand {
 
     @Override
     public void execute() {
-    	DriveInput operatorInput =new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ(),yawAngleSupplier.get());
+    	DriveInput operatorInput = new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ(), yawAngleSupplier.get());
     	DriveInput filteredInput = filterManager.filtered(operatorInput);
     	drive.drive(filteredInput);
     }
