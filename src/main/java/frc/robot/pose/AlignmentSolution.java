@@ -1,5 +1,12 @@
 package frc.robot.pose;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import frc.robot.commands.instructions.AlignmentInstruction;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * An alignment solution should include everything we need if we
  * wanted to execute a fully autonomous score from our current position.
@@ -11,33 +18,31 @@ package frc.robot.pose;
  * as the basis for our calculations, and the scoring node we are going after
  * @author dcowden
  */
-public class AlignmentSolution {
+public class AlignmentSolution implements Sendable{
+    
     public enum AlignmentStrategy{
         HOPELESS_I_GIVE_UP,
+        DEPLOY_NOW,
         ROTATE_AND_DEPLOY,
+        ROTATE_THEN_FOWARD,
         ORTHOGONAL_APPOROACH,
-        NO_STRATEGY_SELECTED
+        NO_STRATEGY_SELECTED,
+        CONFUSED
     }
     
-    private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
-    private TargetNode target;
-    private RobotPose startingPose;
-
-    public RobotPose getStartingPose() {
-        return startingPose;
+    public AlignmentSolution(AlignmentStrategy strategy) {
+    	this.strategy = strategy;
     }
-
-    public void setStartingPose(RobotPose startingPose) {
-        this.startingPose = startingPose;
+    public boolean hasInstructions() {
+    	return ! alignmentInstructions.isEmpty();
     }
-    
-    public TargetNode getTarget() {
-        return target;
+    public void setScoringLocation(ScoringLocation scoringLocation) {
+    	this.scoringLocation = scoringLocation;
     }
-
-    public void setTarget(TargetNode target) {
-        this.target = target;
+    public ScoringLocation getScoringLocation() {
+        return scoringLocation;
     }
+  
     
     public AlignmentStrategy getStrategy() {
         return strategy;
@@ -46,4 +51,32 @@ public class AlignmentSolution {
     public void setStrategy(AlignmentStrategy strategy) {
         this.strategy = strategy;
     }
+
+    public void addAlignmentInstruction( AlignmentInstruction is ){
+        alignmentInstructions.add(is);
+    }
+    public List<AlignmentInstruction> getAlignmentInstructions() {
+        return alignmentInstructions;
+    }
+    
+    @Override
+    public void initSendable(SendableBuilder sb) {
+        sb.addStringProperty("Alignment strategy", this::toString, null);
+    }    
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.strategy);
+        sb.append(" : ");
+        for ( AlignmentInstruction ai: alignmentInstructions){
+            sb.append("\t* ").append (ai).append("\n");
+        }
+        return sb.toString();
+    }
+    
+    private final List<AlignmentInstruction> alignmentInstructions = new ArrayList<>();
+    private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
+    private ScoringLocation scoringLocation;    
+
 }

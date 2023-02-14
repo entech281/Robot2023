@@ -31,5 +31,5 @@ public class TestGyro implements Gyro {
 
     public void simulateMove( double turnPower) {
         anglePose = turnPower * changeRateConstant;
-    }
+    }    
 }

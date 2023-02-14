@@ -4,13 +4,16 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveCommand extends EntechCommandBase {
-    private final DriveSubsystem drive;
-    private final Joystick joystick;
+    protected final DriveSubsystem drive;
+    protected final Joystick joystick;
+    protected final Supplier<Double> yawAngleSupplier;
 
     /**
      * Creates a new ArcadeDrive. This command will drive your robot according to
@@ -20,10 +23,11 @@ public class DriveCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public DriveCommand(DriveSubsystem Drive, Joystick Joystick) {
-        super(Drive);
-        drive = Drive;
-        joystick = Joystick;
+    public DriveCommand(DriveSubsystem drive, Joystick joystick, Supplier<Double> yawAngleSupplier) {
+        super(drive);
+        this.drive = drive;
+        this.joystick = joystick;
+        this.yawAngleSupplier = yawAngleSupplier;
     }
 
     @Override
@@ -32,7 +36,7 @@ public class DriveCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        drive.drive(new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ()));
+        drive.drive(new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ(),yawAngleSupplier.get()) );
     }
 
     @Override

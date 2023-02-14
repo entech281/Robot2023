@@ -14,13 +14,5 @@ public class TestTargetNode {
         TargetNode np = TargetNode.A1;
 
         assertEquals(np.getNodeID(), TargetNode.NodeID.A1);
-    }
-
-    // @Test
-    // public void testGetPoseToTag() {
-    //     TargetNode np = TargetNode.A2;
-
-    //     assertEquals(np.getPoseToTag(), new Pose2d(22, 8.5, new Rotation2d(0)));
-    // }    
-    
+    }    
 }

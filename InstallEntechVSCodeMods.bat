@@ -1,4 +1,5 @@
-SET INSTALL_DIR="C:\Users\Public\wpilib\2023\vscode\data\extensions\wpilibsuite.vscode-wpilib-2023.1.1\resources\java\src\commands"
+SET VERSION="2023.3.2"
+SET INSTALL_DIR="C:\Users\Public\wpilib\2023\vscode\data\extensions\wpilibsuite.vscode-wpilib-%VERSION%\resources\java\src\commands"
 
 @ECHO OFF
 IF NOT EXIST %INSTALL_DIR% (
