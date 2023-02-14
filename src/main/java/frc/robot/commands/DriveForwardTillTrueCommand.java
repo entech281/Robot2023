@@ -8,7 +8,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import frc.robot.filters.DriveInput;
-import frc.robot.pose.RobotPose;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -19,7 +18,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class DriveForwardTillTrueCommand extends EntechCommandBase {
     private final DriveSubsystem drive;
     private final BooleanSupplier condition;
-    private final Supplier<RobotPose> latestPose;
+    private final Supplier<Double> yawAngleSupplier;
 
     /**
      * Creates a new DriveForwardTillTrueCommand that will drive the robot forward until a given condition is true
@@ -28,11 +27,11 @@ public class DriveForwardTillTrueCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param condition the condition that when true will make the robot stop driving
      */
-    public DriveForwardTillTrueCommand(DriveSubsystem drive, BooleanSupplier condition, Supplier<RobotPose> latestPose) {
+    public DriveForwardTillTrueCommand(DriveSubsystem drive, BooleanSupplier condition, Supplier<Double> yawAngleSupplier) {
         super(drive);
         this.drive = drive;
         this.condition = condition;
-        this.latestPose = latestPose;
+        this.yawAngleSupplier = yawAngleSupplier;
     }
 
     @Override
@@ -41,7 +40,7 @@ public class DriveForwardTillTrueCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        drive.drive(new DriveInput(1, 0, 0), latestPose.get());
+        drive.drive(new DriveInput(1, 0, 0,yawAngleSupplier.get()));
     }
 
     @Override

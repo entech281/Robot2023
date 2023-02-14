@@ -14,11 +14,11 @@ public class TestTurnToggle {
 
         filter.setEnabled(true);
 
-        filter.filter(di, null);
+        DriveInput r = filter.filter(di);
 
-        assertEquals(0, di.getRotation(), SMALLDIFFERENCE);
-        assertEquals(0.5, di.getForward(), SMALLDIFFERENCE);
-        assertEquals(0.75, di.getRight(), SMALLDIFFERENCE);
+        assertEquals(0, r.getRotation(), SMALLDIFFERENCE);
+        assertEquals(0.5, r.getForward(), SMALLDIFFERENCE);
+        assertEquals(0.75, r.getRight(), SMALLDIFFERENCE);
     }
 
     @Test
@@ -28,10 +28,10 @@ public class TestTurnToggle {
 
         filter.setEnabled(false);
 
-        filter.filter(di, null);
+        DriveInput r = filter.filter(di);
 
-        assertEquals(0.6, di.getRotation(), SMALLDIFFERENCE);
-        assertEquals(0.5, di.getForward(), SMALLDIFFERENCE);
-        assertEquals(0.75, di.getRight(), SMALLDIFFERENCE);
+        assertEquals(0.6, r.getRotation(), SMALLDIFFERENCE);
+        assertEquals(0.5, r.getForward(), SMALLDIFFERENCE);
+        assertEquals(0.75, r.getRight(), SMALLDIFFERENCE);
     }
 }

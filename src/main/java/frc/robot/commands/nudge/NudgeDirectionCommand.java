@@ -7,9 +7,6 @@ package frc.robot.commands.nudge;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.pose.RobotPose;
-
-import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -19,10 +16,8 @@ import edu.wpi.first.wpilibj.Timer;
  * @author aheitkamp
  */
 public class NudgeDirectionCommand extends EntechCommandBase {
-    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
     private Timer timer;
-    private final Supplier<RobotPose> latestPose;
     private final DriveInput direction;
 
     private static final double NUDGE_TIME = 0.4;
@@ -40,10 +35,9 @@ public class NudgeDirectionCommand extends EntechCommandBase {
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeDirectionCommand(DriveSubsystem drive, DriveInput direction, Supplier<RobotPose> latestPose) {
+    public NudgeDirectionCommand(DriveSubsystem drive, DriveInput direction) {
         super(drive);
         this.drive = drive;
-        this.latestPose = latestPose;
         this.direction = direction.clone();
         this.direction.setOverrideAutoYaw(true);
     }
@@ -56,7 +50,7 @@ public class NudgeDirectionCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        drive.drive(direction.clone(), latestPose.get());
+        drive.drive(direction.clone() );
     }
 
     @Override

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveFilterManager;
 
@@ -10,9 +11,8 @@ import frc.robot.filters.DriveFilterManager;
  * @author aheitkamp
  */
 public class ButtonFilterCommand extends EntechCommandBase {
-    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
-    private DriveFilterManager dfm;
+    //private DriveFilterManager dfm;
     private int buttonNumber;
     private boolean enable;
     private boolean isFinished = false;
@@ -33,19 +33,27 @@ public class ButtonFilterCommand extends EntechCommandBase {
 
     @Override
     public void initialize() {
-        dfm = drive.getDFM();
+        //dfm = drive.getDFM();
     }
 
     @Override
     public void execute() {
-        switch (buttonNumber) {
-            case RobotConstants.DRIVER_STICK.TURN_TOGGLE:
-                dfm.getTurnToggle().setEnabled(enable);
-                break;
-            default:
-                return;
-        }
-        isFinished = true;
+    	if ( drive.getCurrentCommand() instanceof FilteredDriveCommand ) {
+    		FilteredDriveCommand fdc = (FilteredDriveCommand)( drive.getCurrentCommand());
+    		DriveFilterManager dfm = fdc.getFilterManager();
+
+            switch (buttonNumber) {
+	            case RobotConstants.DRIVER_STICK.TURN_TOGGLE:
+	                dfm.getTurnToggle().setEnabled(enable);
+	                break;
+	            default:
+	                return;
+            }    		
+    	}
+    	else {
+    		DriverStation.reportWarning("Attempt to set filter, but current command is not a filter command", false);
+    	}
+    	isFinished = true;
     }
 
     @Override

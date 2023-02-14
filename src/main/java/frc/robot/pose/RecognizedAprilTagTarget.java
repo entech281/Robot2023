@@ -1,7 +1,7 @@
 
 package frc.robot.pose;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform3d;
 
 /**
  * Value object that represents a target we've recognized via vision.
@@ -9,22 +9,21 @@ import edu.wpi.first.math.geometry.Pose2d;
  */
 public class RecognizedAprilTagTarget {
     
-    public RecognizedAprilTagTarget(Pose2d relativeCamera, int tagId) {
-        this.tagId = tagId;
-        this.offsetFromCamera = relativeCamera;
+    public RecognizedAprilTagTarget(Transform3d cameraToTarget, AprilTagLocation tagLocation) {
+        this.tagLocation = tagLocation;
+        this.cameraToTarget = cameraToTarget;
     }
+
+	private AprilTagLocation tagLocation;
+    private Transform3d cameraToTarget;
     
-    Pose2d offsetFromCamera;    
-    private int tagId = 0;
-
-    public int getTagId() {
-        return tagId;
-    }
-
-    public Pose2d getOffsetFromCamera() {
-        return offsetFromCamera;
-    }
-
     
+    public Transform3d getCameraToTargetTransform() {
+		return cameraToTarget;
+	}
+
+    public AprilTagLocation getTagLocation() {
+		return tagLocation;
+	}
 
 }

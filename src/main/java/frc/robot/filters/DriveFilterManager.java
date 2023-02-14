@@ -1,7 +1,7 @@
 package frc.robot.filters;
 
-import frc.robot.pose.RobotPose;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  *
@@ -14,7 +14,6 @@ public class DriveFilterManager {
 
     public DriveFilterManager() {
         autoYaw = new AutoYawFilter();
-
         turnToggle = new TurnToggleFilter();
     }
 
@@ -25,9 +24,11 @@ public class DriveFilterManager {
         SmartDashboard.putBoolean("Auto Yaw Filter", autoYaw.getEnabled());
     }
 
-    public void applyFilters(DriveInput di, RobotPose rp) {
-        turnToggle.filter(di, rp);
-        autoYaw.filter(di, rp);
+    public DriveInput filtered(DriveInput original) {
+    	DriveInput current = original;
+        current = turnToggle.filter(current);
+        current = autoYaw.filter(current);
+        return current;
     }
 
     public void clearFilters() {

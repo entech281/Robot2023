@@ -1,18 +1,15 @@
-package frc.robot.pose;
+package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.util.SendableUtil;
 
 /**
  *
  * @author dcowden
  */
-public class NavxPose implements Sendable {
+public class NavxStatus implements Sendable , SubsystemStatus{
     
     private double yawAngleDegrees = 0.0;
-    private Pose2d basePose;
 
 
     public void setYawAngleDegrees(double yawAngleDegrees){
@@ -23,18 +20,10 @@ public class NavxPose implements Sendable {
         return yawAngleDegrees;
     }
 
-    public void setBasePose(Pose2d basePose){
-        this.basePose = basePose;
-    }
-
-    public Pose2d getBasePose(){
-        return basePose;
-    }
 
     @Override
     public void initSendable(SendableBuilder sb) {
         sb.addDoubleProperty("Yaw Angle",this::getYawAngleDegrees, null);
-        SendableUtil.initPose2dSendable("Base", this::getBasePose, sb);
     }
     
 }

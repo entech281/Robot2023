@@ -8,7 +8,6 @@ import frc.robot.subsystems.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class ToggleFieldAbsoluteCommand extends EntechCommandBase {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem drive;
   private boolean isFinished = false;
 

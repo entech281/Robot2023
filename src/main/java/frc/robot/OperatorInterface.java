@@ -3,16 +3,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.CommandFactory;
 import frc.robot.pose.TargetNode;
-import frc.robot.subsystems.SubsystemManager;
+
 
 public class OperatorInterface {
 
     private CommandJoystick driveStick;
-    private SubsystemManager subsystemManager;
     private CommandFactory commandFactory;
 
-    public OperatorInterface(final SubsystemManager subMan, final CommandFactory cf) {
-        this.subsystemManager = subMan;
+    public OperatorInterface( final CommandFactory cf) {
         this.commandFactory = cf;
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
 
@@ -21,9 +19,9 @@ public class OperatorInterface {
             .onFalse(commandFactory.turnToggleFilter(true));
 
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
-            .onTrue(commandFactory.autoAlignDrive(driveStick.getHID()))
+            .onTrue(commandFactory.alignToScoringLocation(getSelectedTargetNode(),driveStick.getHID()))
             .onFalse(commandFactory.driveCommand(driveStick.getHID()));
-
+        
         driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
             .onTrue(commandFactory.toggleFieldAbsolute());
 
@@ -50,13 +48,20 @@ public class OperatorInterface {
 
         driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_RIGHT)
             .onTrue(commandFactory.nudgeYawRightCommand());
-    
             
-        subsystemManager.getDriveSubsystem().setDefaultCommand(commandFactory.driveCommand(driveStick.getHID()));
+
+    }
+
+    public void setDefaultDriveCommand() {
+    	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveComamnd(driveStick.getHID()));
     }
     
-    public TargetNode getTargetNode(){
-        return  TargetNode.NONE;
+    public boolean hasSelectedTarget() {
+    	return true;
+    }
+    public TargetNode getSelectedTargetNode(){
+    	//TODO: replace with code that gets the selected one
+        return  TargetNode.A3;
     }
 
 }

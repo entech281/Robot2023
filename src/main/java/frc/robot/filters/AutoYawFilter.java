@@ -1,9 +1,6 @@
 package frc.robot.filters;
 
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.pose.RobotPose;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import frc.robot.subsystems.NavXSubSystem;
 
 /**
  *
@@ -27,33 +24,40 @@ public class AutoYawFilter extends Filter {
         pid.enableContinuousInput(-180, 180);
     }
 
-    public void doFilter(DriveInput di, RobotPose rp) {
-        double currentYaw = rp.getBodyPose().getYawAngleDegrees();
+    public DriveInput doFilter(DriveInput original) {
 
-        if (Math.abs(di.getForward()) < 0.1 && Math.abs(di.getRight()) < 0.1) {
+        if (Math.abs(original.getForward()) < 0.1 && Math.abs(original.getRight()) < 0.1) {
             resetVariables();
-            return;
+            return original;
         }
 
-        if (di.getOverrideAutoYaw()) {
+        if (original.getOverrideAutoYaw()) {
             resetVariables();
-            return;
+            return original;
         }
 
-        double setPoint = Math.toDegrees(Math.atan2(di.getRight(), di.getForward()));
+        double setPoint = computeSetPoint(original);
 
-        if (Math.abs(setPoint - currentYaw) > 90) {
-            setPoint += 180;
-        }
-
-        double calcValue = pid.calculate(currentYaw, setPoint);
+        double calcValue = pid.calculate(original.getYawAngleDegrees(), setPoint);
         calcValue = Math.round(calcValue/JITTER_ROUNDING) * JITTER_ROUNDING;
 
-        di.setOverrideYawLock(true);
-        di.setRotation(Math.max(-SPEED_LIMIT, Math.min(calcValue, SPEED_LIMIT)));
+        DriveInput newDi = new DriveInput(original);        		
+        		
+        newDi.setOverrideYawLock(true);
+        newDi.setRotation(Math.max(-SPEED_LIMIT, Math.min(calcValue, SPEED_LIMIT)));
+        return newDi;
     }
 
 
+    private double computeSetPoint( DriveInput original ) {
+        double setPoint = Math.toDegrees(Math.atan2(original.getRight(), original.getForward()));
+
+        if (Math.abs(setPoint - original.getYawAngleDegrees()) > 90) {
+            setPoint += 180;
+        }
+        return setPoint;
+    }
+    
     @Override
     protected void resetVariables() {
         pid.reset();

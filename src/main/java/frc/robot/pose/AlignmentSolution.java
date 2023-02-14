@@ -1,5 +1,12 @@
 package frc.robot.pose;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import frc.robot.commands.instructions.AlignmentInstruction;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * An alignment solution should include everything we need if we
  * wanted to execute a fully autonomous score from our current position.
@@ -11,57 +18,31 @@ package frc.robot.pose;
  * as the basis for our calculations, and the scoring node we are going after
  * @author dcowden
  */
-public class AlignmentSolution {
-    private double neededAngle = 0;
-
+public class AlignmentSolution implements Sendable{
+    
     public enum AlignmentStrategy{
         HOPELESS_I_GIVE_UP,
+        DEPLOY_NOW,
         ROTATE_AND_DEPLOY,
+        ROTATE_THEN_FOWARD,
         ORTHOGONAL_APPOROACH,
-        NO_STRATEGY_SELECTED
+        NO_STRATEGY_SELECTED,
+        CONFUSED
     }
     
-    private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
-    private TargetNode target;
-    private RobotPose startingPose;
-    private double tempAngle =0.0;
-
-    private boolean hasTempAngle = false;
-
-    public boolean isHasTempAngle() {
-        return this.hasTempAngle;
+    public AlignmentSolution(AlignmentStrategy strategy) {
+    	this.strategy = strategy;
     }
-
-    public boolean getHasTempAngle() {
-        return this.hasTempAngle;
+    public boolean hasInstructions() {
+    	return ! alignmentInstructions.isEmpty();
     }
-
-    public void setHasTempAngle(boolean hasTempAngle) {
-        this.hasTempAngle = hasTempAngle;
+    public void setScoringLocation(ScoringLocation scoringLocation) {
+    	this.scoringLocation = scoringLocation;
     }
-
-    public double getTempAngle(){
-        return tempAngle;
+    public ScoringLocation getScoringLocation() {
+        return scoringLocation;
     }
-    public void setTempAngle(double newTempAngle){
-        this.tempAngle = newTempAngle;
-    }
-    
-    public RobotPose getStartingPose() {
-        return startingPose;
-    }
-
-    public void setStartingPose(RobotPose startingPose) {
-        this.startingPose = startingPose;
-    }
-    
-    public TargetNode getTarget() {
-        return target;
-    }
-
-    public void setTarget(TargetNode target) {
-        this.target = target;
-    }
+  
     
     public AlignmentStrategy getStrategy() {
         return strategy;
@@ -71,12 +52,31 @@ public class AlignmentSolution {
         this.strategy = strategy;
     }
 
-    public void setNeededAngle(double neededAngle) {
-        this.neededAngle = neededAngle;
+    public void addAlignmentInstruction( AlignmentInstruction is ){
+        alignmentInstructions.add(is);
     }
-
-
-    public double getNeededAngle() {
-        return neededAngle;
+    public List<AlignmentInstruction> getAlignmentInstructions() {
+        return alignmentInstructions;
     }
+    
+    @Override
+    public void initSendable(SendableBuilder sb) {
+        sb.addStringProperty("Alignment strategy", this::toString, null);
+    }    
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.strategy);
+        sb.append(" : ");
+        for ( AlignmentInstruction ai: alignmentInstructions){
+            sb.append("\t* ").append (ai).append("\n");
+        }
+        return sb.toString();
+    }
+    
+    private final List<AlignmentInstruction> alignmentInstructions = new ArrayList<>();
+    private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
+    private ScoringLocation scoringLocation;    
+
 }

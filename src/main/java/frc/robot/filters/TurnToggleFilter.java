@@ -1,7 +1,5 @@
 package frc.robot.filters;
 
-import frc.robot.pose.RobotPose;
-
 /**
  *
  * 
@@ -13,9 +11,15 @@ public class TurnToggleFilter extends Filter {
     }
 
     @Override
-    protected void doFilter(DriveInput di, RobotPose rp) {
+    protected DriveInput doFilter(DriveInput di) {
+    	
         if (!di.getOverrideYawLock()) {
-            di.setRotation(0);
+        	DriveInput locked = new DriveInput(di);
+        	locked.setRotation(0.0);
+            return locked;
+        }
+        else {
+        	return di;
         }
     }
 

@@ -1,7 +1,5 @@
 package frc.robot.filters;
 
-import frc.robot.pose.RobotPose;
-
 /**
  *
  * 
@@ -10,16 +8,16 @@ import frc.robot.pose.RobotPose;
 public abstract class Filter {
     protected boolean enable;
 
-    protected abstract void doFilter(DriveInput di, RobotPose rp);
+    protected abstract DriveInput doFilter(DriveInput di);
     protected abstract void resetVariables();
 
-    public final void filter(DriveInput di, RobotPose rp) {
+    public final DriveInput filter(DriveInput original) {
         if (!enable) {
             resetVariables();
-            return;
+            return original;
         }
 
-        doFilter(di, rp);
+        return doFilter(original);
     };
 
     public void setEnabled(boolean enabled) {

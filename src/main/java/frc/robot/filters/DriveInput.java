@@ -11,8 +11,16 @@ public class DriveInput {
     private double forward;
     private double right;
     private double rotation;
+    private double yawAngleDegrees = 0.0; //only for field absolute driving
+    public double getYawAngleDegrees() {
+		return yawAngleDegrees;
+	}
 
-    private boolean overrideYawLock = false;
+	public void setYawAngleDegrees(double yawAngleDegrees) {
+		this.yawAngleDegrees = yawAngleDegrees;
+	}
+
+	private boolean overrideYawLock = false;
     private boolean overrideAutoYaw = false;
 
     /**
@@ -27,14 +35,65 @@ public class DriveInput {
         this.right = right;
         this.rotation = rotation;
     }
+    
+    /**
+    *
+    * 
+    * @param forward the speed level forward for the drive subsystem
+    * @param left the speed level right for the drive subsystem
+    * @param right the speed level right for the drive subsystem
+    * @param current yaw angle, for field absolute driving
+    */    
+    public DriveInput(double forward, double right, double rotation, double yawAngleDegrees) {
+    	this(forward,right,rotation);
+    	this.yawAngleDegrees = yawAngleDegrees;
+    }
 
-    public double getForward() { return forward; }
-    public double getRight() { return right; }
-    public double getRotation() { return rotation; }
+    //copy constructor
+	public DriveInput(DriveInput original) {
+		super();
+		this.forward = original.forward;
+		this.right = original.right;
+		this.rotation = original.rotation;
+		this.yawAngleDegrees = original.yawAngleDegrees;
+		this.overrideYawLock = original.overrideYawLock;
+		this.overrideAutoYaw = original.overrideAutoYaw;
+	}
 
-    public void setForward(double forward) { this.forward = forward; }
-    public void setRight(double right) { this.right = right; }
-    public void setRotation(double rotation) { this.rotation = rotation; }
+	public DriveInput(double forward, double right, double rotation, double yawAngleDegrees, boolean overrideYawLock,
+			boolean overrideAutoYaw) {
+		super();
+		this.forward = forward;
+		this.right = right;
+		this.rotation = rotation;
+		this.yawAngleDegrees = yawAngleDegrees;
+		this.overrideYawLock = overrideYawLock;
+		this.overrideAutoYaw = overrideAutoYaw;
+	}
+
+	public double getForward() {
+		return forward;
+	}
+
+	public double getRight() {
+		return right;
+	}
+
+	public double getRotation() {
+		return rotation;
+	}
+
+	public void setForward(double forward) {
+		this.forward = forward;
+	}
+
+	public void setRight(double right) {
+		this.right = right;
+	}
+
+	public void setRotation(double rotation) {
+		this.rotation = rotation;
+	}
 
     public double[] get() {
         double[] output = new double[3];

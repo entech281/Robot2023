@@ -7,7 +7,6 @@ package frc.robot.commands.nudge;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.pose.RobotPose;
 
 import java.util.function.Supplier;
 
@@ -19,12 +18,10 @@ import edu.wpi.first.wpilibj.Timer;
  * @author aheitkamp
  */
 public class NudgeYawCommand extends EntechCommandBase {
-    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final DriveSubsystem drive;
     private Timer timer;
-    private final Supplier<RobotPose> latestPose;
     private final DriveInput direction;
-
+    private final Supplier<Double> yawAngleSupplier;
     private static final double NUDGE_TIME = 0.25;
     
     public interface DIRECTION {
@@ -38,13 +35,13 @@ public class NudgeYawCommand extends EntechCommandBase {
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeYawCommand(DriveSubsystem drive, DriveInput direction, Supplier<RobotPose> latestPose) {
+    public NudgeYawCommand(DriveSubsystem drive, DriveInput direction, Supplier<Double>yawAngleSupplier) {
         super(drive);
         this.drive = drive;
+        this.yawAngleSupplier = yawAngleSupplier;
         this.direction = direction.clone();
         this.direction.setOverrideAutoYaw(true);
         this.direction.setOverrideYawLock(true);
-        this.latestPose = latestPose;
     }
    
     @Override
@@ -55,7 +52,9 @@ public class NudgeYawCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        drive.drive(direction.clone(), latestPose.get());
+    	DriveInput di = direction.clone();
+    	di.setYawAngleDegrees(yawAngleSupplier.get());
+        drive.drive(di );
     }
     
     @Override

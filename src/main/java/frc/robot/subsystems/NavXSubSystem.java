@@ -8,15 +8,11 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import frc.robot.pose.NavxPose;
 /**
  *
  * @author mandrews
@@ -53,12 +49,11 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
         DriverStation.reportWarning("NavX Initialize Complete", false);
     }
 
-    public NavxPose getNavxOutput(){
-        NavxPose newPose = new NavxPose();
+    public NavxStatus getStatus(){
+    	NavxStatus newPose = new NavxStatus();
         newPose.setYawAngleDegrees(getAngle());
         return newPose;
     }
-
     public void zeroYaw() {
         navX.zeroYaw();
     }
