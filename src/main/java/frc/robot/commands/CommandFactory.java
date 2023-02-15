@@ -23,15 +23,12 @@ import frc.robot.subsystems.VisionSubsystem;
  */
 public class CommandFactory {
 
-    //private final SubsystemManager sm;
 	public static final double SNAP_YAW_ANGLE = 160.0;
-    //private PoseEstimator poseEstimator;
 	private RobotContext robotContext;
 	private DriveSubsystem driveSubsystem;
 	private VisionSubsystem visionSubsystem;
 	private NavXSubSystem navxSubsystem;
 	private ArmSubsystem armSubsystem;
-    //private Pose2d estimatedRobotPose;
 
     
     public CommandFactory(RobotContext robotContext, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm){
@@ -55,16 +52,11 @@ public class CommandFactory {
     public void setDefaultDriveCommand (Command newDefaultCommand ) {
     	driveSubsystem.setDefaultCommand(newDefaultCommand);
     }
-    
-//    public Command buttonFilterCommand(int buttonNumber, boolean enabled) {
-//        return new ButtonFilterCommand(robotContext.getDriveSubsystem(), buttonNumber, enabled);
-//    }
 
     public Command turnToggleFilter(boolean enabled) {
-        //return buttonFilterCommand(RobotConstants.DRIVER_STICK.TURN_TOGGLE, enabled);
     	return new SetDriverYawEnableCommand(robotContext.getDriverPreferences(),enabled);
     }
-    public Command filteredDriveComamnd(Joystick joystick) {
+    public Command filteredDriveCommand(Joystick joystick) {
     	return new FilteredDriveCommand(driveSubsystem,joystick,this::getCurrentYawDegrees,robotContext.getDriverPreferences());
     }
     public Command driveCommand(Joystick joystick) {
