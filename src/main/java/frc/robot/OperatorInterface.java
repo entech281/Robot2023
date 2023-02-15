@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.CommandFactory;
-import frc.robot.pose.TargetNode;
 
 
 public class OperatorInterface {
@@ -20,7 +19,7 @@ public class OperatorInterface {
 
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
             .onTrue(commandFactory.alignToScoringLocation(driveStick.getHID()))
-            .onFalse(commandFactory.driveCommand(driveStick.getHID()));
+            .onFalse(commandFactory.filteredDriveCommand(driveStick.getHID()));
         
         driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
             .onTrue(commandFactory.toggleFieldAbsolute());
@@ -53,7 +52,7 @@ public class OperatorInterface {
     }
 
     public void setDefaultDriveCommand() {
-    	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveComamnd(driveStick.getHID()));
+    	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveCommand(driveStick.getHID()));
     }
     
 }
