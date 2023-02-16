@@ -28,18 +28,11 @@ public class ZeroGyroCommand extends EntechCommandBase {
   }
 
   @Override
-  public void initialize() {
-  }
-
-  @Override
   public void execute() {
     navX.zeroYaw();
     isFinished = true;
   }
 
-  @Override
-  public void end(boolean interrupted) {
-  }
 
   @Override
   public boolean isFinished() {

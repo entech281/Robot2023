@@ -35,10 +35,6 @@ public class DriveForwardTillTrueCommand extends EntechCommandBase {
     }
 
     @Override
-    public void initialize() {
-    }
-
-    @Override
     public void execute() {
         drive.drive(new DriveInput(1, 0, 0,yawAngleSupplier.get()));
     }

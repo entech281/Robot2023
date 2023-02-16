@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class DriveCommand extends EntechCommandBase {
+public class SimpleDriveCommand extends EntechCommandBase {
     protected final DriveSubsystem drive;
     protected final Joystick joystick;
     protected final Supplier<Double> yawAngleSupplier;
@@ -23,24 +23,17 @@ public class DriveCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public DriveCommand(DriveSubsystem drive, Joystick joystick, Supplier<Double> yawAngleSupplier) {
+    public SimpleDriveCommand(DriveSubsystem drive, Joystick joystick, Supplier<Double> yawAngleSupplier) {
         super(drive);
         this.drive = drive;
         this.joystick = joystick;
         this.yawAngleSupplier = yawAngleSupplier;
     }
 
-    @Override
-    public void initialize() {
-    }
 
     @Override
     public void execute() {
         drive.drive(new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ(),yawAngleSupplier.get()) );
-    }
-
-    @Override
-    public void end(boolean interrupted) {
     }
 
     @Override

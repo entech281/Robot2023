@@ -38,8 +38,8 @@ public class NudgeDirectionCommand extends EntechCommandBase {
     public NudgeDirectionCommand(DriveSubsystem drive, DriveInput direction) {
         super(drive);
         this.drive = drive;
-        this.direction = direction.clone();
-        this.direction.setOverrideAutoYaw(true);
+        this.direction = new DriveInput(direction);
+        //this.direction.setOverrideAutoYaw(true);
     }
     
     @Override
@@ -50,7 +50,7 @@ public class NudgeDirectionCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        drive.drive(direction.clone() );
+        drive.drive(direction );
     }
 
     @Override

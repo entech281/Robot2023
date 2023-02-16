@@ -4,12 +4,18 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CommandFactory;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
-import frc.robot.subsystems.SubsystemManager;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.NavXSubSystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,6 +27,7 @@ public class Robot extends TimedRobot {
   private OperatorInterface oi;
   private CommandFactory commandFactory;
   private Command autoCommand;
+  private RobotContext robotContext;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -28,10 +35,25 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-	SubsystemManager subsystemManager = new SubsystemManager();
-    subsystemManager.initAll();
-    commandFactory = new CommandFactory(subsystemManager,new VisionFirstNavxAsBackupPoseEstimator());
-    oi = new OperatorInterface(commandFactory);
+	  
+	  
+	DriveSubsystem drive = new DriveSubsystem();
+	VisionSubsystem vision = new VisionSubsystem();
+	NavXSubSystem navx = new NavXSubSystem();
+	ArmSubsystem arm = new ArmSubsystem();
+	
+	List.of(drive,vision,navx,arm).forEach((s)-> {
+		s.initialize();
+		SmartDashboard.putData(s);
+	});
+
+	//this looks like a little more typing, but its useful to note that this allows
+	//us to declare which subsystem these ACTUALLY use, vs giving everyone a subsystem manager,
+	//which allows them to get everything, but then its not clear what they need
+	robotContext = new RobotContext(drive,navx,vision);
+	robotContext.setPoseEstimator(new VisionFirstNavxAsBackupPoseEstimator());
+	commandFactory = new CommandFactory(robotContext,drive,navx,vision,arm);
+	oi = new OperatorInterface(commandFactory);
   }
 
   /**
@@ -48,7 +70,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
 
-	  commandFactory.periodic();
+	robotContext.periodic();
     CommandScheduler.getInstance().run();
   }
   

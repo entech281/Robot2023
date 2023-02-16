@@ -39,9 +39,9 @@ public class NudgeYawCommand extends EntechCommandBase {
         super(drive);
         this.drive = drive;
         this.yawAngleSupplier = yawAngleSupplier;
-        this.direction = direction.clone();
-        this.direction.setOverrideAutoYaw(true);
-        this.direction.setOverrideYawLock(true);
+        this.direction = new DriveInput(direction);
+        //this.direction.setOverrideAutoYaw(true);
+        //this.direction.setOverrideYawLock(true);
     }
    
     @Override
@@ -52,7 +52,7 @@ public class NudgeYawCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-    	DriveInput di = direction.clone();
+    	DriveInput di = new DriveInput(direction);
     	di.setYawAngleDegrees(yawAngleSupplier.get());
         drive.drive(di );
     }

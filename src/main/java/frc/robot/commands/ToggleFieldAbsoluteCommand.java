@@ -4,44 +4,26 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.DriverPreferences;
 
 /** An example command that uses an example subsystem. */
-public class ToggleFieldAbsoluteCommand extends EntechCommandBase {
-  private final DriveSubsystem drive;
-  private boolean isFinished = false;
+public class ToggleFieldAbsoluteCommand extends  BaseDriverPreferencesCommand {
 
   /**
    * Creates a new ToggleFieldAbsoluteCommand.
    *
    * @param drive The subsystem used by this command.
    */
-  public ToggleFieldAbsoluteCommand(DriveSubsystem drive) {
-    super(drive);
-    this.drive = drive;
+  public ToggleFieldAbsoluteCommand(DriverPreferences prefs) {
+    super(prefs);
+
   }
 
-  @Override
-  public void initialize() {
-  }
 
   @Override
   public void execute() {
-    drive.toggleFieldAbsolute();
-    isFinished = true;
+	driverPrefs.setFieldAbsoluteDriving(! driverPrefs.isFieldAbsoluteDriving());
   }
 
-  @Override
-  public void end(boolean interrupted) {
-  }
 
-  @Override
-  public boolean isFinished() {
-    return isFinished;
-  }
-
-  @Override
-  public boolean runsWhenDisabled() {
-    return true;
-  }
 }
