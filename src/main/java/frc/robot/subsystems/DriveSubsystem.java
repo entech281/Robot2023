@@ -26,13 +26,6 @@ public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontRightTalon;
   private WPI_TalonSRX rearRightTalon;
   private MecanumDrive robotDrive;
-  //private DriveFilterManager dfm;
-
-  //private boolean useFieldAbsolute = false;
-  //private DriveInput loggingDriveInput = new DriveInput(0, 0, 0);
-
-  //private double autoAlignAngle = 0.0;
-  //private boolean canAutoAlign = false;
   
   /**
    *
@@ -53,7 +46,6 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightTalon = new WPI_TalonSRX(RobotConstants.CAN.FRONT_RIGHT_MOTOR);
     rearRightTalon  = new WPI_TalonSRX(RobotConstants.CAN.REAR_RIGHT_MOTOR);
     robotDrive      = new MecanumDrive(frontLeftTalon, rearLeftTalon, frontRightTalon, rearRightTalon);
-    //dfm             = new DriveFilterManager();
 
     robotDrive.setDeadband(0.1);
 
@@ -80,8 +72,6 @@ public class DriveSubsystem extends EntechSubsystem {
     //SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
     //SmartDashboard.putNumber("Auto Align Angle", autoAlignAngle);
 
-
-    //dfm.refreshFilterEnable(isFieldAbsoluteActive());
     robotDrive.feed();
     robotDrive.feedWatchdog();
   }
@@ -91,44 +81,9 @@ public class DriveSubsystem extends EntechSubsystem {
   }
   
   public void drive(DriveInput di) {
-	//RobotCalculations rp = this.getCurrentPose();
-    //loggingDriveInput = di;
-    //dfm.applyFilters(di, rp);
-    //if (isFieldAbsoluteActive()) {
-    	robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
-    //} else {
-    //	robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation());
-    //}
+
+    robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
   }
-
-
-//  public double getAlignmentAngle() {
-//    return autoAlignAngle; 
-//  }
-//
-//  public boolean getCanAutoAlign() {
-//    return canAutoAlign;
-//  }
-//
-//  public DriveFilterManager getDFM() {
-//    return dfm;
-//  }
-//
-//  public boolean isFieldAbsoluteActive() {
-//    return useFieldAbsolute;
-//  }
-//
-//  public void setFieldAbsolute(boolean active) {
-//    useFieldAbsolute = active;
-//  }
-//
-//  public void toggleFieldAbsolute() {
-//    if (isFieldAbsoluteActive()) {
-//      setFieldAbsolute(false);
-//    } else {
-//      setFieldAbsolute(true);
-//    }
-//  }
 
   public void brake() {
     robotDrive.stopMotor();

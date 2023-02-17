@@ -50,8 +50,6 @@ public class AlignToAngleCommand extends BaseDrivePIDCommand {
             )
         );
         DriveInput di = new DriveInput(-joystick.getY(), joystick.getX(), calcValue);
-        //di.setOverrideYawLock(true);
-        //di.setOverrideAutoYaw(true);
 
 
         drive.drive(di );
