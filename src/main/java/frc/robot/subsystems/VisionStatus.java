@@ -56,6 +56,12 @@ public class VisionStatus implements SubsystemStatus,Sendable{
 
 
 	@Override
+	public String toString() {
+		return "VisionStatus [latency=" + latency + ", bestTarget=" + bestTarget + ", targets=" + targets
+				+ ", photonEstimatedPose=" + photonEstimatedPose + "]";
+	}
+
+	@Override
 	public void initSendable(SendableBuilder builder) {
 		// TODO Auto-generated method stub
 	}

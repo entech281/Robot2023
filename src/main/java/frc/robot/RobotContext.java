@@ -26,9 +26,7 @@ public class RobotContext {
 	public Pose2d getEstimatedRobotPose() {
 		return estimatedRobotPose;
 	}
-	public void setEstimatedRobotPose(Pose2d estimatedRobotPose) {
-		this.estimatedRobotPose = estimatedRobotPose;
-	}
+
 	protected boolean hasEstimatedPose() {
 		return this.estimatedRobotPose != null;
 	}
@@ -45,7 +43,8 @@ public class RobotContext {
     	
     	//this is where we estimate robot pose from various sources.
     	//set which estimator we use in Robot.robotInit()
-        estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
+        this.estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
+
         
         if ( hasEstimatedPose() ) {
         	poseLogger.logPose2d("pose-us", estimatedRobotPose);

@@ -26,4 +26,9 @@ public class RecognizedAprilTagTarget {
 		return tagLocation;
 	}
 
+	@Override
+	public String toString() {
+		return "RecognizedAprilTagTarget [tagLocation=" + tagLocation + ", cameraToTarget=" + cameraToTarget + "]";
+	}
+
 }

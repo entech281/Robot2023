@@ -85,7 +85,14 @@ public class AprilTagLocation {
   }
   
   
-  public static AprilTagLocation findFromTag(int tagId ){
+  @Override
+public String toString() {
+	return "AprilTagLocation [aprilTagID=" + aprilTagID + ", location=" + location + ", absoluteTargetXIn="
+			+ absoluteTargetXIn + ", absoluteTargetYIn=" + absoluteTargetYIn + ", absoluteTargetAngleDegrees="
+			+ absoluteTargetAngleDegrees + "]";
+}
+
+public static AprilTagLocation findFromTag(int tagId ){
     switch(tagId){
         case RobotConstants.VISION.APRILTAGIDS.RED_RIGHT: return RED_RIGHT;
         case RobotConstants.VISION.APRILTAGIDS.RED_MIDDLE: return RED_MIDDLE;
@@ -96,6 +103,6 @@ public class AprilTagLocation {
         case RobotConstants.VISION.APRILTAGIDS.BLUE_MIDDLE: return BLUE_MIDDLE;
         case RobotConstants.VISION.APRILTAGIDS.BLUE_LEFT: return BLUE_LEFT;
     }
-    throw new NoSuchElementException("'" + tagId + "' is not a valid april tag id");
+    return null;
 }
 }
