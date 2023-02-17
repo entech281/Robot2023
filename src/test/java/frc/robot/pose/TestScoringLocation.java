@@ -25,10 +25,8 @@ public class TestScoringLocation {
 
     @Test
     public void testFirstAprilTag() {
-        //AprilTagLocation tag = new FieldAprilTag(610.77, 42.19, 180, 1, TEAM.RED);
     	AprilTagLocation tag = AprilTagLocation.RED_RIGHT;
         TargetNode node = new TargetNode(25.5, -18.5, NodeID.A3);
-        //TargetNode B3;
         ScoringLocation testScoringLocation = new ScoringLocation(tag, node);
         Pose2d testAbsolutePose = testScoringLocation.computeAbsolutePose();
         Pose2d expectedNodePosition = new Pose2d(636.27, 23.69, Rotation2d.fromDegrees(180));
