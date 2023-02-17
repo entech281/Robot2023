@@ -1,6 +1,12 @@
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.logging.PoseLogger;
 import frc.robot.pose.AlignmentCalculator;
@@ -14,14 +20,16 @@ import frc.robot.subsystems.VisionStatus;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContext {
-
+	
 	//inject just what we need. later we might need arm-- we can add it then
 	public RobotContext( DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision) {
 	    driveSubsystem = drive;
 	    navXSubSystem = navx;
-	    visionSubsystem = vision;	
+	    visionSubsystem = vision;
+	    Shuffleboard.getTab("Field").add(fieldDisplay).withWidget(BuiltInWidgets.kField);
 	}
     private static PoseLogger poseLogger = new PoseLogger();	
+	private Field2d fieldDisplay = new Field2d();
 	
 	public Pose2d getEstimatedRobotPose() {
 		return estimatedRobotPose;
@@ -47,12 +55,15 @@ public class RobotContext {
 
         
         if ( hasEstimatedPose() ) {
+        	fieldDisplay.getObject("Estimated").setPose(estimatedRobotPose);
         	poseLogger.logPose2d("pose-us", estimatedRobotPose);
         }
         
         if ( vs.getPhotonEstimatedPose() != null ) {
+        	fieldDisplay.getObject("PhotonEstiamted").setPose(estimatedRobotPose);
         	poseLogger.logPose2d("pose-photon", vs.getPhotonEstimatedPose().toPose2d());	
         }
+
         /**
          * TEMPORARY Code, just so that we can see 
          * How things look before doing actual control

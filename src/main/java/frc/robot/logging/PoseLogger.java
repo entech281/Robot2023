@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PoseLogger  {
 
+	
+	//https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/wpilibj/smartdashboard/Field2d.html
 	public void logPose2d(String name, Pose2d p) {
 		Pose2dSendable ps = new Pose2dSendable(name, p);
 		SmartDashboard.putData( name,ps );
