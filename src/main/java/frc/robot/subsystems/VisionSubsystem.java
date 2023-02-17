@@ -86,14 +86,14 @@ public class VisionSubsystem extends EntechSubsystem {
 		    }	    	    	
 	    }
  
-	    //SmartDashboard.putBoolean("hasTargets", result.hasTargets());	        
-        //SmartDashboard.putNumber("getcameraX", target3D.getX());
-        //SmartDashboard.putNumber("getcameraY", target3D.getY());
-        //SmartDashboard.putNumber("getcameraZ", target3D.getZ());
+      //SmartDashboard.putBoolean("hasTargets", result.hasTargets());	        
+    //SmartDashboard.putNumber("getcameraX", target3D.getX());
+    //SmartDashboard.putNumber("getcameraY", target3D.getY());
+    //SmartDashboard.putNumber("getcameraZ", target3D.getZ());
       
-        //SmartDashboard.putNumber("getcameraPitch", bestTarget.getPitch());
-        //SmartDashboard.putNumber("getcameraSkew", bestTarget.getSkew());
-        //SmartDashboard.putNumber("getcameraYaw", bestTarget.getYaw());
+    //SmartDashboard.putNumber("getcameraPitch", bestTarget.getPitch());
+    //SmartDashboard.putNumber("getcameraSkew", bestTarget.getSkew());
+    //SmartDashboard.putNumber("getcameraYaw", bestTarget.getYaw());
 	    currentStatus = newStatus;
   }
 

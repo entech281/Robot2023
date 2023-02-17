@@ -27,14 +27,9 @@ public class AutoYawFilter extends DriveInputFilter {
     public DriveInput doFilter(DriveInput original) {
 
         if (Math.abs(original.getForward()) < 0.1 && Math.abs(original.getRight()) < 0.1) {
-//            resetVariables();
             return original;
         }
 
-//        if (original.getOverrideAutoYaw()) {
-//            resetVariables();
-//            return original;
-//        }
 
         double setPoint = computeSetPoint(original);
 
@@ -42,8 +37,7 @@ public class AutoYawFilter extends DriveInputFilter {
         calcValue = Math.round(calcValue/JITTER_ROUNDING) * JITTER_ROUNDING;
 
         DriveInput newDi = new DriveInput(original);        		
-        		
-//        newDi.setOverrideYawLock(true);
+
         newDi.setRotation(Math.max(-SPEED_LIMIT, Math.min(calcValue, SPEED_LIMIT)));
         return newDi;
     }
@@ -58,8 +52,5 @@ public class AutoYawFilter extends DriveInputFilter {
         return setPoint;
     }
     
-//    @Override
-//    protected void resetVariables() {
-//        pid.reset();
-//    }
+
 }
