@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.pose.TargetNode;
 
 /**
@@ -9,7 +11,7 @@ import frc.robot.pose.TargetNode;
  * @author davec
  *
  */
-public class DriverPreferences {
+public class DriverPreferences implements Sendable{
 	
 	public boolean isFieldAbsoluteDriving() {
 		return fieldAbsoluteDriving;
@@ -40,6 +42,12 @@ public class DriverPreferences {
 	}
 	public boolean hasSelectedTarget() {
 		return this.selectedNode != TargetNode.NONE;
+	}
+	
+	@Override
+	public void initSendable(SendableBuilder builder) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

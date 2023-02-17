@@ -67,14 +67,15 @@ public class CommandFactory {
         return new ToggleFieldAbsoluteCommand(robotContext.getDriverPreferences());
     }
 
-    public Command alignToScoringLocation( Joystick joystick) {
+    public Command alignToScoringLocation(TargetNode targetNode, Joystick joystick) {
     	VisionStatus vs= visionSubsystem.getStatus();
     	RecognizedAprilTagTarget rat = vs.getBestAprilTagTarget();
     	if ( rat == null ) {
     		return new PrintCommand("Cannot Align: No active vision target");
     	}
     	else {
-    		ScoringLocation s = new ScoringLocation(rat.getTagLocation(),robotContext.getDriverPreferences().getSelectedNode());
+    		//ScoringLocation s = new ScoringLocation(rat.getTagLocation(),robotContext.getDriverPreferences().getSelectedNode());
+    		ScoringLocation s = new ScoringLocation(rat.getTagLocation(),targetNode);
     		return new AlignToScoringLocationCommand(driveSubsystem,joystick,s,this::getCurrentEstimatedPose );
     	}
         
