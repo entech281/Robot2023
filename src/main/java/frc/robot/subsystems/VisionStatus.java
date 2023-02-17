@@ -44,7 +44,15 @@ public class VisionStatus implements SubsystemStatus,Sendable{
     }
 
     public RecognizedAprilTagTarget getBestAprilTagTarget() {
-        return this.bestTarget;
+    	if ( this.bestTarget != null) {
+    		return this.bestTarget;
+    	}
+    	else if (targets.size() > 0 ){
+    		return targets.get(0);
+    	}
+    	else {
+    		return null;
+    	}
     }
 
     public void setBestTarget(RecognizedAprilTagTarget target) {
