@@ -47,8 +47,7 @@ public class Robot extends TimedRobot {
 	
 	List.of(drive,vision,navx,arm).forEach((s)-> {
 		s.initialize();
-		SmartDashboard.putData(s);
-		Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.OPERATOR_TAB).add(s);
+		Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.MATCH).add(s);
 	});
 
 	//this looks like a little more typing, but its useful to note that this allows

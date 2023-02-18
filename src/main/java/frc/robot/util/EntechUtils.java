@@ -12,9 +12,4 @@ public final class EntechUtils {
         if ((value >= 0.0) && (value < minMagnitude)) return minMagnitude;
         return value;
     }
-
-    public static double ApplyDeadband(double value, double min) {
-        if (Math.abs(value) < Math.abs(min)) return 0.0;
-        return value;
-    }
 }
