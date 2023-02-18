@@ -23,15 +23,17 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;
 
 public class VisionSubsystem extends EntechSubsystem {
 
-  private PhotonCamera camera;
   private VisionStatus currentStatus = new VisionStatus();
-  private final Transform3d ROBOT_TO_CAM = new Transform3d( 
+  private PhotonCamera camera;
+  private Transform3d ROBOT_TO_CAM = new Transform3d( 
 		  new Translation3d( 
 				  RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS,
 				  RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
@@ -40,37 +42,44 @@ public class VisionSubsystem extends EntechSubsystem {
   
   @Override
   public void initialize() {
-    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
+    camera = new PhotonCamera("IMX219");
 
     AprilTagFieldLayout photonAprilTagFieldLayout;
 	try {
 		photonAprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);		
-		photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.CLOSEST_TO_LAST_POSE,camera,ROBOT_TO_CAM);
+		photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.AVERAGE_BEST_TARGETS,camera,ROBOT_TO_CAM);
 	} catch (IOException e) {
 		throw new RuntimeException("Could not load wpilib AprilTagFields");
 	}
-    
   }
 
   @Override
-  public void initSendable(SendableBuilder builder) {
-     //TODO:: fill out
+  public void initSendable(SendableBuilder sb) {
+     sb.addBooleanProperty("HasTargets", this::hasTargets, null);
+     sb.addDoubleProperty("Latency", this::getLatency, null);
+     sb.addBooleanProperty("HasPhotonPose", this::hasPhotonPose, null);
+     sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
   }
 
-  public VisionStatus getStatus(){
+  public VisionStatus getStatus() {
 	  return currentStatus;
   }
   
-
+  private boolean hasTargets() {
+	  return currentStatus.hasTargets();
+  }
+  private double getLatency() {
+	  return currentStatus.getLatency();
+  }
+  private boolean hasPhotonPose() {
+	  return currentStatus.hasPhotonPose();
+  }
+  private boolean hasBestTarget() {
+	  return currentStatus.hasBestTarget();
+  }
   
-  public void updateCurrentStatus() {
+  private void updateStatus(){
 	  	VisionStatus newStatus = new VisionStatus();
-	  	
-		Optional<EstimatedRobotPose> updatedPose = photonPoseEstimator.update();
-		  
-		if ( updatedPose.isPresent()) {
-			newStatus.setPhotonEstimatedPose(updatedPose.get().estimatedPose);  
-		}	  	  	
 	  	
 	    PhotonPipelineResult result = camera.getLatestResult();
 	    newStatus.setLatency(camera.getLatestResult().getLatencyMillis());
@@ -86,27 +95,45 @@ public class VisionSubsystem extends EntechSubsystem {
 		    }	    	    	
 	    }
  
-      //SmartDashboard.putBoolean("hasTargets", result.hasTargets());	        
-    //SmartDashboard.putNumber("getcameraX", target3D.getX());
-    //SmartDashboard.putNumber("getcameraY", target3D.getY());
-    //SmartDashboard.putNumber("getcameraZ", target3D.getZ());
-      
-    //SmartDashboard.putNumber("getcameraPitch", bestTarget.getPitch());
-    //SmartDashboard.putNumber("getcameraSkew", bestTarget.getSkew());
-    //SmartDashboard.putNumber("getcameraYaw", bestTarget.getYaw());
-	    currentStatus = newStatus;
+		Optional<EstimatedRobotPose> updatedPose = photonPoseEstimator.update();
+		  
+		if ( updatedPose.isPresent()) {
+			newStatus.setPhotonEstimatedPose(updatedPose.get().estimatedPose);  
+		}		    
+	    SmartDashboard.putString("getStatus Best Target:", "*" + newStatus.getBestAprilTagTarget() +"*");
+	    SmartDashboard.putString("vs:", "*" + newStatus +"*");
+	    SmartDashboard.putBoolean("hasTargets", newStatus.hasTargets());
+	    if ( newStatus.hasPhotonPose()) {
+	    	SmartDashboard.putString("photon pose", newStatus.getPhotonEstimatedPose().toPose2d().toString());
+	    	SmartDashboard.putString("PhotonTransform3d", "" + result.getBestTarget().getBestCameraToTarget());
+	    }
+	    
+	  currentStatus = newStatus;
   }
+  
 
   public static RecognizedAprilTagTarget createRecognizedTarget(PhotonTrackedTarget t) {
 	  
       Transform3d t3d = t.getBestCameraToTarget();
-      AprilTagLocation loc = AprilTagLocation.findFromTag(t.getFiducialId());
+      int tagId = t.getFiducialId();
+      AprilTagLocation loc = null;
+      if( isValidTagId(tagId)) {
+    	  loc = AprilTagLocation.findFromTag(tagId);
+      }
+      else {
+    	  DriverStation.reportWarning("Photon Vision Target with bad tag id'" + tagId + "'", false);  
+      }
+
       return new RecognizedAprilTagTarget (t3d,loc);
+  }
+  
+  private static boolean isValidTagId(int tagId) {
+	  return tagId > 0 && tagId < 9;
   }
   
   @Override
   public void periodic() {
-	  updateCurrentStatus();
+	  updateStatus();
   }
 
   @Override

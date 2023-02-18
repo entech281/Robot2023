@@ -1,6 +1,7 @@
 package frc.robot.util;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -14,10 +15,16 @@ public class PoseUtil {
     }
     
 	public static final double METERS_PER_INCH = 0.0254;
+	
 	public static Pose2d inchesToMeters ( Pose2d input) {
 		return new Pose2d( input.getTranslation().times(METERS_PER_INCH), input.getRotation());
 	}
-	public static double inches_to_meters ( double inches) {
+	
+	public static Pose3d inchesToMeters ( Pose3d input) {
+		return input.times(METERS_PER_INCH);
+	}
+	
+	public static double inchesToMeters ( double inches) {
 		return inches/METERS_PER_INCH;
 	}
 	public static double meters_to_inches ( double meters) {

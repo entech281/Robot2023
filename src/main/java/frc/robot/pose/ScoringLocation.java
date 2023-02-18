@@ -1,6 +1,8 @@
 package frc.robot.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /**
@@ -48,8 +50,8 @@ public class ScoringLocation {
     public  Pose2d computeAbsolutePose( ){
         Pose2d tagPose = selectedTag.asPose2d();
         Translation2d nodeTranslation = selectedNode.getOffsetToTarget(); 
-        //calaculates absoluteNodePosition correctly 
-        Pose2d absoluteNodePosition = new Pose2d((tagPose.getTranslation().plus(nodeTranslation)), tagPose.getRotation());
+        Transform2d tf = new Transform2d(selectedNode.getOffsetToTarget(),Rotation2d.fromDegrees(0));
+        Pose2d absoluteNodePosition = tagPose.transformBy(tf);
         return absoluteNodePosition;
     }
     

@@ -24,23 +24,37 @@ public class TestScoringLocation {
     }
 
     @Test
-    public void testFirstAprilTag() {
-    	AprilTagLocation tag = AprilTagLocation.RED_RIGHT;
-        TargetNode node = new TargetNode(25.5, -18.5, NodeID.A3);
+    public void testRedMiddleAprilTag() {
+    	AprilTagLocation tag = AprilTagLocation.RED_MIDDLE;
+        TargetNode node = TargetNode.A2;
         ScoringLocation testScoringLocation = new ScoringLocation(tag, node);
         Pose2d testAbsolutePose = testScoringLocation.computeAbsolutePose();
-        Pose2d expectedNodePosition = new Pose2d(636.27, 23.69, Rotation2d.fromDegrees(180));
+        Pose2d expectedNodePosition = new Pose2d(636.27, 108.19, Rotation2d.fromDegrees(180));
 
         assertEquals(expectedNodePosition, testAbsolutePose);
     }
 
     @Test
-    public void testAprilTagScoringLocation() {
+    public void testLeftblueTagA2() {
         
-        //verifies pulling of tag 1
-        AprilTagLocation tagInformation = AprilTagLocation.findFromTag(1);
-        assertEquals(tagInformation.getXIn(), 610.77, 0.01);
-        assertEquals(tagInformation.getYIn(), 42.19, 0.01);
+    	AprilTagLocation tag = AprilTagLocation.findFromTag(8);
+        TargetNode node = TargetNode.A2;
+        ScoringLocation testScoringLocation = new ScoringLocation(tag, node);
+        Pose2d testAbsolutePose = testScoringLocation.computeAbsolutePose();
+        Pose2d expectedNodePosition = new Pose2d(14.95, 42.19, Rotation2d.fromDegrees(0));
+        assertEquals(expectedNodePosition, testAbsolutePose);
     }
 
+    @Test
+    public void testLeftblueTagB3() {
+        
+    	AprilTagLocation tag = AprilTagLocation.findFromTag(8);
+        TargetNode node = TargetNode.B3;
+        ScoringLocation testScoringLocation = new ScoringLocation(tag, node);
+        Pose2d testAbsolutePose = testScoringLocation.computeAbsolutePose();
+        Pose2d expectedNodePosition = new Pose2d(31.95, 64.19, Rotation2d.fromDegrees(0));
+        assertEquals(expectedNodePosition, testAbsolutePose);
+    }
+    
+    
 }
