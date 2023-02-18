@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 public class ShuffleboardFieldDisplay {
 
-	private ShuffleboardTab visionTab = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.VISION_TAB);
+	private ShuffleboardTab visionTab = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.MATCH);
 	private Field2d fieldDisplay = new Field2d();
 
 	

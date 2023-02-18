@@ -2,7 +2,7 @@ package frc.robot;
 
 import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_FIELD_ABSOLUTE;
 import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_YAW_LOCK;
-import static frc.robot.RobotConstants.SHUFFLEBOARD.OPERATOR_TAB;
+import static frc.robot.RobotConstants.SHUFFLEBOARD.TABS.*;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -20,7 +20,7 @@ public class ShuffleboardDriverControls {
 	private GenericEntry driverYawEnabled;
 	
 	public ShuffleboardDriverControls() {
-		operatorTab = Shuffleboard.getTab(OPERATOR_TAB);		
+		operatorTab = Shuffleboard.getTab(MATCH);		
 
 		
     	nodeChooser.setDefaultOption("DEFAULT",TargetNode.A1);
