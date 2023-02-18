@@ -121,7 +121,7 @@ public class VisionSubsystem extends EntechSubsystem {
     	  loc = AprilTagLocation.findFromTag(tagId);
       }
       else {
-    	  DriverStation.reportWarning("Photon Vision Target with bad tag id'" + "", false);  
+    	  DriverStation.reportWarning("Photon Vision Target with bad tag id'" + tagId + "'", false);  
       }
 
       return new RecognizedAprilTagTarget (t3d,loc);

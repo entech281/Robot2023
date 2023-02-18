@@ -17,7 +17,7 @@ public class ShuffleboardDriverControls {
 
 	private SendableChooser<TargetNode> nodeChooser = new SendableChooser<>();
 	private GenericEntry fieldAbsolute;
-	private GenericEntry driverYawLock;
+	private GenericEntry driverYawEnabled;
 	
 	public ShuffleboardDriverControls() {
 		operatorTab = Shuffleboard.getTab(OPERATOR_TAB);		
@@ -34,9 +34,9 @@ public class ShuffleboardDriverControls {
     	operatorTab.add(nodeChooser).withWidget(BuiltInWidgets.kSplitButtonChooser);		
 	
     	fieldAbsolute = operatorTab.add("FieldAbsolute",false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    	driverYawLock = operatorTab.add("YawLock",false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    	driverYawEnabled = operatorTab.add("YawEnabled",false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
     	fieldAbsolute.setBoolean(DEFAULT_FIELD_ABSOLUTE);
-    	driverYawLock.setBoolean(DEFAULT_YAW_LOCK);
+    	driverYawEnabled.setBoolean(DEFAULT_YAW_LOCK);
 	}
 
 	public TargetNode getSelectedTargetNode() {
@@ -59,11 +59,14 @@ public class ShuffleboardDriverControls {
 		setFieldAbsolute( ! isFieldAbsolute() );
 	}
 
-	public boolean isYawLocked() {
-		return driverYawLock.getBoolean(DEFAULT_YAW_LOCK);
+	public boolean isYawEnabled() {
+		return driverYawEnabled.getBoolean(DEFAULT_YAW_LOCK);
 	}	
+	public boolean isYawLocked() {
+		return ! isYawEnabled();
+	}
 	
 	public void setYawLock(boolean newValue) {
-		driverYawLock.setBoolean(newValue);
+		driverYawEnabled.setBoolean(newValue);
 	}
 }

@@ -47,6 +47,7 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
     	
     	RecognizedAprilTagTarget target = vs.getBestAprilTagTarget();
     	Transform3d cameraToTarget =  target.getCameraToTargetTransform();
+    	
     	AprilTagLocation tagLocation = target.getTagLocation();
     	
     	Pose3d tagLocationPose = tagLocation.asPose3d();

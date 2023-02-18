@@ -88,7 +88,7 @@ public final class RobotConstants {
     public interface SHUFFLEBOARD {
     	public static final String OPERATOR_TAB="Operator";
     	public static final String VISION_TAB="Vision";
-    	public static boolean DEFAULT_YAW_LOCK = true;
+    	public static boolean DEFAULT_YAW_LOCK = false;
     	public static boolean DEFAULT_FIELD_ABSOLUTE = true;
     }
 }
