@@ -15,6 +15,9 @@ public class VisionStatus implements SubsystemStatus,Sendable{
     private final List<RecognizedAprilTagTarget> targets = new ArrayList<>();
     private Pose3d photonEstimatedPose;
     
+    public boolean hasPhotonPose() {
+    	return photonEstimatedPose != null;
+    }
     public Pose3d getPhotonEstimatedPose() {
 		return photonEstimatedPose;
 	}
@@ -70,7 +73,10 @@ public class VisionStatus implements SubsystemStatus,Sendable{
 	}
 
 	@Override
-	public void initSendable(SendableBuilder builder) {
-		// TODO Auto-generated method stub
+	public void initSendable(SendableBuilder sb) {
+		sb.addBooleanProperty("hasTargets", this::hasTargets, null);
+		sb.addBooleanProperty("hasPhtonPose", this::hasPhotonPose, null);
+		sb.addBooleanProperty("hasBestTraget", this::hasBestTarget, null);
+		sb.addDoubleProperty("latency", this::getLatency, null);
 	}
 }

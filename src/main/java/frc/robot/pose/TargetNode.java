@@ -11,19 +11,19 @@ public class TargetNode {
 
     public double absoluteNodeX;
 
-    public static double A_ROW_X_IN = 8.5;
-    public static double B_ROW_X_IN = 25.5;
+    public static double A_ROW_X_IN = -25.5;
+    public static double B_ROW_X_IN = -8.5;
 
-    public static int LEFT_NODE_Y_OFSET_IN = 22;
+    public static int LEFT_NODE_Y_OFSET_IN = -22;
     public static int MIDDLE_NODE_Y_OFSET_IN = 0;
     public static int RIGHT_NODE_Y_OFSET_IN = 22;
     
-    public static TargetNode A1 = new TargetNode(LEFT_NODE_Y_OFSET_IN,A_ROW_X_IN,NodeID.A1);
-    public static TargetNode A2 = new TargetNode(MIDDLE_NODE_Y_OFSET_IN,A_ROW_X_IN,NodeID.A2);
-    public static TargetNode A3 = new TargetNode(RIGHT_NODE_Y_OFSET_IN,A_ROW_X_IN,NodeID.A3);
-    public static TargetNode B1 = new TargetNode(LEFT_NODE_Y_OFSET_IN,B_ROW_X_IN,NodeID.B1);
-    public static TargetNode B2 = new TargetNode(MIDDLE_NODE_Y_OFSET_IN,B_ROW_X_IN,NodeID.B2);
-    public static TargetNode B3 = new TargetNode(RIGHT_NODE_Y_OFSET_IN,B_ROW_X_IN,NodeID.B3);
+    public static TargetNode A1 = new TargetNode(A_ROW_X_IN,LEFT_NODE_Y_OFSET_IN,NodeID.A1);
+    public static TargetNode A2 = new TargetNode(A_ROW_X_IN,MIDDLE_NODE_Y_OFSET_IN,NodeID.A2);
+    public static TargetNode A3 = new TargetNode(A_ROW_X_IN,RIGHT_NODE_Y_OFSET_IN,NodeID.A3);
+    public static TargetNode B1 = new TargetNode(B_ROW_X_IN,LEFT_NODE_Y_OFSET_IN,NodeID.B1);
+    public static TargetNode B2 = new TargetNode(B_ROW_X_IN,MIDDLE_NODE_Y_OFSET_IN,NodeID.B2);
+    public static TargetNode B3 = new TargetNode(B_ROW_X_IN,RIGHT_NODE_Y_OFSET_IN,NodeID.B3);
     public static TargetNode NONE = new TargetNode(0,0,NodeID.NONE);
     
     public static enum NodeID {
@@ -39,8 +39,8 @@ public class TargetNode {
     private final Translation2d offsetToTarget;
     private final NodeID id;
 
-    protected TargetNode(double horizontalOffsetInches, double distanceOffsetInches, NodeID ID) {
-        offsetToTarget = new Translation2d(horizontalOffsetInches,distanceOffsetInches);
+    protected TargetNode(double xOffsetInches, double yOffsetInches, NodeID ID) {
+        offsetToTarget = new Translation2d(xOffsetInches,yOffsetInches);
         id = ID;
     }
 

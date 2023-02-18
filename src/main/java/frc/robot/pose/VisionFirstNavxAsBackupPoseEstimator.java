@@ -10,6 +10,7 @@ import frc.robot.RobotConstants;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
+import frc.robot.util.PoseUtil;
 
 /**
  * Estimates the Pose of the Robot using Vision Data, and
@@ -22,7 +23,7 @@ import frc.robot.subsystems.VisionStatus;
  */
 public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
     
-  private final Transform3d ROBOT_TO_CAM = new Transform3d( 
+  private Transform3d ROBOT_TO_CAM = new Transform3d( 
 		  new Translation3d( 
 				  RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS,
 				  RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
@@ -37,8 +38,8 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
     	}
 	}
     
-	//this is where you take the Transform3d provided by
-	//the vision system, and the tag it's based on, to compute 
+	//photon vision gives us transform in meters
+	//also the Field2d widget is in meters
     private Pose2d estimatePoseFromCamera(VisionStatus vs) {
     	
     	RecognizedAprilTagTarget target = vs.getBestAprilTagTarget();
@@ -46,6 +47,7 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
     	AprilTagLocation tagLocation = target.getTagLocation();
     	
     	Pose3d tagLocationPose = tagLocation.asPose3d();
+    	Pose3d tagLocationMeters = PoseUtil.inchesToMeters(tagLocationPose);
     	
     	//robotPose + ROBOT_TO_CAM + cameraToTarget = tagLocation
     	//thus 
@@ -55,7 +57,7 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
     	//HINT:: something like this should work:
     	
     	//this might not be exactly right. lets do some tests! 
-    	Pose3d  estimatedPose = tagLocationPose.transformBy(ROBOT_TO_CAM.inverse()).transformBy(cameraToTarget.inverse());
+    	Pose3d  estimatedPose = tagLocationMeters.transformBy(cameraToTarget.inverse()).transformBy(ROBOT_TO_CAM.inverse());
     	return estimatedPose.toPose2d();
     	
     }

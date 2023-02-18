@@ -1,8 +1,5 @@
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,9 +23,8 @@ public class RobotContext {
 	    driveSubsystem = drive;
 	    navXSubSystem = navx;
 	    visionSubsystem = vision;
-	    Shuffleboard.getTab("Field").add(fieldDisplay).withWidget(BuiltInWidgets.kField);
+	    Shuffleboard.getTab("Field").add("Estimated Location",fieldDisplay).withWidget(BuiltInWidgets.kField);
 	}
-    private static PoseLogger poseLogger = new PoseLogger();	
 	private Field2d fieldDisplay = new Field2d();
 	
 	public Pose2d getEstimatedRobotPose() {
@@ -55,14 +51,15 @@ public class RobotContext {
 
         
         if ( hasEstimatedPose() ) {
-        	fieldDisplay.getObject("Estimated").setPose(estimatedRobotPose);
-        	poseLogger.logPose2d("pose-us", estimatedRobotPose);
+        	SmartDashboard.putString("our pose",estimatedRobotPose.toString());
+        	//fieldDisplay.setRobotPose(estimatedRobotPose);
         }
         
         if ( vs.getPhotonEstimatedPose() != null ) {
-        	fieldDisplay.getObject("PhotonEstiamted").setPose(estimatedRobotPose);
-        	poseLogger.logPose2d("pose-photon", vs.getPhotonEstimatedPose().toPose2d());	
+        	SmartDashboard.putString("photon pose",estimatedRobotPose.toString());
+        	fieldDisplay.setRobotPose(vs.getPhotonEstimatedPose().toPose2d());	
         }
+       
 
         /**
          * TEMPORARY Code, just so that we can see 
@@ -71,7 +68,7 @@ public class RobotContext {
          * 
          * Also we are TEMPORARILY printing out what we get from MagicPhotonVisionEstimator
          */
-         
+        
          AlignmentCalculator calc = new AlignmentCalculator();
          double alignAngle = calc.calculateAngleToScoringLocation(vs, TargetNode.A3, estimatedRobotPose);
          SmartDashboard.putNumber("AlignAngle", alignAngle);

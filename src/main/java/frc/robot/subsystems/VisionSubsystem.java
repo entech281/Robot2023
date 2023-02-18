@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.pose.AprilTagLocation;
@@ -31,8 +32,9 @@ import frc.robot.pose.RecognizedAprilTagTarget;
 
 public class VisionSubsystem extends EntechSubsystem {
 
+  private VisionStatus currentStatus = new VisionStatus();
   private PhotonCamera camera;
-  private final Transform3d ROBOT_TO_CAM = new Transform3d( 
+  private Transform3d ROBOT_TO_CAM = new Transform3d( 
 		  new Translation3d( 
 				  RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS,
 				  RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
@@ -41,7 +43,8 @@ public class VisionSubsystem extends EntechSubsystem {
   
   @Override
   public void initialize() {
-    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
+    //camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
+    camera = new PhotonCamera("IMX219");
 
     AprilTagFieldLayout photonAprilTagFieldLayout;
 	try {
@@ -50,7 +53,6 @@ public class VisionSubsystem extends EntechSubsystem {
 	} catch (IOException e) {
 		throw new RuntimeException("Could not load wpilib AprilTagFields");
 	}
-    
   }
 
   @Override
@@ -58,7 +60,11 @@ public class VisionSubsystem extends EntechSubsystem {
      //TODO:: fill out
   }
 
-  public VisionStatus getStatus(){
+  public VisionStatus getStatus() {
+	  return currentStatus;
+  }
+  
+  public void updateStatus(){
 	  	VisionStatus newStatus = new VisionStatus();
 	  	
 	    PhotonPipelineResult result = camera.getLatestResult();
@@ -83,6 +89,10 @@ public class VisionSubsystem extends EntechSubsystem {
 	    SmartDashboard.putString("getStatus Best Target:", "*" + newStatus.getBestAprilTagTarget() +"*");
 	    SmartDashboard.putString("vs:", "*" + newStatus +"*");
 	    SmartDashboard.putBoolean("hasTargets", newStatus.hasTargets());
+	    if ( newStatus.hasPhotonPose()) {
+	    	SmartDashboard.putString("photon pose", newStatus.getPhotonEstimatedPose().toPose2d().toString());
+	    }
+	    
 
     //SmartDashboard.putNumber("getcameraX", target3D.getX());
     //SmartDashboard.putNumber("getcameraY", target3D.getY());
@@ -91,7 +101,7 @@ public class VisionSubsystem extends EntechSubsystem {
     //SmartDashboard.putNumber("getcameraPitch", bestTarget.getPitch());
     //SmartDashboard.putNumber("getcameraSkew", bestTarget.getSkew());
     //SmartDashboard.putNumber("getcameraYaw", bestTarget.getYaw());
-	  return newStatus;
+	  currentStatus = newStatus;
   }
   
 
@@ -114,6 +124,7 @@ public class VisionSubsystem extends EntechSubsystem {
   }
   @Override
   public void periodic() {
+	  updateStatus();
   }
 
   @Override

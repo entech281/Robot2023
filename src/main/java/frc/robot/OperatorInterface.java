@@ -15,7 +15,7 @@ public class OperatorInterface {
 
     private CommandJoystick driveStick;
     private CommandFactory commandFactory;
-    private SendableChooser<TargetNode> nodeChooser;
+    private SendableChooser<TargetNode> nodeChooser = new SendableChooser<>();
     
     public OperatorInterface( final CommandFactory cf) {
         this.commandFactory = cf;

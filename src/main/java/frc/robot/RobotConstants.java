@@ -34,15 +34,15 @@ public final class RobotConstants {
             public static final int RED_RIGHT = 1;
             public static final int RED_LEFT = 3; 
         }
-        public static final String PHOTON_HOST = "photonvision-3B";  
+        public static final String PHOTON_HOST = "photonvision";  
         public static final double MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES = 40.0;
         public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
         
         public interface CAMERA_POSITION{
         	public static final double INCHES_PER_METER = 39.4;
-        	public static final double UP_METERS = 10.0 / INCHES_PER_METER;
-        	public static final double LEFT_OF_CENTER_METERS = 8.0 /INCHES_PER_METER;
-        	public static final double FORWARD_OF_CENTER_METETRS = 12 / INCHES_PER_METER;
+        	public static final double UP_METERS = -10.0 / INCHES_PER_METER;
+        	public static final double LEFT_OF_CENTER_METERS = 0.0 /INCHES_PER_METER;
+        	public static final double FORWARD_OF_CENTER_METETRS = -18 / INCHES_PER_METER;
         }
     }
     public interface ARM{
