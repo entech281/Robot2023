@@ -25,7 +25,8 @@ public class OperatorInterface {
         .onFalse(commandFactory.setDriverYawEnableCommand(shuffleboardControls,false));
 
 	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
-	        .onTrue(commandFactory.alignToScoringLocation(shuffleboardControls,hidJoystickDriveInputSupplier))
+	    /**TODO: this is broken!!! the challenge is to find out who can be a ScoringLocatin provider**/
+	        .onTrue(commandFactory.alignToScoringLocation(null ,hidJoystickDriveInputSupplier))
 	        .onFalse(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
 	    
 	    driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
