@@ -4,6 +4,8 @@ import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_FIELD_ABSOLUTE;
 import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_YAW_LOCK;
 import static frc.robot.RobotConstants.SHUFFLEBOARD.TABS.*;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -11,7 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.pose.TargetNode;
 
-public class ShuffleboardDriverControls {
+public class ShuffleboardDriverControls implements Supplier<TargetNode> {
 	
 	private ShuffleboardTab operatorTab;
 
@@ -68,5 +70,10 @@ public class ShuffleboardDriverControls {
 	
 	public void setYawLock(boolean newValue) {
 		driverYawEnabled.setBoolean(newValue);
+	}
+
+	@Override
+	public TargetNode get() {
+		return getSelectedTargetNode();
 	}
 }

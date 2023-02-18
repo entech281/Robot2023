@@ -27,8 +27,8 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public FilteredDriveCommand(DriveSubsystem drive, Joystick joystick, Supplier<Double> yawAngleSupplier, ShuffleboardDriverControls driverControls) {
-        super(drive,joystick,yawAngleSupplier);
+    public FilteredDriveCommand(DriveSubsystem drive, Supplier<DriveInput> operatorInput, Supplier<Double> yawAngleSupplier, ShuffleboardDriverControls driverControls) {
+        super(drive,operatorInput,yawAngleSupplier);
         this.driverControls = driverControls;
 
         this.jsDeadbandFilter = new JoystickDeadbandFilter();
@@ -38,11 +38,12 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
 
     @Override
     public void execute() {
-    	DriveInput operatorInput = new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ(), yawAngleSupplier.get());
-    	DriveInput filtered = operatorInput;
+    	DriveInput di = operatorInput.get();
+    	di.setYawAngleDegrees(yawAngleSupplier.get());
+    	DriveInput filtered = di;
     	
         if (jsDeadbandFilter.getEnabled()) {
-            filtered = jsDeadbandFilter.filter(operatorInput);
+            filtered = jsDeadbandFilter.filter(filtered);
         }
     	if ( driverControls.isFieldAbsolute()) {
     		filtered = fieldRelativeFilter.filter(filtered);

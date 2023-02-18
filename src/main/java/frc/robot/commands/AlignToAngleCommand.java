@@ -30,8 +30,11 @@ public class AlignToAngleCommand extends BaseDrivePIDCommand {
      * @param latestPose  The supplier of latest pose of the robot to get the current yaw
      * @param joystick the joystick you controll the robot with
      */
-    public AlignToAngleCommand(DriveSubsystem drive,  Joystick joystick,Supplier<Double> desiredAngleSupplier, Supplier<Double> yawAngleSupplier) {
-        super(drive,joystick);
+    public AlignToAngleCommand(DriveSubsystem drive,      		
+    		Supplier<DriveInput> operatorInput,
+    		Supplier<Double> desiredAngleSupplier, 
+    		Supplier<Double> yawAngleSupplier) {
+        super(drive,operatorInput);
         this.desiredAngleSupplier = desiredAngleSupplier;
         this.yawAngleSupplier = yawAngleSupplier;
     }
@@ -49,9 +52,9 @@ public class AlignToAngleCommand extends BaseDrivePIDCommand {
                 SPEED_LIMIT
             )
         );
-        DriveInput di = new DriveInput(-joystick.getY(), joystick.getX(), calcValue);
 
-
+        DriveInput di = operatorInput.get();
+        di.setRotation(calcValue);
         drive.drive(di );
     }
 

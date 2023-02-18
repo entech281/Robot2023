@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -18,7 +20,7 @@ public abstract class BaseDrivePIDCommand extends EntechCommandBase {
     public static final int STOP_COUNT = 4;
     protected final DriveSubsystem drive;
     protected final PIDController pid;
-    protected final Joystick joystick;
+    protected final Supplier<DriveInput> operatorInput;
     protected StoppingCounter counter;
     /**
      * Creates a new snap yaw degrees command that will snap the robot to the specified angle
@@ -28,10 +30,10 @@ public abstract class BaseDrivePIDCommand extends EntechCommandBase {
      * @param latestPose  The supplier of latest pose of the robot to get the current yaw
      * @param joystick the joystick you controll the robot with
      */
-    public BaseDrivePIDCommand(DriveSubsystem drive,  Joystick joystick) {
+    public BaseDrivePIDCommand(DriveSubsystem drive,  Supplier<DriveInput> operatorInput) {
         super(drive);
         this.drive = drive;
-        this.joystick = joystick;
+        this.operatorInput = operatorInput;
 
         pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
         pid.enableContinuousInput(-180, 180);

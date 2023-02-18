@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,6 +11,7 @@ import frc.robot.RobotContext;
 import frc.robot.ShuffleboardDriverControls;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
+import frc.robot.filters.DriveInput;
 import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.pose.TargetNode;
@@ -55,12 +58,12 @@ public class CommandFactory {
     	driveSubsystem.setDefaultCommand(newDefaultCommand);
     }
 
-    public Command filteredDriveCommand( Joystick joystick, ShuffleboardDriverControls driverControls) {
-    	return new FilteredDriveCommand(driveSubsystem,joystick,this::getCurrentYawDegrees,driverControls);
+    public Command filteredDriveCommand( Supplier<DriveInput> operatorInput, ShuffleboardDriverControls driverControls) {
+    	return new FilteredDriveCommand(driveSubsystem,operatorInput,this::getCurrentYawDegrees,driverControls);
     }
     
-    public Command driveCommand(Joystick joystick) {
-        return new SimpleDriveCommand(driveSubsystem, joystick,this::getCurrentYawDegrees);
+    public Command driveCommand(Supplier<DriveInput> operatorInput) {
+        return new SimpleDriveCommand(driveSubsystem, operatorInput,this::getCurrentYawDegrees);
     }
 
 	public Command toggleFieldAbsoluteCommand( ShuffleboardDriverControls shuffleboardControls ) {
@@ -71,7 +74,7 @@ public class CommandFactory {
 		return new SetDriverYawEnableCommand(shuffleboardControls,newValue);		
 	}
 	
-    public Command alignToScoringLocation(TargetNode targetNode, Joystick joystick) {
+    public Command alignToScoringLocation(Supplier<ScoringLocation> target, Supplier<DriveInput> operatorInput) {
     	VisionStatus vs= visionSubsystem.getStatus();
     	RecognizedAprilTagTarget rat = vs.getBestAprilTagTarget();
     	if ( rat == null ) {
@@ -79,8 +82,8 @@ public class CommandFactory {
     	}
     	else {
     		//ScoringLocation s = new ScoringLocation(rat.getTagLocation(),robotContext.getDriverPreferences().getSelectedNode());
-    		ScoringLocation s = new ScoringLocation(rat.getTagLocation(),targetNode);
-    		return new AlignToScoringLocationCommand(driveSubsystem,joystick,s,this::getCurrentEstimatedPose );
+    		//ScoringLocation s = new ScoringLocation(rat.getTagLocation(),targetNode);
+    		return new AlignToScoringLocationCommand(driveSubsystem,operatorInput,target,this::getCurrentEstimatedPose );
     	}
         
     }    

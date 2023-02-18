@@ -9,6 +9,9 @@ import frc.robot.filters.DriveInput;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.subsystems.DriveSubsystem;
+import java.util.function.Supplier;
+import frc.robot.filters.DriveInput;
+
 
 /**
  * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -21,25 +24,29 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class AlignToScoringLocationCommand extends BaseDrivePIDCommand {
 
-    private ScoringLocation scoringLocation;
+    private Supplier<ScoringLocation> scoringLocationSupplier;
     private Supplier<Pose2d> currentPoseSupplier;
     private AlignmentCalculator alignCalculator = new AlignmentCalculator();
-    
+ 
     
     /**
      * Tries to align to the target scoring location, by rotating the robot about its axis
      * (Operator can still drive in the meantime)
      * @param joystick the joystick you controll the robot with
      */
-    public AlignToScoringLocationCommand(DriveSubsystem drive,  Joystick joystick, ScoringLocation scoringLocation, Supplier<Pose2d> currentPoseSupplier) {
-        super(drive,joystick);
-        this.scoringLocation = scoringLocation;
+    public AlignToScoringLocationCommand(DriveSubsystem drive,
+    		Supplier<DriveInput> operatorInput, 
+    		Supplier<ScoringLocation> scoringLocationSupplier, 
+    		Supplier<Pose2d> currentPoseSupplier) {
+        super(drive,operatorInput);
+        this.scoringLocationSupplier = scoringLocationSupplier;
         this.currentPoseSupplier = currentPoseSupplier;
     }
 
     @Override
     public void execute() {
-    	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(scoringLocation, currentPoseSupplier.get());
+    	ScoringLocation currentScoringLocation = scoringLocationSupplier.get();
+    	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, currentPoseSupplier.get());
     	pid.setSetpoint(angleToTargetDegrees);
     	double currentYawAngleDegrees = currentPoseSupplier.get().getRotation().getDegrees();
     	
@@ -53,7 +60,8 @@ public class AlignToScoringLocationCommand extends BaseDrivePIDCommand {
                 SPEED_LIMIT
             )
         );
-        DriveInput di = new DriveInput(-joystick.getY(), joystick.getX(), calcValue);
+        DriveInput di = operatorInput.get();
+        di.setRotation(calcValue);
         drive.drive(di );
     }
 }
