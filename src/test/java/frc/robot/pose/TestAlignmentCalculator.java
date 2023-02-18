@@ -18,11 +18,13 @@ public class TestAlignmentCalculator {
 		Pose2d robotPose = new Pose2d(0,0,Rotation2d.fromDegrees(0));
 		
 		//and we want to score here:
-		ScoringLocation sloc = new ScoringLocation(AprilTagLocation.BLUE_LEFT,TargetNode.A3);
+		ScoringLocation sloc = new ScoringLocation(AprilTagLocation.BLUE_LEFT,TargetNode.A1);
 		
 		//then the angle we should turn to is
 		int I_HAVE_NO_IDEA_THE_REAL_ANSWER = 0;
 		//assertEquals(I_HAVE_NO_IDEA_THE_REAL_ANSWER,calculator.calculateAngleToScoringLocation(sloc, robotPose),TOLERANCE_DEGREES );
-		
+
+		double turnAngle = calculator.calculateAngleToScoringLocation(sloc, robotPose);
+		//assertEquals( 98.6900675, turnAngle, TOLERANCE_DEGREES);		
 	}
 }
