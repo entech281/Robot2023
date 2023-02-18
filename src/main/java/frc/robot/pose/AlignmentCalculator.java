@@ -9,10 +9,12 @@ public class AlignmentCalculator {
 	
 	public double calculateAngleToScoringLocation(ScoringLocation loc, Pose2d estimatedRobotPose) {
 	   	TargetNode selectedNode = loc.getSelectedNode();
+	   	double currentRobotAngle = estimatedRobotPose.getRotation().getDegrees();
         double robotToNodeX = selectedNode.getXIn() + estimatedRobotPose.getX();
         double robotToNodeY = selectedNode.getYIn() - estimatedRobotPose.getY();
-        double turnAngle = Math.toDegrees(Math.atan2(robotToNodeY,robotToNodeX)) + 180;            
-        return turnAngle;
+        double nodeAngle = Math.toDegrees(Math.atan2(robotToNodeX,robotToNodeY));
+		double totalTurnAngle = (90 - currentRobotAngle) + nodeAngle;
+        return totalTurnAngle;
 	}	
 	
 	public double calculateAngleToScoringLocation ( VisionStatus vs, TargetNode targetNode, Pose2d estimatedRobotPose) {    	

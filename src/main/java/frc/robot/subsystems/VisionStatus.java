@@ -8,13 +8,16 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.pose.RecognizedAprilTagTarget;
 
-public class VisionStatus implements SubsystemStatus,Sendable{
+public class VisionStatus implements SubsystemStatus{
 
     private double latency;
     private RecognizedAprilTagTarget bestTarget;
     private final List<RecognizedAprilTagTarget> targets = new ArrayList<>();
     private Pose3d photonEstimatedPose;
     
+    public boolean hasPhotonPose() {
+    	return photonEstimatedPose != null;
+    }
     public Pose3d getPhotonEstimatedPose() {
 		return photonEstimatedPose;
 	}
@@ -44,7 +47,15 @@ public class VisionStatus implements SubsystemStatus,Sendable{
     }
 
     public RecognizedAprilTagTarget getBestAprilTagTarget() {
-        return this.bestTarget;
+    	if ( this.bestTarget != null) {
+    		return this.bestTarget;
+    	}
+    	else if (targets.size() > 0 ){
+    		return targets.get(0);
+    	}
+    	else {
+    		return null;
+    	}
     }
 
     public void setBestTarget(RecognizedAprilTagTarget target) {
@@ -56,7 +67,9 @@ public class VisionStatus implements SubsystemStatus,Sendable{
 
 
 	@Override
-	public void initSendable(SendableBuilder builder) {
-		// TODO Auto-generated method stub
+	public String toString() {
+		return "VisionStatus [latency=" + latency + ", bestTarget=" + bestTarget + ", targets=" + targets
+				+ ", photonEstimatedPose=" + photonEstimatedPose + "]";
 	}
+
 }
