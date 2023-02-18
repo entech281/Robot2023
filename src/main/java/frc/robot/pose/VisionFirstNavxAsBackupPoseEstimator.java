@@ -25,12 +25,14 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransfor3d();
 	@Override
 	public Pose2d estimateRobotPose(VisionStatus vs, NavxStatus ns, DriveStatus ds) {
+        Pose2d estPose = ns.getPose2d();
     	if ( vs.hasBestTarget() ) {
-    		return estimatePoseFromCamera(vs);
-    	}
-    	else {
-    		return estimatePoseFromNavx(ns);
-    	}
+    		Pose2d camPose = estimatePoseFromCamera(vs);
+            if (camPose != null) {
+                estPose = new Pose2d(camPose.getX(), camPose.getY(), Rotation2d.fromDegrees(ns.getYawAngleDegrees()));
+            }
+        }
+        return estPose;
 	}
     
 	//photon vision gives us transform in meters
@@ -38,6 +40,9 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
     private Pose2d estimatePoseFromCamera(VisionStatus vs) {
     	
     	RecognizedAprilTagTarget target = vs.getBestAprilTagTarget();
+        if (target == null) {
+            return null;
+        }
     	Transform3d cameraToTarget =  target.getCameraToTargetTransform();
     	
     	AprilTagLocation tagLocation = target.getTagLocation();
@@ -54,12 +59,6 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
     	Pose3d  estimatedPose = tagLocationMeters.transformBy(cameraToTarget.inverse()).transformBy(ROBOT_TO_CAM.inverse());    	
     	
     	return estimatedPose.toPose2d();
-    	
     }
-    
-    private Pose2d estimatePoseFromNavx(NavxStatus ns) {
-    	return new Pose2d(0,0,Rotation2d.fromDegrees(ns.getYawAngleDegrees()));
-    }
-
 
 }

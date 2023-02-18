@@ -50,6 +50,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 	public void testEstimatedPoseSeemsAboutRight() {
 		
 		VisionStatus vs = new VisionStatus();
+        NavxStatus ns = new NavxStatus(0.0,0.0,0.0,0.0);
 		
 		/*
 		 * Transform 3d:
@@ -76,12 +77,12 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		//RED-middle = tag id 2 --> x,y = 610.77, 108.19 inches 
 		double EXPECTED_X_METERS  = (610.77 - TEST_OFFSET_INCHES)*METERS_PER_INCH - (RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_INCHES) * METERS_PER_INCH;
 		double EXPECTED_Y_METERS = 108.19 * METERS_PER_INCH;
-		double EXPECTED_ROTATION_DEGRESS  = 0.0;
-		Pose2d r = estimator.estimateRobotPose(vs, null, null);
-		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGRESS));
+		double EXPECTED_ROTATION_DEGREES  = 0.0;
+		Pose2d r = estimator.estimateRobotPose(vs, ns, null);
+		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGREES));
 		
 		
-		//assertEquals(EXPECTED,r);
+		// assertEquals(EXPECTED,r);
 
 	}
 }
