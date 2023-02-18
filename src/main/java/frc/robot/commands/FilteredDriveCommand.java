@@ -31,7 +31,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     	DriveInput operatorInput = new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ(), yawAngleSupplier.get());
     	DriveInput filtered = operatorInput;
     	
-    	if ( driverControls.isFieldRelative()) {
+    	if ( driverControls.isFieldAbsolute()) {
     		filtered = new FieldRelativeDriveInputFilter().filter(operatorInput);
     	}
     	
