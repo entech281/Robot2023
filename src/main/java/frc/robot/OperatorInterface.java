@@ -16,7 +16,6 @@ public class OperatorInterface {
 
         setupButtons();
 
-            
     }
     private void setupButtons() {
         driveStick.button(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
@@ -29,7 +28,6 @@ public class OperatorInterface {
     
     driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
         .onTrue(commandFactory.toggleFieldAbsoluteCommand(this.shuffleboardControls));
-
     
     driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
         .onTrue(commandFactory.getZeroGyro());
