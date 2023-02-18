@@ -74,7 +74,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		);
 		
 		//RED-middle = tag id 2 --> x,y = 610.77, 108.19 inches 
-		double EXPECTED_X_METERS  = (610.77 - TEST_OFFSET_INCHES)*METERS_PER_INCH -RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_INCHES;
+		double EXPECTED_X_METERS  = (610.77 - TEST_OFFSET_INCHES)*METERS_PER_INCH - (RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_INCHES) * METERS_PER_INCH;
 		double EXPECTED_Y_METERS = 108.19 * METERS_PER_INCH;
 		double EXPECTED_ROTATION_DEGRESS  = 0.0;
 		Pose2d r = estimator.estimateRobotPose(vs, null, null);

@@ -22,8 +22,8 @@ public class ArmSubsystem extends EntechSubsystem{
   
   @Override
   public void initialize() {
-    elbowMotor = new CANSparkMax(RobotConstants.ARM.ELBOW_MOTOR, MotorType.kBrushed);
-    telescopeMotor = new CANSparkMax(RobotConstants.ARM.TELESCOPE_MOTOR, MotorType.kBrushed);
+    elbowMotor = new CANSparkMax(RobotConstants.ARM.ELBOW_MOTOR_ID, MotorType.kBrushed);
+    telescopeMotor = new CANSparkMax(RobotConstants.ARM.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
 
     elbowMotor.setInverted(false);
     telescopeMotor.setInverted(false);

@@ -53,8 +53,8 @@ public final class RobotConstants {
         public static final double MIN_EXTENSION_INCHES = 0.0;
         public static final double MAX_EXTENSION_INCHES = 200.0;
         public static final double ARM_MAX_REACH_INCHES = 32; //from center of robot base!!!
-        public static final int ELBOW_MOTOR = 0;
-        public static final int TELESCOPE_MOTOR = 0;
+        public static final int ELBOW_MOTOR_ID = 0;
+        public static final int TELESCOPE_MOTOR_ID = 0;
     }
     public interface ALIGNMENT{
         public static final double ANGLE_TOLERANCE_DEGREES=2.0;
