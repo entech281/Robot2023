@@ -15,12 +15,15 @@ public class PoseUtil {
     }
     
 	public static final double METERS_PER_INCH = 0.0254;
+	
 	public static Pose2d inchesToMeters ( Pose2d input) {
 		return new Pose2d( input.getTranslation().times(METERS_PER_INCH), input.getRotation());
 	}
+	
 	public static Pose3d inchesToMeters ( Pose3d input) {
 		return input.times(METERS_PER_INCH);
-	}	
+	}
+	
 	public static double inchesToMeters ( double inches) {
 		return inches/METERS_PER_INCH;
 	}

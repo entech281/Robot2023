@@ -9,11 +9,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import frc.robot.RobotConstants;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
 public class TestVisionFirstNavxAsBackupPoseEstimator {
 
-	public static double METERS_TO_INCHES=0.0254;
+	public static double METERS_PER_INCH=0.0254;
 	
 	protected VisionFirstNavxAsBackupPoseEstimator estimator = new VisionFirstNavxAsBackupPoseEstimator();
 	public static final double TOLERANCE=0.1;
@@ -57,13 +58,14 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		 * Rotation 3d is rotation about the x, y, and z axes respectively-- IN RADIANS
 		 */
 		
-		
+		double TEST_OFFSET_INCHES = 24.0;
 		//imagine we are sitting somewhere close to RED_MIDDLE,
 		//and we get a position slightly in front of us 
 		Transform3d cameraToTarget = new Transform3d(
-				new Translation3d(.6096,0, 0 ),
+				new Translation3d(TEST_OFFSET_INCHES*METERS_PER_INCH,0, 0 ),
 				new Rotation3d(0,0,Math.toRadians(180))
 		);
+		
 		vs.setBestTarget(
 				new RecognizedAprilTagTarget(
 						cameraToTarget,
@@ -71,14 +73,15 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 				)				
 		);
 		
-		//24 inches in front of red middle should be (x,y)= (610.77 - 24 ), (108.19) = 586.77, 108.39
-		//but then camera is 18" further behind--> x = 568.77, 108.39 inches
-		// = x,y = 14.46, 2.75 m
+		//RED-middle = tag id 2 --> x,y = 610.77, 108.19 inches 
+		double EXPECTED_X_METERS  = (610.77 - TEST_OFFSET_INCHES)*METERS_PER_INCH -RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS;
+		double EXPECTED_Y_METERS = 108.19 * METERS_PER_INCH;
+		double EXPECTED_ROTATION_DEGRESS  = 0.0;
 		Pose2d r = estimator.estimateRobotPose(vs, null, null);
-		Pose2d EXPECTED = new Pose2d(14.46,2.75 ,Rotation2d.fromDegrees(0));
+		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGRESS));
 		
 		
 		//assertEquals(EXPECTED,r);
-		//assertPose2dEquals(EXPECTED,r);
+
 	}
 }

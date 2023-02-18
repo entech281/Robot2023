@@ -40,9 +40,9 @@ public final class RobotConstants {
         
         public interface CAMERA_POSITION{
         	public static final double INCHES_PER_METER = 39.4;
-        	public static final double UP_METERS = -10.0 / INCHES_PER_METER;
+        	public static final double UP_METERS = 10.0 / INCHES_PER_METER;
         	public static final double LEFT_OF_CENTER_METERS = 0.0 /INCHES_PER_METER;
-        	public static final double FORWARD_OF_CENTER_METETRS = -18 / INCHES_PER_METER;
+        	public static final double FORWARD_OF_CENTER_METETRS = 18 / INCHES_PER_METER;
         }
     }
     public interface ARM{

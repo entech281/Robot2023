@@ -105,6 +105,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	    SmartDashboard.putBoolean("hasTargets", newStatus.hasTargets());
 	    if ( newStatus.hasPhotonPose()) {
 	    	SmartDashboard.putString("photon pose", newStatus.getPhotonEstimatedPose().toPose2d().toString());
+	    	SmartDashboard.putString("PhotonTransform3d", "" + result.getBestTarget().getBestCameraToTarget());
 	    }
 	    
 	  currentStatus = newStatus;

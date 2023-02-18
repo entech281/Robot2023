@@ -10,7 +10,8 @@ import frc.robot.RobotConstants;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
-import frc.robot.util.PoseUtil;
+
+import edu.wpi.first.math.util.Units;
 
 /**
  * Estimates the Pose of the Robot using Vision Data, and
@@ -22,7 +23,9 @@ import frc.robot.util.PoseUtil;
  * @author dcowden
  */
 public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
-    
+
+	
+  public static double METERS_PER_INCH=0.0254;	
   private Transform3d ROBOT_TO_CAM = new Transform3d( 
 		  new Translation3d( 
 				  RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS,
@@ -47,16 +50,14 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
     	AprilTagLocation tagLocation = target.getTagLocation();
     	
     	Pose3d tagLocationPose = tagLocation.asPose3d();
-    	Pose3d tagLocationMeters = PoseUtil.inchesToMeters(tagLocationPose);
+    	Pose3d tagLocationMeters = tagLocationPose.times(METERS_PER_INCH);
     	
-    	//robotPose + ROBOT_TO_CAM + cameraToTarget = tagLocation
-    	//thus 
-    	//robotPose = tagLocation - ROBOT_TO_CAM - cameraToTarget
     	
     	//watch out for meters to inches, (use PoseUtil if needed to convert)
     	//HINT:: something like this should work:
     	
-    	//this might not be exactly right. lets do some tests! 
+    	//robotPose -> robotToCamera -> cameraToTag = tagLocation
+    	//thus tagLocation -> tagToCamera -> cameraToRobot = robotPose
     	Pose3d  estimatedPose = tagLocationMeters.transformBy(cameraToTarget.inverse()).transformBy(ROBOT_TO_CAM.inverse());    	
     	
     	return estimatedPose.toPose2d();
