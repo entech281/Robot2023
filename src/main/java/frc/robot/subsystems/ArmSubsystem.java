@@ -22,18 +22,18 @@ public class ArmSubsystem extends EntechSubsystem{
   
   @Override
   public void initialize() {
-    elbowMotor = new CANSparkMax(RobotConstants.ARM.ELBOW_MOTOR_ID, MotorType.kBrushed);
-    telescopeMotor = new CANSparkMax(RobotConstants.ARM.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
+    // elbowMotor = new CANSparkMax(RobotConstants.ARM.ELBOW_MOTOR_ID, MotorType.kBrushed);
+    // telescopeMotor = new CANSparkMax(RobotConstants.ARM.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
 
-    elbowMotor.setInverted(false);
-    telescopeMotor.setInverted(false);
+    // elbowMotor.setInverted(false);
+    // telescopeMotor.setInverted(false);
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
-      builder.setSmartDashboardType(getName());
-      builder.addDoubleProperty("Elbow Motor", () -> { return elbowMotor.get(); }, null);
-      builder.addDoubleProperty("Telescope Motor", () -> { return telescopeMotor.get(); }, null);
+      // builder.setSmartDashboardType(getName());
+      // builder.addDoubleProperty("Elbow Motor", () -> { return elbowMotor.get(); }, null);
+      // builder.addDoubleProperty("Telescope Motor", () -> { return telescopeMotor.get(); }, null);
   }
 
   @Override

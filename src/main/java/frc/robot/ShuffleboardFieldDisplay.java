@@ -14,12 +14,10 @@ public class ShuffleboardFieldDisplay {
 
 	
 	public ShuffleboardFieldDisplay() {
-		visionTab.add("Estimated Location",fieldDisplay).withWidget(BuiltInWidgets.kField);	
+		visionTab.add("Estimated Location", fieldDisplay).withWidget(BuiltInWidgets.kField);	
 	}
 	
 	public void setRobotPose(Pose2d estimatedPose) {
 		fieldDisplay.setRobotPose(estimatedPose);
 	}
-	
-		
 }
