@@ -25,6 +25,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.RobotConstants;
 import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;
@@ -42,7 +43,7 @@ public class VisionSubsystem extends EntechSubsystem {
   
   @Override
   public void initialize() {
-    camera = new PhotonCamera("IMX219");
+    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
 
     AprilTagFieldLayout photonAprilTagFieldLayout;
 	try {
