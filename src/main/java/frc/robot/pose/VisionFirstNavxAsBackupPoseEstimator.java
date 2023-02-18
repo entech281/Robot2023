@@ -51,7 +51,10 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
     	AprilTagLocation tagLocation = target.getTagLocation();
     	
     	Pose3d tagLocationPose = tagLocation.asPose3d();
-    	Pose3d tagLocationMeters = tagLocationPose.times(METERS_PER_INCH);
+    	Pose3d tagLocationMeters = new Pose3d (
+    			tagLocationPose.getTranslation().times(METERS_PER_INCH),
+    			tagLocationPose.getRotation()
+    		);
     	
     	
     	//watch out for meters to inches, (use PoseUtil if needed to convert)
