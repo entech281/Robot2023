@@ -1,16 +1,35 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  *
  * @author dcowden
  */
-public class NavxStatus implements Sendable , SubsystemStatus{
+public class NavxStatus implements SubsystemStatus {
+    private double forwardDistance;
+    private double rightDistance;
+    private double yawAngleDegrees;
+    private double pitchAngleDegrees;
     
-    private double yawAngleDegrees = 0.0;
+    public NavxStatus() {
+        this.forwardDistance = 0.0;
+        this.rightDistance = 0.0;
+        this.yawAngleDegrees = 0.0;
+        this.pitchAngleDegrees = 0.0;
+    }
 
+    public NavxStatus(double forward, double right, double yaw, double pitch) {
+        this.yawAngleDegrees = forward;
+        this.forwardDistance = right;
+        this.rightDistance = yaw;
+        this.pitchAngleDegrees = pitch;           
+    }
+
+    public Pose2d getPose2d() {
+        return new Pose2d(forwardDistance, rightDistance, Rotation2d.fromDegrees(yawAngleDegrees));
+    }
 
     public void setYawAngleDegrees(double yawAngleDegrees){
         this.yawAngleDegrees = yawAngleDegrees;
@@ -20,10 +39,18 @@ public class NavxStatus implements Sendable , SubsystemStatus{
         return yawAngleDegrees;
     }
 
-
-    @Override
-    public void initSendable(SendableBuilder sb) {
-        sb.addDoubleProperty("Yaw Angle",this::getYawAngleDegrees, null);
+    public void setPitchAngleDegrees(double tiltAngleDegrees){
+        this.pitchAngleDegrees = tiltAngleDegrees;
+    }
+    
+    public double getPitchAngleDegrees(){
+        return pitchAngleDegrees;
+    }
+    public double getForward() {
+        return forwardDistance;
+    }
+    public double getRight() {
+        return rightDistance;
     }
     
 }
