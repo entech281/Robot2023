@@ -3,15 +3,11 @@ package frc.robot.pose;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import frc.robot.RobotConstants;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
-
-import edu.wpi.first.math.util.Units;
+import frc.robot.util.PoseUtil;
 
 /**
  * Estimates the Pose of the Robot using Vision Data, and
@@ -26,11 +22,7 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
 
 	
   public static double METERS_PER_INCH=0.0254;	
-  private Transform3d ROBOT_TO_CAM = new Transform3d( 
-		  new Translation3d( 
-				  RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS,
-				  RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
-				  RobotConstants.VISION.CAMERA_POSITION.UP_METERS), new Rotation3d(0,0,0));
+  private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransfor3d();
 	@Override
 	public Pose2d estimateRobotPose(VisionStatus vs, NavxStatus ns, DriveStatus ds) {
     	if ( vs.hasBestTarget() ) {

@@ -19,9 +19,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,16 +27,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;
+import frc.robot.util.PoseUtil;
 
 public class VisionSubsystem extends EntechSubsystem {
 
   private VisionStatus currentStatus = new VisionStatus();
   private PhotonCamera camera;
-  private Transform3d ROBOT_TO_CAM = new Transform3d( 
-		  new Translation3d( 
-				  RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS,
-				  RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
-				  RobotConstants.VISION.CAMERA_POSITION.UP_METERS), new Rotation3d(0,0,0));
+  private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransfor3d();
   private PhotonPoseEstimator photonPoseEstimator;
   
   @Override
