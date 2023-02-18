@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.logging.PoseLogger;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.PoseEstimator;
 import frc.robot.pose.TargetNode;
@@ -19,13 +18,12 @@ import frc.robot.subsystems.VisionSubsystem;
 public class RobotContext {
 	
 	//inject just what we need. later we might need arm-- we can add it then
-	public RobotContext( DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision) {
+	public RobotContext( ShuffleboardFieldDisplay fieldDisplay, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision) {
 	    driveSubsystem = drive;
 	    navXSubSystem = navx;
 	    visionSubsystem = vision;
-	    Shuffleboard.getTab("Field").add("Estimated Location",fieldDisplay).withWidget(BuiltInWidgets.kField);
+	    this.fieldDisplay=fieldDisplay;
 	}
-	private Field2d fieldDisplay = new Field2d();
 	
 	public Pose2d getEstimatedRobotPose() {
 		return estimatedRobotPose;
@@ -68,26 +66,22 @@ public class RobotContext {
          * 
          * Also we are TEMPORARILY printing out what we get from MagicPhotonVisionEstimator
          */
-        
+         
          AlignmentCalculator calc = new AlignmentCalculator();
          double alignAngle = calc.calculateAngleToScoringLocation(vs, TargetNode.A3, estimatedRobotPose);
          SmartDashboard.putNumber("AlignAngle", alignAngle);
-         
+ 
+
     }    
+
     
     private DriveSubsystem driveSubsystem;
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
 	private Pose2d estimatedRobotPose;
 	private PoseEstimator poseEstimator;
-	private DriverPreferences driverPreferences = new DriverPreferences();
+	private ShuffleboardFieldDisplay fieldDisplay;
 	
-    public DriverPreferences getDriverPreferences() {
-		return driverPreferences;
-	}
-	public void setDriverPreferences(DriverPreferences driverPreferences) {
-		this.driverPreferences = driverPreferences;
-	}
 	public PoseEstimator getPoseEstimator() {
 		return poseEstimator;
 	}

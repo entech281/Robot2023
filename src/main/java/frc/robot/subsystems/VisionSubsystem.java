@@ -24,7 +24,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.pose.AprilTagLocation;
@@ -43,7 +42,6 @@ public class VisionSubsystem extends EntechSubsystem {
   
   @Override
   public void initialize() {
-    //camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
     camera = new PhotonCamera("IMX219");
 
     AprilTagFieldLayout photonAprilTagFieldLayout;
@@ -56,15 +54,31 @@ public class VisionSubsystem extends EntechSubsystem {
   }
 
   @Override
-  public void initSendable(SendableBuilder builder) {
-     //TODO:: fill out
+  public void initSendable(SendableBuilder sb) {
+     sb.addBooleanProperty("HasTargets", this::hasTargets, null);
+     sb.addDoubleProperty("Latency", this::getLatency, null);
+     sb.addBooleanProperty("HasPhotonPose", this::hasPhotonPose, null);
+     sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
   }
 
   public VisionStatus getStatus() {
 	  return currentStatus;
   }
   
-  public void updateStatus(){
+  private boolean hasTargets() {
+	  return currentStatus.hasTargets();
+  }
+  private double getLatency() {
+	  return currentStatus.getLatency();
+  }
+  private boolean hasPhotonPose() {
+	  return currentStatus.hasPhotonPose();
+  }
+  private boolean hasBestTarget() {
+	  return currentStatus.hasBestTarget();
+  }
+  
+  private void updateStatus(){
 	  	VisionStatus newStatus = new VisionStatus();
 	  	
 	    PhotonPipelineResult result = camera.getLatestResult();
@@ -93,14 +107,6 @@ public class VisionSubsystem extends EntechSubsystem {
 	    	SmartDashboard.putString("photon pose", newStatus.getPhotonEstimatedPose().toPose2d().toString());
 	    }
 	    
-
-    //SmartDashboard.putNumber("getcameraX", target3D.getX());
-    //SmartDashboard.putNumber("getcameraY", target3D.getY());
-    //SmartDashboard.putNumber("getcameraZ", target3D.getZ());
-      
-    //SmartDashboard.putNumber("getcameraPitch", bestTarget.getPitch());
-    //SmartDashboard.putNumber("getcameraSkew", bestTarget.getSkew());
-    //SmartDashboard.putNumber("getcameraYaw", bestTarget.getYaw());
 	  currentStatus = newStatus;
   }
   
@@ -119,9 +125,11 @@ public class VisionSubsystem extends EntechSubsystem {
 
       return new RecognizedAprilTagTarget (t3d,loc);
   }
+  
   private static boolean isValidTagId(int tagId) {
 	  return tagId > 0 && tagId < 9;
   }
+  
   @Override
   public void periodic() {
 	  updateStatus();

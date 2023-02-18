@@ -3,14 +3,14 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.DriverPreferences;
+import frc.robot.ShuffleboardDriverControls;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldRelativeDriveInputFilter;
 import frc.robot.filters.TurnToggleFilter;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class FilteredDriveCommand extends SimpleDriveCommand {
-    private DriverPreferences driverPreferences;
+    private ShuffleboardDriverControls driverControls;
 
 
 	/**
@@ -21,9 +21,9 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public FilteredDriveCommand(DriveSubsystem drive, Joystick joystick, Supplier<Double> yawAngleSupplier, DriverPreferences driverPreferences) {
+    public FilteredDriveCommand(DriveSubsystem drive, Joystick joystick, Supplier<Double> yawAngleSupplier, ShuffleboardDriverControls driverControls) {
         super(drive,joystick,yawAngleSupplier);
-        this.driverPreferences =driverPreferences;
+        this.driverControls = driverControls;
     }
 
     @Override
@@ -31,11 +31,11 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     	DriveInput operatorInput = new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ(), yawAngleSupplier.get());
     	DriveInput filtered = operatorInput;
     	
-    	if ( driverPreferences.isFieldRelativeDriving()) {
+    	if ( driverControls.isFieldRelative()) {
     		filtered = new FieldRelativeDriveInputFilter().filter(operatorInput);
     	}
     	
-    	if ( driverPreferences.isTwistLocked()) {
+    	if ( driverControls.isYawLocked()) {
     		filtered = new TurnToggleFilter().filter(filtered);
     	}
     	

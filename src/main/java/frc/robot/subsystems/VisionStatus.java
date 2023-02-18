@@ -8,7 +8,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.pose.RecognizedAprilTagTarget;
 
-public class VisionStatus implements SubsystemStatus,Sendable{
+public class VisionStatus implements SubsystemStatus{
 
     private double latency;
     private RecognizedAprilTagTarget bestTarget;
@@ -72,11 +72,4 @@ public class VisionStatus implements SubsystemStatus,Sendable{
 				+ ", photonEstimatedPose=" + photonEstimatedPose + "]";
 	}
 
-	@Override
-	public void initSendable(SendableBuilder sb) {
-		sb.addBooleanProperty("hasTargets", this::hasTargets, null);
-		sb.addBooleanProperty("hasPhtonPose", this::hasPhotonPose, null);
-		sb.addBooleanProperty("hasBestTraget", this::hasBestTarget, null);
-		sb.addDoubleProperty("latency", this::getLatency, null);
-	}
 }

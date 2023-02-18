@@ -4,7 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.RobotConstants;
 import frc.robot.RobotContext;
+import frc.robot.ShuffleboardDriverControls;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.pose.RecognizedAprilTagTarget;
@@ -53,20 +55,22 @@ public class CommandFactory {
     	driveSubsystem.setDefaultCommand(newDefaultCommand);
     }
 
-    public Command turnToggleFilter(boolean enabled) {
-    	return new SetDriverYawEnableCommand(robotContext.getDriverPreferences(),enabled);
+    public Command filteredDriveCommand( Joystick joystick, ShuffleboardDriverControls driverControls) {
+    	return new FilteredDriveCommand(driveSubsystem,joystick,this::getCurrentYawDegrees,driverControls);
     }
-    public Command filteredDriveCommand(Joystick joystick) {
-    	return new FilteredDriveCommand(driveSubsystem,joystick,this::getCurrentYawDegrees,robotContext.getDriverPreferences());
-    }
+    
     public Command driveCommand(Joystick joystick) {
         return new SimpleDriveCommand(driveSubsystem, joystick,this::getCurrentYawDegrees);
     }
 
-    public Command toggleFieldAbsolute() {
-        return new ToggleFieldAbsoluteCommand(robotContext.getDriverPreferences());
-    }
+	public Command toggleFieldAbsoluteCommand( ShuffleboardDriverControls shuffleboardControls ) {
+		return new ToggleFieldAbsoluteCommand(shuffleboardControls);
+	}
 
+	public Command setDriverYawEnableCommand(ShuffleboardDriverControls shuffleboardControls , boolean newValue) {
+		return new SetDriverYawEnableCommand(shuffleboardControls,newValue);		
+	}
+	
     public Command alignToScoringLocation(TargetNode targetNode, Joystick joystick) {
     	VisionStatus vs= visionSubsystem.getStatus();
     	RecognizedAprilTagTarget rat = vs.getBestAprilTagTarget();
