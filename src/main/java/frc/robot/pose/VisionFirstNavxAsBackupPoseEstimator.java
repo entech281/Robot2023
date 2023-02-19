@@ -1,5 +1,7 @@
 package frc.robot.pose;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,12 +34,12 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
 				  RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
 				  RobotConstants.VISION.CAMERA_POSITION.UP_METERS), new Rotation3d(0,0,0));
 	@Override
-	public Pose2d estimateRobotPose(VisionStatus vs, NavxStatus ns, DriveStatus ds) {
+	public Optional<Pose2d> estimateRobotPose(VisionStatus vs, NavxStatus ns, DriveStatus ds) {
     	if ( vs.hasBestTarget() ) {
-    		return estimatePoseFromCamera(vs);
+    		return Optional.ofNullable(vs);
     	}
     	else {
-    		return estimatePoseFromNavx(ns);
+    		return Optional.ofNullable(vs);
     	}
 	}
     

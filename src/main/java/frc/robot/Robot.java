@@ -53,7 +53,8 @@ public class Robot extends TimedRobot {
 	//this looks like a little more typing, but its useful to note that this allows
 	//us to declare which subsystem these ACTUALLY use, vs giving everyone a subsystem manager,
 	//which allows them to get everything, but then its not clear what they need
-	robotContext = new RobotContext(fieldDisplay,drive,navx,vision);
+	RobotState robotState = new RobotState();
+	robotContext = new RobotContext(robotState, fieldDisplay,drive,navx,vision);
 	robotContext.setPoseEstimator(new VisionFirstNavxAsBackupPoseEstimator());
 	commandFactory = new CommandFactory(robotContext,drive,navx,vision,arm);
 	oi = new OperatorInterface(commandFactory,shuffleboardControls);

@@ -7,5 +7,5 @@ import frc.robot.subsystems.VisionStatus;
 
 public interface PoseEstimator {
 
-	public Pose2d estimateRobotPose ( VisionStatus vs, NavxStatus ns, DriveStatus ds);
+	public Optional<Pose2d> estimateRobotPose ( VisionStatus vs, NavxStatus ns, DriveStatus ds);
 }

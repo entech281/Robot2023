@@ -15,11 +15,12 @@ import frc.robot.subsystems.VisionSubsystem;
 public class RobotContext {
 	
 	//inject just what we need. later we might need arm-- we can add it then
-	public RobotContext( ShuffleboardFieldDisplay fieldDisplay, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision) {
+	public RobotContext( RobotState robotState, ShuffleboardFieldDisplay fieldDisplay, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision) {
 	    driveSubsystem = drive;
 	    navXSubSystem = navx;
 	    visionSubsystem = vision;
 	    this.fieldDisplay=fieldDisplay;
+	    this.robotState = robotState;
 	}
 	
 	public Pose2d getEstimatedRobotPose() {
@@ -71,8 +72,12 @@ public class RobotContext {
 
     }    
 
-    
-    private DriveSubsystem driveSubsystem;
+    private RobotState robotState;
+    public RobotState getRobotState() {
+		return robotState;
+	}
+
+	private DriveSubsystem driveSubsystem;
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
 	private Pose2d estimatedRobotPose;
