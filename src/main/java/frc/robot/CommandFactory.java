@@ -1,17 +1,21 @@
-package frc.robot.commands;
+package frc.robot;
 
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.DriveInputYawMixer;
-import frc.robot.RobotState;
-import frc.robot.ScoringLocationProvider;
-import frc.robot.ShuffleboardDriverControls;
+import frc.robot.adapter.DriveInputYawMixer;
+import frc.robot.commands.AlignToScoringLocationCommand;
+import frc.robot.commands.FilteredDriveCommand;
+import frc.robot.commands.SetDriverYawEnableCommand;
+import frc.robot.commands.SimpleDriveCommand;
+import frc.robot.commands.SnapYawDegreesCommand;
+import frc.robot.commands.ToggleFieldAbsoluteCommand;
+import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
+import frc.robot.commands.supplier.TargetNodeSupplier;
 import frc.robot.filters.DriveInput;
-import frc.robot.pose.ScoringLocation;
-import frc.robot.pose.TargetNode;
+import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
@@ -40,9 +44,6 @@ public class CommandFactory {
 
     }
     
-    private ScoringLocationSupplier getScoringLocationProvider(TargetNodeSupplier targetNodeSuppplier) {
-    	return new ScoringLocationProvider(targetNodeSuppplier,robotState );
-    }
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
     	return new DriveInputYawMixer(robotState, operatorJoystickInput);
     }
@@ -68,7 +69,7 @@ public class CommandFactory {
 	}
 	
     public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {
-  		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),getScoringLocationProvider(targetSupplier), robotState  );    	
+  		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState, robotState  );    	
     }    
     
     public Command snapYawDegreesCommand(double angle) {

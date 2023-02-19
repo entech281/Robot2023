@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.ShuffleboardDriverControls;
+import frc.robot.oi.ShuffleboardDriverControls;
 
 /** An example command that uses an example subsystem. */
 public class ToggleFieldAbsoluteCommand extends  BaseShuffleboardControlsUpdateCommand {

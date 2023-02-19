@@ -2,11 +2,11 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import frc.robot.ShuffleboardDriverControls;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldRelativeDriveInputFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.TurnToggleFilter;
+import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class FilteredDriveCommand extends SimpleDriveCommand {

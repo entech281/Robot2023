@@ -1,18 +1,17 @@
-package frc.robot;
+package frc.robot.oi;
 
 import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_FIELD_ABSOLUTE;
 import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_YAW_LOCK;
 import static frc.robot.RobotConstants.SHUFFLEBOARD.TABS.MATCH;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.commands.TargetNodeSupplier;
+import frc.robot.commands.supplier.TargetNodeSupplier;
 import frc.robot.pose.TargetNode;
 
 public class ShuffleboardDriverControls implements TargetNodeSupplier {
@@ -42,11 +41,6 @@ public class ShuffleboardDriverControls implements TargetNodeSupplier {
     	fieldAbsolute.setBoolean(DEFAULT_FIELD_ABSOLUTE);
     	driverYawEnabled.setBoolean(DEFAULT_YAW_LOCK);
 	}
-
-	public TargetNode getSelectedTargetNode() {
-		return nodeChooser.getSelected();
-	}
-
 	
 	public void setFieldAbsolute(boolean newValue) {
 		fieldAbsolute.setBoolean(newValue);

@@ -1,8 +1,8 @@
-package frc.robot;
+package frc.robot.adapter;
 
 import java.util.function.Supplier;
 
-import frc.robot.commands.YawAngleSupplier;
+import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
 
 public class DriveInputYawMixer implements Supplier<DriveInput>{

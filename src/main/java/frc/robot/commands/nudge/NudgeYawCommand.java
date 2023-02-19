@@ -6,7 +6,7 @@ package frc.robot.commands.nudge;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.EntechCommandBase;
-import frc.robot.commands.YawAngleSupplier;
+import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 

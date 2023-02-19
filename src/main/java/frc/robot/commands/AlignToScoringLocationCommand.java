@@ -4,6 +4,8 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.commands.supplier.EstimatedPoseSupplier;
+import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.ScoringLocation;

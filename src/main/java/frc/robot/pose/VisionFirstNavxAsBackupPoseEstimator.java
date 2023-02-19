@@ -23,6 +23,11 @@ import frc.robot.util.PoseUtil;
 public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
 
 	
+  private boolean overrideYawWithNavx = false;
+  
+  public VisionFirstNavxAsBackupPoseEstimator ( boolean overrideYawWithNavx) {
+	  this.overrideYawWithNavx=overrideYawWithNavx;
+  }
   public static double METERS_PER_INCH=0.0254;	
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
 	@Override
@@ -32,7 +37,12 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
         Optional<Pose2d> cameraPoseEstimate = estimatePoseFromCamera(vs);
         
         if ( cameraPoseEstimate.isPresent()) {
-        	return Optional.of(overrideYawAngleInPose(cameraPoseEstimate.get(),ns.getYawAngleDegrees()));
+        	if ( overrideYawWithNavx) {
+        		return Optional.of(overrideYawAngleInPose(cameraPoseEstimate.get(),ns.getYawAngleDegrees()));
+        	}
+        	else {
+        		return cameraPoseEstimate;
+        	}
         }
         else {
         	return Optional.of(navXPoseEstimate);

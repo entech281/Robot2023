@@ -6,17 +6,16 @@ import org.junit.jupiter.api.Test;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
-import edu.wpi.first.math.util.Units;
+import frc.robot.util.PoseUtil;
 public class TestVisionFirstNavxAsBackupPoseEstimator {
 
 	
-	protected VisionFirstNavxAsBackupPoseEstimator estimator = new VisionFirstNavxAsBackupPoseEstimator();
+	protected VisionFirstNavxAsBackupPoseEstimator estimator = new VisionFirstNavxAsBackupPoseEstimator(true);
 	public static final double TOLERANCE=0.1;
 	
 	protected void assertPose2dEquals( Pose2d expected, Pose2d actual) {
@@ -62,10 +61,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		double TEST_OFFSET_INCHES = 24.0;
 		//imagine we are sitting somewhere close to RED_MIDDLE,
 		//and we get a position slightly in front of us 
-		Transform3d cameraToTarget = new Transform3d(
-				new Translation3d(Units.inchesToMeters(TEST_OFFSET_INCHES),0, 0 ),
-				new Rotation3d(0,0,Math.toRadians(180))
-		);
+		Transform3d cameraToTarget = PoseUtil.cameraToTarget(TEST_OFFSET_INCHES,0,180);
 		
 		vs.setBestTarget(
 				new RecognizedAprilTagTarget(
@@ -81,7 +77,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		Pose2d r = estimator.estimateRobotPose(vs, ns, null).get();
 		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGREES));
 		
-		
+		//assertEquals(EXPECTED_X_METERS,r.getX(),TOLERANCE);
 		assertPose2dEquals(EXPECTED,r);
 
 

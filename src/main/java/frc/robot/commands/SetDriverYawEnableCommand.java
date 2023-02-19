@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import frc.robot.ShuffleboardDriverControls;
+import frc.robot.oi.ShuffleboardDriverControls;
 
 public class SetDriverYawEnableCommand extends BaseShuffleboardControlsUpdateCommand{
 

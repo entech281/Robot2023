@@ -26,4 +26,5 @@ public class TestVisionStatus {
 		//note: we did not call setbesttarget. it should return the first item in the list, if a best was not set
 		assertNotNull( vs.getBestAprilTagTarget());
 	}
+	
 }

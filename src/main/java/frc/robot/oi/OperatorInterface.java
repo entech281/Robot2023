@@ -1,8 +1,9 @@
-package frc.robot;
+package frc.robot.oi;
 
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import frc.robot.commands.CommandFactory;
-import frc.robot.commands.JoystickDriveInputSupplier;
+import frc.robot.CommandFactory;
+import frc.robot.RobotConstants;
+import frc.robot.adapter.JoystickDriveInputSupplier;
 
 public class OperatorInterface {
 

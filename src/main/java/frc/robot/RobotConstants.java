@@ -42,8 +42,9 @@ public final class RobotConstants {
         	public static final double UP_INCHES = 6.25;
         	public static final double LEFT_OF_CENTER_INCHES = 10;
         	public static final double FORWARD_OF_CENTER_INCHES = 14.25;
-            public static final double CAMERA_YAW_DEGREES = 0.191986;
-            public static final double CAMERA_PITCH_DEGREES = 0.191986;
+            public static final double CAMERA_YAW_DEGREES = 11.0;
+            public static final double CAMERA_PITCH_DEGREES = 11.0;
+            
         }
     }
     public interface ARM{
