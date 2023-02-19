@@ -5,15 +5,11 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import frc.robot.RobotConstants;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
-
-import edu.wpi.first.math.util.Units;
+import frc.robot.util.PoseUtil;
 
 /**
  * Estimates the Pose of the Robot using Vision Data, and
@@ -28,51 +24,54 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
 
 	
   public static double METERS_PER_INCH=0.0254;	
-  private Transform3d ROBOT_TO_CAM = new Transform3d( 
-		  new Translation3d( 
-				  RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS,
-				  RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
-				  RobotConstants.VISION.CAMERA_POSITION.UP_METERS), new Rotation3d(0,0,0));
+  private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
 	@Override
+
 	public Optional<Pose2d> estimateRobotPose(VisionStatus vs, NavxStatus ns, DriveStatus ds) {
-    	if ( vs.hasBestTarget() ) {
-    		return Optional.ofNullable(vs);
-    	}
-    	else {
-    		return Optional.ofNullable(vs);
-    	}
+        Pose2d navXPoseEstimate = ns.getPose2d();
+        Optional<Pose2d> cameraPoseEstimate = estimatePoseFromCamera(vs);
+        
+        if ( cameraPoseEstimate.isPresent()) {
+        	return Optional.of(overrideYawAngleInPose(cameraPoseEstimate.get(),ns.getYawAngleDegrees()));
+        }
+        else {
+        	return Optional.of(navXPoseEstimate);
+        }
+
 	}
-    
+
+	private Pose2d overrideYawAngleInPose ( Pose2d originalPose, double newYawAngle) {
+		return new Pose2d (originalPose.getX(), originalPose.getY(),  Rotation2d.fromDegrees(newYawAngle ));
+	}
+	
 	//photon vision gives us transform in meters
 	//also the Field2d widget is in meters
-    private Pose2d estimatePoseFromCamera(VisionStatus vs) {
+    private Optional<Pose2d> estimatePoseFromCamera(VisionStatus vs) {
     	
-    	RecognizedAprilTagTarget target = vs.getBestAprilTagTarget();
-    	Transform3d cameraToTarget =  target.getCameraToTargetTransform();
-    	
-    	AprilTagLocation tagLocation = target.getTagLocation();
-    	
-    	Pose3d tagLocationPose = tagLocation.asPose3d();
-    	Pose3d tagLocationMeters = new Pose3d (
-    			tagLocationPose.getTranslation().times(METERS_PER_INCH),
-    			tagLocationPose.getRotation()
-    		);
-    	
-    	
-    	//watch out for meters to inches, (use PoseUtil if needed to convert)
-    	//HINT:: something like this should work:
-    	
-    	//robotPose -> robotToCamera -> cameraToTag = tagLocation
-    	//thus tagLocation -> tagToCamera -> cameraToRobot = robotPose
-    	Pose3d  estimatedPose = tagLocationMeters.transformBy(cameraToTarget.inverse()).transformBy(ROBOT_TO_CAM.inverse());    	
-    	
-    	return estimatedPose.toPose2d();
-    	
-    }
-    
-    private Pose2d estimatePoseFromNavx(NavxStatus ns) {
-    	return new Pose2d(0,0,Rotation2d.fromDegrees(ns.getYawAngleDegrees()));
-    }
+    	if ( vs.getBestAprilTagTarget().isPresent()) {
+        	RecognizedAprilTagTarget target = vs.getBestAprilTagTarget().get();
+        	Transform3d cameraToTarget =  target.getCameraToTargetTransform();
+        	
+        	AprilTagLocation tagLocation = target.getTagLocation();
+        	
+        	Pose3d tagLocationPose = tagLocation.asPose3d();
+        	Pose3d tagLocationMeters = new Pose3d (
+        			tagLocationPose.getTranslation().times(METERS_PER_INCH),
+        			tagLocationPose.getRotation()
+        	);
 
+        	//watch out for meters to inches, (use PoseUtil if needed to convert)
+        	//HINT:: something like this should work:
+        	
+        	//robotPose -> robotToCamera -> cameraToTag = tagLocation
+        	//thus tagLocation -> tagToCamera -> cameraToRobot = robotPose        	
+        	Pose3d  estimatedPose = tagLocationMeters.transformBy(cameraToTarget.inverse()).transformBy(ROBOT_TO_CAM.inverse());    	        	
+        	return Optional.of(estimatedPose.toPose2d());    		
+    	}
+    	else {
+    		return Optional.empty();
+    	}
+
+    }
 
 }

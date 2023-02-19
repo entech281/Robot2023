@@ -2,23 +2,19 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.RobotConstants;
-import frc.robot.RobotContext;
+import frc.robot.DriveInputYawMixer;
+import frc.robot.RobotState;
+import frc.robot.ScoringLocationProvider;
 import frc.robot.ShuffleboardDriverControls;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.filters.DriveInput;
-import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.pose.TargetNode;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
-import frc.robot.subsystems.VisionStatus;
 import frc.robot.subsystems.VisionSubsystem;
 
 /**
@@ -29,29 +25,26 @@ import frc.robot.subsystems.VisionSubsystem;
 public class CommandFactory {
 
 	public static final double SNAP_YAW_ANGLE = 160.0;
-	private RobotContext robotContext;
+	private RobotState robotState;
 	private DriveSubsystem driveSubsystem;
 	private VisionSubsystem visionSubsystem;
 	private NavXSubSystem navxSubsystem;
 	private ArmSubsystem armSubsystem;
-
     
-    public CommandFactory(RobotContext robotContext, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm){
+    public CommandFactory(RobotState robotState, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm){
     	this.driveSubsystem = drive;
     	this.navxSubsystem = navx;
     	this.visionSubsystem = vision;
     	this.armSubsystem = arm;
-        this.robotContext = robotContext;
+        this.robotState = robotState;
+
     }
     
-    //private because this is just a provider for drive commands
-    private Pose2d getCurrentEstimatedPose() {
-    	return robotContext.getEstimatedRobotPose();
+    private ScoringLocationSupplier getScoringLocationProvider(TargetNodeSupplier targetNodeSuppplier) {
+    	return new ScoringLocationProvider(targetNodeSuppplier,robotState );
     }
-    
-    //private because this is just a provider for drive commands
-    private double getCurrentYawDegrees() {
-    	return robotContext.getEstimatedRobotPose().getRotation().getDegrees();
+    private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
+    	return new DriveInputYawMixer(robotState, operatorJoystickInput);
     }
     
     public void setDefaultDriveCommand (Command newDefaultCommand ) {
@@ -59,11 +52,11 @@ public class CommandFactory {
     }
 
     public Command filteredDriveCommand( Supplier<DriveInput> operatorInput, ShuffleboardDriverControls driverControls) {
-    	return new FilteredDriveCommand(driveSubsystem,operatorInput,this::getCurrentYawDegrees,driverControls);
+    	return new FilteredDriveCommand(driveSubsystem,addYawToOperatorJoystickInput( operatorInput),driverControls);
     }
     
     public Command driveCommand(Supplier<DriveInput> operatorInput) {
-        return new SimpleDriveCommand(driveSubsystem, operatorInput,this::getCurrentYawDegrees);
+        return new SimpleDriveCommand(driveSubsystem, addYawToOperatorJoystickInput(operatorInput));
     }
 
 	public Command toggleFieldAbsoluteCommand( ShuffleboardDriverControls shuffleboardControls ) {
@@ -74,22 +67,12 @@ public class CommandFactory {
 		return new SetDriverYawEnableCommand(shuffleboardControls,newValue);		
 	}
 	
-    public Command alignToScoringLocation(Supplier<ScoringLocation> target, Supplier<DriveInput> operatorInput) {
-    	VisionStatus vs= visionSubsystem.getStatus();
-    	RecognizedAprilTagTarget rat = vs.getBestAprilTagTarget();
-    	if ( rat == null ) {
-    		return new PrintCommand("Cannot Align: No active vision target");
-    	}
-    	else {
-    		//ScoringLocation s = new ScoringLocation(rat.getTagLocation(),robotContext.getDriverPreferences().getSelectedNode());
-    		//ScoringLocation s = new ScoringLocation(rat.getTagLocation(),targetNode);
-    		return new AlignToScoringLocationCommand(driveSubsystem,operatorInput,target,this::getCurrentEstimatedPose );
-    	}
-        
+    public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {
+  		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),getScoringLocationProvider(targetSupplier), robotState  );    	
     }    
     
     public Command snapYawDegreesCommand(double angle) {
-        return new SnapYawDegreesCommand(driveSubsystem, angle,this::getCurrentYawDegrees );
+        return new SnapYawDegreesCommand(driveSubsystem, angle,robotState );
     }
 
     public Command getAutonomousCommand() {
@@ -117,10 +100,10 @@ public class CommandFactory {
     }
 
     public Command nudgeYawLeftCommand() {
-        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.LEFT,this::getCurrentYawDegrees);
+        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.LEFT,robotState);
     }
 
     public Command nudgeYawRightCommand() {
-        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.RIGHT,this::getCurrentYawDegrees);
+        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.RIGHT,robotState);
     }
 }

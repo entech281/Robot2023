@@ -1,7 +1,6 @@
 package frc.robot.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.subsystems.VisionStatus;
 
 public class AlignmentCalculator {
 
@@ -16,14 +15,5 @@ public class AlignmentCalculator {
 		double totalTurnAngle = (90 - currentRobotAngle) + nodeAngle;
         return totalTurnAngle;
 	}	
-	
-	public double calculateAngleToScoringLocation ( VisionStatus vs, TargetNode targetNode, Pose2d estimatedRobotPose) {    	
-    	RecognizedAprilTagTarget rat = vs.getBestAprilTagTarget();
-    	if ( rat == null ) {
-    		return NOT_FOUND;
-    	}
-    	ScoringLocation s = new ScoringLocation(rat.getTagLocation(),targetNode);
-    	return calculateAngleToScoringLocation(s,estimatedRobotPose);
-	}
 
 }

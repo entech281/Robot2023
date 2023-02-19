@@ -12,9 +12,9 @@ import edu.wpi.first.math.geometry.Translation3d;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
+import edu.wpi.first.math.util.Units;
 public class TestVisionFirstNavxAsBackupPoseEstimator {
 
-	public static double METERS_PER_INCH=0.0254;
 	
 	protected VisionFirstNavxAsBackupPoseEstimator estimator = new VisionFirstNavxAsBackupPoseEstimator();
 	public static final double TOLERANCE=0.1;
@@ -36,7 +36,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		
 		double ZERO_OFFSETS_EXPECTED_FOR_NOW = 0.0;
 		
-		Pose2d r = estimator.estimateRobotPose(vs, ns, null);
+		Pose2d r = estimator.estimateRobotPose(vs, ns, null).get();
 		
 		
 		assertEquals(EXPECTED_ANGLE, r.getRotation().getDegrees(),TOLERANCE);
@@ -50,6 +50,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 	public void testEstimatedPoseSeemsAboutRight() {
 		
 		VisionStatus vs = new VisionStatus();
+        NavxStatus ns = new NavxStatus(0.0,0.0,0.0,0.0);
 		
 		/*
 		 * Transform 3d:
@@ -62,7 +63,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		//imagine we are sitting somewhere close to RED_MIDDLE,
 		//and we get a position slightly in front of us 
 		Transform3d cameraToTarget = new Transform3d(
-				new Translation3d(TEST_OFFSET_INCHES*METERS_PER_INCH,0, 0 ),
+				new Translation3d(Units.inchesToMeters(TEST_OFFSET_INCHES),0, 0 ),
 				new Rotation3d(0,0,Math.toRadians(180))
 		);
 		
@@ -74,14 +75,15 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		);
 		
 		//RED-middle = tag id 2 --> x,y = 610.77, 108.19 inches 
-		double EXPECTED_X_METERS  = (610.77 - TEST_OFFSET_INCHES)*METERS_PER_INCH -RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METETRS;
-		double EXPECTED_Y_METERS = 108.19 * METERS_PER_INCH;
-		double EXPECTED_ROTATION_DEGRESS  = 0.0;
-		Pose2d r = estimator.estimateRobotPose(vs, null, null);
-		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGRESS));
+		double EXPECTED_X_METERS  = Units.inchesToMeters(610.77 - TEST_OFFSET_INCHES) - Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_INCHES);
+		double EXPECTED_Y_METERS = Units.inchesToMeters(108.19)- Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_INCHES);
+		double EXPECTED_ROTATION_DEGREES  = 0.0;
+		Pose2d r = estimator.estimateRobotPose(vs, ns, null).get();
+		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGREES));
 		
 		
-		assertEquals(EXPECTED,r);
+		assertPose2dEquals(EXPECTED,r);
+
 
 	}
 }

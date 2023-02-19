@@ -1,8 +1,64 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "Talon SRX[8]/Analog In": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Match/DriveSubsystem": "Subsystem",
+      "/Shuffleboard/Match/Estimated Location": "Field2d",
+      "/Shuffleboard/Match/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/DriveSubsystem": "Subsystem"
+    }
+  },
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
+    "transitory": {
+      "LiveWindow": {
+        ".status": {
+          "open": true
+        },
+        "open": true
+      },
+      "photonvision": {
+        "OV5647": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  },
+  "NetworkTables View": {
+    "visible": false
+  },
+  "Plot": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 338
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": 338
+        }
+      ]
     }
   }
 }

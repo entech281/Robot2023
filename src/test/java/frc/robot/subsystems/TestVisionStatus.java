@@ -6,9 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-
 import edu.wpi.first.math.geometry.Pose3d;
-
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;

@@ -1,8 +1,8 @@
 package frc.robot.filters;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class TestTurnToggle {
     private static final double SMALLDIFFERENCE = 0.01;

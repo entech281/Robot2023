@@ -22,8 +22,12 @@ public class ToggleFieldAbsoluteCommand extends  BaseShuffleboardControlsUpdateC
 
   @Override
   public void execute() {
-	driverPrefs.toggleFieldAbsolute();
+	  driverControls.toggleFieldAbsolute();
   }
 
+  @Override
+  public boolean runsWhenDisabled() {
+    return false;
+  }
 
 }

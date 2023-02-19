@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 
-import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
@@ -17,7 +16,7 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class SnapYawDegreesCommand extends BaseDrivePIDCommand {
 
-    private Supplier<Double> yawAngleSupplier;
+    private YawAngleSupplier yawAngleSupplier;
 
 
     /**
@@ -27,7 +26,7 @@ public class SnapYawDegreesCommand extends BaseDrivePIDCommand {
      * @param drive The drive subsystem on which this command will run
      * @param angle The angle you want to snap to
      */
-    public SnapYawDegreesCommand(DriveSubsystem drive, double desiredAngle, Supplier<Double> yawAngleSupplier) {
+    public SnapYawDegreesCommand(DriveSubsystem drive, double desiredAngle, YawAngleSupplier yawAngleSupplier) {
         super(drive,null);
         this.yawAngleSupplier = yawAngleSupplier;
         pid.setSetpoint(desiredAngle);
@@ -35,10 +34,11 @@ public class SnapYawDegreesCommand extends BaseDrivePIDCommand {
 
     @Override
     public void execute() {
+    	double yawAngleDegrees = yawAngleSupplier.getYawAngleDegrees();
         double calcValue = Math.max(
             -SPEED_LIMIT, 
             Math.min(
-                pid.calculate(MathUtil.inputModulus(yawAngleSupplier.get(), -180, 180)), 
+                pid.calculate(MathUtil.inputModulus(yawAngleDegrees, -180, 180)), 
                 SPEED_LIMIT
             )
         );

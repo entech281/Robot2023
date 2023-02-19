@@ -8,10 +8,10 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CommandFactory;
+import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -36,14 +36,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
+	  
+	ShuffleboardDriverControls shuffleboardControls = new ShuffleboardDriverControls();
+	ShuffleboardFieldDisplay fieldDisplay = new ShuffleboardFieldDisplay();
 	  
 	  
 	DriveSubsystem drive = new DriveSubsystem();
 	VisionSubsystem vision = new VisionSubsystem();
 	NavXSubSystem navx = new NavXSubSystem();
 	ArmSubsystem arm = new ArmSubsystem();
-	ShuffleboardDriverControls shuffleboardControls = new ShuffleboardDriverControls();
-	ShuffleboardFieldDisplay fieldDisplay = new ShuffleboardFieldDisplay();
 	
 	List.of(drive,vision,navx,arm).forEach((s)-> {
 		s.initialize();
@@ -54,9 +56,13 @@ public class Robot extends TimedRobot {
 	//us to declare which subsystem these ACTUALLY use, vs giving everyone a subsystem manager,
 	//which allows them to get everything, but then its not clear what they need
 	RobotState robotState = new RobotState();
-	robotContext = new RobotContext(robotState, fieldDisplay,drive,navx,vision);
-	robotContext.setPoseEstimator(new VisionFirstNavxAsBackupPoseEstimator());
-	commandFactory = new CommandFactory(robotContext,drive,navx,vision,arm);
+
+	robotContext = new RobotContext(new AlignmentCalculator(),
+			robotState, fieldDisplay,drive,navx,vision, new VisionFirstNavxAsBackupPoseEstimator()
+	);
+	
+	
+	commandFactory = new CommandFactory(robotState,drive,navx,vision,arm);
 	oi = new OperatorInterface(commandFactory,shuffleboardControls);
   }
 
@@ -129,4 +135,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+@Override
+public void simulationPeriodic() {
+	robotContext.periodic();
+    CommandScheduler.getInstance().run();
+}
+  
+  
+  
 }

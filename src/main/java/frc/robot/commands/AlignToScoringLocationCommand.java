@@ -4,13 +4,10 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.filters.DriveInput;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.subsystems.DriveSubsystem;
-import java.util.function.Supplier;
-import frc.robot.filters.DriveInput;
 
 
 /**
@@ -24,8 +21,8 @@ import frc.robot.filters.DriveInput;
  */
 public class AlignToScoringLocationCommand extends BaseDrivePIDCommand {
 
-    private Supplier<ScoringLocation> scoringLocationSupplier;
-    private Supplier<Pose2d> currentPoseSupplier;
+    private ScoringLocationSupplier scoringLocationSupplier;
+    private EstimatedPoseSupplier currentPoseSupplier;
     private AlignmentCalculator alignCalculator = new AlignmentCalculator();
  
     
@@ -36,8 +33,8 @@ public class AlignToScoringLocationCommand extends BaseDrivePIDCommand {
      */
     public AlignToScoringLocationCommand(DriveSubsystem drive,
     		Supplier<DriveInput> operatorInput, 
-    		Supplier<ScoringLocation> scoringLocationSupplier, 
-    		Supplier<Pose2d> currentPoseSupplier) {
+    		ScoringLocationSupplier scoringLocationSupplier, 
+    		EstimatedPoseSupplier currentPoseSupplier) {
         super(drive,operatorInput);
         this.scoringLocationSupplier = scoringLocationSupplier;
         this.currentPoseSupplier = currentPoseSupplier;
@@ -45,10 +42,20 @@ public class AlignToScoringLocationCommand extends BaseDrivePIDCommand {
 
     @Override
     public void execute() {
-    	ScoringLocation currentScoringLocation = scoringLocationSupplier.get();
-    	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, currentPoseSupplier.get());
+    	ScoringLocation currentScoringLocation = scoringLocationSupplier.getScoringLocation().get();
+    	Pose2d estimatedPose = currentPoseSupplier.getEstimatedPose().get();
+    	
+    	/**
+    	 * TODO:the above is too basic. We need to handle what happens if:
+    	 *   -- the command is started without a scoringlocation or an estimated pose
+    	 *   -- we lose either one during one execution loop
+    	 *   -- the scoring location changes from the originally provided one
+    	 */
+    	
+    	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);    	
+    	double currentYawAngleDegrees = operatorInput.get().getYawAngleDegrees();
+    	
     	pid.setSetpoint(angleToTargetDegrees);
-    	double currentYawAngleDegrees = currentPoseSupplier.get().getRotation().getDegrees();
     	
         double calcValue = Math.max(
             -SPEED_LIMIT, 

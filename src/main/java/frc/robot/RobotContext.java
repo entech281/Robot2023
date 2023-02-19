@@ -1,10 +1,11 @@
 package frc.robot;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.PoseEstimator;
-import frc.robot.pose.TargetNode;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
@@ -15,20 +16,16 @@ import frc.robot.subsystems.VisionSubsystem;
 public class RobotContext {
 	
 	//inject just what we need. later we might need arm-- we can add it then
-	public RobotContext( RobotState robotState, ShuffleboardFieldDisplay fieldDisplay, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision) {
+	public RobotContext( AlignmentCalculator alignmentCalculator, RobotState robotState, 
+			ShuffleboardFieldDisplay fieldDisplay, 
+			DriveSubsystem drive, NavXSubSystem navx, 
+			VisionSubsystem vision, PoseEstimator poseEstimator) {
 	    driveSubsystem = drive;
 	    navXSubSystem = navx;
 	    visionSubsystem = vision;
 	    this.fieldDisplay=fieldDisplay;
 	    this.robotState = robotState;
-	}
-	
-	public Pose2d getEstimatedRobotPose() {
-		return estimatedRobotPose;
-	}
-
-	protected boolean hasEstimatedPose() {
-		return this.estimatedRobotPose != null;
+	    this.poseEstimator = poseEstimator;
 	}
 
     /**
@@ -43,52 +40,28 @@ public class RobotContext {
     	
     	//this is where we estimate robot pose from various sources.
     	//set which estimator we use in Robot.robotInit()
-        this.estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
-
+        Optional<Pose2d> estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
+        robotState.setEstimatedPose(estimatedRobotPose);
         
-        if ( hasEstimatedPose() ) {
-        	SmartDashboard.putString("our pose",estimatedRobotPose.toString());
+        if ( estimatedRobotPose.isPresent() ) {
+        	SmartDashboard.putString("our pose",estimatedRobotPose.get().toString());
         	//fieldDisplay.setRobotPose(estimatedRobotPose);
         }
         
-        if ( vs.getPhotonEstimatedPose() != null ) {
+        if ( vs.getPhotonEstimatedPose().isPresent() ) {
         	SmartDashboard.putString("photon pose",estimatedRobotPose.toString());
-        	fieldDisplay.setRobotPose(vs.getPhotonEstimatedPose().toPose2d());	
-        }
-       
-
-        /**
-         * TEMPORARY Code, just so that we can see 
-         * How things look before doing actual control
-         * once we like this, it belongs inside of whatever command we run
-         * 
-         * Also we are TEMPORARILY printing out what we get from MagicPhotonVisionEstimator
-         */
-         
-         AlignmentCalculator calc = new AlignmentCalculator();
-         double alignAngle = calc.calculateAngleToScoringLocation(vs, TargetNode.A3, estimatedRobotPose);
-         SmartDashboard.putNumber("AlignAngle", alignAngle);
+        	fieldDisplay.setRobotPose(vs.getPhotonEstimatedPose().get().toPose2d());	
+        }         
  
 
     }    
 
     private RobotState robotState;
-    public RobotState getRobotState() {
-		return robotState;
-	}
-
 	private DriveSubsystem driveSubsystem;
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
-	private Pose2d estimatedRobotPose;
 	private PoseEstimator poseEstimator;
 	private ShuffleboardFieldDisplay fieldDisplay;
 	
-	public PoseEstimator getPoseEstimator() {
-		return poseEstimator;
-	}
-	public void setPoseEstimator(PoseEstimator poseEstimator) {
-		this.poseEstimator = poseEstimator;
-	}
 	
 }

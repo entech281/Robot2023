@@ -3,7 +3,13 @@ package frc.robot.util;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
+import frc.robot.RobotConstants;
+import frc.robot.RobotConstants.VISION;
 
 /**
  *
@@ -29,5 +35,18 @@ public class PoseUtil {
 	}
 	public static double meters_to_inches ( double meters) {
 		return meters*METERS_PER_INCH;
+	}
+
+	public static Transform3d robotToCameraTransform3d() {
+		return new Transform3d( 
+				new Translation3d(Units.inchesToMeters(VISION.CAMERA_POSITION.FORWARD_OF_CENTER_INCHES),
+						Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_INCHES),
+								Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.UP_INCHES)
+				),
+				new Rotation3d(0,
+							   Units.degreesToRadians(RobotConstants.VISION.CAMERA_POSITION.CAMERA_PITCH_DEGREES),
+							   Units.degreesToRadians(RobotConstants.VISION.CAMERA_POSITION.CAMERA_YAW_DEGREES)
+				)
+		);
 	}
 }

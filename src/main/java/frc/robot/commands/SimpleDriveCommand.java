@@ -12,7 +12,6 @@ import frc.robot.subsystems.DriveSubsystem;
 public class SimpleDriveCommand extends EntechCommandBase {
     protected final DriveSubsystem drive;
     protected final Supplier<DriveInput> operatorInput;
-    protected final Supplier<Double> yawAngleSupplier;
 
     /**
      * Creates a new ArcadeDrive. This command will drive your robot according to
@@ -22,19 +21,16 @@ public class SimpleDriveCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public SimpleDriveCommand(DriveSubsystem drive, Supplier<DriveInput> operatorInput, Supplier<Double> yawAngleSupplier) {
+    public SimpleDriveCommand(DriveSubsystem drive, Supplier<DriveInput> operatorInput) {
         super(drive);
         this.drive = drive;
         this.operatorInput = operatorInput;
-        this.yawAngleSupplier = yawAngleSupplier;
     }
 
 
     @Override
     public void execute() {
-    	DriveInput di = operatorInput.get();
-    	di.setYawAngleDegrees(yawAngleSupplier.get());
-        drive.drive(di );
+        drive.drive(operatorInput.get() );
     }
 
     @Override

@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.ShuffleboardDriverControls;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldRelativeDriveInputFilter;
@@ -27,8 +26,8 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public FilteredDriveCommand(DriveSubsystem drive, Supplier<DriveInput> operatorInput, Supplier<Double> yawAngleSupplier, ShuffleboardDriverControls driverControls) {
-        super(drive,operatorInput,yawAngleSupplier);
+    public FilteredDriveCommand(DriveSubsystem drive, Supplier<DriveInput> operatorInput,  ShuffleboardDriverControls driverControls) {
+        super(drive,operatorInput);
         this.driverControls = driverControls;
 
         this.jsDeadbandFilter = new JoystickDeadbandFilter();
@@ -39,7 +38,6 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     @Override
     public void execute() {
     	DriveInput di = operatorInput.get();
-    	di.setYawAngleDegrees(yawAngleSupplier.get());
     	DriveInput filtered = di;
     	
         if (jsDeadbandFilter.getEnabled()) {

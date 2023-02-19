@@ -1,12 +1,12 @@
 package frc.robot.pose;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.pose.TargetNode.NodeID;
-
-import static org.junit.Assert.assertEquals;
-import org.junit.jupiter.api.Test;
 
 public class TestScoringLocation {
     

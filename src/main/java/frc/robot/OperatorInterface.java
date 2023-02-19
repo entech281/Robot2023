@@ -19,14 +19,15 @@ public class OperatorInterface {
         setupButtons();
 
     }
+    
     private void setupButtons() {
         driveStick.button(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
         .onTrue(commandFactory.setDriverYawEnableCommand(shuffleboardControls,true))
         .onFalse(commandFactory.setDriverYawEnableCommand(shuffleboardControls,false));
 
 	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
-	    /**TODO: this is broken!!! the challenge is to find out who can be a ScoringLocatin provider**/
-	        .onTrue(commandFactory.alignToScoringLocation(null ,hidJoystickDriveInputSupplier))
+	    
+	        .onTrue(commandFactory.alignToScoringLocation(shuffleboardControls ,hidJoystickDriveInputSupplier))
 	        .onFalse(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
 	    
 	    driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)

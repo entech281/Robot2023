@@ -39,10 +39,11 @@ public final class RobotConstants {
         public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
         
         public interface CAMERA_POSITION{
-        	public static final double INCHES_PER_METER = 39.4;
-        	public static final double UP_METERS = 10.0 / INCHES_PER_METER;
-        	public static final double LEFT_OF_CENTER_METERS = 0.0 /INCHES_PER_METER;
-        	public static final double FORWARD_OF_CENTER_METETRS = 18 / INCHES_PER_METER;
+        	public static final double UP_INCHES = 6.25;
+        	public static final double LEFT_OF_CENTER_INCHES = 10;
+        	public static final double FORWARD_OF_CENTER_INCHES = 14.25;
+            public static final double CAMERA_YAW_DEGREES = 0.191986;
+            public static final double CAMERA_PITCH_DEGREES = 0.191986;
         }
     }
     public interface ARM{
@@ -52,6 +53,8 @@ public final class RobotConstants {
         public static final double MIN_EXTENSION_INCHES = 0.0;
         public static final double MAX_EXTENSION_INCHES = 200.0;
         public static final double ARM_MAX_REACH_INCHES = 32; //from center of robot base!!!
+        public static final int ELBOW_MOTOR_ID = 0;
+        public static final int TELESCOPE_MOTOR_ID = 0;
     }
     public interface ALIGNMENT{
         public static final double ANGLE_TOLERANCE_DEGREES=2.0;

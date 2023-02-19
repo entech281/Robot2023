@@ -2,8 +2,9 @@ package frc.robot;
 
 import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_FIELD_ABSOLUTE;
 import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_YAW_LOCK;
-import static frc.robot.RobotConstants.SHUFFLEBOARD.TABS.*;
+import static frc.robot.RobotConstants.SHUFFLEBOARD.TABS.MATCH;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -11,9 +12,10 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.TargetNodeSupplier;
 import frc.robot.pose.TargetNode;
 
-public class ShuffleboardDriverControls implements Supplier<TargetNode> {
+public class ShuffleboardDriverControls implements TargetNodeSupplier {
 	
 	private ShuffleboardTab operatorTab;
 
@@ -25,7 +27,7 @@ public class ShuffleboardDriverControls implements Supplier<TargetNode> {
 		operatorTab = Shuffleboard.getTab(MATCH);		
 
 		
-    	nodeChooser.setDefaultOption("DEFAULT",TargetNode.A1);
+    	nodeChooser.setDefaultOption("NONE",TargetNode.NONE);
     	nodeChooser.addOption("A1", TargetNode.A1); 
     	nodeChooser.addOption("A2", TargetNode.A2);
     	nodeChooser.addOption("A3", TargetNode.A3);
@@ -72,8 +74,14 @@ public class ShuffleboardDriverControls implements Supplier<TargetNode> {
 		driverYawEnabled.setBoolean(newValue);
 	}
 
+
 	@Override
-	public TargetNode get() {
-		return getSelectedTargetNode();
+	public Optional<TargetNode> getSelectedTarget() {
+		if ( nodeChooser.getSelected() == TargetNode.NONE) {
+			return Optional.empty();
+		}
+		else {
+			return Optional.of(nodeChooser.getSelected());
+		}
 	}
 }

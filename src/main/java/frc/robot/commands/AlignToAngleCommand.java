@@ -7,7 +7,6 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -18,7 +17,6 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class AlignToAngleCommand extends BaseDrivePIDCommand {
 
-    private Supplier<Double> yawAngleSupplier;
     private Supplier<Double> desiredAngleSupplier;
 
     
@@ -32,11 +30,9 @@ public class AlignToAngleCommand extends BaseDrivePIDCommand {
      */
     public AlignToAngleCommand(DriveSubsystem drive,      		
     		Supplier<DriveInput> operatorInput,
-    		Supplier<Double> desiredAngleSupplier, 
-    		Supplier<Double> yawAngleSupplier) {
+    		Supplier<Double> desiredAngleSupplier) {
         super(drive,operatorInput);
         this.desiredAngleSupplier = desiredAngleSupplier;
-        this.yawAngleSupplier = yawAngleSupplier;
     }
 
     @Override
@@ -47,7 +43,7 @@ public class AlignToAngleCommand extends BaseDrivePIDCommand {
             Math.min(
                 pid.calculate(
                     MathUtil.inputModulus(desiredAngleSupplier.get(), -180.0, 180.0), 
-                    yawAngleSupplier.get()
+                    operatorInput.get().getYawAngleDegrees()
                 ), 
                 SPEED_LIMIT
             )

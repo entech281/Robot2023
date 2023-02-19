@@ -12,7 +12,7 @@ public class SetDriverYawEnableCommand extends BaseShuffleboardControlsUpdateCom
 
 	@Override
 	public void execute() {
-		driverPrefs.setYawLock(newValue);
+		driverControls.setYawLock(newValue);
 	}
 	
 

@@ -5,10 +5,10 @@ import frc.robot.ShuffleboardDriverControls;
 
 public abstract class BaseShuffleboardControlsUpdateCommand extends InstantCommand{
 
-	protected ShuffleboardDriverControls driverPrefs;
+	protected ShuffleboardDriverControls driverControls;
 	
 	public BaseShuffleboardControlsUpdateCommand ( ShuffleboardDriverControls  preferencesToAlter) {
-		this.driverPrefs = preferencesToAlter;
+		this.driverControls = preferencesToAlter;
 	}
 
 }

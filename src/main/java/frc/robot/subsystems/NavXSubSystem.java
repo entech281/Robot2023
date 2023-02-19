@@ -8,6 +8,8 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -35,6 +37,9 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
     private double initialYawAngle = 0.0;
+    private double initialForwardMeters = 0.0;
+    private double initialRightMeters = 0.0;
+    private double initialUpMeters = 0.0;
 
     public NavXSubSystem() {
     }
@@ -45,14 +50,14 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
         while (navX.isCalibrating()) {
           ;
         }
-        navX.zeroYaw();
         DriverStation.reportWarning("NavX Initialize Complete", false);
+        navX.zeroYaw();
+        zeroPosition();
     }
 
     public NavxStatus getStatus(){
-    	NavxStatus newPose = new NavxStatus();
-        newPose.setYawAngleDegrees(getAngle());
-        return newPose;
+    	return new NavxStatus(getForward(), getRight(), getYaw(), getPitch());
+
     }
     public void zeroYaw() {
         navX.zeroYaw();
@@ -71,15 +76,21 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
     }
 
     public double getForward() {
-      return navX.getDisplacementX();
+      return Units.metersToInches(navX.getDisplacementX()-initialForwardMeters);
     }
 
     public double getRight() {
-      return navX.getDisplacementY();
+      return Units.metersToInches(navX.getDisplacementY()-initialRightMeters);
     }
 
     public double getUp() {
-      return navX.getDisplacementZ();
+      return Units.metersToInches(navX.getDisplacementZ()-initialUpMeters);
+    }
+
+    public void zeroPosition() {
+        initialForwardMeters = navX.getDisplacementX();
+        initialRightMeters = navX.getDisplacementY();
+        initialUpMeters = navX.getDisplacementZ();  
     }
 
     @Override
@@ -107,9 +118,9 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
         builder.addDoubleProperty("NavX Yaw", this::getYaw, null);
         builder.addDoubleProperty("NavX Pitch", this::getPitch, null);
         builder.addDoubleProperty("NavX Roll", this::getRoll, null);
-        builder.addDoubleProperty("NavX X", this::getForward, null);
-        builder.addDoubleProperty("NavX Y", this::getRight, null);
-        builder.addDoubleProperty("NavX Z", this::getUp, null);
+        builder.addDoubleProperty("NavX Forward (in)", this::getForward, null);
+        builder.addDoubleProperty("NavX Right (in)", this::getRight, null);
+        builder.addDoubleProperty("NavX Height (in)", this::getUp, null);
     }
 
     @Override
@@ -136,5 +147,11 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
     public double getAngle() {
       return navX.getAngle();
     }
+
+	@Override
+	public void simulationPeriodic() {
+		// TODO Auto-generated method stub
+		super.simulationPeriodic();
+	}
 
 }
