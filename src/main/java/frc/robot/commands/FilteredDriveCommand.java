@@ -2,12 +2,11 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.ShuffleboardDriverControls;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldRelativeDriveInputFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.TurnToggleFilter;
+import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class FilteredDriveCommand extends SimpleDriveCommand {
@@ -27,8 +26,8 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public FilteredDriveCommand(DriveSubsystem drive, Joystick joystick, Supplier<Double> yawAngleSupplier, ShuffleboardDriverControls driverControls) {
-        super(drive,joystick,yawAngleSupplier);
+    public FilteredDriveCommand(DriveSubsystem drive, Supplier<DriveInput> operatorInput,  ShuffleboardDriverControls driverControls) {
+        super(drive,operatorInput);
         this.driverControls = driverControls;
 
         this.jsDeadbandFilter = new JoystickDeadbandFilter();
@@ -38,11 +37,11 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
 
     @Override
     public void execute() {
-    	DriveInput operatorInput = new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ(), yawAngleSupplier.get());
-    	DriveInput filtered = operatorInput;
+    	DriveInput di = operatorInput.get();
+    	DriveInput filtered = di;
     	
         if (jsDeadbandFilter.getEnabled()) {
-            filtered = jsDeadbandFilter.filter(operatorInput);
+            filtered = jsDeadbandFilter.filter(filtered);
         }
     	if ( driverControls.isFieldAbsolute()) {
     		filtered = fieldRelativeFilter.filter(filtered);

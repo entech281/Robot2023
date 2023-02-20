@@ -1,8 +1,10 @@
 package frc.robot.learning;
 
-import edu.wpi.first.math.MathUtil;
 import static org.junit.Assert.assertEquals;
+
 import org.junit.jupiter.api.Test;
+
+import edu.wpi.first.math.MathUtil;
 
 public class TestInputModulus {
 

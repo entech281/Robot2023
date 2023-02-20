@@ -6,14 +6,12 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class SimpleDriveCommand extends EntechCommandBase {
     protected final DriveSubsystem drive;
-    protected final Joystick joystick;
-    protected final Supplier<Double> yawAngleSupplier;
+    protected final Supplier<DriveInput> operatorInput;
 
     /**
      * Creates a new ArcadeDrive. This command will drive your robot according to
@@ -23,17 +21,16 @@ public class SimpleDriveCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public SimpleDriveCommand(DriveSubsystem drive, Joystick joystick, Supplier<Double> yawAngleSupplier) {
+    public SimpleDriveCommand(DriveSubsystem drive, Supplier<DriveInput> operatorInput) {
         super(drive);
         this.drive = drive;
-        this.joystick = joystick;
-        this.yawAngleSupplier = yawAngleSupplier;
+        this.operatorInput = operatorInput;
     }
 
 
     @Override
     public void execute() {
-        drive.drive(new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ(),yawAngleSupplier.get()) );
+        drive.drive(operatorInput.get() );
     }
 
     @Override

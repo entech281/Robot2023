@@ -1,6 +1,7 @@
 package frc.robot.pose;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 /**

@@ -1,7 +1,5 @@
 package frc.robot.pose;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 
 import edu.wpi.first.math.geometry.Pose2d;
