@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.oi.OperatorInterface;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.oi.ShuffleboardFieldDisplay;
+import frc.robot.oi.TargetNodeChooser;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
@@ -33,6 +34,7 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
   private RobotContext robotContext;
   private ShuffleboardDriverControls shuffleboardControls;
+  private TargetNodeChooser nodeGridChooser = new TargetNodeChooser();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
