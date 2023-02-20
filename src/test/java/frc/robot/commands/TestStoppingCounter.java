@@ -1,12 +1,11 @@
 package frc.robot.commands;
 
-import org.junit.jupiter.api.Test;
-
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.function.Supplier;
+import org.junit.jupiter.api.Test;
+
+import frc.robot.util.StoppingCounter;
 
 public class TestStoppingCounter {
 	

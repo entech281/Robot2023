@@ -8,9 +8,14 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.CommandFactory;
+import frc.robot.oi.OperatorInterface;
+import frc.robot.oi.ShuffleboardDriverControls;
+import frc.robot.oi.ShuffleboardFieldDisplay;
+import frc.robot.oi.TargetNodeChooser;
+import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -28,36 +33,59 @@ public class Robot extends TimedRobot {
   private CommandFactory commandFactory;
   private Command autoCommand;
   private RobotContext robotContext;
-
+  private ShuffleboardDriverControls shuffleboardControls;
+  private TargetNodeChooser nodeGridChooser = new TargetNodeChooser();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-	  
+
+	ShuffleboardTab MATCH_TAB = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.MATCH);
+	
+	
+	shuffleboardControls = new ShuffleboardDriverControls();
+	ShuffleboardFieldDisplay fieldDisplay = new ShuffleboardFieldDisplay();
+	RobotState robotState = new RobotState();	  
 	  
 	DriveSubsystem drive = new DriveSubsystem();
 	VisionSubsystem vision = new VisionSubsystem();
 	NavXSubSystem navx = new NavXSubSystem();
 	ArmSubsystem arm = new ArmSubsystem();
-	ShuffleboardDriverControls shuffleboardControls = new ShuffleboardDriverControls();
-	ShuffleboardFieldDisplay fieldDisplay = new ShuffleboardFieldDisplay();
+	
 	
 	List.of(drive,vision,navx,arm).forEach((s)-> {
-		s.initialize();
-		Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.MATCH).add(s);
+		s.initialize();		
 	});
+	
+	//adding these individually so we can lay them out nicely
+	MATCH_TAB.add(drive).withSize(2, 2).withPosition(8,0);
+	MATCH_TAB.add(vision).withSize(2, 2).withPosition(8,2);
+	MATCH_TAB.add(navx).withSize(2, 2).withPosition(10,0);
+	MATCH_TAB.add(arm).withSize(2, 2).withPosition(10,2);
+	MATCH_TAB.add("RobotState",robotState).withSize(2, 2).withPosition(8, 4);
+	
 
-	//this looks like a little more typing, but its useful to note that this allows
-	//us to declare which subsystem these ACTUALLY use, vs giving everyone a subsystem manager,
-	//which allows them to get everything, but then its not clear what they need
-	robotContext = new RobotContext(fieldDisplay,drive,navx,vision);
-	robotContext.setPoseEstimator(new VisionFirstNavxAsBackupPoseEstimator());
-	commandFactory = new CommandFactory(robotContext,drive,navx,vision,arm);
+	robotContext = new RobotContext(new AlignmentCalculator(),
+			robotState, fieldDisplay,drive,navx,vision, new VisionFirstNavxAsBackupPoseEstimator(false),
+			shuffleboardControls
+	);
+	
+	
+	commandFactory = new CommandFactory(robotState,drive,navx,vision,arm);
 	oi = new OperatorInterface(commandFactory,shuffleboardControls);
+	List<Command> autoChoices = commandFactory.getAutoCommandChoices();
+
+	autoChoices.forEach((c)->{
+		shuffleboardControls.addAutoCommandChoice(c);
+	});
   }
 
+  private void doPeriodic() {
+		robotContext.periodic();
+	    CommandScheduler.getInstance().run();	  
+  }
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
    * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
@@ -67,13 +95,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
-
-	robotContext.periodic();
-    CommandScheduler.getInstance().run();
+	  doPeriodic();
   }
   
   /** This function is called once each time the robot enters Disabled mode. */
@@ -88,7 +110,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
 
     // Get selected routine 
-    autoCommand = commandFactory.getAutonomousCommand();
+    autoCommand = shuffleboardControls.getSelectedAutoCommand();
 
     // schedule the autonomous command
     if (autoCommand != null) {
@@ -98,7 +120,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+	  doPeriodic();  
+  }
 
   @Override
   public void teleopInit() {
@@ -126,5 +150,15 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+	  doPeriodic();
+  }
+
+@Override
+public void simulationPeriodic() {
+	  doPeriodic();
+}
+  
+  
+  
 }

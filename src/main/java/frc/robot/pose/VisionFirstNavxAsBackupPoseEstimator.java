@@ -1,5 +1,7 @@
 package frc.robot.pose;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,44 +23,65 @@ import frc.robot.util.PoseUtil;
 public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
 
 	
+  private boolean overrideYawWithNavx = false;
+  
+  public VisionFirstNavxAsBackupPoseEstimator ( boolean overrideYawWithNavx) {
+	  this.overrideYawWithNavx=overrideYawWithNavx;
+  }
   public static double METERS_PER_INCH=0.0254;	
-  private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransfor3d();
+  private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
 	@Override
-	public Pose2d estimateRobotPose(VisionStatus vs, NavxStatus ns, DriveStatus ds) {
-        Pose2d estPose = ns.getPose2d();
-    	if ( vs.hasBestTarget() ) {
-    		Pose2d camPose = estimatePoseFromCamera(vs);
-            if (camPose != null) {
-                estPose = new Pose2d(camPose.getX(), camPose.getY(), Rotation2d.fromDegrees(ns.getYawAngleDegrees()));
-            }
+
+	public Optional<Pose2d> estimateRobotPose(VisionStatus vs, NavxStatus ns, DriveStatus ds) {
+        Pose2d navXPoseEstimate = ns.getPose2d();
+        Optional<Pose2d> cameraPoseEstimate = estimatePoseFromCamera(vs);
+        
+        if ( cameraPoseEstimate.isPresent()) {
+        	if ( overrideYawWithNavx) {
+        		return Optional.of(overrideYawAngleInPose(cameraPoseEstimate.get(),ns.getYawAngleDegrees()));
+        	}
+        	else {
+        		return cameraPoseEstimate;
+        	}
         }
-        return estPose;
+        else {
+        	return Optional.of(navXPoseEstimate);
+        }
+
 	}
-    
+
+	private Pose2d overrideYawAngleInPose ( Pose2d originalPose, double newYawAngle) {
+		return new Pose2d (originalPose.getX(), originalPose.getY(),  Rotation2d.fromDegrees(newYawAngle ));
+	}
+	
 	//photon vision gives us transform in meters
 	//also the Field2d widget is in meters
-    private Pose2d estimatePoseFromCamera(VisionStatus vs) {
+    private Optional<Pose2d> estimatePoseFromCamera(VisionStatus vs) {
     	
-    	RecognizedAprilTagTarget target = vs.getBestAprilTagTarget();
-        if (target == null) {
-            return null;
-        }
-    	Transform3d cameraToTarget =  target.getCameraToTargetTransform();
-    	
-    	AprilTagLocation tagLocation = target.getTagLocation();
-    	
-    	Pose3d tagLocationPose = tagLocation.asPose3d();
-    	Pose3d tagLocationMeters = tagLocationPose.times(METERS_PER_INCH);
-    	
-    	
-    	//watch out for meters to inches, (use PoseUtil if needed to convert)
-    	//HINT:: something like this should work:
-    	
-    	//robotPose -> robotToCamera -> cameraToTag = tagLocation
-    	//thus tagLocation -> tagToCamera -> cameraToRobot = robotPose
-    	Pose3d  estimatedPose = tagLocationMeters.transformBy(cameraToTarget.inverse()).transformBy(ROBOT_TO_CAM.inverse());    	
-    	
-    	return estimatedPose.toPose2d();
+    	if ( vs.getBestAprilTagTarget().isPresent()) {
+        	RecognizedAprilTagTarget target = vs.getBestAprilTagTarget().get();
+        	Transform3d cameraToTarget =  target.getCameraToTargetTransform();
+        	
+        	AprilTagLocation tagLocation = target.getTagLocation();
+        	
+        	Pose3d tagLocationPose = tagLocation.asPose3d();
+        	Pose3d tagLocationMeters = new Pose3d (
+        			tagLocationPose.getTranslation().times(METERS_PER_INCH),
+        			tagLocationPose.getRotation()
+        	);
+
+        	//watch out for meters to inches, (use PoseUtil if needed to convert)
+        	//HINT:: something like this should work:
+        	
+        	//robotPose -> robotToCamera -> cameraToTag = tagLocation
+        	//thus tagLocation -> tagToCamera -> cameraToRobot = robotPose        	
+        	Pose3d  estimatedPose = tagLocationMeters.transformBy(cameraToTarget.inverse()).transformBy(ROBOT_TO_CAM.inverse());    	        	
+        	return Optional.of(estimatedPose.toPose2d());    		
+    	}
+    	else {
+    		return Optional.empty();
+    	}
+
     }
 
 }

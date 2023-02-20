@@ -56,15 +56,6 @@ public class DriveInput {
 		this.yawAngleDegrees = original.yawAngleDegrees;
 	}
 
-	public DriveInput(double forward, double right, double rotation, double yawAngleDegrees, boolean overrideYawLock,
-			boolean overrideAutoYaw) {
-		super();
-		this.forward = forward;
-		this.right = right;
-		this.rotation = rotation;
-		this.yawAngleDegrees = yawAngleDegrees;
-	}
-
 	public double getForward() {
 		return forward;
 	}

@@ -7,20 +7,23 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
-
+import frc.robot.util.StoppingCounter;
+import static frc.robot.commands.DriveCommandConstants.*;
 /**
  *
  * 
  * @author aheitkamp
  */
-public class AlignToAngleCommand extends BaseDrivePIDCommand {
+public class AlignToAngleCommand extends EntechCommandBase {
 
-    private Supplier<Double> yawAngleSupplier;
     private Supplier<Double> desiredAngleSupplier;
-
+    protected final DriveSubsystem drive;
+    protected final PIDController pid;
+    protected final Supplier<DriveInput> operatorInput;
+    protected StoppingCounter counter;
     
     /**
      * Creates a new snap yaw degrees command that will snap the robot to the specified angle
@@ -30,10 +33,19 @@ public class AlignToAngleCommand extends BaseDrivePIDCommand {
      * @param latestPose  The supplier of latest pose of the robot to get the current yaw
      * @param joystick the joystick you controll the robot with
      */
-    public AlignToAngleCommand(DriveSubsystem drive,  Joystick joystick,Supplier<Double> desiredAngleSupplier, Supplier<Double> yawAngleSupplier) {
-        super(drive,joystick);
+    public AlignToAngleCommand(DriveSubsystem drive,      		
+    		Supplier<DriveInput> operatorInput,
+    		Supplier<Double> desiredAngleSupplier) {
+        super(drive);
+        this.drive = drive;
+        this.operatorInput = operatorInput;
         this.desiredAngleSupplier = desiredAngleSupplier;
-        this.yawAngleSupplier = yawAngleSupplier;
+        
+        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
+        pid.enableContinuousInput(-180, 180);
+        pid.setTolerance(ANGLE_TOLERANCE);
+        counter = new StoppingCounter("PIDDriveCommand",STOP_COUNT);
+        
     }
 
     @Override
@@ -44,15 +56,30 @@ public class AlignToAngleCommand extends BaseDrivePIDCommand {
             Math.min(
                 pid.calculate(
                     MathUtil.inputModulus(desiredAngleSupplier.get(), -180.0, 180.0), 
-                    yawAngleSupplier.get()
+                    operatorInput.get().getYawAngleDegrees()
                 ), 
                 SPEED_LIMIT
             )
         );
-        DriveInput di = new DriveInput(-joystick.getY(), joystick.getX(), calcValue);
 
-
+        DriveInput di = operatorInput.get();
+        di.setRotation(calcValue);
         drive.drive(di );
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        drive.brake();
+    }
+
+    @Override
+    public boolean isFinished() {
+    	return counter.isFinished(pid.atSetpoint());    	
+    }
+
+    @Override
+    public boolean runsWhenDisabled() {
+        return false;
+    }    
+    
 }
