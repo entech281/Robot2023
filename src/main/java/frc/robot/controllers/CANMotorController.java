@@ -1,11 +1,10 @@
 package frc.robot.controllers;
 
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
 public class CANMotorController implements MotorController {
 

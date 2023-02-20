@@ -23,7 +23,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;
@@ -33,20 +33,23 @@ public class VisionSubsystem extends EntechSubsystem {
 
   private VisionStatus currentStatus = new VisionStatus();
   private PhotonCamera camera;
-  private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransfor3d();
+  private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
   private PhotonPoseEstimator photonPoseEstimator;
   
   @Override
   public void initialize() {
-    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
 
     AprilTagFieldLayout photonAprilTagFieldLayout;
 	try {
 		photonAprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);		
-		photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.AVERAGE_BEST_TARGETS,camera,ROBOT_TO_CAM);
+		
 	} catch (IOException e) {
 		throw new RuntimeException("Could not load wpilib AprilTagFields");
 	}
+	if ( Robot.isReal()) {
+	    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
+	    photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.AVERAGE_BEST_TARGETS,camera,ROBOT_TO_CAM);
+	}	
   }
 
   @Override
@@ -55,8 +58,10 @@ public class VisionSubsystem extends EntechSubsystem {
      sb.addDoubleProperty("Latency", this::getLatency, null);
      sb.addBooleanProperty("HasPhotonPose", this::hasPhotonPose, null);
      sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
+     sb.addStringProperty("Target", this::getBestTagName, null);
   }
-
+  
+  
   public VisionStatus getStatus() {
 	  return currentStatus;
   }
@@ -68,12 +73,19 @@ public class VisionSubsystem extends EntechSubsystem {
 	  return currentStatus.getLatency();
   }
   private boolean hasPhotonPose() {
-	  return currentStatus.hasPhotonPose();
+	  return currentStatus.getPhotonEstimatedPose().isPresent();
   }
   private boolean hasBestTarget() {
-	  return currentStatus.hasBestTarget();
+	  return currentStatus.getBestAprilTagTarget().isPresent();
   }
-  
+  private String getBestTagName() {
+	  if ( currentStatus.getBestAprilTagTarget().isPresent()) {
+		  return currentStatus.getBestAprilTagTarget().get().getTagLocation().getLocation().toString();
+	  }
+	  else {
+		  return "NONE";
+	  }
+  }
   private void updateStatus(){
 	  	VisionStatus newStatus = new VisionStatus();
 	  	
@@ -96,18 +108,34 @@ public class VisionSubsystem extends EntechSubsystem {
 		if ( updatedPose.isPresent()) {
 			newStatus.setPhotonEstimatedPose(updatedPose.get().estimatedPose);  
 		}		    
-	    SmartDashboard.putString("getStatus Best Target:", "*" + newStatus.getBestAprilTagTarget() +"*");
-	    SmartDashboard.putString("vs:", "*" + newStatus +"*");
-	    SmartDashboard.putBoolean("hasTargets", newStatus.hasTargets());
-	    if ( newStatus.hasPhotonPose()) {
-	    	SmartDashboard.putString("photon pose", newStatus.getPhotonEstimatedPose().toPose2d().toString());
-	    	SmartDashboard.putString("PhotonTransform3d", "" + result.getBestTarget().getBestCameraToTarget());
-	    }
+
 	    
 	  currentStatus = newStatus;
+	  debugStatus();
   }
   
+  private void updateStatusSimulated(){
+	  /**
+	   * this is the robot location we will see in shuffleboard after .\gradlew simulateJava
+	   */
+	  VisionStatus newStatus = new VisionStatus();
+	  	
+	  //pretend we have exactly one target, pretty much right in front of us
+	  //Transform3d T = PoseUtil.cameraToTargetDirectlyInFrontOfCamera(24);
+	  Transform3d T = PoseUtil.cameraToTarget(48,3,180);
+	  newStatus.setLatency(20);
+	  newStatus.addRecognizedTarget(new RecognizedAprilTagTarget(T, AprilTagLocation.BLUE_MIDDLE));
+	    
 
+	  currentStatus = newStatus;
+	  debugStatus();	  
+}  
+
+private void debugStatus() {
+    SmartDashboard.putString("getStatus Best Target:", "*" + currentStatus.getBestAprilTagTarget() +"*");
+    SmartDashboard.putString("vs:", "*" + currentStatus +"*");
+    SmartDashboard.putBoolean("hasTargets", currentStatus.hasTargets());
+}
   public static RecognizedAprilTagTarget createRecognizedTarget(PhotonTrackedTarget t) {
 	  
       Transform3d t3d = t.getBestCameraToTarget();
@@ -129,11 +157,11 @@ public class VisionSubsystem extends EntechSubsystem {
   
   @Override
   public void periodic() {
-	  updateStatus();
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+	  if ( Robot.isReal()) {
+		  updateStatus();  
+	  }
+	  else {
+		  updateStatusSimulated();
+	  }
   }
 }

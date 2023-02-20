@@ -8,12 +8,13 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.util.Units;
 /**
  *
  * @author mandrews
@@ -146,5 +147,11 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
     public double getAngle() {
       return navX.getAngle();
     }
+
+	@Override
+	public void simulationPeriodic() {
+		// TODO Auto-generated method stub
+		super.simulationPeriodic();
+	}
 
 }

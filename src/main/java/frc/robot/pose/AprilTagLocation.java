@@ -1,11 +1,9 @@
 package frc.robot.pose;
 
-import frc.robot.RobotConstants;
-import java.util.NoSuchElementException;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.RobotConstants;
 
 public class AprilTagLocation {
   

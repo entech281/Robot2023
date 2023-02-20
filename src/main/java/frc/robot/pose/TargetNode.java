@@ -1,7 +1,8 @@
 package frc.robot.pose;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import java.util.Objects;
+
+import edu.wpi.first.math.geometry.Translation2d;
 
 /**
  *

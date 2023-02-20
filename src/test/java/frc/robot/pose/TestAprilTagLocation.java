@@ -4,9 +4,9 @@
 
 package frc.robot.pose;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 
 /** Add your docs here. */

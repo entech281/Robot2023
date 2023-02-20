@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.util.PoseUtil;
 
 /**
  *
@@ -52,7 +53,7 @@ public class ScoringLocation {
         Translation2d nodeTranslation = selectedNode.getOffsetToTarget(); 
         Transform2d tf = new Transform2d(selectedNode.getOffsetToTarget(),Rotation2d.fromDegrees(0));
         Pose2d absoluteNodePosition = tagPose.transformBy(tf);
-        return absoluteNodePosition;
+        return PoseUtil.inchesToMeters(absoluteNodePosition);
     }
-    
+
 }   

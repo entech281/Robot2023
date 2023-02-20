@@ -1,11 +1,11 @@
 package frc.robot.pose;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.commands.instructions.AlignmentInstruction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An alignment solution should include everything we need if we
