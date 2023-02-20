@@ -14,10 +14,10 @@ import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
 public class TestVisionFirstNavxAsBackupPoseEstimator {
 
-	public static double METERS_PER_INCH=0.0254;
+	public static double METERS_PER_INCH = 0.0254;
 	
 	protected VisionFirstNavxAsBackupPoseEstimator estimator = new VisionFirstNavxAsBackupPoseEstimator();
-	public static final double TOLERANCE=0.1;
+	public static final double TOLERANCE = 0.1;
 	
 	protected void assertPose2dEquals( Pose2d expected, Pose2d actual) {
 		assertEquals(expected.getX(), actual.getX(),TOLERANCE);
