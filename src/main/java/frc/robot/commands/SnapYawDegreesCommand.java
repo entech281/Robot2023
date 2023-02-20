@@ -4,19 +4,23 @@
 
 package frc.robot.commands;
 
-
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
-
+import frc.robot.util.StoppingCounter;
+import static frc.robot.commands.DriveCommandConstants.*;
 /**
  *
  * 
  * @author aheitkamp
  */
-public class SnapYawDegreesCommand extends BaseDrivePIDCommand {
+public class SnapYawDegreesCommand extends EntechCommandBase {
 
+    protected final DriveSubsystem drive;
+    protected final PIDController pid;
+    protected StoppingCounter counter;
     private YawAngleSupplier yawAngleSupplier;
 
 
@@ -28,8 +32,15 @@ public class SnapYawDegreesCommand extends BaseDrivePIDCommand {
      * @param angle The angle you want to snap to
      */
     public SnapYawDegreesCommand(DriveSubsystem drive, double desiredAngle, YawAngleSupplier yawAngleSupplier) {
-        super(drive,null);
+        super(drive);
+        this.drive = drive;
         this.yawAngleSupplier = yawAngleSupplier;
+        
+        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
+        pid.enableContinuousInput(-180, 180);
+        pid.setTolerance(ANGLE_TOLERANCE);
+        counter = new StoppingCounter("PIDDriveCommand",STOP_COUNT);
+
         pid.setSetpoint(desiredAngle);
     }
 
@@ -51,4 +62,19 @@ public class SnapYawDegreesCommand extends BaseDrivePIDCommand {
         drive.drive(di);
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        drive.brake();
+    }
+
+    @Override
+    public boolean isFinished() {
+    	return counter.isFinished(pid.atSetpoint());    	
+    }
+
+    @Override
+    public boolean runsWhenDisabled() {
+        return false;
+    }    
+    
 }

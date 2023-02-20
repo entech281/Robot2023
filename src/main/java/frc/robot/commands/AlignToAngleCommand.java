@@ -7,18 +7,23 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
-
+import frc.robot.util.StoppingCounter;
+import static frc.robot.commands.DriveCommandConstants.*;
 /**
  *
  * 
  * @author aheitkamp
  */
-public class AlignToAngleCommand extends BaseDrivePIDCommand {
+public class AlignToAngleCommand extends EntechCommandBase {
 
     private Supplier<Double> desiredAngleSupplier;
-
+    protected final DriveSubsystem drive;
+    protected final PIDController pid;
+    protected final Supplier<DriveInput> operatorInput;
+    protected StoppingCounter counter;
     
     /**
      * Creates a new snap yaw degrees command that will snap the robot to the specified angle
@@ -31,8 +36,16 @@ public class AlignToAngleCommand extends BaseDrivePIDCommand {
     public AlignToAngleCommand(DriveSubsystem drive,      		
     		Supplier<DriveInput> operatorInput,
     		Supplier<Double> desiredAngleSupplier) {
-        super(drive,operatorInput);
+        super(drive);
+        this.drive = drive;
+        this.operatorInput = operatorInput;
         this.desiredAngleSupplier = desiredAngleSupplier;
+        
+        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
+        pid.enableContinuousInput(-180, 180);
+        pid.setTolerance(ANGLE_TOLERANCE);
+        counter = new StoppingCounter("PIDDriveCommand",STOP_COUNT);
+        
     }
 
     @Override
@@ -54,4 +67,19 @@ public class AlignToAngleCommand extends BaseDrivePIDCommand {
         drive.drive(di );
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        drive.brake();
+    }
+
+    @Override
+    public boolean isFinished() {
+    	return counter.isFinished(pid.atSetpoint());    	
+    }
+
+    @Override
+    public boolean runsWhenDisabled() {
+        return false;
+    }    
+    
 }

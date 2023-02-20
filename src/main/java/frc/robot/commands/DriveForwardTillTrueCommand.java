@@ -22,7 +22,11 @@ public class DriveForwardTillTrueCommand extends EntechCommandBase {
 
     /**
      * Creates a new DriveForwardTillTrueCommand that will drive the robot forward until a given condition is true
+     * TODO: It would be better if the conditions are simple parameters, vs outside the command.
+     * It doesnt buy us a lot to push logic outside of the command, because that'd complicate command factory or operator interface.
+     * Another strategy might be to pass a (value) object as input vs a function
      * 
+     * Also change Till to Until
      * 
      * @param drive The drive subsystem on which this command will run
      * @param condition the condition that when true will make the robot stop driving

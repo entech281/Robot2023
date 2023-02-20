@@ -27,7 +27,7 @@ public class ToggleFieldAbsoluteCommand extends  BaseShuffleboardControlsUpdateC
 
   @Override
   public boolean runsWhenDisabled() {
-    return false;
+    return true;
   }
 
 }
