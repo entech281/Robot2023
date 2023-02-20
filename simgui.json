@@ -14,6 +14,7 @@
       "/Shuffleboard/Match/DriveSubsystem": "Subsystem",
       "/Shuffleboard/Match/Estimated Location": "Field2d",
       "/Shuffleboard/Match/SendableChooser[0]": "String Chooser",
+      "/Shuffleboard/Match/TargetNode": "String Chooser",
       "/SmartDashboard/DriveSubsystem": "Subsystem"
     }
   },

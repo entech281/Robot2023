@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
   private CommandFactory commandFactory;
   private Command autoCommand;
   private RobotContext robotContext;
-
+  private ShuffleboardDriverControls shuffleboardControls;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -40,26 +40,35 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-	ShuffleboardTab MATCH_TAB = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.MATCH);  
-	ShuffleboardDriverControls shuffleboardControls = new ShuffleboardDriverControls();
+	ShuffleboardTab MATCH_TAB = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.MATCH);
+	
+	
+	shuffleboardControls = new ShuffleboardDriverControls();
 	ShuffleboardFieldDisplay fieldDisplay = new ShuffleboardFieldDisplay();
-	  
+	RobotState robotState = new RobotState();	  
 	  
 	DriveSubsystem drive = new DriveSubsystem();
 	VisionSubsystem vision = new VisionSubsystem();
 	NavXSubSystem navx = new NavXSubSystem();
 	ArmSubsystem arm = new ArmSubsystem();
 	
+	
 	List.of(drive,vision,navx,arm).forEach((s)-> {
 		s.initialize();
-		MATCH_TAB.add(s);
+		
 	});
-
+	//adding these individually so we can lay them out nicely
+	MATCH_TAB.add(drive).withSize(2, 2).withPosition(8,0);
+	MATCH_TAB.add(vision).withSize(2, 2).withPosition(8,2);
+	MATCH_TAB.add(navx).withSize(2, 2).withPosition(10,0);
+	MATCH_TAB.add(arm).withSize(2, 2).withPosition(10,2);
+	MATCH_TAB.add("RobotState",robotState).withSize(2, 2).withPosition(8, 4);
+	
 	//this looks like a little more typing, but its useful to note that this allows
 	//us to declare which subsystem these ACTUALLY use, vs giving everyone a subsystem manager,
 	//which allows them to get everything, but then its not clear what they need
-	RobotState robotState = new RobotState();
-	MATCH_TAB.add("RobotState",robotState);
+
+	
 	
 	robotContext = new RobotContext(new AlignmentCalculator(),
 			robotState, fieldDisplay,drive,navx,vision, new VisionFirstNavxAsBackupPoseEstimator(false),
@@ -69,6 +78,11 @@ public class Robot extends TimedRobot {
 	
 	commandFactory = new CommandFactory(robotState,drive,navx,vision,arm);
 	oi = new OperatorInterface(commandFactory,shuffleboardControls);
+	List<Command> autoChoices = commandFactory.getAutoCommandChoices();
+	System.out.println("command choices:" + autoChoices.size());
+	autoChoices.forEach((c)->{
+		shuffleboardControls.addAutoCommandChoice(c);
+	});
   }
 
   private void doPeriodic() {
@@ -99,7 +113,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
 
     // Get selected routine 
-    autoCommand = commandFactory.getAutonomousCommand();
+    autoCommand = shuffleboardControls.getSelectedAutoCommand();
 
     // schedule the autonomous command
     if (autoCommand != null) {
@@ -109,7 +123,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+	  doPeriodic();  
+  }
 
   @Override
   public void teleopInit() {

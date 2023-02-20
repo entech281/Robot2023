@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,6 +45,14 @@ public class CommandFactory {
 
     }
     
+    public List<Command> getAutoCommandChoices(){
+    	Command c1 = new NudgeDirectionCommand(driveSubsystem,NudgeDirectionCommand.DIRECTION.FORWARD);
+    	c1.setName("Nudge Forward");
+    	Command c2 = new NudgeDirectionCommand(driveSubsystem,NudgeDirectionCommand.DIRECTION.RIGHT);
+    	c2.setName("Nudge Right");
+    	return List.of( c1,c2);
+
+    }
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
     	return new DriveInputYawMixer(robotState, operatorJoystickInput);
     }
