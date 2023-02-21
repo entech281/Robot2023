@@ -85,7 +85,7 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         );
         DriveInput di = operatorInput.get();
         di.setRotation(calcValue);
-        drive.drive(di );
+        drive.drive(di);
     }
     
     @Override

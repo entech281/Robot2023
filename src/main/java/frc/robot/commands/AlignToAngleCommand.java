@@ -64,7 +64,7 @@ public class AlignToAngleCommand extends EntechCommandBase {
 
         DriveInput di = operatorInput.get();
         di.setRotation(calcValue);
-        drive.drive(di );
+        drive.drive(di);
     }
 
     @Override
