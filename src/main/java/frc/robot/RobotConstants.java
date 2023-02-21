@@ -22,7 +22,7 @@ public final class RobotConstants {
         BLUE
     }
     public interface VISION {
-        public static final double CAMERA_TO_BUMPER = 17.785;
+        //public static final double CAMERA_TO_BUMPER = 17.785; //don't need?
         
         public interface APRILTAGIDS {
             public static final int BLUE_LOADING = 4;

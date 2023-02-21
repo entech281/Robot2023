@@ -3,6 +3,7 @@ package frc.robot.pose;
 import java.util.Objects;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 
 /**
  *
@@ -12,12 +13,12 @@ public class TargetNode {
 
     public double absoluteNodeX;
 
-    public static double A_ROW_X_METERS = -0.6477;
-    public static double B_ROW_X_METERS = -0.2159;
+    public static double A_ROW_X_METERS = Units.inchesToMeters(-25.5);
+    public static double B_ROW_X_METERS = Units.inchesToMeters(-8.5);
 
-    public static double LEFT_NODE_Y_OFSET_METERS = -0.5588;
+    public static double LEFT_NODE_Y_OFSET_METERS = Units.inchesToMeters(-22);
     public static double MIDDLE_NODE_Y_OFSET_METERS = 0;
-    public static double RIGHT_NODE_Y_OFSET_METERS = 0.5588;
+    public static double RIGHT_NODE_Y_OFSET_METERS = Units.inchesToMeters(22);
     
     public static TargetNode A1 = new TargetNode(A_ROW_X_METERS,LEFT_NODE_Y_OFSET_METERS,NodeID.A1);
     public static TargetNode A2 = new TargetNode(A_ROW_X_METERS,MIDDLE_NODE_Y_OFSET_METERS,NodeID.A2);

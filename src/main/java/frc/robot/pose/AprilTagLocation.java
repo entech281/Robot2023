@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConstants;
+import edu.wpi.first.math.util.Units;
 
 public class AprilTagLocation {
   
@@ -26,15 +27,15 @@ public class AprilTagLocation {
   private double absoluteTargetAngleDegrees;
 
   
-  public static double TAG_X_BLUE_TARGET = 1.02743; //Meters
-  public static double TAG_X_RED_LOADING = 0.36195; //Meters
-  public static double TAG_X_RED_TARGET = 15.513558; //Meters
-  public static double TAG_X_BLUE_LOADING = 16.178784; //Meters
+  public static double TAG_X_BLUE_TARGET = Units.inchesToMeters(40.45);
+  public static double TAG_X_RED_LOADING = Units.inchesToMeters(14.25); 
+  public static double TAG_X_RED_TARGET = Units.inchesToMeters(610.77); 
+  public static double TAG_X_BLUE_LOADING = Units.inchesToMeters(636.96); 
 
-  public static double TAG_Y_MIDDLE = 2.748026; //Meters
-  public static double TAG_Y_LEFT = 4.424426; //Meters
-  public static double TAG_Y_RIGHT = 1.071626; //Meters
-  public static double TAG_Y_LOADING = 6.749796; //Meters
+  public static double TAG_Y_MIDDLE = Units.inchesToMeters(108.19); 
+  public static double TAG_Y_LEFT = Units.inchesToMeters(174.19); 
+  public static double TAG_Y_RIGHT = Units.inchesToMeters(42.19); 
+  public static double TAG_Y_LOADING = Units.inchesToMeters(265.74);
 
   public static double BLUE_ANGLE = 0; //Degrees
   public static double RED_ANGLE = 180; //Degrees
