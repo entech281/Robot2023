@@ -58,34 +58,37 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-    	ScoringLocation currentScoringLocation = scoringLocationSupplier.getScoringLocation().get();
-    	Pose2d estimatedPose = currentPoseSupplier.getEstimatedPose().get();
-    	
-    	/**
-    	 * TODO:the above is too basic. We need to handle what happens if:
-    	 *   -- the command is started without a scoringlocation or an estimated pose
-    	 *   -- we lose either one during one execution loop
-    	 *   -- the scoring location changes from the originally provided one
-    	 */
-    	
-    	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);    	
-    	double currentYawAngleDegrees = operatorInput.get().getYawAngleDegrees();
-    	
-    	pid.setSetpoint(angleToTargetDegrees);
-    	
-        double calcValue = Math.max(
-            -SPEED_LIMIT, 
-            Math.min(
-                pid.calculate(
-                    MathUtil.inputModulus(currentYawAngleDegrees, -180.0, 180.0), 
-                    angleToTargetDegrees
-                ), 
-                SPEED_LIMIT
-            )
-        );
-        DriveInput di = operatorInput.get();
-        di.setRotation(calcValue);
-        drive.drive(di);
+    	if ( scoringLocationSupplier.getScoringLocation().isPresent()) {
+        	ScoringLocation currentScoringLocation = scoringLocationSupplier.getScoringLocation().get();
+        	Pose2d estimatedPose = currentPoseSupplier.getEstimatedPose().get();
+        	
+        	/**
+        	 * TODO:the above is too basic. We need to handle what happens if:
+        	 *   -- the command is started without a scoringlocation or an estimated pose
+        	 *   -- we lose either one during one execution loop
+        	 *   -- the scoring location changes from the originally provided one
+        	 */
+        	
+        	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);    	
+        	double currentYawAngleDegrees = operatorInput.get().getYawAngleDegrees();
+        	
+        	pid.setSetpoint(angleToTargetDegrees);
+        	
+            double calcValue = Math.max(
+                -SPEED_LIMIT, 
+                Math.min(
+                    pid.calculate(
+                        MathUtil.inputModulus(currentYawAngleDegrees, -180.0, 180.0), 
+                        angleToTargetDegrees
+                    ), 
+                    SPEED_LIMIT
+                )
+            );
+            DriveInput di = operatorInput.get();
+            di.setRotation(calcValue);
+            drive.drive(di );    		
+    	}
+
     }
     
     @Override
