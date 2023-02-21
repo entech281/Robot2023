@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -14,9 +16,10 @@ import frc.robot.subsystems.VisionStatus;
 import frc.robot.util.PoseUtil;
 public class TestVisionFirstNavxAsBackupPoseEstimator {
 
+	public static double METERS_PER_INCH = 0.0254;
 	
-	protected VisionFirstNavxAsBackupPoseEstimator estimator = new VisionFirstNavxAsBackupPoseEstimator(true);
-	public static final double TOLERANCE=0.1;
+	protected VisionFirstNavxAsBackupPoseEstimator estimator = new VisionFirstNavxAsBackupPoseEstimator(false);
+	public static final double TOLERANCE = 0.1;
 	
 	protected void assertPose2dEquals( Pose2d expected, Pose2d actual) {
 		assertEquals(expected.getX(), actual.getX(),TOLERANCE);
@@ -71,14 +74,14 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		);
 		
 		//RED-middle = tag id 2 --> x,y = 610.77, 108.19 inches 
-		double EXPECTED_X_METERS  = Units.inchesToMeters(610.77 - TEST_OFFSET_INCHES) - Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_INCHES);
-		double EXPECTED_Y_METERS = Units.inchesToMeters(108.19)- Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_INCHES);
-		double EXPECTED_ROTATION_DEGREES  = 0.0;
-		Pose2d r = estimator.estimateRobotPose(vs, ns, null).get();
-		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGREES));
+		double EXPECTED_X_METERS  = (610.77 - TEST_OFFSET_INCHES) * METERS_PER_INCH - (RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS);
+		double EXPECTED_Y_METERS = 100.337078012 * METERS_PER_INCH;
+		double EXPECTED_ROTATION_DEGRESS  = 10.793491265234485;
+		Pose2d r = estimator.estimateRobotPose(vs, new NavxStatus(), null).get();
+		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGRESS));
 		
 		//assertEquals(EXPECTED_X_METERS,r.getX(),TOLERANCE);
-		assertPose2dEquals(EXPECTED,r);
+		assertPose2dEquals(EXPECTED, r);
 
 
 	}
