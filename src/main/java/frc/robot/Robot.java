@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.logging.ExceptionHandler;
 import frc.robot.oi.OperatorInterface;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.oi.ShuffleboardFieldDisplay;
@@ -34,6 +35,8 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
   private RobotContext robotContext;
   private ShuffleboardDriverControls shuffleboardControls;
+  private ExceptionHandler exceptionHandler = new ExceptionHandler();
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -82,8 +85,15 @@ public class Robot extends TimedRobot {
   }
 
   private void doPeriodic() {
-		robotContext.periodic();
-	    CommandScheduler.getInstance().run();	  
+	  try {
+			robotContext.periodic();
+		    CommandScheduler.getInstance().run();		  
+	  }
+	  catch (Throwable t) {
+		  exceptionHandler.handleException(t);
+		  //t.printStackTrace();
+	  }
+	  
   }
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like

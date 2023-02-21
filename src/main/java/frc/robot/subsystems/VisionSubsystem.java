@@ -87,6 +87,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	  }
   }
   private void updateStatus(){
+	  
 	  	VisionStatus newStatus = new VisionStatus();
 	  	
 	    PhotonPipelineResult result = camera.getLatestResult();
@@ -126,9 +127,8 @@ public class VisionSubsystem extends EntechSubsystem {
 	  newStatus.setLatency(20);
 	  newStatus.addRecognizedTarget(new RecognizedAprilTagTarget(T, AprilTagLocation.BLUE_MIDDLE));
 	    
-
 	  currentStatus = newStatus;
-	  debugStatus();	  
+	  debugStatus();
 }  
 
 private void debugStatus() {
