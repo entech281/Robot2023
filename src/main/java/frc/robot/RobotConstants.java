@@ -39,9 +39,9 @@ public final class RobotConstants {
         public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
         
         public interface CAMERA_POSITION{
-        	public static final double UP_INCHES = 6.25;
-        	public static final double LEFT_OF_CENTER_INCHES = 10;
-        	public static final double FORWARD_OF_CENTER_INCHES = 14.25;
+        	public static final double UP_METERS = 0.15875;
+        	public static final double LEFT_OF_CENTER_METERS = 0.254;
+        	public static final double FORWARD_OF_CENTER_METERS = 0.36195;
             public static final double CAMERA_YAW_DEGREES = 11.0;
             public static final double CAMERA_PITCH_DEGREES = 11.0;
             
@@ -51,15 +51,15 @@ public final class RobotConstants {
         public static final double MIN_ANGLE_DEGREES = 0.0;
         public static final double MAX_ANGLE_DEGREES = 90.0;
         public static final boolean INIT_CLAW_STATE = false;
-        public static final double MIN_EXTENSION_INCHES = 0.0;
-        public static final double MAX_EXTENSION_INCHES = 200.0;
-        public static final double ARM_MAX_REACH_INCHES = 32; //from center of robot base!!!
+        public static final double MIN_EXTENSION_METERS = 0.0;
+        public static final double MAX_EXTENSION_METERS = 5.08;
+        public static final double ARM_MAX_REACH_METERS = 0.8128; //from center of robot base!!!
         public static final int ELBOW_MOTOR_ID = 0;
         public static final int TELESCOPE_MOTOR_ID = 0;
     }
     public interface ALIGNMENT{
         public static final double ANGLE_TOLERANCE_DEGREES=2.0;
-        public static final double DISTANCE_TOLERANCE_INCHES=2.0;
+        public static final double DISTANCE_TOLERANCE_METERS=0.0508;
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;

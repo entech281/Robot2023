@@ -16,28 +16,16 @@ import frc.robot.RobotConstants.VISION;
  * @author dcowden
  */
 public class PoseUtil {
-    public static Pose2d poseFromDoubles ( double xInches, double yInches, double angleDegrees){
-        return new Pose2d ( new Translation2d(xInches,yInches), Rotation2d.fromDegrees(angleDegrees));
+    public static Pose2d poseFromDoubles ( double xMeters, double yMeters, double angleDegrees){
+        return new Pose2d ( new Translation2d(xMeters,yMeters), Rotation2d.fromDegrees(angleDegrees));
     }
-    
-	public static final double METERS_PER_INCH = 0.0254;
-	
-	public static Pose3d inchesToMeters ( Pose3d input) {
-		return input.times(METERS_PER_INCH);
-	}
-	
-	public static double inchesToMeters ( double inches) {
-		return inches/METERS_PER_INCH;
-	}
-	public static double meters_to_inches ( double meters) {
-		return meters*METERS_PER_INCH;
-	}
+
 
 	public static Transform3d robotToCameraTransform3d() {
 		return new Transform3d( 
-				new Translation3d(Units.inchesToMeters(VISION.CAMERA_POSITION.FORWARD_OF_CENTER_INCHES),
-						Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_INCHES),
-								Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.UP_INCHES)
+				new Translation3d(VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS,
+						RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
+								RobotConstants.VISION.CAMERA_POSITION.UP_METERS
 				),
 				new Rotation3d(0,
 							   Units.degreesToRadians(RobotConstants.VISION.CAMERA_POSITION.CAMERA_PITCH_DEGREES),
@@ -46,17 +34,17 @@ public class PoseUtil {
 		);
 	}
 	
-	public static Transform3d cameraToTarget (double xInches, double yInches, double degrees) {
+	public static Transform3d cameraToTarget (double xMeters, double yMeters, double degrees) {
 		return new Transform3d(
-				new Translation3d(Units.inchesToMeters(xInches),Units.inchesToMeters(yInches), 0 ),
+				new Translation3d(xMeters,yMeters, 0 ),
 				new Rotation3d(0,0,Math.toRadians(degrees)));		
 	}
 	
 	public static Transform3d cameraToTargetDirectlyInFrontOfRobot () {
 		return new Transform3d( 
-				new Translation3d(Units.inchesToMeters(VISION.CAMERA_POSITION.FORWARD_OF_CENTER_INCHES),
-						Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_INCHES),
-								Units.inchesToMeters(RobotConstants.VISION.CAMERA_POSITION.UP_INCHES)
+				new Translation3d(VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS,
+						RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
+								RobotConstants.VISION.CAMERA_POSITION.UP_METERS
 				),
 				new Rotation3d(0,
 							   Units.degreesToRadians(RobotConstants.VISION.CAMERA_POSITION.CAMERA_PITCH_DEGREES),

@@ -76,15 +76,15 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
     }
 
     public double getForward() {
-      return Units.metersToInches(navX.getDisplacementX()-initialForwardMeters);
+      return navX.getDisplacementX()-initialForwardMeters;
     }
 
     public double getRight() {
-      return Units.metersToInches(navX.getDisplacementY()-initialRightMeters);
+      return navX.getDisplacementY()-initialRightMeters;
     }
 
     public double getUp() {
-      return Units.metersToInches(navX.getDisplacementZ()-initialUpMeters);
+      return navX.getDisplacementZ()-initialUpMeters;
     }
 
     public void zeroPosition() {

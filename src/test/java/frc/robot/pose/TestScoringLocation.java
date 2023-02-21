@@ -31,6 +31,8 @@ public class TestScoringLocation {
         ScoringLocation testScoringLocation = new ScoringLocation(tag, node);
         Pose2d testAbsolutePose = testScoringLocation.computeAbsolutePose();
         Pose2d expectedNodePosition = new Pose2d(Units.inchesToMeters(636.27), Units.inchesToMeters(108.19), Rotation2d.fromDegrees(180));
+        System.out.println(expectedNodePosition);
+        System.out.println(testAbsolutePose);
 
         assertEquals(expectedNodePosition, testAbsolutePose);
     }
