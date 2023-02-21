@@ -66,7 +66,7 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
         	
         	Pose3d tagLocationPose = tagLocation.asPose3d();
         	Pose3d tagLocationMeters = new Pose3d (
-        			tagLocationPose.getTranslation().times(METERS_PER_INCH),
+        			tagLocationPose.getTranslation(),
         			tagLocationPose.getRotation()
         	);
 
