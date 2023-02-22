@@ -21,9 +21,9 @@ public class NavxStatus implements SubsystemStatus {
     }
 
     public NavxStatus(double forward, double right, double yaw, double pitch) {
-        this.yawAngleDegrees = forward;
-        this.forwardDistance = right;
-        this.rightDistance = yaw;
+        this.yawAngleDegrees = yaw;
+        this.forwardDistance = forward;
+        this.rightDistance = right;
         this.pitchAngleDegrees = pitch;           
     }
 
