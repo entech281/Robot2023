@@ -78,8 +78,8 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGREES));
 		
 		//assertEquals(EXPECTED_X_METERS,r.getX(),TOLERANCE);
-		System.out.println(EXPECTED);
-		System.out.println(r);
+		//System.out.println(EXPECTED);
+		//System.out.println(r);
 		assertPose2dEquals(EXPECTED,r);
 
 	}

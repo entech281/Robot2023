@@ -60,8 +60,4 @@ public class PoseUtil {
 		return new Transform2d( new Translation2d(0,0), Rotation2d.fromDegrees(180));
 	}
 	
-    public static Pose2d inchesToMeters(Pose2d inches ) {
-    	return new Pose2d (Units.inchesToMeters(inches.getX()), Units.inchesToMeters(inches.getY()), inches.getRotation() );
-    }	
-	
 }
