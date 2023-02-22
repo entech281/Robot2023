@@ -13,8 +13,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.util.EntechUtils;
 /**
  *
  * @author mandrews
@@ -33,13 +33,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *         |  +---+  |
  *       //+---------+\\
  */
-public class NavXSubSystem extends EntechSubsystem implements Gyro {
+public class NavXSubSystem extends EntechSubsystem  {
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
-    private double initialYawAngle = 0.0;
-    private double initialForwardMeters = 0.0;
-    private double initialRightMeters = 0.0;
-    private double initialUpMeters = 0.0;
+    private double initialYawAngleForFieldDrive = 180.0;
+    private double initialYawAngleForFieldPose = 0.0;
+    private double knownForwardMeters = 0.0;
+    private double knownRightMeters = 0.0;
+    private double knownUpMeters = 0.0;
 
     public NavXSubSystem() {
     }
@@ -51,14 +52,28 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
           ;
         }
         DriverStation.reportWarning("NavX Initialize Complete", false);
-        navX.zeroYaw();
+        zeroYaw();
         zeroPosition();
+        if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+            initialYawAngleForFieldPose = 180.0;
+        }
     }
 
-    public NavxStatus getStatus(){
-    	return new NavxStatus(getForward(), getRight(), getYaw(), getPitch());
+    public NavxStatus getStatus() {
+    	return getFieldPoseStatus();
 
     }
+
+    public NavxStatus getFieldAbsoluteDriveStatus() {
+    	return new NavxStatus(getForward(), getRight(), getYawForFieldAbsoluteDrive(), getPitch());
+
+    }
+    
+    public NavxStatus getFieldPoseStatus() {
+    	return new NavxStatus(getForward(), getRight(), getYawForFieldPose(), getPitch());
+
+    }
+
     public void zeroYaw() {
         navX.zeroYaw();
     }
@@ -72,25 +87,37 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
     }
 
     public double getYaw() {
-      return -navX.getYaw() + initialYawAngle;
+      return getYawForFieldPose();
+    }
+
+    public double getYawForFieldAbsoluteDrive() {
+        return EntechUtils.normalizeAngle(-navX.getYaw() + initialYawAngleForFieldDrive);
+    }
+
+    public double getYawForFieldPose() {
+        return EntechUtils.normalizeAngle(-navX.getYaw() + initialYawAngleForFieldPose);
     }
 
     public double getForward() {
-      return Units.metersToInches(navX.getDisplacementX()-initialForwardMeters);
+      return Units.metersToInches(navX.getDisplacementX()+knownForwardMeters);
     }
 
     public double getRight() {
-      return Units.metersToInches(navX.getDisplacementY()-initialRightMeters);
+      return Units.metersToInches(navX.getDisplacementY()+knownRightMeters);
     }
 
     public double getUp() {
-      return Units.metersToInches(navX.getDisplacementZ()-initialUpMeters);
+      return Units.metersToInches(navX.getDisplacementZ()+knownUpMeters);
+    }
+
+    public void updatePosition(double forward, double right) {
+        zeroPosition();
+        knownForwardMeters = forward;
+        knownRightMeters = right;
     }
 
     public void zeroPosition() {
-        initialForwardMeters = navX.getDisplacementX();
-        initialRightMeters = navX.getDisplacementY();
-        initialUpMeters = navX.getDisplacementZ();  
+        navX.resetDisplacement();
     }
 
     @Override
@@ -118,34 +145,9 @@ public class NavXSubSystem extends EntechSubsystem implements Gyro {
         builder.addDoubleProperty("NavX Yaw", this::getYaw, null);
         builder.addDoubleProperty("NavX Pitch", this::getPitch, null);
         builder.addDoubleProperty("NavX Roll", this::getRoll, null);
-        builder.addDoubleProperty("NavX Forward (in)", this::getForward, null);
-        builder.addDoubleProperty("NavX Right (in)", this::getRight, null);
-        builder.addDoubleProperty("NavX Height (in)", this::getUp, null);
-    }
-
-    @Override
-    public void close() throws Exception {
-      navX.close();
-    }
-
-    @Override
-    public void calibrate() {
-      navX.calibrate();
-    }
-
-    @Override
-    public void reset() {
-      navX.reset();
-    }
-
-    @Override
-    public double getRate() {
-      return navX.getRate();
-    }
-
-    @Override
-    public double getAngle() {
-      return navX.getAngle();
+        builder.addDoubleProperty("NavX Forward", this::getForward, null);
+        builder.addDoubleProperty("NavX Right", this::getRight, null);
+        builder.addDoubleProperty("NavX Height", this::getUp, null);
     }
 
 	@Override
