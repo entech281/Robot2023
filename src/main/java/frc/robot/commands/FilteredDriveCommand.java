@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import frc.robot.filters.DriveInput;
+import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
 import frc.robot.filters.FieldRelativeDriveInputFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.TurnToggleFilter;
@@ -16,7 +17,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     private JoystickDeadbandFilter jsDeadbandFilter;
     private FieldRelativeDriveInputFilter fieldRelativeFilter;
     private TurnToggleFilter yawLockFilter;
-
+    private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
 
 	/**
      * Creates a new ArcadeDrive. This command will drive your robot according to
@@ -33,6 +34,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
         this.jsDeadbandFilter = new JoystickDeadbandFilter();
         this.fieldRelativeFilter = new FieldRelativeDriveInputFilter();
         this.yawLockFilter = new TurnToggleFilter();
+        this.yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
     }
 
     @Override
@@ -43,11 +45,14 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
         if (jsDeadbandFilter.getEnabled()) {
             filtered = jsDeadbandFilter.filter(filtered);
         }
-    	if ( driverControls.isFieldAbsolute()) {
+        
+    	if (driverControls.isFieldAbsolute()) {
+            filtered = yawAngleCorrectionFilter.filter(filtered);
+        } else {
     		filtered = fieldRelativeFilter.filter(filtered);
     	}
     	
-    	if ( driverControls.isYawLocked()) {
+    	if (driverControls.isYawLocked()) {
     		filtered = yawLockFilter.filter(filtered);
     	}
     	
