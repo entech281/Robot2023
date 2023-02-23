@@ -28,7 +28,7 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
   public VisionFirstNavxAsBackupPoseEstimator ( boolean overrideYawWithNavx) {
 	  this.overrideYawWithNavx=overrideYawWithNavx;
   }
-  public static double METERS_PER_INCH=0.0254;	
+  
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
 	@Override
 

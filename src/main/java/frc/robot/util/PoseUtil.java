@@ -23,13 +23,14 @@ public class PoseUtil {
 
 	public static Transform3d robotToCameraTransform3d() {
 		return new Transform3d( 
-				new Translation3d(VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS,
-						RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
-								RobotConstants.VISION.CAMERA_POSITION.UP_METERS
+				new Translation3d(
+					VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS,
+					RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
+					RobotConstants.VISION.CAMERA_POSITION.UP_METERS
 				),
 				new Rotation3d(0,
-							   Units.degreesToRadians(RobotConstants.VISION.CAMERA_POSITION.CAMERA_PITCH_DEGREES),
-							   Units.degreesToRadians(RobotConstants.VISION.CAMERA_POSITION.CAMERA_YAW_DEGREES)
+					RobotConstants.VISION.CAMERA_POSITION.CAMERA_PITCH_RADIANS,
+					RobotConstants.VISION.CAMERA_POSITION.CAMERA_YAW_RADIANS
 				)
 		);
 	}
@@ -42,13 +43,14 @@ public class PoseUtil {
 	
 	public static Transform3d cameraToTargetDirectlyInFrontOfRobot () {
 		return new Transform3d( 
-				new Translation3d(VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS,
-						RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
-								RobotConstants.VISION.CAMERA_POSITION.UP_METERS
+				new Translation3d(
+					VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS,
+					RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS,
+					RobotConstants.VISION.CAMERA_POSITION.UP_METERS
 				),
 				new Rotation3d(0,
-							   Units.degreesToRadians(RobotConstants.VISION.CAMERA_POSITION.CAMERA_PITCH_DEGREES),
-							   Units.degreesToRadians(RobotConstants.VISION.CAMERA_POSITION.CAMERA_YAW_DEGREES)
+					RobotConstants.VISION.CAMERA_POSITION.CAMERA_PITCH_RADIANS,
+					RobotConstants.VISION.CAMERA_POSITION.CAMERA_YAW_RADIANS
 				)
 		);
 	}	

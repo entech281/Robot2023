@@ -40,11 +40,10 @@ public final class RobotConstants {
         
         public interface CAMERA_POSITION{
         	public static final double UP_METERS = 0.15875;
-        	public static final double LEFT_OF_CENTER_METERS = 0.254;
-        	public static final double FORWARD_OF_CENTER_METERS = 0.36195;
-            public static final double CAMERA_YAW_DEGREES = 11.0;
-            public static final double CAMERA_PITCH_DEGREES = 11.0;
-            
+        	public static final double LEFT_OF_CENTER_METERS = 0.1;
+        	public static final double FORWARD_OF_CENTER_METERS = 0.55;
+            public static final double CAMERA_YAW_RADIANS = -0.185;
+            public static final double CAMERA_PITCH_RADIANS = 0.191986;
         }
     }
     public interface ARM{

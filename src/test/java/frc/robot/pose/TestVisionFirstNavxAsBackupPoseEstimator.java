@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -14,9 +16,10 @@ import frc.robot.subsystems.VisionStatus;
 import frc.robot.util.PoseUtil;
 public class TestVisionFirstNavxAsBackupPoseEstimator {
 
+	public static double METERS_PER_INCH = 0.0254;
 	
-	protected VisionFirstNavxAsBackupPoseEstimator estimator = new VisionFirstNavxAsBackupPoseEstimator(true);
-	public static final double TOLERANCE=0.1;
+	protected VisionFirstNavxAsBackupPoseEstimator estimator = new VisionFirstNavxAsBackupPoseEstimator(false);
+	public static final double TOLERANCE = 0.1;
 	
 	protected void assertPose2dEquals( Pose2d expected, Pose2d actual) {
 		assertEquals(expected.getX(), actual.getX(),TOLERANCE);
@@ -78,9 +81,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGREES));
 		
 		//assertEquals(EXPECTED_X_METERS,r.getX(),TOLERANCE);
-		//System.out.println(EXPECTED);
-		//System.out.println(r);
-		assertPose2dEquals(EXPECTED,r);
+		assertPose2dEquals(EXPECTED, r);
 
 	}
 }

@@ -86,7 +86,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 		if ( target.isPresent()) {
 			AprilTagIDLocation at = target.get().getSelectedTag().getLocation();
 			TargetNode tn = target.get().getSelectedNode();
-			return at.toString() + ":" + tn;
+			return at.toString() + ":" + tn.getNodeID();
 		}
 		else {
 			return "NONE";
