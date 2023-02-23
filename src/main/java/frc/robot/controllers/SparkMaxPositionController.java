@@ -70,7 +70,7 @@ public class SparkMaxPositionController implements PositionController{
 
     @Override
     public boolean isAtUpperLimit() {
-    	return spark.getReverseLimitSwitch(Type.kNormallyOpen).isPressed();
+    	return spark.getForwardLimitSwitch(Type.kNormallyOpen).isPressed();
     }
     
     @Override

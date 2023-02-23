@@ -1,10 +1,21 @@
 package frc.robot.controllers;
 
-public interface PositionController {
+import java.util.List;
+import java.util.Map;
+
+public interface PositionController {	
+	
+	
+	//List<PositionPreset> getPositionPresets();
     double getDesiredPosition();
     double getActualPosition();
 
-    void setDesiredPosition(double desiredPosition);
+    //void setDesiredPosition(PositionPreset preset);
+    void setDesiredPosition(double preset);
+    
+    //boolean isInMotion();
+    //boolean isAtDesiredPosition();
+    
     default void resetPosition(){
         setDesiredPosition(0.0);
     }
@@ -14,5 +25,12 @@ public interface PositionController {
     boolean isEnabled();
     
     //should detect if the controller is available
-    void configure();   
+    void configure();
+    
+}
+
+
+class PositionPreset{
+	String name;
+	double value;
 }

@@ -15,11 +15,22 @@ import frc.robot.controllers.SparkMaxPositionController;
 public class ArmSubsystem extends EntechSubsystem{
 
 
+  public interface TELESCOPE_POSITIONS_INCHES{
+	  double HOME = 0.0;
+	  double CLEAR_FRAME = 10.0;
+	  double FULL_OUT = 30.0;	  
+  }
+  
+  public interface ELBOW_POSITIONS_DEGREES{
+	  double HOME=0.0;
+	  double CLEAR_FRAME=45.0;
+	  double FULL_UP = 95.0;
+  }
+  
   //for production robot
   public ArmSubsystem() {
 	  
   }
-  public static double ARM_UP_POSITION= 10.0;
   
   
   //this constructor is for unit testing-- this way we can
@@ -40,9 +51,13 @@ public class ArmSubsystem extends EntechSubsystem{
   private SparkMaxPositionController telescopeController;
   
   private boolean enabled = false;
-  
   public ArmStatus getStatus(){
       return new ArmStatus();
+  }
+  
+  protected void resetPosition() {
+	  elbowController.resetPosition();
+	  telescopeController.resetPosition();
   }
   
   @Override
@@ -70,8 +85,18 @@ public class ArmSubsystem extends EntechSubsystem{
 	  }
   }
 
+  public void home() {
+	  elbowController.setDesiredPosition(ELBOW_POSITIONS_DEGREES.HOME);
+	  telescopeController.setDesiredPosition(TELESCOPE_POSITIONS_INCHES.HOME);
+  }
+  
+  /**
+   * move the arm out. 
+   * In this case, we need to swing out, and only after we clear the frame
+   * start the telescope.
+   */
   public void deployArm() {
-	  elbowController.setDesiredPosition(ARM_UP_POSITION);
+	  elbowController.setDesiredPosition(ELBOW_POSITIONS_DEGREES.CLEAR_FRAME);
   }
   
   @Override
