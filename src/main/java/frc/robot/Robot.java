@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
 	
 
 	robotContext = new RobotContext(new AlignmentCalculator(),
-			robotState, fieldDisplay,drive,navx,vision, new VisionFirstNavxAsBackupPoseEstimator(false),
+			robotState, fieldDisplay,drive,navx,vision, new VisionFirstNavxAsBackupPoseEstimator(true),
 			shuffleboardControls
 	);
 	

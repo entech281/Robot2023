@@ -4,9 +4,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.commands.supplier.YawAngleSupplier;
+import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.StoppingCounter;
@@ -21,7 +20,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
     protected final DriveSubsystem drive;
     protected final PIDController pid;
     protected StoppingCounter counter;
-    private YawAngleSupplier yawAngleSupplier;
+    private EstimatedPoseSupplier estimatedPoseSupplier;
 
 
     /**
@@ -31,10 +30,10 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param angle The angle you want to snap to
      */
-    public SnapYawDegreesCommand(DriveSubsystem drive, double desiredAngle, YawAngleSupplier yawAngleSupplier) {
+    public SnapYawDegreesCommand(DriveSubsystem drive, double desiredAngle, EstimatedPoseSupplier estimatedPoseSupplier) {
         super(drive);
         this.drive = drive;
-        this.yawAngleSupplier = yawAngleSupplier;
+        this.estimatedPoseSupplier = estimatedPoseSupplier;
         
         pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
         pid.enableContinuousInput(-180, 180);
@@ -45,12 +44,17 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
     }
 
     @Override
+    public void initialize() {
+        counter.reset();
+    }
+
+    @Override
     public void execute() {
-    	double yawAngleDegrees = yawAngleSupplier.getYawAngleDegrees();
+    	double yawAngleDegrees = estimatedPoseSupplier.getEstimatedPose().get().getRotation().getDegrees();
         double calcValue = Math.max(
             -SPEED_LIMIT, 
             Math.min(
-                pid.calculate(MathUtil.inputModulus(yawAngleDegrees, -180, 180)), 
+                pid.calculate(-yawAngleDegrees), 
                 SPEED_LIMIT
             )
         );
