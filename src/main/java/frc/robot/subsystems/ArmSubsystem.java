@@ -13,6 +13,18 @@ import frc.robot.RobotConstants;
  */
 public class ArmSubsystem extends EntechSubsystem{
 
+
+  public ArmSubsystem() {
+	  //for actual running
+  }
+  
+  //this constructor is for unit testing
+  public ArmSubsystem( CANSparkMax elbowMotor, CANSparkMax telescopeMotor) {
+	  this.elbowMotor=elbowMotor;
+	  this.telescopeMotor=telescopeMotor;
+	  this.enabled = true;
+  }
+  
   private CANSparkMax elbowMotor;
   private CANSparkMax telescopeMotor;
   private boolean enabled = false;
@@ -26,7 +38,6 @@ public class ArmSubsystem extends EntechSubsystem{
 	if ( enabled ) {
 	    elbowMotor = new CANSparkMax(RobotConstants.ARM.ELBOW_MOTOR_ID, MotorType.kBrushed);
 	    telescopeMotor = new CANSparkMax(RobotConstants.ARM.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
-
 	    elbowMotor.setInverted(false);
 	    telescopeMotor.setInverted(false);		
 	}
@@ -42,6 +53,10 @@ public class ArmSubsystem extends EntechSubsystem{
 	  }
   }
 
+  public void deployArm() {
+	  elbowMotor.set(100);
+  }
+  
   @Override
   public void periodic() {
      if (enabled ) {
