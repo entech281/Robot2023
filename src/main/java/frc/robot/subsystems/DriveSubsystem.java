@@ -26,7 +26,7 @@ public class DriveSubsystem extends EntechSubsystem {
   private WPI_TalonSRX frontRightTalon;
   private WPI_TalonSRX rearRightTalon;
   private MecanumDrive robotDrive;
-  
+  private DriveInput lastDriveInput; //for unit testing commands
   /**
    *
    * 
@@ -66,23 +66,17 @@ public class DriveSubsystem extends EntechSubsystem {
     SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
     SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
     SmartDashboard.putNumber("Back Right Talon", rearRightTalon.get());
-    //SmartDashboard.putNumber("Driver Input Forward", loggingDriveInput.getForward());
-    //SmartDashboard.putNumber("Driver Input Left", loggingDriveInput.getRight());
-    //SmartDashboard.putNumber("Driver Input Rotation", loggingDriveInput.getRotation());
-    //SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
-    //SmartDashboard.putNumber("Auto Align Angle", autoAlignAngle);
-
     robotDrive.feed();
     robotDrive.feedWatchdog();
   }
-
-  public void driveFieldAbsolute( DriveInput di, double yawAngleDegrees) {
-      	  
+  
+  public DriveInput getLastDriveInput() {
+	  return lastDriveInput;
   }
   
   public void drive(DriveInput di) {
-
     robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
+    lastDriveInput = di;
   }
 
   public void brake() {
