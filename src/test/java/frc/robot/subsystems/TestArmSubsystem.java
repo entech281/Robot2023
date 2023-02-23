@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import com.revrobotics.CANSparkMax;
 
@@ -19,12 +20,15 @@ public class TestArmSubsystem {
 		
 		//set up the arm with motor mocks, which will 
 		//track what happens
-		CANSparkMax fakeElbow = mock(CANSparkMax.class);
-		CANSparkMax fakeTelescopeMotor = mock(CANSparkMax.class);
+		//what we want to see is the PIDcontrollers get a deisred position update
+		CANSparkMax fakeElbow = mock(CANSparkMax.class, Mockito.RETURNS_DEEP_STUBS);
+		CANSparkMax fakeTelescopeMotor = mock(CANSparkMax.class, Mockito.RETURNS_DEEP_STUBS);
 		ArmSubsystem as = new ArmSubsystem(fakeElbow, fakeTelescopeMotor);
 		as.deployArm();
 		
-		verify(fakeElbow).set(100);
+		verify(
+				fakeElbow.getPIDController()
+		).setReference(ArmSubsystem.ARM_UP_POSITION, CANSparkMax.ControlType.kPosition);
 		
 	}
 }
