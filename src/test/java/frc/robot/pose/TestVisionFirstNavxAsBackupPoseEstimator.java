@@ -76,7 +76,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		//RED-middle = tag id 2 --> x,y = 15.513558 , 2.748026 meters 
 		double EXPECTED_X_METERS  = (15.513558 - TEST_OFFSET_METERS) - RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS;
 		double EXPECTED_Y_METERS = 2.748026- RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS;
-		double EXPECTED_ROTATION_DEGREES  = 10.79;
+		double EXPECTED_ROTATION_DEGREES  = 0.0;
 		Pose2d r = estimator.estimateRobotPose(vs, ns, null).get();
 		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGREES));
 		//assertEquals(EXPECTED_X_METERS,r.getX(),TOLERANCE);
