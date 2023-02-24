@@ -14,7 +14,7 @@ public class StoppingCounter {
 	}
 	
 	public boolean isFinished(boolean conditionToCheck) {
-		if ( conditionToCheck) {
+		if (conditionToCheck) {
 			currentCounts++;
 		}
 		else {
@@ -22,6 +22,9 @@ public class StoppingCounter {
 		}
 		SmartDashboard.putNumber("StopCounter::" + name, currentCounts);
 		return currentCounts > targetCounts;
+	}
 
+	public void reset() {
+		this.currentCounts = 0;
 	}
 }

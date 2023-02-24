@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.filters.DriveInput;
@@ -69,16 +70,17 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         	 *   -- the scoring location changes from the originally provided one
         	 */
         	
-        	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);    	
+        	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);
         	double currentYawAngleDegrees = operatorInput.get().getYawAngleDegrees();
         	
         	pid.setSetpoint(angleToTargetDegrees);
+            SmartDashboard.putNumber("Auto Align Angle", angleToTargetDegrees);
         	
             double calcValue = Math.max(
                 -SPEED_LIMIT, 
                 Math.min(
                     pid.calculate(
-                        MathUtil.inputModulus(currentYawAngleDegrees, -180.0, 180.0), 
+                        currentYawAngleDegrees, 
                         angleToTargetDegrees
                     ), 
                     SPEED_LIMIT
@@ -86,8 +88,11 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
             );
             DriveInput di = operatorInput.get();
             di.setRotation(calcValue);
-            drive.drive(di );    		
-    	}
+            drive.drive(di);    		
+    	} else {
+            DriveInput di = new DriveInput(0, 0, 0, 0);
+            drive.drive(di);
+        }
 
     }
     

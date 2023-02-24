@@ -55,7 +55,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	
 	@Override
 	public double getYawAngleDegrees() {
-		return 0.0;
+		return estimatedPose.get().getRotation().getDegrees();
 	}
 
 	public boolean canDeploy() {
@@ -67,6 +67,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	    sb.addStringProperty("Target", this::getTargetDesc, null);
 	    sb.addDoubleProperty("Distance(in)", this::getTargetDistance, null);
 	    sb.addBooleanProperty("CanDeploy", this::canDeploy, null);
+		sb.addStringProperty("Estimated Pose", () -> { return estimatedPose + ""; }, null);
 	}
 
 	public double getTargetDistance() {
