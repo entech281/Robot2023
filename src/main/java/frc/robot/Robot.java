@@ -87,14 +87,17 @@ public class Robot extends TimedRobot {
 
   private void doPeriodic() {
 	  try {
-			robotContext.periodic();
+			robotContext.periodic();	  
+	  }
+	  catch (Throwable t) {
+		  exceptionHandler.handleException(t);
+	  }
+	  try {
 		    CommandScheduler.getInstance().run();		  
 	  }
 	  catch (Throwable t) {
 		  exceptionHandler.handleException(t);
-		  //t.printStackTrace();
 	  }
-	  
   }
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like

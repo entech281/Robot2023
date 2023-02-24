@@ -88,6 +88,10 @@ public final class RobotConstants {
     public interface DIGITAL_IO {
 
     }
+    public interface PNEUMATICS {
+        public static final int GRIPPER_OPEN = 1;
+        public static final int GRIPPER_CLOSE = 2;
+    }    
     public interface SHUFFLEBOARD {
     	public interface TABS{
         	public static final String PREMATCH="PreMatch";
