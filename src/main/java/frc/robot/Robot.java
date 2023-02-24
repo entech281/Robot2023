@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
   private RobotContext robotContext;
   private ShuffleboardDriverControls shuffleboardControls;
   private ExceptionHandler exceptionHandler = new ExceptionHandler();
+  private NavXSubSystem navx;
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -53,7 +54,7 @@ public class Robot extends TimedRobot {
 	  
 	DriveSubsystem drive = new DriveSubsystem();
 	VisionSubsystem vision = new VisionSubsystem();
-	NavXSubSystem navx = new NavXSubSystem();
+	navx = new NavXSubSystem();
 	ArmSubsystem arm = new ArmSubsystem();
 	
 	
@@ -110,6 +111,10 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {}
+  @Override
+  public void disabledExit() {
+    navx.assignAlliance();
+  }
 
   @Override
   public void disabledPeriodic() {}
