@@ -123,10 +123,6 @@ public class SparkMaxPositionController implements PositionController{
     	return getActualPosition() + "/" + getDesiredPosition();
     }
 
-	@Override
-	public void setDesiredPosition(PositionPreset preset) {
-		setDesiredPosition(preset.getPosition());
-	}
 
 
 

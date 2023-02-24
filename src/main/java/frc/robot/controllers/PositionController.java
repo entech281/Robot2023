@@ -6,7 +6,6 @@ public interface PositionController {
     double getDesiredPosition();
     double getActualPosition();
 
-    void setDesiredPosition(PositionPreset preset);
     void setDesiredPosition(double preset);
 
     boolean isInMotion();

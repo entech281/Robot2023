@@ -20,12 +20,13 @@ public class ArmSubsystem extends EntechSubsystem{
   private PositionController controller;
   
   public interface Presets {
-	  public static PositionPreset HOME = new PositionPreset("HOME", 0.0);
-	  public static PositionPreset CARRY = new PositionPreset("CARRY", 20.0);
-	  public static PositionPreset SCORE_LOW = new PositionPreset("SCORE_LOW", 20.0);
-	  public static PositionPreset SCORE_MIDDLE = new PositionPreset("SCORE_MIDDLE", 85.0);
-	  public static PositionPreset SCORE_HIGH = new PositionPreset("SCORE_HIGH", 95.0);
+	  public static double HOME =  0.0;
+	  public static double CARRY = 20.0;
+	  public static double SCORE_LOW = 20.0;
+	  public static double SCORE_MIDDLE = 85.0;
+	  public static double SCORE_HIGH = 95.0;
   }
+  
   public static int TOLERANCE_COUNTS = 50; 
   private boolean enabled = false;
   private boolean homed = false;
@@ -58,9 +59,9 @@ public class ArmSubsystem extends EntechSubsystem{
 	  goToPositionIfHomed(Presets.SCORE_HIGH);
   }
   
-  private void goToPositionIfHomed(PositionPreset preset) {
+  private void goToPositionIfHomed(double position) {
 	  if ( isHome()) {
-		  controller.setDesiredPosition(preset);
+		  controller.setDesiredPosition(position);
 	  }
 	  
   }
