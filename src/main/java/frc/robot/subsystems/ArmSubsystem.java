@@ -7,7 +7,6 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
 import frc.robot.controllers.PositionController;
-import frc.robot.controllers.PositionPreset;
 import frc.robot.controllers.SparkMaxPositionController;
 
 /**
