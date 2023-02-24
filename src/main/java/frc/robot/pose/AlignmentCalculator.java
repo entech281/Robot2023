@@ -13,6 +13,7 @@ public class AlignmentCalculator {
 		Pose2d scoringLocation = inchesToMeters(loc.computeAbsolutePose());
 		Pose2d rotated = new Pose2d(scoringLocation.getX(), scoringLocation.getY(), scoringLocation.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
 		return estimatedRobotPose.minus(rotated).getRotation().getDegrees();
+
 	}	
 
 }

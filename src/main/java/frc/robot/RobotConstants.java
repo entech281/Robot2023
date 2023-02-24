@@ -22,7 +22,7 @@ public final class RobotConstants {
         BLUE
     }
     public interface VISION {
-        public static final double CAMERA_TO_BUMPER = 17.785;
+        //public static final double CAMERA_TO_BUMPER = 17.785; //don't need?
         
         public interface APRILTAGIDS {
             public static final int BLUE_LOADING = 4;
@@ -50,15 +50,15 @@ public final class RobotConstants {
         public static final double MIN_ANGLE_DEGREES = 0.0;
         public static final double MAX_ANGLE_DEGREES = 90.0;
         public static final boolean INIT_CLAW_STATE = false;
-        public static final double MIN_EXTENSION_INCHES = 0.0;
-        public static final double MAX_EXTENSION_INCHES = 200.0;
-        public static final double ARM_MAX_REACH_INCHES = 32; //from center of robot base!!!
+        public static final double MIN_EXTENSION_METERS = 0.0;
+        public static final double MAX_EXTENSION_METERS = 5.08;
+        public static final double ARM_MAX_REACH_METERS = 0.8128; //from center of robot base!!!
         public static final int ELBOW_MOTOR_ID = 0;
         public static final int TELESCOPE_MOTOR_ID = 0;
     }
     public interface ALIGNMENT{
         public static final double ANGLE_TOLERANCE_DEGREES=2.0;
-        public static final double DISTANCE_TOLERANCE_INCHES=2.0;
+        public static final double DISTANCE_TOLERANCE_METERS=0.0508;
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;

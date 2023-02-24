@@ -61,10 +61,10 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		 * Rotation 3d is rotation about the x, y, and z axes respectively-- IN RADIANS
 		 */
 		
-		double TEST_OFFSET_INCHES = 24.0;
+		double TEST_OFFSET_METERS = 0.6096;
 		//imagine we are sitting somewhere close to RED_MIDDLE,
 		//and we get a position slightly in front of us 
-		Transform3d cameraToTarget = PoseUtil.cameraToTarget(TEST_OFFSET_INCHES,0,175);
+		Transform3d cameraToTarget = PoseUtil.cameraToTarget(TEST_OFFSET_METERS,0,180);
 		
 		vs.setBestTarget(
 				new RecognizedAprilTagTarget(
@@ -73,16 +73,14 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 				)				
 		);
 		
-		//RED-middle = tag id 2 --> x,y = 610.77, 108.19 inches 
-		double EXPECTED_X_METERS  = (610.77 - TEST_OFFSET_INCHES) * METERS_PER_INCH - (RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS);
-		double EXPECTED_Y_METERS = 100.337078012 * METERS_PER_INCH;
-		double EXPECTED_ROTATION_DEGRESS  = 5;
-		Pose2d r = estimator.estimateRobotPose(vs, new NavxStatus(), null).get();
-		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGRESS));
-		
+		//RED-middle = tag id 2 --> x,y = 15.513558 , 2.748026 meters 
+		double EXPECTED_X_METERS  = (15.513558 - TEST_OFFSET_METERS) - RobotConstants.VISION.CAMERA_POSITION.FORWARD_OF_CENTER_METERS;
+		double EXPECTED_Y_METERS = 2.748026- RobotConstants.VISION.CAMERA_POSITION.LEFT_OF_CENTER_METERS;
+		double EXPECTED_ROTATION_DEGREES  = 0.0;
+		Pose2d r = estimator.estimateRobotPose(vs, ns, null).get();
+		Pose2d EXPECTED = new Pose2d(EXPECTED_X_METERS,EXPECTED_Y_METERS ,Rotation2d.fromDegrees(EXPECTED_ROTATION_DEGREES));
 		//assertEquals(EXPECTED_X_METERS,r.getX(),TOLERANCE);
 		assertPose2dEquals(EXPECTED, r);
-
 
 	}
 }

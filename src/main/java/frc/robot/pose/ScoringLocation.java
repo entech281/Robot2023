@@ -53,7 +53,7 @@ public class ScoringLocation {
         Translation2d nodeTranslation = selectedNode.getOffsetToTarget(); 
         Transform2d tf = new Transform2d(selectedNode.getOffsetToTarget(),Rotation2d.fromDegrees(0));
         Pose2d absoluteNodePosition = tagPose.transformBy(tf);
-        return PoseUtil.inchesToMeters(absoluteNodePosition);
+        return absoluteNodePosition;
     }
 
 }   

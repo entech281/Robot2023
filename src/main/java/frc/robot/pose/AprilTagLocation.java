@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.RobotConstants;
+import edu.wpi.first.math.util.Units;
 
 public class AprilTagLocation {
   
@@ -21,23 +22,23 @@ public class AprilTagLocation {
 
   private int aprilTagID;
   private AprilTagIDLocation location;
-  private double absoluteTargetXIn;
-  private double absoluteTargetYIn;
+  private double absoluteTargetXMeters;
+  private double absoluteTargetYMeters;
   private double absoluteTargetAngleDegrees;
 
   
-  public static double TAG_X_BLUE_TARGET = 40.45; //In
-  public static double TAG_X_RED_LOADING = 14.25; //In
-  public static double TAG_X_RED_TARGET = 610.77; //In
-  public static double TAG_X_BLUE_LOADING = 636.96; //In
+  public static double TAG_X_BLUE_TARGET = Units.inchesToMeters(40.45);
+  public static double TAG_X_RED_LOADING = Units.inchesToMeters(14.25); 
+  public static double TAG_X_RED_TARGET = Units.inchesToMeters(610.77); 
+  public static double TAG_X_BLUE_LOADING = Units.inchesToMeters(636.96); 
 
-  public static double TAG_Y_MIDDLE = 108.19; //In
-  public static double TAG_Y_LEFT = 174.19; //In
-  public static double TAG_Y_RIGHT = 42.19; //In
-  public static double TAG_Y_LOADING = 265.74; //In
+  public static double TAG_Y_MIDDLE = Units.inchesToMeters(108.19); 
+  public static double TAG_Y_LEFT = Units.inchesToMeters(174.19); 
+  public static double TAG_Y_RIGHT = Units.inchesToMeters(42.19); 
+  public static double TAG_Y_LOADING = Units.inchesToMeters(265.74);
 
-  public static double BLUE_ANGLE = 0; //In
-  public static double RED_ANGLE = 180; //In
+  public static double BLUE_ANGLE = 0; //Degrees
+  public static double RED_ANGLE = 180; //Degrees
 
   public static AprilTagLocation BLUE_LOADING = new AprilTagLocation(AprilTagIDLocation.BLUE_LOADING, 4, TAG_X_BLUE_LOADING, TAG_Y_LOADING, RED_ANGLE);
   public static AprilTagLocation BLUE_LEFT = new AprilTagLocation(AprilTagIDLocation.BLUE_LEFT, 8, TAG_X_BLUE_TARGET, TAG_Y_RIGHT, BLUE_ANGLE);
@@ -48,16 +49,16 @@ public class AprilTagLocation {
   public static AprilTagLocation RED_RIGHT = new AprilTagLocation(AprilTagIDLocation.RED_RIGHT, 1, TAG_X_RED_TARGET, TAG_Y_RIGHT, RED_ANGLE);
   public static AprilTagLocation RED_MIDDLE = new AprilTagLocation(AprilTagIDLocation.RED_MIDDLE, 2, TAG_X_RED_TARGET, TAG_Y_MIDDLE, RED_ANGLE);
   
-  protected AprilTagLocation(AprilTagIDLocation location, int aprilTagID,double absoluteTargetXIn, double absoluteTargetYIn, double absoluteTargetAngleDegrees) {
+  protected AprilTagLocation(AprilTagIDLocation location, int aprilTagID,double absoluteTargetXMeters, double absoluteTargetYMeters, double absoluteTargetAngleDegrees) {
     this.location = location;
     this.aprilTagID = aprilTagID;
-    this.absoluteTargetXIn = absoluteTargetXIn;
-    this.absoluteTargetYIn = absoluteTargetYIn;
+    this.absoluteTargetXMeters = absoluteTargetXMeters;
+    this.absoluteTargetYMeters = absoluteTargetYMeters;
     this.absoluteTargetAngleDegrees = absoluteTargetAngleDegrees;
   }
 
   public Pose2d asPose2d() {
-	  return new Pose2d(getXIn(), getYIn(), Rotation2d.fromDegrees(absoluteTargetAngleDegrees));
+	  return new Pose2d(getXMeters(), getYMeters(), Rotation2d.fromDegrees(absoluteTargetAngleDegrees));
   }
   
   public Pose3d asPose3d() {
@@ -70,12 +71,12 @@ public class AprilTagLocation {
   public AprilTagIDLocation getLocation() {
 	  return this.location;
   }
-  public double getXIn() {
-    return absoluteTargetXIn;
+  public double getXMeters() {
+    return absoluteTargetXMeters;
   }
 
-  public double getYIn() {
-    return absoluteTargetYIn;
+  public double getYMeters() {
+    return absoluteTargetYMeters;
   }
 
   public double getAngleDegrees() {
@@ -85,8 +86,8 @@ public class AprilTagLocation {
   
   @Override
 public String toString() {
-	return "AprilTagLocation [aprilTagID=" + aprilTagID + ", location=" + location + ", absoluteTargetXIn="
-			+ absoluteTargetXIn + ", absoluteTargetYIn=" + absoluteTargetYIn + ", absoluteTargetAngleDegrees="
+	return "AprilTagLocation [aprilTagID=" + aprilTagID + ", location=" + location + ", absoluteTargetXMeters="
+			+ absoluteTargetXMeters + ", absoluteTargetYMeters=" + absoluteTargetYMeters + ", absoluteTargetAngleDegrees="
 			+ absoluteTargetAngleDegrees + "]";
 }
 

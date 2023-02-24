@@ -28,6 +28,7 @@ import frc.robot.RobotConstants;
 import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.util.PoseUtil;
+import edu.wpi.first.math.util.Units;
 
 public class VisionSubsystem extends EntechSubsystem {
 
@@ -123,7 +124,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	  	
 	  //pretend we have exactly one target, pretty much right in front of us
 	  //Transform3d T = PoseUtil.cameraToTargetDirectlyInFrontOfCamera(24);
-	  Transform3d T = PoseUtil.cameraToTarget(48,3,180);
+	  Transform3d T = PoseUtil.cameraToTarget(Units.inchesToMeters(48),Units.inchesToMeters(3),180);
 	  newStatus.setLatency(20);
 	  newStatus.addRecognizedTarget(new RecognizedAprilTagTarget(T, AprilTagLocation.BLUE_MIDDLE));
 	    

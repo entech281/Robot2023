@@ -2,19 +2,19 @@ package frc.robot.commands.instructions;
 
 public class MoveDistanceInstruction extends AlignmentInstruction {
 
-	public double getMoveXDistanceInches() {
-		return moveXDistanceInches;
+	public double getMoveXDistanceMeters() {
+		return moveXDistanceMeters;
 	}
 
-	public double getMoveYDistanceInches() {
-		return moveYDistanceInches;
+	public double getMoveYDistanceMeters() {
+		return moveYDistanceMeters;
 	}
 
-	private double moveXDistanceInches = 0.0;
-	private double moveYDistanceInches = 0.0;
+	private double moveXDistanceMeters = 0.0;
+	private double moveYDistanceMeters = 0.0;
 	
-	public MoveDistanceInstruction( double moveXDistanceInches, double moveYDistanceInches) {
-		this.moveXDistanceInches = moveXDistanceInches;
-		this.moveYDistanceInches = moveYDistanceInches;
+	public MoveDistanceInstruction( double moveXDistanceMeters, double moveYDistanceMeters) {
+		this.moveXDistanceMeters = moveXDistanceMeters;
+		this.moveYDistanceMeters = moveYDistanceMeters;
 	}
 }
