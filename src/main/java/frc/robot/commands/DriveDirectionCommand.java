@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.EntechSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class DriveDirectionCommand extends EntechCommandBase {

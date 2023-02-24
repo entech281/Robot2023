@@ -67,7 +67,7 @@ public class ArmSubsystem extends EntechSubsystem{
   @Override
   public void initialize() {
 	if ( enabled ) {
-	    telescopeMotor = new CANSparkMax(RobotConstants.ARM.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
+	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
 	    controller = new SparkMaxPositionController(telescopeMotor,false,TOLERANCE_COUNTS);
 	}
 

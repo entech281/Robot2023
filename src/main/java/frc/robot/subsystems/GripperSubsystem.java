@@ -34,7 +34,9 @@ public class GripperSubsystem extends EntechSubsystem{
 	          } else {
 	              gripperSolenoid.set(DoubleSolenoid.Value.kOff);
 	          }
-	      }		  
+	      } else {
+            gripperSolenoid.set(DoubleSolenoid.Value.kOff);
+          }
 	  }
 	}
 	
