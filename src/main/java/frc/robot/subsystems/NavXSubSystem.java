@@ -54,6 +54,10 @@ public class NavXSubSystem extends EntechSubsystem  {
         DriverStation.reportWarning("NavX Initialize Complete", false);
         zeroYaw();
         zeroPosition();
+        assignAlliance();
+    }
+
+    public void assignAlliance() {
         if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
             initialYawAngleForFieldPose = 180.0;
         }
