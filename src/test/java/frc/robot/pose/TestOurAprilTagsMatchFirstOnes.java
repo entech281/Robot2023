@@ -32,8 +32,7 @@ public class TestOurAprilTagsMatchFirstOnes {
 		loadWpiLayout();
 		Pose2d wpi_tag = WPI_2023_LAYOUT.getTagPose(input_tag).get().toPose2d();
 
-		Pose2d our_tag_inches = AprilTagLocation.findFromTag(input_tag).asPose2d();
-		Pose2d our_tag_meters = PoseUtil.inchesToMeters(our_tag_inches);
+		Pose2d our_tag_meters = AprilTagLocation.findFromTag(input_tag).asPose2d();
 		assertEquals(wpi_tag, our_tag_meters);
 	}
 }

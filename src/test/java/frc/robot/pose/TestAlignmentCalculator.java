@@ -1,28 +1,77 @@
 package frc.robot.pose;
+import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import frc.robot.util.PoseUtil;
+
 
 public class TestAlignmentCalculator {
 
 	protected AlignmentCalculator calculator = new AlignmentCalculator();
 	public static final double TOLERANCE_DEGREES=1.0;
-	@Test
-	public void testAlignmentCalculatorAngle() {
-		
-		//if the center of the robot is at the corner of the field
-		Pose2d robotPose = new Pose2d(0,0,Rotation2d.fromDegrees(0));
-		
-		//and we want to score here:
-		ScoringLocation sloc = new ScoringLocation(AprilTagLocation.BLUE_LEFT,TargetNode.A1);
-		
-		//then the angle we should turn to is
-		int I_HAVE_NO_IDEA_THE_REAL_ANSWER = 0;
-		//assertEquals(I_HAVE_NO_IDEA_THE_REAL_ANSWER,calculator.calculateAngleToScoringLocation(sloc, robotPose),TOLERANCE_DEGREES );
-
-		double turnAngle = calculator.calculateAngleToScoringLocation(sloc, robotPose);
-		//assertEquals( 98.6900675, turnAngle, TOLERANCE_DEGREES);		
+	
+	
+	protected Pose2d computePoseOffset ( Pose2d original, double x, double y) {
+		return new Pose2d(
+				original.getX()+x, 
+				original.getY()+y, 
+				original.getRotation().rotateBy(Rotation2d.fromDegrees(180))
+				);
 	}
+	
+	@Test
+	public void testZeroAngleFacingaTagDirectly() {
+		
+		ScoringLocation sloc = new ScoringLocation(AprilTagLocation.RED_MIDDLE,TargetNode.A2);
+		Pose2d targetPose = sloc.computeAbsolutePose();
+
+		//right in front of the tag
+		Pose2d robotPose = computePoseOffset(targetPose, -24, 0);
+		
+		//must convert this to meters
+		Pose2d robotPoseInMeters = PoseUtil.inchesToMeters(robotPose);
+		double turnAngle = calculator.calculateAngleToScoringLocation(sloc, robotPoseInMeters);
+		assertEquals( 0, turnAngle, TOLERANCE_DEGREES);		
+	}
+	
+	@Test
+	public void testPositiveAngleFromTag() {
+
+		ScoringLocation sloc = new ScoringLocation(AprilTagLocation.RED_MIDDLE,TargetNode.A2);
+		Pose2d targetPose = sloc.computeAbsolutePose();
+
+		//48 inches left of the tag, 10 inches up. 
+		//angle should be atan( 10/48 ) = 11.76 degrees
+		Pose2d robotPose = computePoseOffset(targetPose, -48, 10); 
+		
+		//must convert this to meters
+		Pose2d robotPoseInMeters = PoseUtil.inchesToMeters(robotPose);
+		double turnAngle = calculator.calculateAngleToScoringLocation(sloc, robotPoseInMeters);
+		assertEquals( Units.radiansToDegrees(Math.atan(10/48)), turnAngle, TOLERANCE_DEGREES);			
+		
+	}
+
+	@Test
+	public void testNegativeAngleFromTag() {
+		
+		ScoringLocation sloc = new ScoringLocation(AprilTagLocation.RED_MIDDLE,TargetNode.A2);
+		Pose2d targetPose = sloc.computeAbsolutePose();
+
+		//48 inches left of the tag, 10 inches up. 
+		//angle should be atan( 10/48 ) = 11.76 degrees
+		Pose2d robotPose = computePoseOffset(targetPose, -48, -10); 
+		
+		//must convert this to meters
+		Pose2d robotPoseInMeters = PoseUtil.inchesToMeters(robotPose);
+		double turnAngle = calculator.calculateAngleToScoringLocation(sloc, robotPoseInMeters);
+		assertEquals( -Units.radiansToDegrees(Math.atan(10/48)), turnAngle, TOLERANCE_DEGREES);		
+		
+	}
+	
 }

@@ -16,22 +16,10 @@ import frc.robot.RobotConstants.VISION;
  * @author dcowden
  */
 public class PoseUtil {
-    public static Pose2d poseFromDoubles ( double xInches, double yInches, double angleDegrees){
-        return new Pose2d ( new Translation2d(xInches,yInches), Rotation2d.fromDegrees(angleDegrees));
+    public static Pose2d poseFromDoubles ( double xMeters, double yMeters, double angleDegrees){
+        return new Pose2d ( new Translation2d(xMeters,yMeters), Rotation2d.fromDegrees(angleDegrees));
     }
-    
-	public static final double METERS_PER_INCH = 0.0254;
-	
-	public static Pose3d inchesToMeters ( Pose3d input) {
-		return input.times(METERS_PER_INCH);
-	}
-	
-	public static double inchesToMeters ( double inches) {
-		return inches/METERS_PER_INCH;
-	}
-	public static double meters_to_inches ( double meters) {
-		return meters*METERS_PER_INCH;
-	}
+
 
 	public static Transform3d robotToCameraTransform3d() {
 		return new Transform3d( 
@@ -47,9 +35,9 @@ public class PoseUtil {
 		);
 	}
 	
-	public static Transform3d cameraToTarget (double xInches, double yInches, double degrees) {
+	public static Transform3d cameraToTarget (double xMeters, double yMeters, double degrees) {
 		return new Transform3d(
-				new Translation3d(Units.inchesToMeters(xInches),Units.inchesToMeters(yInches), 0 ),
+				new Translation3d(xMeters,yMeters, 0 ),
 				new Rotation3d(0,0,Math.toRadians(degrees)));		
 	}
 	
@@ -73,9 +61,8 @@ public class PoseUtil {
 	public static Transform2d flipBy180Degrees2d() {
 		return new Transform2d( new Translation2d(0,0), Rotation2d.fromDegrees(180));
 	}
-	
-    public static Pose2d inchesToMeters(Pose2d inches ) {
-    	return new Pose2d (Units.inchesToMeters(inches.getX()), Units.inchesToMeters(inches.getY()), inches.getRotation() );
-    }	
+	public static Pose2d inchesToMeters(Pose2d inches ) {
+        return new Pose2d (Units.inchesToMeters(inches.getX()), Units.inchesToMeters(inches.getY()), inches.getRotation() );
+    }
 	
 }

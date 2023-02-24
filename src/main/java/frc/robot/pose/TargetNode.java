@@ -3,6 +3,7 @@ package frc.robot.pose;
 import java.util.Objects;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 
 /**
  *
@@ -12,19 +13,19 @@ public class TargetNode {
 
     public double absoluteNodeX;
 
-    public static double A_ROW_X_IN = -25.5;
-    public static double B_ROW_X_IN = -8.5;
+    public static double A_ROW_X_METERS = Units.inchesToMeters(-25.5);
+    public static double B_ROW_X_METERS = Units.inchesToMeters(-8.5);
 
-    public static int LEFT_NODE_Y_OFSET_IN = -22;
-    public static int MIDDLE_NODE_Y_OFSET_IN = 0;
-    public static int RIGHT_NODE_Y_OFSET_IN = 22;
+    public static double LEFT_NODE_Y_OFSET_METERS = Units.inchesToMeters(-22);
+    public static double MIDDLE_NODE_Y_OFSET_METERS = 0;
+    public static double RIGHT_NODE_Y_OFSET_METERS = Units.inchesToMeters(22);
     
-    public static TargetNode A1 = new TargetNode(A_ROW_X_IN,LEFT_NODE_Y_OFSET_IN,NodeID.A1);
-    public static TargetNode A2 = new TargetNode(A_ROW_X_IN,MIDDLE_NODE_Y_OFSET_IN,NodeID.A2);
-    public static TargetNode A3 = new TargetNode(A_ROW_X_IN,RIGHT_NODE_Y_OFSET_IN,NodeID.A3);
-    public static TargetNode B1 = new TargetNode(B_ROW_X_IN,LEFT_NODE_Y_OFSET_IN,NodeID.B1);
-    public static TargetNode B2 = new TargetNode(B_ROW_X_IN,MIDDLE_NODE_Y_OFSET_IN,NodeID.B2);
-    public static TargetNode B3 = new TargetNode(B_ROW_X_IN,RIGHT_NODE_Y_OFSET_IN,NodeID.B3);
+    public static TargetNode A1 = new TargetNode(A_ROW_X_METERS,LEFT_NODE_Y_OFSET_METERS,NodeID.A1);
+    public static TargetNode A2 = new TargetNode(A_ROW_X_METERS,MIDDLE_NODE_Y_OFSET_METERS,NodeID.A2);
+    public static TargetNode A3 = new TargetNode(A_ROW_X_METERS,RIGHT_NODE_Y_OFSET_METERS,NodeID.A3);
+    public static TargetNode B1 = new TargetNode(B_ROW_X_METERS,LEFT_NODE_Y_OFSET_METERS,NodeID.B1);
+    public static TargetNode B2 = new TargetNode(B_ROW_X_METERS,MIDDLE_NODE_Y_OFSET_METERS,NodeID.B2);
+    public static TargetNode B3 = new TargetNode(B_ROW_X_METERS,RIGHT_NODE_Y_OFSET_METERS,NodeID.B3);
     public static TargetNode NONE = new TargetNode(0,0,NodeID.NONE);
     
     public static enum NodeID {
@@ -40,8 +41,8 @@ public class TargetNode {
     private final Translation2d offsetToTarget;
     private final NodeID id;
 
-    protected TargetNode(double xOffsetInches, double yOffsetInches, NodeID ID) {
-        offsetToTarget = new Translation2d(xOffsetInches,yOffsetInches);
+    protected TargetNode(double xOffsetMeters, double yOffsetMeters, NodeID ID) {
+        offsetToTarget = new Translation2d(xOffsetMeters,yOffsetMeters);
         id = ID;
     }
 
@@ -82,11 +83,11 @@ public class TargetNode {
         return Objects.hash(offsetToTarget, id);
     }    
 
-    public double getXIn(){
+    public double getXMeters(){
         return offsetToTarget.getX();
     }
     
-    public double getYIn(){
+    public double getYMeters(){
         return offsetToTarget.getY();
     }
 

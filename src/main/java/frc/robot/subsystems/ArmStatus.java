@@ -11,7 +11,7 @@ import frc.robot.RobotConstants;
 public class ArmStatus implements Sendable, SubsystemStatus{
 
     private boolean clawOpen = RobotConstants.ARM.INIT_CLAW_STATE;
-    private double armExtension = RobotConstants.ARM.MIN_EXTENSION_INCHES;
+    private double armExtension = RobotConstants.ARM.MIN_EXTENSION_METERS;
     private double verticalAngle= RobotConstants.ARM.MIN_ANGLE_DEGREES;
     
     

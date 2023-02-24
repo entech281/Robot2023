@@ -54,6 +54,10 @@ public class NavXSubSystem extends EntechSubsystem  {
         DriverStation.reportWarning("NavX Initialize Complete", false);
         zeroYaw();
         zeroPosition();
+        assignAlliance();
+    }
+
+    public void assignAlliance() {
         if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
             initialYawAngleForFieldPose = 180.0;
         }
@@ -99,15 +103,15 @@ public class NavXSubSystem extends EntechSubsystem  {
     }
 
     public double getForward() {
-      return Units.metersToInches(navX.getDisplacementX()+knownForwardMeters);
+      return navX.getDisplacementX()+knownForwardMeters;
     }
 
     public double getRight() {
-      return Units.metersToInches(navX.getDisplacementY()+knownRightMeters);
+      return navX.getDisplacementY()+knownRightMeters;
     }
 
     public double getUp() {
-      return Units.metersToInches(navX.getDisplacementZ()+knownUpMeters);
+      return navX.getDisplacementZ()+knownUpMeters;
     }
 
     public void updatePosition(double forward, double right) {

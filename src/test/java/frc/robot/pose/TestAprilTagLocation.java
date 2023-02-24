@@ -17,13 +17,13 @@ public class TestAprilTagLocation {
     @Test
     public void TestBlueLoading() {
         AprilTagLocation loc = AprilTagLocation.BLUE_LOADING;
-        assertEquals(loc.getXIn(), 636.96, comparisonTolerance);
-        assertEquals(loc.getYIn(), 265.74, comparisonTolerance);
+        assertEquals(loc.getXMeters(), 16.178784, comparisonTolerance);
+        assertEquals(loc.getYMeters(), 6.749796, comparisonTolerance);
     }
 
     public void TestRedLeft() {
         AprilTagLocation loc = AprilTagLocation.RED_LEFT;
-        assertEquals(loc.getXIn(), 610.77, comparisonTolerance);
-        assertEquals(loc.getYIn(), 174.19, comparisonTolerance);
+        assertEquals(loc.getXMeters(), 15.513558, comparisonTolerance);
+        assertEquals(loc.getYMeters(), 4.424426, comparisonTolerance);
     }
 }

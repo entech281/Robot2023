@@ -17,7 +17,7 @@ import frc.robot.pose.TargetNode;
 public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSupplier,ScoringLocationSupplier , TargetNodeSupplier{
 
 	public static final double DISTANCE_UNKNOWN = -1;
-	public static final double CLOSE_ENOUGH_TO_DEPLOY_INCHES = 48 + 16; //arm is 48 inches in front of robot
+	public static final double CLOSE_ENOUGH_TO_DEPLOY_METERS = 1.2192 + 0.4064; //arm is 1.2192 meters in front of robot
 	public Optional<RecognizedAprilTagTarget> getBestAprilTagTarget() {
 		return bestAprilTagTarget;
 	}
@@ -59,7 +59,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	}
 
 	public boolean canDeploy() {
-		return getTargetDistance() < CLOSE_ENOUGH_TO_DEPLOY_INCHES;
+		return getTargetDistance() < CLOSE_ENOUGH_TO_DEPLOY_METERS;
 	}
 	@Override
 	public void initSendable(SendableBuilder sb) {
@@ -76,7 +76,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 			AprilTagIDLocation at = target.get().getSelectedTag().getLocation();
 			Translation2d start = estimatedPose.get().getTranslation();
 			Translation2d end = target.get().computeAbsolutePose().getTranslation();
-			return Units.metersToInches(end.getDistance(start));
+			return end.getDistance(start);
 		}
 		else {
 			return DISTANCE_UNKNOWN;
