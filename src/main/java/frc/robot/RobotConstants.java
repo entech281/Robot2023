@@ -53,8 +53,6 @@ public final class RobotConstants {
         public static final double MIN_EXTENSION_METERS = 0.0;
         public static final double MAX_EXTENSION_METERS = 5.08;
         public static final double ARM_MAX_REACH_METERS = 0.8128; //from center of robot base!!!
-        public static final int ELBOW_MOTOR_ID = 0;
-        public static final int TELESCOPE_MOTOR_ID = 0;
     }
     public interface ALIGNMENT{
         public static final double ANGLE_TOLERANCE_DEGREES=2.0;
@@ -84,6 +82,8 @@ public final class RobotConstants {
         public static final int REAR_LEFT_MOTOR = 8;
         public static final int FRONT_RIGHT_MOTOR = 7;
         public static final int REAR_RIGHT_MOTOR = 6;
+        public static final int ELBOW_MOTOR_ID = 0;
+        public static final int TELESCOPE_MOTOR_ID = 0;
     }
     public interface DIGITAL_IO {
 
