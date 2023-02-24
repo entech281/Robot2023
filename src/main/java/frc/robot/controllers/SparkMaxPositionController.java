@@ -1,5 +1,4 @@
 package frc.robot.controllers;
-import java.util.List;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
@@ -8,21 +7,48 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 public class SparkMaxPositionController implements PositionController{
 
-	public SparkMaxPositionController ( CANSparkMax spark, boolean reversed ) {
+	public SparkMaxPositionController ( CANSparkMax spark, boolean reversed, int moveToleranceCounts ) {
 		this.spark = spark;
 		this.reversed = reversed;
+		this.moveToleranceCounts = moveToleranceCounts;
 	}
 	protected CANSparkMax spark;	
     private double desiredPosition = 0.0;
     public static final int CAN_TIMEOUT_MILLIS = 1000;
     public static final double POSITION_NOT_ENABLED=-1;
+    
     private boolean enabled = true;
 	private  boolean reversed = false;
+	
+	private int moveToleranceCounts;
+	
+    public int getMoveToleranceCounts() {
+		return moveToleranceCounts;
+	}
 
-    public double getDesiredPosition() {
+    
+	@Override
+	public boolean isInMotion() {
+		return spark.get() > 0 ;
+	}    
+    
+    private double getCurrentError() {
+    	return Math.abs(desiredPosition - getActualPosition());
+    }
+    
+	public void setMoveTolerance(int moveToleranceCounts) {
+		this.moveToleranceCounts = moveToleranceCounts;
+	}
+
+	public double getDesiredPosition() {
         return desiredPosition;
     }
 
+	@Override
+	public boolean isAtDesiredPosition() {
+		return getCurrentError() < moveToleranceCounts;
+	}	
+	
     protected double correctDirection(double input){
         if ( reversed ){
             return -input;
@@ -57,6 +83,8 @@ public class SparkMaxPositionController implements PositionController{
             t.printStackTrace();
         }
     }
+    
+    
 
     @Override
     public double getActualPosition() {
@@ -97,18 +125,10 @@ public class SparkMaxPositionController implements PositionController{
 
 	@Override
 	public void setDesiredPosition(PositionPreset preset) {
-		
+		setDesiredPosition(preset.getPosition());
 	}
 
-	@Override
-	public boolean isInMotion() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean isAtDesiredPosition() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
+
 }

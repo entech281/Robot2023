@@ -11,12 +11,31 @@ public class GripperSubsystem extends EntechSubsystem{
 	private GripperState gripperState;
 	private boolean enabled = false;
 	private final int SOLENOID_HIT_COUNT = 10;
+	
 	public enum GripperState { kClose, kOpen }
 	
 	@Override
 	public void initialize() {
-        gripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.GRIPPER_OPEN, RobotConstants.PNEUMATICS.GRIPPER_CLOSE);
+		if (enabled ) {
+			gripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.GRIPPER_OPEN, RobotConstants.PNEUMATICS.GRIPPER_CLOSE);
+		}
 		
+	}
+	
+	@Override
+	public void periodic() {
+	  if ( enabled ) {
+	      if (gripperSolenoidCounter < SOLENOID_HIT_COUNT) {
+	          gripperSolenoidCounter += 1;
+	          if (gripperState == GripperState.kOpen) {
+	              gripperSolenoid.set(DoubleSolenoid.Value.kForward);
+	          } else if (gripperState == GripperState.kClose) {
+	              gripperSolenoid.set(DoubleSolenoid.Value.kReverse);
+	          } else {
+	              gripperSolenoid.set(DoubleSolenoid.Value.kOff);
+	          }
+	      }		  
+	  }
 	}
 	
     public void setGripperState(GripperState state) {
@@ -25,16 +44,12 @@ public class GripperSubsystem extends EntechSubsystem{
 	      gripperState = state;
 	    }
 	}
-	public void openGripper() {
-	    if (enabled) {
-		    setGripperState(GripperState.kOpen);	    	
-	    }
+	public void open() {
+		setGripperState(GripperState.kOpen);	    	
 	}
 	
-	public void closeGripper() {
-	    if (enabled) {
-		    setGripperState(GripperState.kClose);	    	
-	    }
+	public void close() {
+		setGripperState(GripperState.kClose);	    	
 	}
 	
 	@Override
