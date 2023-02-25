@@ -34,7 +34,7 @@ public class DriveDirectionCommand extends EntechCommandBase {
 
   @Override
     public void initialize() {
-        drive.setTalonBrake();
+        drive.setBrake();
         driveTimer.stop();
         driveTimer.reset();
         driveTimer.start();
@@ -57,7 +57,7 @@ public class DriveDirectionCommand extends EntechCommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.brake();
-    drive.setTalonCoast();
+    drive.setCoast();
   }
 
   // Returns true when the command should end.

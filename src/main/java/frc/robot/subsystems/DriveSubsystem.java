@@ -90,14 +90,14 @@ public class DriveSubsystem extends EntechSubsystem {
     robotDrive.stopMotor();
   }
 
-  public void setTalonCoast() {
+  public void setCoast() {
     frontLeftTalon.setNeutralMode(NeutralMode.Coast);
     frontRightTalon.setNeutralMode(NeutralMode.Coast);
     rearLeftTalon.setNeutralMode(NeutralMode.Coast);
     rearRightTalon.setNeutralMode(NeutralMode.Coast);
   }
 
-  public void setTalonBrake() {
+  public void setBrake() {
     frontLeftTalon.setNeutralMode(NeutralMode.Brake);
     frontRightTalon.setNeutralMode(NeutralMode.Brake);
     rearLeftTalon.setNeutralMode(NeutralMode.Brake);
