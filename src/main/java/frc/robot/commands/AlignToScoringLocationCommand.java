@@ -33,12 +33,12 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
     private ScoringLocationSupplier scoringLocationSupplier;
     private EstimatedPoseSupplier currentPoseSupplier;
     private AlignmentCalculator alignCalculator = new AlignmentCalculator();
-    public static final double pGain = 0.01;
-	public static final double iGain = 0.55;
-    public static final double dGain = 0;
-    public static final double angleTolerance = 1;
-    public static final double speedLimit = 0.75;
-    public static final int stopCount = 4;
+    public static final double P_GAIN = 0.01;
+	public static final double I_GAIN = 0.55;
+    public static final double D_GAIN = 0;
+    public static final double ANGLE_TOLERANCE = 1;
+    public static final double SPEED_LIMIT = 0.75;
+    public static final int STOP_COUNT = 4;
 
     
     /**
@@ -56,10 +56,10 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         this.scoringLocationSupplier = scoringLocationSupplier;
         this.currentPoseSupplier = currentPoseSupplier;
         
-        pid = new PIDController(pGain, iGain, dGain);
+        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
         pid.enableContinuousInput(-180, 180);
-        pid.setTolerance(angleTolerance);
-        counter = new StoppingCounter("PIDDriveCommand",stopCount);
+        pid.setTolerance(ANGLE_TOLERANCE);
+        counter = new StoppingCounter("PIDDriveCommand",STOP_COUNT);
         
     }
 
@@ -82,12 +82,12 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
             SmartDashboard.putNumber("Auto Align Angle", angleToTargetDegrees);
         	
             double calcValue = Math.max(
-                -speedLimit, 
+                - SPEED_LIMIT, 
                 Math.min(
                     pid.calculate(
                         angleToTargetDegrees
                     ), 
-                    speedLimit
+                    SPEED_LIMIT
                 )
             );
             DriveInput di = operatorInput.get();
