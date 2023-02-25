@@ -11,14 +11,12 @@ public interface PositionController {
     boolean isInMotion();
     boolean isAtDesiredPosition();
 
-    default void resetPosition(){
-        setDesiredPosition(0.0);
-    }
+    void resetPosition();
     boolean isReversed();
     boolean isAtLowerLimit();
     boolean isAtUpperLimit();
     boolean isEnabled();
-
+ 
     //should detect if the controller is available
     void configure();	
 	

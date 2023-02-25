@@ -3,23 +3,29 @@ package frc.robot.controllers;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
+import edu.wpi.first.wpilibj.DriverStation;
 
 
 public class SparkMaxPositionController implements PositionController{
 
-	public SparkMaxPositionController ( CANSparkMax spark, boolean reversed, int moveToleranceCounts ) {
+	public SparkMaxPositionController ( CANSparkMax spark, boolean reversed, int moveToleranceCounts, double minPosition, double maxPosition) {
 		this.spark = spark;
 		this.reversed = reversed;
 		this.moveToleranceCounts = moveToleranceCounts;
+		this.minPosition = minPosition;
+		this.maxPosition = maxPosition;
 	}
+	
 	protected CANSparkMax spark;	
     private double desiredPosition = 0.0;
+    
     public static final int CAN_TIMEOUT_MILLIS = 1000;
     public static final double POSITION_NOT_ENABLED=-1;
-    
+    public static final double POSITION_UNKNOWN = -999;
+    private double minPosition = 0.0;
+    private double maxPosition = 0.0;
     private boolean enabled = true;
-	private  boolean reversed = false;
-	
+	private  boolean reversed = false;	
 	private int moveToleranceCounts;
 	
     public int getMoveToleranceCounts() {
@@ -75,8 +81,13 @@ public class SparkMaxPositionController implements PositionController{
     public void setDesiredPosition(double desiredPosition) {
 
         if(enabled){
-            this.desiredPosition = desiredPosition;
-            spark.getPIDController().setReference(correctDirection(desiredPosition), CANSparkMax.ControlType.kPosition);
+        	if ( isPositionAcceptable(desiredPosition) ) {
+                this.desiredPosition = desiredPosition;
+                spark.getPIDController().setReference(correctDirection(desiredPosition), CANSparkMax.ControlType.kPosition);        		
+        	}
+        	else {
+        		DriverStation.reportWarning("Invalid Position " + desiredPosition, false);
+        	}
         }
         else{
             Throwable t = new Throwable("Didnt set position, because this controller is disabled.");
@@ -84,7 +95,9 @@ public class SparkMaxPositionController implements PositionController{
         }
     }
     
-    
+    private boolean isPositionAcceptable(double position) {
+    	return position >= minPosition && position <= maxPosition ;
+    }
 
     @Override
     public double getActualPosition() {
@@ -119,6 +132,7 @@ public class SparkMaxPositionController implements PositionController{
 
     }    
 
+    @Override    
     public String toString() {
     	return getActualPosition() + "/" + getDesiredPosition();
     }

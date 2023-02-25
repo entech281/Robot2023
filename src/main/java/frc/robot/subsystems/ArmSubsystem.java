@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
@@ -16,20 +15,41 @@ import frc.robot.controllers.SparkMaxPositionController;
 public class ArmSubsystem extends EntechSubsystem{
 
   private CANSparkMax telescopeMotor;
-  private PositionController controller;
+  private PositionController positionController;
   
-  public interface Presets {
+  public interface Preset {
+	  public static double MIN = 0.0;
 	  public static double HOME =  0.0;
 	  public static double CARRY = 20.0;
 	  public static double SCORE_LOW = 20.0;
 	  public static double SCORE_MIDDLE = 85.0;
 	  public static double SCORE_HIGH = 95.0;
+	  public static double MAX = 1000.0;
   }
-  
+ 
   public static int TOLERANCE_COUNTS = 50; 
   private boolean enabled = false;
   private boolean homed = false;
 
+  //for unit testing
+  public ArmSubsystem(PositionController positionController, CANSparkMax motor) {
+	  this.positionController=positionController;
+	  this.enabled=true;
+	  this.telescopeMotor = motor;
+  }  
+
+  //for match
+  public ArmSubsystem() {
+	  
+  }
+  
+  @Override
+  public void initialize() {
+	if ( enabled ) {
+	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
+	    positionController = new SparkMaxPositionController(telescopeMotor,false,TOLERANCE_COUNTS,Preset.MIN, Preset.MAX);
+	}
+  }  
   
   public ArmStatus getStatus(){
       return new ArmStatus();
@@ -39,60 +59,63 @@ public class ArmSubsystem extends EntechSubsystem{
   }
   
   public void home() {
-	  controller.setDesiredPosition(Presets.HOME);
+	  positionController.setDesiredPosition(Preset.HOME);
   }
   
   public void carry() {
-	  goToPositionIfHomed(Presets.CARRY);
+	  goToPositionIfHomed(Preset.CARRY);
   }
   
   public void scoreLow() {
-	  goToPositionIfHomed(Presets.SCORE_LOW);
+	  goToPositionIfHomed(Preset.SCORE_LOW);
   }
   
   public void scoreMiddle() {
-	  goToPositionIfHomed(Presets.SCORE_MIDDLE);
+	  goToPositionIfHomed(Preset.SCORE_MIDDLE);
   }
   
   public void scoreHigh() {
-	  goToPositionIfHomed(Presets.SCORE_HIGH);
+	  goToPositionIfHomed(Preset.SCORE_HIGH);
+  }
+  
+  public boolean isInMotion() {
+	  return positionController.isInMotion();
   }
   
   private void goToPositionIfHomed(double position) {
 	  if ( isHome()) {
-		  controller.setDesiredPosition(position);
+		  positionController.setDesiredPosition(position);
 	  }
 	  
   }
-  @Override
-  public void initialize() {
-	if ( enabled ) {
-	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
-	    controller = new SparkMaxPositionController(telescopeMotor,false,TOLERANCE_COUNTS);
-	}
+  
 
-  }
   public void stop() {
 	  telescopeMotor.set(0);
   }
   public void reset() {
-	  controller.resetPosition();
+	  positionController.resetPosition();
   }
   public boolean isAtLowerLimit() {
-	  return controller.isAtLowerLimit();
+	  return positionController.isAtLowerLimit();
   }
 
   public boolean isAtUpperLimit() {
-	  return controller.isAtUpperLimit();
+	  return positionController.isAtUpperLimit();
   }
+  
+  public boolean isAtDesiredPosition() {
+	  return positionController.isAtDesiredPosition();
+  }  
   
   @Override
   public void initSendable(SendableBuilder builder) {
 	  if ( enabled ) {
 	      builder.setSmartDashboardType(getName());
-	      builder.addStringProperty("Arm:", () -> { return controller+""; }, null);		  
-	      builder.addBooleanProperty("InMotion", () -> { return controller.isInMotion(); }, null);
-	      builder.addBooleanProperty("Enabled", () -> { return controller.isEnabled(); }, null);
+	      builder.addStringProperty("Arm:", () -> { return positionController+""; }, null);		  
+	      builder.addBooleanProperty("InMotion", () -> { return positionController.isInMotion(); }, null);
+	      builder.addBooleanProperty("Enabled", () -> { return positionController.isEnabled(); }, null);
+	      builder.addBooleanProperty("Homed", () -> { return isHome(); }, null);
 	  }
   }
 
@@ -106,7 +129,7 @@ public class ArmSubsystem extends EntechSubsystem{
 
   private void checkArrivedPosition() {
 	  if ( enabled ) {
-		  if (controller.isAtDesiredPosition()) {
+		  if (positionController.isAtDesiredPosition()) {
 			  stop();
 		  }
 	  }

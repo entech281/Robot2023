@@ -71,16 +71,14 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         	 */
         	
         	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);
-        	double currentYawAngleDegrees = operatorInput.get().getYawAngleDegrees();
         	
-        	pid.setSetpoint(angleToTargetDegrees);
+        	pid.setSetpoint(0);
             SmartDashboard.putNumber("Auto Align Angle", angleToTargetDegrees);
         	
             double calcValue = Math.max(
                 -SPEED_LIMIT, 
                 Math.min(
                     pid.calculate(
-                        currentYawAngleDegrees, 
                         angleToTargetDegrees
                     ), 
                     SPEED_LIMIT
