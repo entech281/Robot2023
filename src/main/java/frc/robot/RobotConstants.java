@@ -43,12 +43,12 @@ public final class RobotConstants {
         }
     }
     public interface ARM{
-        public static final double MIN_ANGLE_DEGREES = 0.0;
-        public static final double MAX_ANGLE_DEGREES = 90.0;
+        public static final double MIN_ANGLE_DEGREES = 12.0; //78 degrees below horizontal (90)
+        public static final double MAX_ANGLE_DEGREES = 107.0; //17 degrees above horizontal (90)
         public static final boolean INIT_CLAW_STATE = false;
-        public static final double MIN_EXTENSION_METERS = 0.0;
-        public static final double MAX_EXTENSION_METERS = 5.08;
-        public static final double ARM_MAX_REACH_METERS = 0.8128; //from center of robot base!!!
+        public static final double MIN_EXTENSION_METERS = 0.9906; //39 inches from center of robot to center of claw
+        public static final double MAX_EXTENSION_METERS = 1.4478; //57 inches from center of robot to center of claw
+        //public static final double ARM_MAX_REACH_METERS = 0.8128; //from center of robot base!!!
     }
     public interface ALIGNMENT{
         public static final double ANGLE_TOLERANCE_DEGREES=2.0;
