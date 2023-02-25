@@ -63,11 +63,11 @@ public class Robot extends TimedRobot {
 	});
 	
 	//adding these individually so we can lay them out nicely
-	MATCH_TAB.add(drive).withSize(2, 2).withPosition(8,0);
-	MATCH_TAB.add(vision).withSize(2, 2).withPosition(8,2);
-	MATCH_TAB.add(navx).withSize(2, 2).withPosition(10,0);
-	MATCH_TAB.add(arm).withSize(2, 2).withPosition(10,2);
-	MATCH_TAB.add("RobotState",robotState).withSize(2, 2).withPosition(8, 4);
+	MATCH_TAB.add(drive).withSize(2, 1).withPosition(7,2);
+	MATCH_TAB.add(vision).withSize(2, 2).withPosition(4,0);
+	MATCH_TAB.add(navx).withSize(2, 2).withPosition(6,0);
+	MATCH_TAB.add(arm).withSize(1, 1).withPosition(9,2);
+	MATCH_TAB.add("RobotState",robotState).withSize(2, 2).withPosition(8, 0);
 	
 
 	robotContext = new RobotContext(new AlignmentCalculator(),
