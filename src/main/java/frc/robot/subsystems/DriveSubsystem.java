@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -87,5 +88,19 @@ public class DriveSubsystem extends EntechSubsystem {
 
   public void brake() {
     robotDrive.stopMotor();
+  }
+
+  public void setTalonCoast() {
+    frontLeftTalon.setNeutralMode(NeutralMode.Coast);
+    frontRightTalon.setNeutralMode(NeutralMode.Coast);
+    rearLeftTalon.setNeutralMode(NeutralMode.Coast);
+    rearRightTalon.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public void setTalonBrake() {
+    frontLeftTalon.setNeutralMode(NeutralMode.Brake);
+    frontRightTalon.setNeutralMode(NeutralMode.Brake);
+    rearLeftTalon.setNeutralMode(NeutralMode.Brake);
+    rearRightTalon.setNeutralMode(NeutralMode.Brake);
   }
 }
