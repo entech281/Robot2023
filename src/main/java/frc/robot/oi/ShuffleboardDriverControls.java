@@ -39,8 +39,8 @@ public class ShuffleboardDriverControls implements TargetNodeSupplier {
 //Driver Station is 0-4 by 0-9 (squares)
     	operatorTab.add("TargetNode",nodeChooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withSize(3, 1).withPosition(4, 2);	
     	prematchTab.add("AutoCommand",autoCommandChooser).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(5, 1).withPosition(0, 0);
-    	fieldAbsolute = prematchTab.add("FieldAbsolute",false).withWidget(BuiltInWidgets.kToggleButton).withPosition(0, 1).getEntry();
-    	driverYawEnabled = operatorTab.add("YawEnabled",false).withWidget(BuiltInWidgets.kToggleButton).withPosition(6,8).getEntry();
+    	fieldAbsolute = prematchTab.add("FieldAbsolute",DEFAULT_FIELD_ABSOLUTE).withWidget(BuiltInWidgets.kToggleButton).withPosition(0, 1).getEntry();
+    	driverYawEnabled = operatorTab.add("YawEnabled",DEFAULT_YAW_LOCK).withWidget(BuiltInWidgets.kToggleButton).withPosition(0,5).getEntry();
     	fieldAbsolute.setBoolean(DEFAULT_FIELD_ABSOLUTE);
     	driverYawEnabled.setBoolean(DEFAULT_YAW_LOCK);
 	}
