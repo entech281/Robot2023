@@ -33,7 +33,13 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
     private ScoringLocationSupplier scoringLocationSupplier;
     private EstimatedPoseSupplier currentPoseSupplier;
     private AlignmentCalculator alignCalculator = new AlignmentCalculator();
- 
+    public static final double pGain = 0.01;
+	public static final double iGain = 0.55;
+    public static final double dGain = 0;
+    public static final double angleTolerance = 1;
+    public static final double speedLimit = 0.75;
+    public static final int stopCount = 4;
+
     
     /**
      * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -50,10 +56,10 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         this.scoringLocationSupplier = scoringLocationSupplier;
         this.currentPoseSupplier = currentPoseSupplier;
         
-        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
+        pid = new PIDController(pGain, iGain, dGain);
         pid.enableContinuousInput(-180, 180);
-        pid.setTolerance(ANGLE_TOLERANCE);
-        counter = new StoppingCounter("PIDDriveCommand",STOP_COUNT);
+        pid.setTolerance(angleTolerance);
+        counter = new StoppingCounter("PIDDriveCommand",stopCount);
         
     }
 
@@ -71,23 +77,21 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         	 */
         	
         	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);
-        	double currentYawAngleDegrees = operatorInput.get().getYawAngleDegrees();
         	
-        	pid.setSetpoint(angleToTargetDegrees);
+        	pid.setSetpoint(0);
             SmartDashboard.putNumber("Auto Align Angle", angleToTargetDegrees);
         	
             double calcValue = Math.max(
-                -SPEED_LIMIT, 
+                -speedLimit, 
                 Math.min(
                     pid.calculate(
-                        currentYawAngleDegrees, 
                         angleToTargetDegrees
                     ), 
-                    SPEED_LIMIT
+                    speedLimit
                 )
             );
             DriveInput di = operatorInput.get();
-            di.setRotation(calcValue);
+            di.setRotation(-calcValue);
             drive.drive(di);    		
     	} else {
             DriveInput di = new DriveInput(0, 0, 0, 0);
