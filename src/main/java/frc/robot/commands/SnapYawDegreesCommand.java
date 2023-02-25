@@ -4,12 +4,10 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
+import frc.robot.RobotYawPIDController;
 import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.util.StoppingCounter;
-import static frc.robot.commands.DriveCommandConstants.*;
 /**
  *
  * 
@@ -18,10 +16,8 @@ import static frc.robot.commands.DriveCommandConstants.*;
 public class SnapYawDegreesCommand extends EntechCommandBase {
 
     protected final DriveSubsystem drive;
-    protected final PIDController pid;
-    protected StoppingCounter counter;
+    protected final RobotYawPIDController pid;
     private EstimatedPoseSupplier estimatedPoseSupplier;
-
 
     /**
      * Creates a new snap yaw degrees command that will snap the robot to the specified angle
@@ -35,29 +31,18 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
         this.drive = drive;
         this.estimatedPoseSupplier = estimatedPoseSupplier;
         
-        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
-        pid.enableContinuousInput(-180, 180);
-        pid.setTolerance(ANGLE_TOLERANCE);
-        counter = new StoppingCounter("PIDDriveCommand",STOP_COUNT);
-
+        pid = new RobotYawPIDController();
         pid.setSetpoint(desiredAngle);
     }
 
     @Override
     public void initialize() {
-        counter.reset();
     }
 
     @Override
     public void execute() {
     	double yawAngleDegrees = estimatedPoseSupplier.getEstimatedPose().get().getRotation().getDegrees();
-        double calcValue = Math.max(
-            -SPEED_LIMIT, 
-            Math.min(
-                pid.calculate(-yawAngleDegrees), 
-                SPEED_LIMIT
-            )
-        );
+        double calcValue = pid.calculate(-yawAngleDegrees); 
         DriveInput di = new DriveInput(0, 0, calcValue);
         
         //TODO: should we pass yawAngleDegrees into the drive input, to support different behavior
@@ -73,7 +58,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     @Override
     public boolean isFinished() {
-    	return counter.isFinished(pid.atSetpoint());    	
+    	return pid.atSetpoint();    	
     }
 
     @Override
