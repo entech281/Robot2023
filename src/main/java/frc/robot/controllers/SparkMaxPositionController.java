@@ -7,30 +7,23 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 
 public class SparkMaxPositionController implements PositionController{
-
-	public SparkMaxPositionController ( CANSparkMax spark, boolean reversed, int moveToleranceCounts, double minPosition, double maxPosition) {
+	public enum MotionState { IDLE, FINDING_LIMIT, BACKING_OFF, HOMED }
+	public SparkMaxPositionController ( CANSparkMax spark, PositionControllerConfig config) {
 		this.spark = spark;
-		this.reversed = reversed;
-		this.moveToleranceCounts = moveToleranceCounts;
-		this.minPosition = minPosition;
-		this.maxPosition = maxPosition;
+		this.config = config;
 	}
 	
 	protected CANSparkMax spark;	
-    private double desiredPosition = 0.0;
+    private PositionControllerConfig config;
+    private int desiredPosition = 0;
     
     public static final int CAN_TIMEOUT_MILLIS = 1000;
+    
+    //TODO: shouldnt need these!
     public static final double POSITION_NOT_ENABLED=-1;
     public static final double POSITION_UNKNOWN = -999;
-    private double minPosition = 0.0;
-    private double maxPosition = 0.0;
+    
     private boolean enabled = true;
-	private  boolean reversed = false;	
-	private int moveToleranceCounts;
-	
-    public int getMoveToleranceCounts() {
-		return moveToleranceCounts;
-	}
 
     
 	@Override
@@ -41,10 +34,7 @@ public class SparkMaxPositionController implements PositionController{
     private double getCurrentError() {
     	return Math.abs(desiredPosition - getActualPosition());
     }
-    
-	public void setMoveTolerance(int moveToleranceCounts) {
-		this.moveToleranceCounts = moveToleranceCounts;
-	}
+
 
 	public double getDesiredPosition() {
         return desiredPosition;
@@ -52,11 +42,11 @@ public class SparkMaxPositionController implements PositionController{
 
 	@Override
 	public boolean isAtDesiredPosition() {
-		return getCurrentError() < moveToleranceCounts;
+		return getCurrentError() < config.getToleranceCounts();
 	}	
 	
     protected double correctDirection(double input){
-        if ( reversed ){
+        if ( config.isReversed() ){
             return -input;
         }
         else{
@@ -67,10 +57,7 @@ public class SparkMaxPositionController implements PositionController{
     public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}    
-
-    public boolean isReversed(){
-        return reversed;
-    }    
+ 
 
     /**
      * When you call this, the talon will be put in the right mode for control
@@ -78,7 +65,7 @@ public class SparkMaxPositionController implements PositionController{
      * @param desiredPosition
      */
     @Override
-    public void setDesiredPosition(double desiredPosition) {
+    public void setDesiredPosition(int desiredPosition) {
 
         if(enabled){
         	if ( isPositionAcceptable(desiredPosition) ) {
@@ -136,5 +123,26 @@ public class SparkMaxPositionController implements PositionController{
     public String toString() {
     	return getActualPosition() + "/" + getDesiredPosition();
     }
+
+
+	@Override
+	public void home() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public boolean isHome() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

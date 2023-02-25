@@ -26,11 +26,11 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 		this.bestAprilTagTarget = bestAprilTagTarget;
 	}
 
-	public Optional<Double> getAlignAngle() {
+	public double getAlignAngle() {
 		return alignAngle;
 	}
 
-	public void setAlignAngle(Optional<Double> alignAngle) {
+	public void setAlignAngle(double alignAngle) {
 		this.alignAngle = alignAngle;
 	}
 
@@ -41,9 +41,9 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	}
 
 	private Optional<RecognizedAprilTagTarget> bestAprilTagTarget = Optional.empty();
-	private Optional<Double> alignAngle= Optional.empty();
+	private double alignAngle= 0.0;
 	private Optional<TargetNode> targetNode = Optional.empty();
-
+	
 	public void setTargetNode(Optional<TargetNode> targetNode) {
 		this.targetNode = targetNode;
 	}
@@ -68,6 +68,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	    sb.addDoubleProperty("Distance Meters", this::getTargetDistance, null);
 	    sb.addBooleanProperty("CanDeploy", this::canDeploy, null);
 		sb.addStringProperty("Estimated Pose", () -> { return estimatedPose + ""; }, null);
+		sb.addDoubleProperty("DaveAngle", this::getAlignAngle, null);		
 	}
 
 	public double getTargetDistance() {

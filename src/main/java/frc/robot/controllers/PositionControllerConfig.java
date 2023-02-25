@@ -6,11 +6,7 @@ public class PositionControllerConfig {
 	private PositionControllerConfig() {
 		
 	}
-	private PositionControllerConfig(double homingSpeed, boolean reversed, int homePosition) {
-		this.homePosition = homePosition;
-		this.reversed = reversed;
-		this.homingSpeedPercent=homingSpeed;
-	}
+
 	public double getHomingSpeed() {
 		return homingSpeedPercent;
 	}
@@ -27,23 +23,42 @@ public class PositionControllerConfig {
 	}
 
 	public double getHomePosition() {
-		return homePosition;
+		return homePositionCounts;
 	}
 	public void setHomePosition(int homePosition) {
-		this.homePosition = homePosition;
+		this.homePositionCounts = homePosition;
 	}
 
-	private int homePosition = 0;
-	private int backoffDDistance = 0;
+	public int getHomePositionCounts() {
+		return homePositionCounts;
+	}
+
+	public int getBackoffCounts() {
+		return backoffCounts;
+	}
+
+	public int getToleranceCounts() {
+		return toleranceCounts;
+	}
+
+	public double getHomingSpeedPercent() {
+		return homingSpeedPercent;
+	}
+
+	public int getMinPositionCounts() {
+		return minPositionCounts;
+	}
+
+	public int getMaxPositionCounts() {
+		return maxPositionCounts;
+	}
+
+	private int homePositionCounts = 0;
+	private int backoffCounts = 0;
+	private int toleranceCounts = 5;
 	private double homingSpeedPercent = 10.0;	
-
-
-	public double getBackoffDDistance() {
-		return backoffDDistance;
-	}
-	public void setBackoffDDistance(int backoffDDistance) {
-		this.backoffDDistance = backoffDDistance;
-	}
+	private int minPositionCounts = 0;
+	private int maxPositionCounts = 0;
 
 	public static class Builder {
 		private PositionControllerConfig c = new PositionControllerConfig();
