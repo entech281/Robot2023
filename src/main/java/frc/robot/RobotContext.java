@@ -39,6 +39,7 @@ public class RobotContext {
 	    driveSubsystem = drive;
 	    navXSubSystem = navx;
 	    visionSubsystem = vision;
+		this.alignmentCalculator = alignmentCalculator;
 	    this.fieldDisplay=fieldDisplay;
 	    this.robotState = robotState;
 	    this.poseEstimator = poseEstimator;
@@ -76,6 +77,7 @@ public class RobotContext {
         if ( robotState.getScoringLocation().isPresent()) {
         	ScoringLocation scoreloc = robotState.getScoringLocation().get();
             fieldDisplay.displayScoringSolution(estimatedRobotPose.get(),scoreloc.computeAbsolutePose()); 
+			robotState.setAngleToTarget(alignmentCalculator.calculateAngleToScoringLocation(scoreloc, estimatedRobotPose.get()));
         }
         
     }    
@@ -87,6 +89,6 @@ public class RobotContext {
 	private PoseEstimator poseEstimator;
 	private ShuffleboardFieldDisplay fieldDisplay;
 	private ShuffleboardDriverControls driverControls;
-	
+	private AlignmentCalculator alignmentCalculator;
 	
 }

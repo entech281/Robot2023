@@ -18,6 +18,8 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 
 	public static final double DISTANCE_UNKNOWN = -1;
 	public static final double CLOSE_ENOUGH_TO_DEPLOY_METERS = 1.2192 + 0.4064; //arm is 1.2192 meters in front of robot
+	private double angleToTarget;
+
 	public Optional<RecognizedAprilTagTarget> getBestAprilTagTarget() {
 		return bestAprilTagTarget;
 	}
@@ -68,6 +70,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	    sb.addDoubleProperty("Distance Meters", this::getTargetDistance, null);
 	    sb.addBooleanProperty("CanDeploy", this::canDeploy, null);
 		sb.addStringProperty("Estimated Pose", () -> { return estimatedPose + ""; }, null);
+		sb.addDoubleProperty("Angle To Target", this::getAngleToTarget, null);
 	}
 
 	public double getTargetDistance() {
@@ -108,5 +111,13 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	@Override
 	public Optional<TargetNode> getSelectedTarget() {
 		return targetNode;
+	}
+
+	public double getAngleToTarget() {
+		return this.angleToTarget;
+	}
+
+	public void setAngleToTarget(double angleToTarget) {
+		this.angleToTarget = angleToTarget;
 	}
 }
