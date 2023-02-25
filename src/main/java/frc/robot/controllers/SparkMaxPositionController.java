@@ -137,8 +137,4 @@ public class SparkMaxPositionController implements PositionController{
     	return getActualPosition() + "/" + getDesiredPosition();
     }
 
-
-
-
-
 }

@@ -5,7 +5,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
+import frc.robot.controllers.PositionControllerConfig;
+import frc.robot.controllers.HomingController;
+import frc.robot.controllers.HomingControllerConfig;
 import frc.robot.controllers.PositionController;
+import frc.robot.controllers.SparkMaxHomingController;
 import frc.robot.controllers.SparkMaxPositionController;
 
 /**
@@ -13,27 +17,34 @@ import frc.robot.controllers.SparkMaxPositionController;
  * @author dcowden
  */
 public class ArmSubsystem extends EntechSubsystem{
-
+	
+  //reality note:  
+  // 42 counts per ref
+  // gearbox: 48 to 1
+  // sprocket diameter approx. 1.5" 
+  // -- 4.71 inch/ref --> ABOUT 0.002 inches per count
   private CANSparkMax telescopeMotor;
   private PositionController positionController;
+  private HomingController homingController;
   
-  public interface Preset {
-	  public static double MIN = 0.0;
-	  public static double HOME =  0.0;
-	  public static double CARRY = 20.0;
-	  public static double SCORE_LOW = 20.0;
-	  public static double SCORE_MIDDLE = 85.0;
-	  public static double SCORE_HIGH = 95.0;
-	  public static double MAX = 1000.0;
+  public interface PositionPreset {
+	  public static int MIN = 0;
+	  public static int HOME =  0;
+	  public static int CARRY = 20;
+	  public static int SCORE_LOW = 20;
+	  public static int SCORE_MIDDLE = 85;
+	  public static int SCORE_HIGH = 9;
+	  public static int MAX = 1000;
   }
- 
-  public static int TOLERANCE_COUNTS = 50; 
+  
+  public static int TOLERANCE_COUNTS = 5; 
   private boolean enabled = false;
   private boolean homed = false;
 
   //for unit testing
-  public ArmSubsystem(PositionController positionController, CANSparkMax motor) {
+  public ArmSubsystem(HomingController homingController, PositionController positionController, CANSparkMax motor) {
 	  this.positionController=positionController;
+	  this.homingController = homingController;
 	  this.enabled=true;
 	  this.telescopeMotor = motor;
   }  
@@ -47,61 +58,49 @@ public class ArmSubsystem extends EntechSubsystem{
   public void initialize() {
 	if ( enabled ) {
 	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
-	    positionController = new SparkMaxPositionController(telescopeMotor,false,TOLERANCE_COUNTS,Preset.MIN, Preset.MAX);
+	    positionController = new SparkMaxPositionController(telescopeMotor,false,TOLERANCE_COUNTS,PositionPreset.MIN, PositionPreset.MAX);
+	    PositionControllerConfig config = new PositionControllerConfig.Builder()
+	    		.withBackoffDistanceCounts(10)
+	    		.withHomePositionCounts(0)
+	    		.withHomingSpeedPercent(25.0)
+	    		.withReversed(false)
+	    		.build();
+	    		
+	    homingController = new SparkMaxHomingController(telescopeMotor,config);
 	}
   }  
   
   public ArmStatus getStatus(){
+	  //TODO: compute actual position in counts
       return new ArmStatus();
   }
-  public boolean isHome() {
-	  return homed;
-  }
+ 
   
   public void home() {
-	  positionController.setDesiredPosition(Preset.HOME);
-  }
-  
-  public void carry() {
-	  goToPositionIfHomed(Preset.CARRY);
-  }
-  
-  public void scoreLow() {
-	  goToPositionIfHomed(Preset.SCORE_LOW);
-  }
-  
-  public void scoreMiddle() {
-	  goToPositionIfHomed(Preset.SCORE_MIDDLE);
-  }
-  
-  public void scoreHigh() {
-	  goToPositionIfHomed(Preset.SCORE_HIGH);
+	  homingController.home();
   }
   
   public boolean isInMotion() {
 	  return positionController.isInMotion();
   }
   
-  private void goToPositionIfHomed(double position) {
-	  if ( isHome()) {
-		  positionController.setDesiredPosition(position);
+  public void setPosition(int desiredPosition) {
+	  if ( homingController.isHome()) {
+		  positionController.setDesiredPosition(desiredPosition);		  
 	  }
-	  
+	  else {
+		  
+	  }
   }
-  
-
+  public boolean isHomed() {
+	  return homingController.isHome();
+  }
   public void stop() {
 	  telescopeMotor.set(0);
   }
-  public void reset() {
+  
+  protected void reset() {
 	  positionController.resetPosition();
-  }
-  public boolean isAtLowerLimit() {
-	  return positionController.isAtLowerLimit();
-  }
-
-  public boolean isAtUpperLimit() {
-	  return positionController.isAtUpperLimit();
   }
   
   public boolean isAtDesiredPosition() {
@@ -115,15 +114,14 @@ public class ArmSubsystem extends EntechSubsystem{
 	      builder.addStringProperty("Arm:", () -> { return positionController+""; }, null);		  
 	      builder.addBooleanProperty("InMotion", () -> { return positionController.isInMotion(); }, null);
 	      builder.addBooleanProperty("Enabled", () -> { return positionController.isEnabled(); }, null);
-	      builder.addBooleanProperty("Homed", () -> { return isHome(); }, null);
+	      builder.addBooleanProperty("Homed", () -> { return isHomed(); }, null);
 	  }
   }
 
   @Override
-  public void periodic() {
+  public void periodic() {	 
      if (enabled ) {
-    	 checkForHomed();
-    	 checkArrivedPosition();
+    	 homingController.update();
      }
   }
 
@@ -134,15 +132,7 @@ public class ArmSubsystem extends EntechSubsystem{
 		  }
 	  }
   }
-  private void checkForHomed() {
-      if (isAtLowerLimit()) {
-          reset();
-          homed = true;
-      }
-      if (!isHome()) {
-     	 home();
-      }	  
-  }
+
   
   @Override
   public void simulationPeriodic() {

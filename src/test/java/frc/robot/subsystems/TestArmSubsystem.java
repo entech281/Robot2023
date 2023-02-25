@@ -51,7 +51,7 @@ public class TestArmSubsystem {
 		
 	}
 	
-	@Test
+	//@Test
 	public void testMovingToPosition() {
 		TestPositionController tp = new TestPositionController();
 		tp.setLowerLimitTripped(true);

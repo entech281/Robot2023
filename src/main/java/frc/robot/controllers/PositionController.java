@@ -7,7 +7,9 @@ public interface PositionController {
     double getActualPosition();
 
     void setDesiredPosition(double preset);
-
+	public void home();
+	public void update();
+	public boolean isHome();
     boolean isInMotion();
     boolean isAtDesiredPosition();
 

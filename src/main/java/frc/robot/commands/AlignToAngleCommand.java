@@ -7,7 +7,7 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
-import frc.robot.RobotYawPIDController;
+import frc.robot.controllers.RobotYawPIDController;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 /**
