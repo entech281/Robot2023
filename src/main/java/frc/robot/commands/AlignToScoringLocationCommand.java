@@ -63,12 +63,11 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         	 */
         	
         	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);
-        	double currentYawAngleDegrees = operatorInput.get().getYawAngleDegrees();
         	
         	pid.setSetpoint(angleToTargetDegrees);
             SmartDashboard.putNumber("Auto Align Angle", angleToTargetDegrees);
         	
-            double calcValue = pid.calculate(currentYawAngleDegrees, angleToTargetDegrees);
+            double calcValue = pid.calculate(angleToTargetDegrees, 0.0);
             DriveInput di = operatorInput.get();
             di.setRotation(calcValue);
             drive.drive(di);    		
