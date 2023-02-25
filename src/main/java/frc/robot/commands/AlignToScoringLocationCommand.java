@@ -33,7 +33,13 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
     private ScoringLocationSupplier scoringLocationSupplier;
     private EstimatedPoseSupplier currentPoseSupplier;
     private AlignmentCalculator alignCalculator = new AlignmentCalculator();
- 
+    public static final double P_GAIN = 0.01;
+	public static final double I_GAIN = 0.55;
+    public static final double D_GAIN = 0;
+    public static final double ANGLE_TOLERANCE = 1;
+    public static final double SPEED_LIMIT = 0.75;
+    public static final int STOP_COUNT = 4;
+
     
     /**
      * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -71,23 +77,21 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         	 */
         	
         	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);
-        	double currentYawAngleDegrees = operatorInput.get().getYawAngleDegrees();
         	
-        	pid.setSetpoint(angleToTargetDegrees);
+        	pid.setSetpoint(0);
             SmartDashboard.putNumber("Auto Align Angle", angleToTargetDegrees);
         	
             double calcValue = Math.max(
-                -SPEED_LIMIT, 
+                - SPEED_LIMIT, 
                 Math.min(
                     pid.calculate(
-                        currentYawAngleDegrees, 
                         angleToTargetDegrees
                     ), 
                     SPEED_LIMIT
                 )
             );
             DriveInput di = operatorInput.get();
-            di.setRotation(calcValue);
+            di.setRotation(-calcValue);
             drive.drive(di);    		
     	} else {
             DriveInput di = new DriveInput(0, 0, 0, 0);
