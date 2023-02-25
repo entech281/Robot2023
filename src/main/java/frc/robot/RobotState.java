@@ -65,7 +65,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	public void initSendable(SendableBuilder sb) {
 	    sb.addDoubleProperty("Yaw", this::getYawAngleDegrees, null);
 	    sb.addStringProperty("Target", this::getTargetDesc, null);
-	    sb.addDoubleProperty("Distance(in)", this::getTargetDistance, null);
+	    sb.addDoubleProperty("Distance Meters", this::getTargetDistance, null);
 	    sb.addBooleanProperty("CanDeploy", this::canDeploy, null);
 		sb.addStringProperty("Estimated Pose", () -> { return estimatedPose + ""; }, null);
 	}

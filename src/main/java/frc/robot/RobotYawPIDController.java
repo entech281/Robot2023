@@ -37,8 +37,8 @@ public class RobotYawPIDController extends PIDController {
     public double calculate(double measurement, double setpoint) {
         return EntechUtils.capDoubleValue(super.calculate(measurement,setpoint),-SPEED_LIMIT,SPEED_LIMIT);
     }
-    @Override
-    public boolean atSetpoint() {
+    
+    public boolean isStable() {
         return counter.isFinished(super.atSetpoint());
     }
 

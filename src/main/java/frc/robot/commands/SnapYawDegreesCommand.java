@@ -58,7 +58,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     @Override
     public boolean isFinished() {
-    	return pid.atSetpoint();    	
+    	return pid.isStable();    	
     }
 
     @Override
