@@ -22,7 +22,7 @@ public class ShuffleboardFieldDisplay {
 	public final double TRAJECTORY_SPEED_DOESNT_MATTER = 10.0;
 	
 	public ShuffleboardFieldDisplay() {
-		visionTab.add("Estimated Location",fieldDisplay).withWidget(BuiltInWidgets.kField).withSize(8, 5).withPosition(0, 0);	
+		visionTab.add("Estimated Location",fieldDisplay).withWidget(BuiltInWidgets.kField).withSize(4, 3).withPosition(0, 0);	
 	}
 	
 	public void setRobotPose(Pose2d estimatedPose) {

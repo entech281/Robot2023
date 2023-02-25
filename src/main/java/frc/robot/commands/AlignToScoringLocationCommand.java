@@ -2,19 +2,16 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotYawPIDController;
 import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.util.StoppingCounter;
 
-import static frc.robot.commands.DriveCommandConstants.*;
 /**
  * Tries to align to the target scoring location, by rotating the robot about its axis
  * (Operator can still drive in the meantime)
@@ -27,13 +24,18 @@ import static frc.robot.commands.DriveCommandConstants.*;
 public class AlignToScoringLocationCommand extends EntechCommandBase {
 
     protected final DriveSubsystem drive;
-    protected final PIDController pid;
+    protected final RobotYawPIDController pid;
     protected final Supplier<DriveInput> operatorInput;
-    protected StoppingCounter counter;
     private ScoringLocationSupplier scoringLocationSupplier;
     private EstimatedPoseSupplier currentPoseSupplier;
     private AlignmentCalculator alignCalculator = new AlignmentCalculator();
- 
+    public static final double P_GAIN = 0.01;
+	public static final double I_GAIN = 0.55;
+    public static final double D_GAIN = 0;
+    public static final double ANGLE_TOLERANCE = 1;
+    public static final double SPEED_LIMIT = 0.75;
+    public static final int STOP_COUNT = 4;
+
     
     /**
      * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -50,11 +52,7 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         this.scoringLocationSupplier = scoringLocationSupplier;
         this.currentPoseSupplier = currentPoseSupplier;
         
-        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
-        pid.enableContinuousInput(-180, 180);
-        pid.setTolerance(ANGLE_TOLERANCE);
-        counter = new StoppingCounter("PIDDriveCommand",STOP_COUNT);
-        
+        pid = new RobotYawPIDController();        
     }
 
     @Override
@@ -75,17 +73,10 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         	pid.setSetpoint(0);
             SmartDashboard.putNumber("Auto Align Angle", angleToTargetDegrees);
         	
-            double calcValue = Math.max(
-                -SPEED_LIMIT, 
-                Math.min(
-                    pid.calculate(
-                        angleToTargetDegrees
-                    ), 
-                    SPEED_LIMIT
-                )
-            );
+            double calcValue = pid.calculate(angleToTargetDegrees, 0.0);
+
             DriveInput di = operatorInput.get();
-            di.setRotation(calcValue);
+            di.setRotation(-calcValue);
             drive.drive(di);    		
     	} else {
             DriveInput di = new DriveInput(0, 0, 0, 0);
@@ -101,7 +92,7 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
 
     @Override
     public boolean isFinished() {
-    	return counter.isFinished(pid.atSetpoint());    	
+    	return pid.isStable();    	
     }
 
     @Override

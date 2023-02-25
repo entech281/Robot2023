@@ -7,11 +7,9 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
+import frc.robot.RobotYawPIDController;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.util.StoppingCounter;
-import static frc.robot.commands.DriveCommandConstants.*;
 /**
  *
  * 
@@ -21,9 +19,8 @@ public class AlignToAngleCommand extends EntechCommandBase {
 
     private Supplier<Double> desiredAngleSupplier;
     protected final DriveSubsystem drive;
-    protected final PIDController pid;
+    protected final RobotYawPIDController pid;
     protected final Supplier<DriveInput> operatorInput;
-    protected StoppingCounter counter;
     
     /**
      * Creates a new snap yaw degrees command that will snap the robot to the specified angle
@@ -41,26 +38,14 @@ public class AlignToAngleCommand extends EntechCommandBase {
         this.operatorInput = operatorInput;
         this.desiredAngleSupplier = desiredAngleSupplier;
         
-        pid = new PIDController(P_GAIN, I_GAIN, D_GAIN);
-        pid.enableContinuousInput(-180, 180);
-        pid.setTolerance(ANGLE_TOLERANCE);
-        counter = new StoppingCounter("PIDDriveCommand",STOP_COUNT);
-        
+        pid = new RobotYawPIDController();
     }
 
     @Override
     public void execute() {
 
-        double calcValue = Math.max(
-            -SPEED_LIMIT, 
-            Math.min(
-                pid.calculate(
-                    MathUtil.inputModulus(desiredAngleSupplier.get(), -180.0, 180.0), 
-                    operatorInput.get().getYawAngleDegrees()
-                ), 
-                SPEED_LIMIT
-            )
-        );
+        double calcValue = pid.calculate(MathUtil.inputModulus(desiredAngleSupplier.get(), -180.0, 180.0), 
+                    operatorInput.get().getYawAngleDegrees() );
 
         DriveInput di = operatorInput.get();
         di.setRotation(calcValue);
@@ -74,7 +59,7 @@ public class AlignToAngleCommand extends EntechCommandBase {
 
     @Override
     public boolean isFinished() {
-    	return counter.isFinished(pid.atSetpoint());    	
+    	return pid.isStable();    	
     }
 
     @Override
