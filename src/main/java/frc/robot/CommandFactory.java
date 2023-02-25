@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
+import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
 import frc.robot.commands.SimpleDriveCommand;
@@ -50,7 +53,14 @@ public class CommandFactory {
     	c1.setName("Nudge Forward");
     	Command c2 = new NudgeDirectionCommand(driveSubsystem,NudgeDirectionCommand.DIRECTION.RIGHT);
     	c2.setName("Nudge Right");
-    	return List.of( c1,c2);
+        Command c3 = new SequentialCommandGroup(
+        new DriveDirectionCommand(driveSubsystem, 2,0.0, 0.5)
+        , new DriveDirectionCommand(driveSubsystem, 0.0, 2, 0.5)
+        , new DriveDirectionCommand(driveSubsystem, -2,0.0, 0.5)
+        , new DriveDirectionCommand(driveSubsystem, 0.0, -2, 0.5)
+        );
+        c3.setName("Autonomous");
+    	return List.of( c1, c2, c3);
 
     }
     
@@ -89,6 +99,15 @@ public class CommandFactory {
 
     public Command getAutonomousCommand() {
         return snapYawDegreesCommand(SNAP_YAW_ANGLE);
+    }
+
+    public Command autoCommand1() {
+        return new SequentialCommandGroup(
+            new DriveDirectionCommand(driveSubsystem, 0.5,0.0, 0.25)
+            , new DriveDirectionCommand(driveSubsystem, 0.0, 0.5, 0.25)
+            , new DriveDirectionCommand(driveSubsystem, -0.5,0.0, 0.25)
+            , new DriveDirectionCommand(driveSubsystem, 0.0, -0.5, 0.25)
+        );
     }
 
     public Command getZeroGyro() {

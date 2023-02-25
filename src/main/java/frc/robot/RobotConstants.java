@@ -17,10 +17,6 @@ public final class RobotConstants {
         public static final int PWM_0 = 0;
         public static final int PWM_1 = 1;
     }
-    public enum TEAM{
-        RED,
-        BLUE
-    }
     public interface VISION {
         //public static final double CAMERA_TO_BUMPER = 17.785; //don't need?
         
@@ -47,12 +43,12 @@ public final class RobotConstants {
         }
     }
     public interface ARM{
-        public static final double MIN_ANGLE_DEGREES = 0.0;
-        public static final double MAX_ANGLE_DEGREES = 90.0;
+        public static final double MIN_ANGLE_DEGREES = 12.0; //78 degrees below horizontal (90)
+        public static final double MAX_ANGLE_DEGREES = 107.0; //17 degrees above horizontal (90)
         public static final boolean INIT_CLAW_STATE = false;
-        public static final double MIN_EXTENSION_METERS = 0.0;
-        public static final double MAX_EXTENSION_METERS = 5.08;
-        public static final double ARM_MAX_REACH_METERS = 0.8128; //from center of robot base!!!
+        public static final double MIN_EXTENSION_METERS = 0.9906; //39 inches from center of robot to center of claw
+        public static final double MAX_EXTENSION_METERS = 1.4478; //57 inches from center of robot to center of claw
+        //public static final double ARM_MAX_REACH_METERS = 0.8128; //from center of robot base!!!
     }
     public interface ALIGNMENT{
         public static final double ANGLE_TOLERANCE_DEGREES=2.0;
@@ -63,13 +59,13 @@ public final class RobotConstants {
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
-        public static final int TOGGLE_FIELD_ABSOLUTE = 12;
+        public static final int AUTO_ALIGN_DRIVE = 2;
+        public static final int NUDGE_YAW_LEFT = 3;
+        public static final int NUDGE_YAW_RIGHT = 4;
         public static final int ZERO_GYRO_ANGLE = 9;
         public static final int ZERO_ROBOT_ANGLE = 10;
         public static final int AUTO_YAW_TOGGLE = 11;
-        public static final int NUDGE_YAW_LEFT = 3;
-        public static final int NUDGE_YAW_RIGHT = 4;
-        public static final int AUTO_ALIGN_DRIVE = 2;
+        public static final int TOGGLE_FIELD_ABSOLUTE = 12;
         public interface POV {
             public static final int FORWARD = 0;
             public static final int RIGHT = 90;
@@ -79,9 +75,9 @@ public final class RobotConstants {
     }
     public interface CAN {
         public static final int FRONT_LEFT_MOTOR = 5;
-        public static final int REAR_LEFT_MOTOR = 8;
-        public static final int FRONT_RIGHT_MOTOR = 7;
         public static final int REAR_RIGHT_MOTOR = 6;
+        public static final int FRONT_RIGHT_MOTOR = 7;
+        public static final int REAR_LEFT_MOTOR = 8;
         public static final int ELBOW_MOTOR_ID = 0;
         public static final int TELESCOPE_MOTOR_ID = 0;
     }
