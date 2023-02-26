@@ -5,20 +5,18 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.PositionArmCommand;
+import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.ZeroGyroCommand;
-import frc.robot.commands.PositionElbowCommand;
-import frc.robot.commands.PositionArmCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.commands.supplier.TargetNodeSupplier;
@@ -31,7 +29,6 @@ import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.RobotConstants;
 /**
  *
  * @author dcowden 
@@ -39,7 +36,6 @@ import frc.robot.RobotConstants;
  */
 public class CommandFactory {
 
-	public static final double SNAP_YAW_ANGLE = 160.0;
 	private RobotState robotState;
 	private DriveSubsystem driveSubsystem;
 	private VisionSubsystem visionSubsystem;
@@ -83,6 +79,7 @@ public class CommandFactory {
     			new GripperCommand( gripperSubsystem, GripperState.kOpen) 
     	);
     }
+    //this is probably also the home position
     public Command carryPosition() {
     	return new SequentialCommandGroup(
     			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY,true),
@@ -121,19 +118,6 @@ public class CommandFactory {
     
     public Command snapYawDegreesCommand(double angle) {
         return new SnapYawDegreesCommand(driveSubsystem, angle,robotState );
-    }
-
-    public Command getAutonomousCommand() {
-        return snapYawDegreesCommand(SNAP_YAW_ANGLE);
-    }
-
-    public Command autoCommand1() {
-        return new SequentialCommandGroup(
-            new DriveDirectionCommand(driveSubsystem, 0.5,0.0, 0.25)
-            , new DriveDirectionCommand(driveSubsystem, 0.0, 0.5, 0.25)
-            , new DriveDirectionCommand(driveSubsystem, -0.5,0.0, 0.25)
-            , new DriveDirectionCommand(driveSubsystem, 0.0, -0.5, 0.25)
-        );
     }
 
     public Command getZeroGyro() {

@@ -47,7 +47,6 @@ public class TestSparkMaxPositionController {
 		SparkMaxLimitSwitch lowerLimit = mock(SparkMaxLimitSwitch.class);
 		SparkMaxLimitSwitch upperLimit = mock(SparkMaxLimitSwitch.class);
 		
-		//when(fakeMotor.getEncoder()).thenReturn(encoder);
 		when(lowerLimit.isPressed()).thenAnswer(new Answer<Boolean>() {
 
 			@Override

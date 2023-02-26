@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.Optional;
 
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.oi.ShuffleboardDriverControls;
@@ -89,6 +91,11 @@ public class RobotContext {
         robotState.setBestAprilTagTarget(vs.getBestAprilTagTarget());
         robotState.setTargetNode(driverControls.getSelectedTarget());
         
+        if ( vs.getBestAprilTagTarget().isPresent()) {
+        	PhotonTrackedTarget pt = vs.getBestAprilTagTarget().get().getPhotonTarget();
+        	robotState.setPhotonYawAngle(Optional.of(pt.getYaw()));
+        }
+        
         if ( robotState.getScoringLocation().isPresent()) {
         	ScoringLocation scoreloc = robotState.getScoringLocation().get();
         	Pose2d absoluteScoringPose = scoreloc.computeAbsolutePose();
@@ -96,8 +103,6 @@ public class RobotContext {
         	Pose2d realRobotPose = estimatedRobotPose.get();
             fieldDisplay.displayScoringSolution(realRobotPose,absoluteScoringPose); 
             double targetYaw = alignmentCalculator.calculateAngleToScoringLocation(absoluteScoringPose, realRobotPose);
-            double targetYawFromVision = robotState.getBestAprilTagTarget().get().getPhotonTarget().getYaw(); //this is the way the photon examples do it
-            
             robotState.setTargetYawAngle(targetYaw);
         }
            
