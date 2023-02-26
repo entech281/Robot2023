@@ -1,28 +1,34 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.RobotConstants;
+import static frc.robot.RobotConstants.ARM.*;
 
 /**
  *
  * @author dcowden
  */
-public class ArmStatus implements Sendable, SubsystemStatus{
+public class ArmStatus  implements SubsystemStatus{
 
-    private double armExtension = RobotConstants.ARM.MIN_EXTENSION_METERS;
-
-    public void setArmExtension(double armExtension){
-        this.armExtension = armExtension;
+    private double actualPostion;
+    private int armCounts;
+    
+    /**reality note:  
+    * 42 counts per ref
+    * gearbox: 48 to 1
+    * sprocket diameter approx. 1.5" 
+    * -- 4.71 inch/ref --> ABOUT 0.002 inches per count    
+    **/
+    public ArmStatus ( int armCounts) {
+    	this.armCounts = armCounts;
+    	this.actualPostion = MIN_EXTENSION_METERS + armCounts/ SETTINGS.COUNTS_PER_METER;
     }
 
-    public double getArmExtension(){
-        return armExtension;
+    public int getArmExtensionCounts() {
+    	return armCounts;
+    }
+    
+    public double getArmExtensionMeters(){
+        return actualPostion;
     }
 
-    @Override
-    public void initSendable(SendableBuilder sb) {
-        sb.addDoubleProperty("ArmExtension", this::getArmExtension, null);
-    }
 
 }

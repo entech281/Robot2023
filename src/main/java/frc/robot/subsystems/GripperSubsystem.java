@@ -1,14 +1,22 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.RobotConstants;
 
-public class GripperSubsystem extends EntechSubsystem{
+public class GripperSubsystem extends EntechSubsystem implements Sendable{
 
 	private DoubleSolenoid gripperSolenoid;	
 	private int gripperSolenoidCounter;
 	private GripperState gripperState;
+	
+	
+	public GripperState getGripperState() {
+		return gripperState;
+	}
+
 	private boolean enabled = false;
 	private final int SOLENOID_HIT_COUNT = 10;
 	
@@ -25,6 +33,19 @@ public class GripperSubsystem extends EntechSubsystem{
 	@Override
 	public void periodic() {
 	  if ( enabled ) {
+		  handleSolenoid();
+	  }
+	}
+	
+    @Override
+    public void initSendable(SendableBuilder builder) {
+  	  if ( enabled ) {
+  	      builder.setSmartDashboardType(getName());		  
+  	      builder.addBooleanProperty("Open", this::isOpen, null);
+  	  }
+    }	
+	
+	private void handleSolenoid() {
 	      if (gripperSolenoidCounter < SOLENOID_HIT_COUNT) {
 	          gripperSolenoidCounter += 1;
 	          if (gripperState == GripperState.kOpen) {
@@ -36,28 +57,21 @@ public class GripperSubsystem extends EntechSubsystem{
 	          }
 	      } else {
             gripperSolenoid.set(DoubleSolenoid.Value.kOff);
-          }
-	  }
+          }		
 	}
-	
     public void setGripperState(GripperState state) {
 	    if (state != gripperState) {
 	      gripperSolenoidCounter = 0;
 	      gripperState = state;
 	    }
 	}
-	public void open() {
-		setGripperState(GripperState.kOpen);	    	
-	}
-	
-	public void close() {
-		setGripperState(GripperState.kClose);	    	
-	}
+    public boolean isOpen() {
+    	return gripperState == GripperState.kOpen;
+    }
 	
 	@Override
 	public SubsystemStatus getStatus() {
-		// TODO Auto-generated method stub
-		return null;
+		return new GripperStatus(gripperState);
 	}
 
 	

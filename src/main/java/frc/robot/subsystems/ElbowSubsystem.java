@@ -5,145 +5,84 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
-import frc.robot.controllers.PositionController;
+import static frc.robot.RobotConstants.ELBOW;
+import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
 
 
 public class ElbowSubsystem extends EntechSubsystem{
-	
-	  //for unit testing
-	  public ElbowSubsystem(PositionController positionController) {
-		  this.positionController=positionController;
-	  }
-	  
-	  //for match
-	  public ElbowSubsystem() {
-		  
-	  }
-	  
-	  private CANSparkMax elbowMotor;
-	  private PositionController positionController;
-	  
-	  public interface Preset {
-		  public static double MIN = 0.0;		  
-		  public static double HOME =  0.0;
-		  public static double CARRY = 20.0;
-		  public static double SCORE_LOW = 20.0;
-		  public static double SCORE_MIDDLE = 85.0;
-		  public static double SCORE_HIGH = 95.0;
-		  public static double MAX = 300.0;		  
-	  }
-	  
-	  public static int TOLERANCE_COUNTS = 50; 
-	  
-	  private boolean enabled = false;
-	  private boolean homed = false;
 
+	  private CANSparkMax elbowMotor;
+	  private SparkMaxPositionController positionController;
+	  private boolean enabled = false;	
+	
+	
 	  @Override
 	  public void initialize() {
 		if ( enabled ) {
-		    elbowMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
-		    positionController = new SparkMaxPositionController(elbowMotor,false,TOLERANCE_COUNTS,Preset.MIN, Preset.MAX);
+			elbowMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
+			elbowMotor.getPIDController().setP(ELBOW.TUNING.P_GAIN);
+			elbowMotor.getPIDController().setI(ELBOW.TUNING.I_GAIN);
+			elbowMotor.getPIDController().setD(ELBOW.TUNING.D_GAIN);
+			elbowMotor.setSmartCurrentLimit(ELBOW.SETTINGS.MAX_SPIKE_CURRENT);
+		    
+		    positionController = new SparkMaxPositionController(elbowMotor,
+		    new PositionControllerConfig.Builder("ELBOW")
+		    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ELBOW.HOMING.HOME_POSITION_COUNTS )
+		    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_COUNTS)
+		    	.withReversed(ELBOW.SETTINGS.MOTOR_REVERSED)
+		    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_COUNTS, ELBOW.HOMING.MAX_POSITION_COUNTS)
+		    	.build()	    		
+		    );
 		}
-
+	  }  
+	  	 
+	  public void requestPosition(int requestedPosition) {
+		  positionController.requestPosition(requestedPosition);
 	  }
 	  
-	  
-	  public ElbowStatus getStatus(){
-	      return new ElbowStatus();
-	  }
-	  public boolean isHome() {
-		  return homed;
-	  }
-	  
-	  public boolean isInMotion() {
-		  return positionController.isInMotion();
-	  }
-	  
-	  public void home() {
-		  positionController.setDesiredPosition(Preset.HOME);
-	  }
-	  
-	  public void carry() {
-		  goToPositionIfHomed(Preset.CARRY);
-	  }
-	  
-	  public void scoreLow() {
-		  goToPositionIfHomed(Preset.SCORE_LOW);
-	  }
-	  
-	  public void scoreMiddle() {
-		  goToPositionIfHomed(Preset.SCORE_MIDDLE);
-	  }
-	  
-	  public void scoreHigh() {
-		  goToPositionIfHomed(Preset.SCORE_HIGH);
-	  }
-	  public void setPosition ( double position) {
-		  goToPositionIfHomed(position);
-	  }
-	  private void goToPositionIfHomed(double position) {
-		  if ( isHome()) {
-			  positionController.setDesiredPosition(position);
-		  }
-		  
-	  }
-
-	  
-	  public boolean isAtDesiredPosition() {
-		  return positionController.isAtDesiredPosition();
-	  }
 	  public void stop() {
-		  elbowMotor.set(0);
-	  }
-	  public void reset() {
-		  positionController.resetPosition();
-	  }
-	  public boolean isAtLowerLimit() {
-		  return positionController.isAtLowerLimit();
-	  }
-
-	  public boolean isAtUpperLimit() {
-		  return positionController.isAtUpperLimit();
+		  positionController.stop();
 	  }
 	  
+	  public boolean isAtRequestedPosition() {
+		  return positionController.isAtRequestedPosition();
+	  }  
+	  
+	  
+	  public void periodic() {	 
+		  if (enabled ) {
+			  positionController.update();
+		  }
+	  }
+	    
 	  @Override
 	  public void initSendable(SendableBuilder builder) {
-		  if ( enabled ) {
-		      builder.setSmartDashboardType(getName());
-		      builder.addStringProperty("Arm:", () -> { return positionController+""; }, null);		  
-		      builder.addBooleanProperty("InMotion", () -> { return positionController.isInMotion(); }, null);
-		      builder.addBooleanProperty("Enabled", () -> { return positionController.isEnabled(); }, null);
-		  }
-	  }
-
-	  @Override
-	  public void periodic() {
-	     if (enabled ) {
-	    	 checkForHomed();
-	    	 checkArrivedPosition();
-	     }
-	  }
-
-	  private void checkArrivedPosition() {
-		  if ( enabled ) {
-			  if (positionController.isAtDesiredPosition()) {
-				  stop();
-			  }
-		  }
-	  }
-	  private void checkForHomed() {
-	      if (isAtLowerLimit()) {
-	          reset();
-	          homed = true;
-	      }
-	      if (!isHome()) {
-	     	 home();
-	      }	  
+	      builder.setSmartDashboardType(getName());
+		  positionController.initSendable(builder);	      
 	  }
 	  
+	  public boolean isHomed() {
+		  return positionController.isHomed();
+	  }
+	  
+	  public int getActualPosition() {
+		  return positionController.getActualPosition();
+	  }
+	  
+	  public boolean inMotion() {
+		  return positionController.inMotion();
+	  }
+	 
+
 	  @Override
 	  public void simulationPeriodic() {
 	    
 	  }
+	  
+	  @Override
+	  public SubsystemStatus getStatus() {
+		 return new ElbowStatus(getActualPosition());
+	  }
+
 }

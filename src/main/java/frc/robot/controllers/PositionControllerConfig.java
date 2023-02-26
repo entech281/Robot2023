@@ -7,26 +7,9 @@ public class PositionControllerConfig {
 		
 	}
 
-	public double getHomingSpeed() {
-		return homingSpeedPercent;
-	}
-	public void setHomingSpeed(double homingSpeed) {
-		this.homingSpeedPercent = homingSpeed;
-	}
-	
-	private boolean reversed = false;
+
 	public boolean isReversed() {
 		return reversed;
-	}
-	public void setReversed(boolean reversed) {
-		this.reversed = reversed;
-	}
-
-	public double getHomePosition() {
-		return homePositionCounts;
-	}
-	public void setHomePosition(int homePosition) {
-		this.homePositionCounts = homePosition;
 	}
 
 	public int getHomePositionCounts() {
@@ -37,8 +20,8 @@ public class PositionControllerConfig {
 		return backoffCounts;
 	}
 
-	public int getToleranceCounts() {
-		return toleranceCounts;
+	public int getPositionToleranceCounts() {
+		return positionToleranceCounts;
 	}
 
 	public double getHomingSpeedPercent() {
@@ -53,32 +36,42 @@ public class PositionControllerConfig {
 		return maxPositionCounts;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	private String name = "";
+	private boolean reversed = false;
 	private int homePositionCounts = 0;
 	private int backoffCounts = 0;
-	private int toleranceCounts = 5;
+	private int positionToleranceCounts = 5;
 	private double homingSpeedPercent = 10.0;	
 	private int minPositionCounts = 0;
 	private int maxPositionCounts = 0;
 
 	public static class Builder {
+		public Builder(String name ) {
+			c.name = name;
+		}
 		private PositionControllerConfig c = new PositionControllerConfig();
-		public Builder() {
-			
+		
+		public Builder withSoftLimits(int lowerLimitCounts, int upperLimitCounts) {
+			c.maxPositionCounts=upperLimitCounts;
+			c.minPositionCounts=lowerLimitCounts;
+			return this;
+		}
+		public Builder withPositionTolerance( int positionToleranceCounts) {
+			c.positionToleranceCounts = positionToleranceCounts;
+			return this;
 		}
 		public Builder withReversed(boolean reversed) {
-			c.setReversed(reversed);
+			c.reversed = reversed;
 			return this;
 		}
-		public Builder withHomingSpeedPercent( double speed) {
-			c.setHomingSpeed(speed);
-			return this;
-		}
-		public Builder withHomePositionCounts( int homePosition) {
-			c.setHomePosition(homePosition);
-			return this;
-		}
-		public Builder withBackoffDistanceCounts( int distance) {
-			c.setBackoffDDistance(distance);
+		public Builder withHomingOptions ( double homingSpeedPercent, int backoffCounts , int homePositionCounts) {
+			c.backoffCounts = backoffCounts;
+			c.homingSpeedPercent = homingSpeedPercent;
+			c.homePositionCounts = homePositionCounts;
 			return this;
 		}
 		public PositionControllerConfig build() {

@@ -10,17 +10,17 @@ import frc.robot.subsystems.ArmSubsystem;
 public class PositionArmCommand extends EntechCommandBase {
 
   private final ArmSubsystem armSubsystem;
-  private final double desiredPosition;
+  private final int requestedPosition;
 
   /**
    * Creates a new PositionArmCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PositionArmCommand(ArmSubsystem subsystem, double desiredPosition) {
+  public PositionArmCommand(ArmSubsystem subsystem, int requestedPosition) {
       super(subsystem);
       armSubsystem = subsystem;
-      this.desiredPosition = desiredPosition;
+      this.requestedPosition = requestedPosition;
   }
 
   // Called when the command is initially scheduled.
@@ -32,7 +32,7 @@ public class PositionArmCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Nothing here.  Work is all done inside ArmSubsystem.periodic()
+    armSubsystem.requestPosition(requestedPosition);
   }
 
   // Called once the command ends or is interrupted.
@@ -44,7 +44,7 @@ public class PositionArmCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return armSubsystem.isAtDesiredPosition();
+      return armSubsystem.isAtRequestedPosition();
   }
 
   // Returns true if this command should run when robot is disabled.

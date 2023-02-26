@@ -1,23 +1,20 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.RobotConstants;
 
-public class GripperStatus implements Sendable,SubsystemStatus{
 
-    private boolean clawOpen = RobotConstants.ARM.INIT_CLAW_STATE;
+public class GripperStatus implements SubsystemStatus{
 
-	@Override
-	public void initSendable(SendableBuilder sb) {
-        sb.addBooleanProperty("Claw", this::getClawOpen, null);
-	}
-    
-    public void setClawOpen(boolean clawOpen) {
-        this.clawOpen = clawOpen;
+    private GripperSubsystem.GripperState state;
+
+    public GripperStatus ( GripperSubsystem.GripperState state) {
+    	this.state = state;
     }
 
-    public boolean getClawOpen(){
-        return clawOpen;
-    }	
+    public boolean isClawOpen(){
+        return state == GripperSubsystem.GripperState.kOpen;
+    }
+    
+    public boolean isClawClosed(){
+        return state == GripperSubsystem.GripperState.kClose;
+    }	    
 }

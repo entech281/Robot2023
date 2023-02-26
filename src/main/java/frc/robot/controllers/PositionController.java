@@ -1,25 +1,29 @@
 package frc.robot.controllers;
 
+import frc.robot.controllers.SparkMaxPositionController.HomingState;
 
 public interface PositionController {
 
-    double getDesiredPosition();
-    double getActualPosition();
+	int getActualPosition();
 
-    void setDesiredPosition(double preset);
-	public void home();
-	public void update();
-	public boolean isHome();
-    boolean isInMotion();
-    boolean isAtDesiredPosition();
+	double getRequestedPosition();
 
-    void resetPosition();
-    boolean isReversed();
-    boolean isAtLowerLimit();
-    boolean isAtUpperLimit();
-    boolean isEnabled();
- 
-    //should detect if the controller is available
-    void configure();	
-	
+	boolean isAtRequestedPosition();
+
+	void setEnabled(boolean enabled);
+
+	void update();
+
+	void requestPosition(int requestedPosition);
+
+	boolean isAtLowerLimit();
+
+	boolean isAtUpperLimit();
+
+	boolean inMotion();
+
+	boolean isHomed();
+
+	HomingState getHomingState();
+
 }

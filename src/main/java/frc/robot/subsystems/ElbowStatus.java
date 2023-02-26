@@ -1,22 +1,21 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.RobotConstants;
 
-public class ElbowStatus implements Sendable, SubsystemStatus{
+import static frc.robot.RobotConstants.ELBOW;
 
-    private double verticalAngle= RobotConstants.ARM.MIN_ANGLE_DEGREES;
+public class ElbowStatus implements SubsystemStatus{
+
+    private double verticalAngle=0.0; 
+    private int counts = 0;
     
-	@Override
-	public void initSendable(SendableBuilder sb) {
-        sb.addDoubleProperty("Vertical Angle", this::getVerticalAngle, null);
-		
-	}
-    public void setVerticalAngle(double verticalAngle){
-        this.verticalAngle = verticalAngle;
+    public ElbowStatus(int counts) {
+    	this.counts = counts;
+    	verticalAngle = ELBOW.MIN_ANGLE_DEGREES + counts / ELBOW.SETTINGS.COUNTS_PER_DEGREE;
     }
 
+    public int getCounts() {
+    	return this.counts;
+    }
     public double getVerticalAngle(){
         return verticalAngle;
     }

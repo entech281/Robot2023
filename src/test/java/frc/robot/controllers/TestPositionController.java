@@ -1,5 +1,7 @@
 package frc.robot.controllers;
 
+import frc.robot.controllers.SparkMaxPositionController.HomingState;
+
 /**
  * for unit testing position controller and subsystems that 
  * use them
@@ -10,69 +12,51 @@ public class TestPositionController implements PositionController{
 
 	public static final double POSITION_UNKNOWN = 999;
 	
-	private double actualPosition = POSITION_UNKNOWN;
-	private double requestedPosition = 0.0;
-	public static double TOLERANCE = 0.1;
-	private boolean reversed = false;
-	private boolean enabled = false;
+	public TestPositionController ( PositionControllerConfig config) {
+		this.config = config;
+	}
+	private PositionControllerConfig config;
+	private int actualPosition  = 0;
+	private int requestedPosition = 0;
+	private boolean inMotion = false;
+	private boolean homed = false;
+	private HomingState homingState;
 	private boolean lowerLimitTripped = false;
 	private boolean upperLimitTripped = false;
 
 	public void addToPosition ( double pos) {
 		this.actualPosition += pos;
 	}
-	
 
-	public void setReversed(boolean reversed) {
-		this.reversed = reversed;
+	@Override
+	public int getActualPosition() {
+		return actualPosition;
 	}
 
+	@Override
+	public double getRequestedPosition() {
+		return requestedPosition;
+	}
+
+	@Override
+	public boolean isAtRequestedPosition() {
+		return actualPosition == requestedPosition;
+	}
+
+	@Override
 	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public void setLowerLimitTripped(boolean lowerLimitTripped) {
-		this.lowerLimitTripped = lowerLimitTripped;
-	}
-
-	public void setUpperLimitTripped(boolean upperLimitTripped) {
-		this.upperLimitTripped = upperLimitTripped;
-	}
-	
-	
-	@Override
-	public double getDesiredPosition() {
-		return actualPosition;
+		this.enabled = enabled;		
 	}
 
 	@Override
-	public double getActualPosition() {
-		return actualPosition;
-	}
-	
-	public void setActualPosition(double actual) {
-		actualPosition = actual;
+	public void update() {
+		
 	}
 
 	@Override
-	public void setDesiredPosition(double preset) {
-		requestedPosition = preset;		
-	}
-
-	@Override
-	public boolean isInMotion() {
-		return !isAtDesiredPosition();
-	}
-
-	@Override
-	public boolean isAtDesiredPosition() {
-		System.out.println(actualPosition +"/" + requestedPosition);
-		return  Math.abs(requestedPosition - actualPosition) < TOLERANCE ;
-	}
-
-	@Override
-	public boolean isReversed() {
-		return reversed;
+	public void requestPosition(int requestedPosition) {
+		this.requestedPosition = requestedPosition;
+		
 	}
 
 	@Override
@@ -86,20 +70,18 @@ public class TestPositionController implements PositionController{
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return enabled;
+	public boolean inMotion() {
+		return inMotion;
 	}
 
 	@Override
-	public void configure() {
-		// TODO Auto-generated method stub
-		
+	public boolean isHomed() {
+		return homed;
 	}
 
 	@Override
-	public void resetPosition() {
-		this.setActualPosition(0.0);
-		
+	public HomingState getHomingState() {
+		return homingState;
 	}
 
 }
