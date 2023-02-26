@@ -110,6 +110,10 @@ public class PositionControllerConfig {
 			c.minPositionCounts=lowerLimitCounts;
 			return this;
 		}
+		public Builder withSwappedLimitSwitches(boolean swapped) {
+			c.swapLimitSwitches = swapped;
+			return this;
+		}
 		public Builder withPositionTolerance( int positionToleranceCounts) {
 			c.positionToleranceCounts = positionToleranceCounts;
 			return this;

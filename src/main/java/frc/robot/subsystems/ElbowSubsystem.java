@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
@@ -31,6 +32,8 @@ public class ElbowSubsystem extends EntechSubsystem{
 		    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ELBOW.HOMING.HOME_POSITION_COUNTS )
 		    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_COUNTS)
 		    	.withReversed(ELBOW.SETTINGS.MOTOR_REVERSED)
+		    	.withLimitSwitchTypes(Type.kNormallyOpen,Type.kNormallyOpen)
+		    	.withSwappedLimitSwitches(false)		    	
 		    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_COUNTS, ELBOW.HOMING.MAX_POSITION_COUNTS)
 		    	.build()	    		
 		    );		  
