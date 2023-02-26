@@ -30,17 +30,32 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class SparkMaxPositionController implements Sendable, PositionController{
 
+	public static final int NO_POSITION = -999;
 	
 	/**
 	 * Ov
 	 * @param spark
 	 * @param config
 	 */
-	public SparkMaxPositionController ( CANSparkMax spark, PositionControllerConfig config) {
+	public SparkMaxPositionController (CANSparkMax spark,  PositionControllerConfig config) {
 		this.spark = spark;
 		this.config = config;
 	}
 	
+	public SparkMaxPositionController (  PositionControllerConfig config) {
+		this.config = config;
+	}	
+	/**
+	 * I hate this! but its necesary because:
+	 * wpilib initializes sendables before INITIALIZE is called on the subsystem
+	 * but i want to populate this controll in the senable
+	 * but to do that, i'd ahve to put that code in the constructor, meaning we try to load the motors too early
+	 * BUT this forces us to deal with having all methods inside senadable deal with a null spark max!! CMON WPILIB!
+	 * @param spark
+	 */
+	public void setSparkMax ( CANSparkMax spark ) {
+		this.spark = spark;
+	}
 	protected CANSparkMax spark;	
     private PositionControllerConfig config;
 
@@ -52,18 +67,32 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     public static final int CAN_TIMEOUT_MILLIS = 1000;    
     private boolean enabled = true;
     
-	public boolean isInMotion() {
-		return spark.getEncoder().getVelocity() > 0;
+	public boolean inMotion() {
+		if ( hasSpark() ) {
+			return spark.getEncoder().getVelocity() > 0;
+		}
+		else {
+			return false;
+		}
 	}    
     
     @Override
 	public int getActualPosition() {
-	  return (int)spark.getEncoder().getPosition();
+    	if ( hasSpark()) {
+    		return (int)spark.getEncoder().getPosition();
+    	}
+    	else {
+    		return NO_POSITION;
+    	}
     }
 
     private boolean isPositionWithinSoftLimits(double position) {
 	  	return position >= config.getMinPositionCounts() && position <= config.getMaxPositionCounts() ;
  	}    
+    
+    private boolean hasSpark() {
+    	return spark != null;
+    }
   
 	@Override
 	public double getRequestedPosition() {
@@ -72,6 +101,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 
 	@Override
 	public boolean isAtRequestedPosition() {
+		
 		return isWithinToleranceOfPosition(requestedPosition);
 	}  
 	
@@ -88,6 +118,19 @@ public class SparkMaxPositionController implements Sendable, PositionController{
             return input;
         }
     }    
+    
+    @Override
+    public void initSendable(SendableBuilder builder) {
+  	  if ( enabled ) {
+  	      builder.setSmartDashboardType("PositionController:" + config.getName());
+  	      builder.addStringProperty("Status:", this::getHomingStateString , null);		  
+  	      builder.addBooleanProperty("InMotion", this::inMotion, null);
+  	      builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+  	      builder.addIntegerProperty("ActualPos", this::getActualPosition, null);
+  	      builder.addBooleanProperty("Homed", this::isHomed, null);
+  	  }
+    }    
+    
 
     @Override
 	public void setEnabled(boolean enabled) {
@@ -174,22 +217,6 @@ public class SparkMaxPositionController implements Sendable, PositionController{
         return this.enabled;
     }
 
-    @Override
-	public boolean inMotion() {
-  	  return spark.getEncoder().getVelocity() > 0;
-    }
-    
-    @Override
-    public void initSendable(SendableBuilder builder) {
-  	  if ( enabled ) {
-  	      builder.setSmartDashboardType("PositionController:" + config.getName());
-  	      builder.addStringProperty("Status:", this::getHomingStateString , null);		  
-  	      builder.addBooleanProperty("InMotion", this::inMotion, null);
-  	      builder.addDoubleProperty("RequestedPosition", this::getRequestedPosition, null);
-  	      builder.addIntegerProperty("ActualPosition", this::getActualPosition, null);
-  	      builder.addBooleanProperty("Homed", this::isHomed, null);
-  	  }
-    }
     
     public String getHomingStateString() {
   	  return axisState+"";

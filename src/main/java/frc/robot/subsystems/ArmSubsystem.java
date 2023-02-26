@@ -25,12 +25,21 @@ public class ArmSubsystem extends EntechSubsystem{
   public ArmSubsystem( CANSparkMax motor, PositionControllerConfig config) {
 	  this.enabled=true;
 	  this.telescopeMotor = motor;
-	  this.positionController = new SparkMaxPositionController(motor,config);
+	  this.positionController = new SparkMaxPositionController(config);
   }  
 
+  
   //for match
   public ArmSubsystem() {
-  }
+	    positionController = new SparkMaxPositionController(
+	    new PositionControllerConfig.Builder("ARM")
+	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ARM.HOMING.HOME_POSITION_COUNTS )
+	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_COUNTS)
+	    	.withReversed(ARM.SETTINGS.MOTOR_REVERSED)
+	    	.withSoftLimits(ARM.HOMING.MIN_POSITION_COUNTS, ARM.HOMING.MAX_POSITION_COUNTS)
+	    	.build()	    		
+	    );
+  }  
   
   @Override
   public void initialize() {
@@ -40,15 +49,7 @@ public class ArmSubsystem extends EntechSubsystem{
 	    telescopeMotor.getPIDController().setI(TUNING.I_GAIN);
 	    telescopeMotor.getPIDController().setD(TUNING.D_GAIN);
 	    telescopeMotor.setSmartCurrentLimit(SETTINGS.MAX_SPIKE_CURRENT);
-	    
-	    positionController = new SparkMaxPositionController(telescopeMotor,
-	    new PositionControllerConfig.Builder("ARM")
-	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ARM.HOMING.HOME_POSITION_COUNTS )
-	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_COUNTS)
-	    	.withReversed(ARM.SETTINGS.MOTOR_REVERSED)
-	    	.withSoftLimits(ARM.HOMING.MIN_POSITION_COUNTS, ARM.HOMING.MAX_POSITION_COUNTS)
-	    	.build()	    		
-	    );
+	    positionController.setSparkMax(telescopeMotor);
 	}
   }  
   

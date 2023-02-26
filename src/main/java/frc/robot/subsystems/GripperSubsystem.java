@@ -70,7 +70,7 @@ public class GripperSubsystem extends EntechSubsystem implements Sendable{
     }
 	
 	@Override
-	public SubsystemStatus getStatus() {
+	public GripperStatus getStatus() {
 		return new GripperStatus(gripperState);
 	}
 

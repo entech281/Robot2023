@@ -15,11 +15,12 @@ import frc.robot.logging.ExceptionHandler;
 import frc.robot.oi.OperatorInterface;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.oi.ShuffleboardFieldDisplay;
-import frc.robot.oi.TargetNodeChooser;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElbowSubsystem;
+import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -56,27 +57,30 @@ public class Robot extends TimedRobot {
 	VisionSubsystem vision = new VisionSubsystem();
 	navx = new NavXSubSystem();
 	ArmSubsystem arm = new ArmSubsystem();
+	ElbowSubsystem elbow = new ElbowSubsystem();
+	GripperSubsystem gripper = new GripperSubsystem();
 	
-	
-	List.of(drive,vision,navx,arm).forEach((s)-> {
+	List.of(drive,vision,navx,arm,elbow,gripper).forEach((s)-> {
 		s.initialize();		
 	});
 	
 	//adding these individually so we can lay them out nicely
-	MATCH_TAB.add(drive).withSize(2, 1).withPosition(7,2);
+	MATCH_TAB.add(drive).withSize(2, 1).withPosition(4,2);
 	MATCH_TAB.add(vision).withSize(2, 2).withPosition(4,0);
 	MATCH_TAB.add(navx).withSize(2, 2).withPosition(6,0);
-	MATCH_TAB.add(arm).withSize(1, 1).withPosition(9,2);
+	MATCH_TAB.add(arm).withSize(2, 2).withPosition(6,2);
+	MATCH_TAB.add(elbow).withSize(2, 2).withPosition(8,2);
+	MATCH_TAB.add(gripper).withSize(2, 1).withPosition(4,3);
 	MATCH_TAB.add("RobotState",robotState).withSize(2, 2).withPosition(8, 0);
 	
 
 	robotContext = new RobotContext(new AlignmentCalculator(),
-			robotState, fieldDisplay,drive,navx,vision, new VisionFirstNavxAsBackupPoseEstimator(true),
+			robotState, fieldDisplay,drive,navx,vision, arm, elbow, gripper, new VisionFirstNavxAsBackupPoseEstimator(true),
 			shuffleboardControls
 	);
 	
 	
-	commandFactory = new CommandFactory(robotState,drive,navx,vision,arm);
+	commandFactory = new CommandFactory(robotState,drive,navx,vision,arm,elbow,gripper);
 	oi = new OperatorInterface(commandFactory,shuffleboardControls);
 	List<Command> autoChoices = commandFactory.getAutoCommandChoices();
 

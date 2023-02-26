@@ -10,11 +10,15 @@ import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.FilteredDriveCommand;
+import frc.robot.commands.GripperCommand;
+import frc.robot.commands.PositionArmCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.commands.PositionElbowCommand;
+import frc.robot.commands.PositionArmCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.commands.supplier.TargetNodeSupplier;
@@ -22,9 +26,12 @@ import frc.robot.filters.DriveInput;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElbowSubsystem;
+import frc.robot.subsystems.GripperSubsystem;
+import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.VisionSubsystem;
-
+import frc.robot.RobotConstants;
 /**
  *
  * @author dcowden 
@@ -38,13 +45,17 @@ public class CommandFactory {
 	private VisionSubsystem visionSubsystem;
 	private NavXSubSystem navxSubsystem;
 	private ArmSubsystem armSubsystem;
+	private ElbowSubsystem elbowSubsystem;
+	private GripperSubsystem gripperSubsystem;
     
-    public CommandFactory(RobotState robotState, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm){
+    public CommandFactory(RobotState robotState, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm, ElbowSubsystem elbowSubsystem,GripperSubsystem gripperSubsystem){
     	this.driveSubsystem = drive;
     	this.navxSubsystem = navx;
     	this.visionSubsystem = vision;
     	this.armSubsystem = arm;
         this.robotState = robotState;
+        this.elbowSubsystem = elbowSubsystem;
+        this.gripperSubsystem = gripperSubsystem;
 
     }
     
@@ -64,6 +75,13 @@ public class CommandFactory {
 
     }
     
+    public Command deployHighCommand() {
+    	return new SequentialCommandGroup(
+    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH,true),
+    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH, true ),
+    			new GripperCommand( gripperSubsystem, GripperState.kOpen) 
+    	);
+    }
     
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
     	return new DriveInputYawMixer(robotState, operatorJoystickInput);

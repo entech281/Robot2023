@@ -11,16 +11,17 @@ public class PositionArmCommand extends EntechCommandBase {
 
   private final ArmSubsystem armSubsystem;
   private final int requestedPosition;
-
+  private boolean waitToComplete = false;
   /**
    * Creates a new PositionArmCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PositionArmCommand(ArmSubsystem subsystem, int requestedPosition) {
+  public PositionArmCommand(ArmSubsystem subsystem, int requestedPosition, boolean waitToComplete) {
       super(subsystem);
       armSubsystem = subsystem;
       this.requestedPosition = requestedPosition;
+      this.waitToComplete = waitToComplete;
   }
 
   // Called when the command is initially scheduled.
@@ -44,7 +45,12 @@ public class PositionArmCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return armSubsystem.isAtRequestedPosition();
+	  if ( waitToComplete) {
+		  return armSubsystem.isAtRequestedPosition();
+	  }
+	  else {
+		  return true;
+	  }
   }
 
   // Returns true if this command should run when robot is disabled.

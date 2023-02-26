@@ -16,7 +16,26 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  private SparkMaxPositionController positionController;
 	  private boolean enabled = false;	
 	
+	  
+	  //for unit testing
+	  public ElbowSubsystem( CANSparkMax motor, PositionControllerConfig config) {
+		  this.enabled=true;
+		  this.elbowMotor = motor;
+		  this.positionController = new SparkMaxPositionController(config);
+	  }  	  
 	
+	  //for match
+	  public ElbowSubsystem () {
+		    positionController = new SparkMaxPositionController(elbowMotor,
+		    new PositionControllerConfig.Builder("ELBOW")
+		    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ELBOW.HOMING.HOME_POSITION_COUNTS )
+		    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_COUNTS)
+		    	.withReversed(ELBOW.SETTINGS.MOTOR_REVERSED)
+		    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_COUNTS, ELBOW.HOMING.MAX_POSITION_COUNTS)
+		    	.build()	    		
+		    );		  
+		  
+	  }
 	  @Override
 	  public void initialize() {
 		if ( enabled ) {
@@ -26,14 +45,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 			elbowMotor.getPIDController().setD(ELBOW.TUNING.D_GAIN);
 			elbowMotor.setSmartCurrentLimit(ELBOW.SETTINGS.MAX_SPIKE_CURRENT);
 		    
-		    positionController = new SparkMaxPositionController(elbowMotor,
-		    new PositionControllerConfig.Builder("ELBOW")
-		    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ELBOW.HOMING.HOME_POSITION_COUNTS )
-		    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_COUNTS)
-		    	.withReversed(ELBOW.SETTINGS.MOTOR_REVERSED)
-		    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_COUNTS, ELBOW.HOMING.MAX_POSITION_COUNTS)
-		    	.build()	    		
-		    );
+
 		}
 	  }  
 	  	 
@@ -81,7 +93,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  }
 	  
 	  @Override
-	  public SubsystemStatus getStatus() {
+	  public ElbowStatus getStatus() {
 		 return new ElbowStatus(getActualPosition());
 	  }
 

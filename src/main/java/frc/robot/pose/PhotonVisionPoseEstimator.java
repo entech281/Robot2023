@@ -13,7 +13,7 @@ import frc.robot.subsystems.VisionStatus;
  * @author davec
  *
  */
-public class MagicPhotonVisionPoseEstimator implements PoseEstimator{
+public class PhotonVisionPoseEstimator implements PoseEstimator{
 
 	@Override
 	public Optional<Pose2d> estimateRobotPose(VisionStatus vs, NavxStatus ns, DriveStatus ds) {

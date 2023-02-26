@@ -8,11 +8,15 @@ import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.oi.ShuffleboardFieldDisplay;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.PoseEstimator;
-import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.ScoringLocation;
-import frc.robot.pose.TargetNode;
+import frc.robot.subsystems.ArmStatus;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElbowStatus;
+import frc.robot.subsystems.ElbowSubsystem;
+import frc.robot.subsystems.GripperStatus;
+import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
@@ -37,6 +41,9 @@ public class RobotContext {
 			ShuffleboardFieldDisplay fieldDisplay, 
 			DriveSubsystem drive, NavXSubSystem navx, 
 			VisionSubsystem vision, 
+		    ArmSubsystem armSubsystem,
+		    ElbowSubsystem elbowSubsystem,
+		    GripperSubsystem gripperSubsystem,			
 			PoseEstimator poseEstimator,
 			ShuffleboardDriverControls driverControls) {
 	    driveSubsystem = drive;
@@ -46,6 +53,9 @@ public class RobotContext {
 	    this.robotState = robotState;
 	    this.poseEstimator = poseEstimator;
 	    this.driverControls = driverControls;
+	    this.elbowSubsystem = elbowSubsystem;
+	    this.armSubsystem = armSubsystem;
+	    this.gripperSubsystem = gripperSubsystem;
 	    this.alignmentCalculator = alignmentCalculator;
 	}
 
@@ -62,7 +72,9 @@ public class RobotContext {
     	DriveStatus ds = driveSubsystem.getStatus();
     	VisionStatus vs =visionSubsystem.getStatus();
     	NavxStatus ns = navXSubSystem.getStatus();
-    	
+    	ArmStatus as = armSubsystem.getStatus();
+    	ElbowStatus es = elbowSubsystem.getStatus();
+    	GripperStatus gs = gripperSubsystem.getStatus();
     	
     	//estimate pose
     	Optional<Pose2d> estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
@@ -80,10 +92,12 @@ public class RobotContext {
         if ( robotState.getScoringLocation().isPresent()) {
         	ScoringLocation scoreloc = robotState.getScoringLocation().get();
         	Pose2d absoluteScoringPose = scoreloc.computeAbsolutePose();
-
+        	
         	Pose2d realRobotPose = estimatedRobotPose.get();
             fieldDisplay.displayScoringSolution(realRobotPose,absoluteScoringPose); 
             double targetYaw = alignmentCalculator.calculateAngleToScoringLocation(absoluteScoringPose, realRobotPose);
+            double targetYawFromVision = robotState.getBestAprilTagTarget().get().getPhotonTarget().getYaw(); //this is the way the photon examples do it
+            
             robotState.setTargetYawAngle(targetYaw);
         }
            
@@ -94,6 +108,9 @@ public class RobotContext {
 	private DriveSubsystem driveSubsystem;
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
+    private ArmSubsystem armSubsystem;
+    private ElbowSubsystem elbowSubsystem;
+    private GripperSubsystem gripperSubsystem;
 	private PoseEstimator poseEstimator;
 	private AlignmentCalculator alignmentCalculator;
 	private ShuffleboardFieldDisplay fieldDisplay;
