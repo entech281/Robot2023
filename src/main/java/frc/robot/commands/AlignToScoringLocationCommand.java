@@ -68,7 +68,7 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         	 *   -- the scoring location changes from the originally provided one
         	 */
         	
-        	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation.computeAbsolutePose(), estimatedPose);
+        	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);
         	
         	pid.setSetpoint(0);
             SmartDashboard.putNumber("Auto Align Angle", angleToTargetDegrees);
