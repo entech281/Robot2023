@@ -2,18 +2,28 @@ package frc.robot.pose;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import static frc.robot.util.PoseUtil.inchesToMeters;
 
 public class AlignmentCalculator {
-
-	public static final double NOT_FOUND = 999;
 	
 	public double calculateAngleToScoringLocation(Pose2d scoringLocation, Pose2d estimatedRobotPose) {
-	
-		Pose2d rotated = new Pose2d(scoringLocation.getX(), scoringLocation.getY(), scoringLocation.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
-		return estimatedRobotPose.minus(rotated).getRotation().getDegrees();
 
+		Translation2d t = scoringLocation.minus(estimatedRobotPose).getTranslation();
+		double robotToScoringLocationAngle = Units.radiansToDegrees(Math.atan2(t.getY(), t.getX()));
+		
+		double fieldAbsoluteTargetAngle = scoringLocation.getRotation().rotateBy(Rotation2d.fromDegrees(180)).getDegrees();
+		
+		SmartDashboard.putNumber("robotToScoringLocationAngle", robotToScoringLocationAngle);
+		SmartDashboard.putNumber("fieldAbsoluteTargetAngle", fieldAbsoluteTargetAngle);
+		SmartDashboard.putNumber("t-getY()", t.getY());
+		SmartDashboard.putNumber("t-getX()",  t.getX());	
+		SmartDashboard.putNumber("sl-getX()",  scoringLocation.getX());
+		SmartDashboard.putNumber("sl-getY()",  scoringLocation.getY());	
+		SmartDashboard.putNumber("pose-getX()",  estimatedRobotPose.getX());
+		SmartDashboard.putNumber("pose-getY()",  estimatedRobotPose.getY());			
+		return fieldAbsoluteTargetAngle + robotToScoringLocationAngle;
 	}	
-
 }

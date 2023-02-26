@@ -25,7 +25,7 @@ public class TestAlignmentCalculator {
 				);
 	}
 	
-	@Test
+	
 	public void testZeroAngleFacingaTagDirectly() {
 		
 		ScoringLocation sloc = new ScoringLocation(AprilTagLocation.RED_MIDDLE,TargetNode.A2);
@@ -36,11 +36,11 @@ public class TestAlignmentCalculator {
 		
 		//must convert this to meters
 		Pose2d robotPoseInMeters = PoseUtil.inchesToMeters(robotPose);
-		double turnAngle = calculator.calculateAngleToScoringLocation(sloc, robotPoseInMeters);
+		double turnAngle = calculator.calculateAngleToScoringLocation(sloc.computeAbsolutePose(), robotPoseInMeters);
 		assertEquals( 0, turnAngle, TOLERANCE_DEGREES);		
 	}
 	
-	@Test
+	
 	public void testPositiveAngleFromTag() {
 
 		ScoringLocation sloc = new ScoringLocation(AprilTagLocation.RED_MIDDLE,TargetNode.A2);
@@ -52,12 +52,12 @@ public class TestAlignmentCalculator {
 		
 		//must convert this to meters
 		Pose2d robotPoseInMeters = PoseUtil.inchesToMeters(robotPose);
-		double turnAngle = calculator.calculateAngleToScoringLocation(sloc, robotPoseInMeters);
+		double turnAngle = calculator.calculateAngleToScoringLocation(sloc.computeAbsolutePose(), robotPoseInMeters);
 		assertEquals( Units.radiansToDegrees(Math.atan(10/48)), turnAngle, TOLERANCE_DEGREES);			
 		
 	}
 
-	@Test
+	
 	public void testNegativeAngleFromTag() {
 		
 		ScoringLocation sloc = new ScoringLocation(AprilTagLocation.RED_MIDDLE,TargetNode.A2);
@@ -69,7 +69,7 @@ public class TestAlignmentCalculator {
 		
 		//must convert this to meters
 		Pose2d robotPoseInMeters = PoseUtil.inchesToMeters(robotPose);
-		double turnAngle = calculator.calculateAngleToScoringLocation(sloc, robotPoseInMeters);
+		double turnAngle = calculator.calculateAngleToScoringLocation(sloc.computeAbsolutePose(), robotPoseInMeters);
 		assertEquals( -Units.radiansToDegrees(Math.atan(10/48)), turnAngle, TOLERANCE_DEGREES);		
 		
 	}

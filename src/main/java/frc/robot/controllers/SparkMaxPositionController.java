@@ -7,9 +7,35 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 
+/**
+ * Overview:
+ * 
+ * This controller allows user to control a position oriented axis, including managed homing to a lower limit switch.
+ * 
+ * Overall, it works like this:
+ *  * user supplies a number of configuration optoins
+ *  * user requests moving to a position via requestPosition
+ *  
+ *  * When the user first requests a position,the axis wil home itself if not homed. This consists of these steps
+ *  
+ *    (1) move at config.homingSpeed towards the lower limit
+ *    (2) when the lower limit switch is pressed, move fowrard config.backoffCounts
+ *    (3) when this position is reached, set position to config.homeCounts
+ *    (4) execute the users original move, by moving to requestedPosition
+ *    
+ *   Requests to move outside the soft limits ( config.mincounts and config.maxcounts ) are ignored, but a warning is
+ *   logged to driver station 
+ * @author davec
+ *
+ */
 public class SparkMaxPositionController implements Sendable, PositionController{
-	public enum MotionState { IDLE, FINDING_LIMIT, BACKING_OFF, HOMED }
+
 	
+	/**
+	 * Ov
+	 * @param spark
+	 * @param config
+	 */
 	public SparkMaxPositionController ( CANSparkMax spark, PositionControllerConfig config) {
 		this.spark = spark;
 		this.config = config;
@@ -18,10 +44,10 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 	protected CANSparkMax spark;	
     private PositionControllerConfig config;
 
-    private HomingState axisState = HomingState.UNINITIALIZED;
+    private MotionState axisState = MotionState.UNINITIALIZED;
     private int requestedPosition = 0;
     
-    public enum HomingState { UNINITIALIZED, FINDING_LIMIT, BACKING_OFF, HOMED }    
+    public enum MotionState { UNINITIALIZED, FINDING_LIMIT, BACKING_OFF, HOMED }    
     
     public static final int CAN_TIMEOUT_MILLIS = 1000;    
     private boolean enabled = true;
@@ -35,7 +61,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 	  return (int)spark.getEncoder().getPosition();
     }
 
-    private boolean isPositionAcceptable(double position) {
+    private boolean isPositionWithinSoftLimits(double position) {
 	  	return position >= config.getMinPositionCounts() && position <= config.getMaxPositionCounts() ;
  	}    
   
@@ -44,12 +70,16 @@ public class SparkMaxPositionController implements Sendable, PositionController{
         return requestedPosition;
     }
 
-	  @Override
+	@Override
 	public boolean isAtRequestedPosition() {
-		  double actualPosition = spark.getEncoder().getPosition();
-		  return Math.abs(actualPosition - requestedPosition) < config.getPositionToleranceCounts();
-	  }  
+		return isWithinToleranceOfPosition(requestedPosition);
+	}  
 	
+	
+	protected boolean isWithinToleranceOfPosition( int position) {
+		double actualPosition = spark.getEncoder().getPosition();
+		return Math.abs(actualPosition - position) < config.getPositionToleranceCounts();
+	}
     protected double correctDirection(double input){
         if ( config.isReversed() ){
             return -input;
@@ -64,36 +94,37 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 		this.enabled = enabled;
 	}    
  
-
     @Override
 	public void update() {	 
   	  if (enabled ) {
       	 switch ( axisState) {
       		 case UNINITIALIZED:
-      			 //do nothing
+      			 break;
       		 case FINDING_LIMIT:
       			 if ( isAtLowerLimit() ) {
       				spark.getEncoder().setPosition(0);
       				setPositionInternal(config.getBackoffCounts());
-      				axisState = HomingState.BACKING_OFF;
+      				axisState = MotionState.BACKING_OFF;
       			 }
+      			 break;
       		 case BACKING_OFF:
-      			 if ( isAtRequestedPosition()) {
+      			 if ( isWithinToleranceOfPosition(config.getBackoffCounts())) {
       				spark.getEncoder().setPosition(config.getHomePositionCounts());
       				 //telescopeMotor.stopMotor();  future configurable? this will stop the motor. Not doing this leaves the motor on and locked on this position 
-      				 axisState = HomingState.HOMED;
+      				 axisState = MotionState.HOMED;
       			 }
+      			 break;
       		 case HOMED:
       			 setPositionInternal(requestedPosition);
       			 if (isAtLowerLimit()  ) {
       				 stop();
       				 DriverStation.reportWarning("Low Limit Reached! Please Move Axis off the switch. We will home on next comamand." , false);
-      				 axisState = HomingState.UNINITIALIZED;
+      				 axisState = MotionState.UNINITIALIZED;
       			 }
       			 if ( isAtUpperLimit() ) {
       				 stop();
       				 DriverStation.reportWarning("Upper Limit Reached! Please Move Axis off the switch. We will home on next comamand." , false);
-      				 axisState = HomingState.UNINITIALIZED;
+      				 axisState = MotionState.UNINITIALIZED;
       			 }
   	     }
   	  }
@@ -103,14 +134,17 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     	spark.getPIDController().setReference(correctDirection(desiredPosition), CANSparkMax.ControlType.kPosition);
     }    
     
+    public void home() {
+    	requestPosition(config.getHomePositionCounts());
+    }
     
     @Override
 	public void requestPosition(int requestedPosition) {
-  	  if ( isPositionAcceptable(requestedPosition)) {
+  	  if ( isPositionWithinSoftLimits(requestedPosition)) {
   		  this.requestedPosition = requestedPosition;		  
-  		  if (axisState == HomingState.UNINITIALIZED) {
+  		  if (axisState == MotionState.UNINITIALIZED) {
   			  spark.set(correctDirection(config.getHomingSpeedPercent()));
-  			  axisState = HomingState.FINDING_LIMIT;
+  			  axisState = MotionState.FINDING_LIMIT;
   		  }		  
   	  }
   	  else {
@@ -160,12 +194,14 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     public String getHomingStateString() {
   	  return axisState+"";
     }
+    
     @Override
 	public boolean isHomed() {
-  	  return axisState == HomingState.HOMED;
+  	  return axisState == MotionState.HOMED;
     }
+    
     @Override
-	public HomingState getHomingState() {
+	public MotionState getMotionState() {
   	  return axisState;
     }
 

@@ -1,6 +1,7 @@
 package frc.robot.controllers;
 
-import frc.robot.controllers.SparkMaxPositionController.HomingState;
+
+import frc.robot.controllers.SparkMaxPositionController.MotionState;
 
 /**
  * for unit testing position controller and subsystems that 
@@ -8,19 +9,58 @@ import frc.robot.controllers.SparkMaxPositionController.HomingState;
  * @author davec
  *
  */
-public class TestPositionController implements PositionController{
+public class MockPositionController implements PositionController{
 
 	public static final double POSITION_UNKNOWN = 999;
 	
-	public TestPositionController ( PositionControllerConfig config) {
+	public MockPositionController ( PositionControllerConfig config) {
 		this.config = config;
 	}
 	private PositionControllerConfig config;
+	public boolean isInMotion() {
+		return inMotion;
+	}
+
+	public void setInMotion(boolean inMotion) {
+		this.inMotion = inMotion;
+	}
+
+	public boolean isLowerLimitTripped() {
+		return lowerLimitTripped;
+	}
+
+	public void setLowerLimitTripped(boolean lowerLimitTripped) {
+		this.lowerLimitTripped = lowerLimitTripped;
+	}
+
+	public boolean isUpperLimitTripped() {
+		return upperLimitTripped;
+	}
+
+	public void setUpperLimitTripped(boolean upperLimitTripped) {
+		this.upperLimitTripped = upperLimitTripped;
+	}
+
+	public void setActualPosition(int actualPosition) {
+		this.actualPosition = actualPosition;
+	}
+
+	public void setRequestedPosition(int requestedPosition) {
+		this.requestedPosition = requestedPosition;
+	}
+
+	public void setHomed(boolean homed) {
+		this.homed = homed;
+	}
+
+	public void setMotionState(MotionState motionState) {
+		this.motionState = motionState;
+	}
 	private int actualPosition  = 0;
 	private int requestedPosition = 0;
 	private boolean inMotion = false;
 	private boolean homed = false;
-	private HomingState homingState;
+	private MotionState motionState;
 	private boolean lowerLimitTripped = false;
 	private boolean upperLimitTripped = false;
 
@@ -45,7 +85,6 @@ public class TestPositionController implements PositionController{
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;		
 	}
 
 	@Override
@@ -80,8 +119,8 @@ public class TestPositionController implements PositionController{
 	}
 
 	@Override
-	public HomingState getHomingState() {
-		return homingState;
+	public MotionState getMotionState() {
+		return motionState;
 	}
 
 }

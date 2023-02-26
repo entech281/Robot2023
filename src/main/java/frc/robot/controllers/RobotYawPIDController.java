@@ -5,9 +5,9 @@ import frc.robot.util.EntechUtils;
 import frc.robot.util.StoppingCounter;
 
 public class RobotYawPIDController extends PIDController {
-	private static final double P_GAIN = 0.0855;
-	private static final double I_GAIN = 0.55;
-    private static final double D_GAIN = 0.009;
+	private static final double P_GAIN = 0.025;
+	private static final double I_GAIN = 0.001;
+    private static final double D_GAIN = 0.00;
     private static final double ANGLE_TOLERANCE = 1;
     private static final double SPEED_LIMIT = 0.75;
     private static final int STOP_COUNT = 4;
