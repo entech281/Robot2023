@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.supplier.TargetYawSupplier;
+import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.controllers.RobotYawPIDController;
@@ -27,9 +28,8 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
     protected final DriveSubsystem drive;
     protected final RobotYawPIDController pid;
     protected final Supplier<DriveInput> operatorInput;
-    private EstimatedPoseSupplier currentPoseSupplier;
+    private YawAngleSupplier currentYawAngleSupplier;
     private TargetYawSupplier alignAngleSupplier;
-    private AlignmentCalculator alignCalculator = new AlignmentCalculator();
 
     
     /**
@@ -39,13 +39,13 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
      */
     public AlignToScoringLocationCommand(DriveSubsystem drive,
     		Supplier<DriveInput> operatorInput, 
-    		EstimatedPoseSupplier currentPoseSupplier,
+    		YawAngleSupplier currentYawAngleSupplier,
     		TargetYawSupplier alignAngleSupplier) {
         super(drive);
         this.drive = drive;
         this.operatorInput = operatorInput;        
         this.alignAngleSupplier = alignAngleSupplier;
-        this.currentPoseSupplier = currentPoseSupplier;
+        this.currentYawAngleSupplier = currentYawAngleSupplier;
         
         pid = new RobotYawPIDController();        
     }
@@ -54,13 +54,11 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
     public void execute() {
         DriveInput di = operatorInput.get();
         
-    	if ( alignAngleSupplier.getTargetYawAngle().isPresent() && currentPoseSupplier.getEstimatedPose().isPresent()) {
-    		
-        	Pose2d estimatedPose = currentPoseSupplier.getEstimatedPose().get();
-        	
-        	double currentRobotAngle = estimatedPose.getRotation().getDegrees();
-        	
+    	if ( alignAngleSupplier.getTargetYawAngle().isPresent() ) {
+    		        	
+        	double currentRobotAngle = currentYawAngleSupplier.getYawAngleDegrees();        	
         	double objectiveAngle = alignAngleSupplier.getTargetYawAngle().get();
+        	
         	SmartDashboard.putNumber("ObjectiveAngleFromAlign", objectiveAngle);
         	SmartDashboard.putData(pid);
 
