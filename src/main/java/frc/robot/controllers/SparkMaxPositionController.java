@@ -1,6 +1,8 @@
 package frc.robot.controllers;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.util.sendable.Sendable;
@@ -32,19 +34,27 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 
 	public static final int NO_POSITION = -999;
 	
-	/**
-	 * Ov
-	 * @param spark
-	 * @param config
-	 */
-	public SparkMaxPositionController (CANSparkMax spark,  PositionControllerConfig config) {
-		this.spark = spark;
+
+	//for unit testing
+	public SparkMaxPositionController (CANSparkMax spark,  PositionControllerConfig config, SparkMaxLimitSwitch lowerLimit, SparkMaxLimitSwitch upperLimit, RelativeEncoder encoder) {
+		this.spark = spark;		
+		this.lowerLimit = lowerLimit;
+		this.upperLimit = upperLimit;
+		this.encoder = encoder;
 		this.config = config;
-	}
+	}	
 	
+//	public SparkMaxPositionController (CANSparkMax spark,  PositionControllerConfig config) {
+//		setSparkMax(spark);
+//		this.config = config;
+//		
+//	}
+	
+	//for stupid wpilib where the max has to be set up in initialize, not in constructor
 	public SparkMaxPositionController (  PositionControllerConfig config) {
 		this.config = config;
 	}	
+	
 	/**
 	 * I hate this! but its necesary because:
 	 * wpilib initializes sendables before INITIALIZE is called on the subsystem
@@ -55,21 +65,36 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 	 */
 	public void setSparkMax ( CANSparkMax spark ) {
 		this.spark = spark;
+		this.encoder = spark.getEncoder();
+		setLimitSwitches(spark);
 	}
+	
+	private void setLimitSwitches ( CANSparkMax spark) {
+		if ( config.isSwapLimitSwitches()) {
+			upperLimit = spark.getReverseLimitSwitch(config.getUpperLimitSwitchType());
+			lowerLimit = spark.getForwardLimitSwitch(config.getLowerLimitSwitchType());
+		}
+		else {
+			lowerLimit = spark.getReverseLimitSwitch(config.getLowerLimitSwitchType());
+			upperLimit = spark.getForwardLimitSwitch(config.getUpperLimitSwitchType());			
+		}		
+	}
+	
 	protected CANSparkMax spark;	
     private PositionControllerConfig config;
 
     private MotionState axisState = MotionState.UNINITIALIZED;
     private int requestedPosition = 0;
-    
     public enum MotionState { UNINITIALIZED, FINDING_LIMIT, BACKING_OFF, HOMED }    
-    
+    private SparkMaxLimitSwitch lowerLimit;
+    private SparkMaxLimitSwitch upperLimit;
+    private RelativeEncoder encoder;
     public static final int CAN_TIMEOUT_MILLIS = 1000;    
     private boolean enabled = true;
     
 	public boolean inMotion() {
 		if ( hasSpark() ) {
-			return spark.getEncoder().getVelocity() > 0;
+			return encoder.getVelocity() > 0;
 		}
 		else {
 			return false;
@@ -79,7 +104,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     @Override
 	public int getActualPosition() {
     	if ( hasSpark()) {
-    		return (int)spark.getEncoder().getPosition();
+    		return (int)encoder.getPosition();
     	}
     	else {
     		return NO_POSITION;
@@ -107,7 +132,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 	
 	
 	protected boolean isWithinToleranceOfPosition( int position) {
-		double actualPosition = spark.getEncoder().getPosition();
+		double actualPosition = encoder.getPosition();
 		return Math.abs(actualPosition - position) < config.getPositionToleranceCounts();
 	}
     protected double correctDirection(double input){
@@ -145,14 +170,14 @@ public class SparkMaxPositionController implements Sendable, PositionController{
       			 break;
       		 case FINDING_LIMIT:
       			 if ( isAtLowerLimit() ) {
-      				spark.getEncoder().setPosition(0);
+      				encoder.setPosition(0);
       				setPositionInternal(config.getBackoffCounts());
       				axisState = MotionState.BACKING_OFF;
       			 }
       			 break;
       		 case BACKING_OFF:
       			 if ( isWithinToleranceOfPosition(config.getBackoffCounts())) {
-      				spark.getEncoder().setPosition(config.getHomePositionCounts());
+      				encoder.setPosition(config.getHomePositionCounts());
       				 //telescopeMotor.stopMotor();  future configurable? this will stop the motor. Not doing this leaves the motor on and locked on this position 
       				 axisState = MotionState.HOMED;
       			 }
@@ -201,16 +226,16 @@ public class SparkMaxPositionController implements Sendable, PositionController{
  
     @Override
 	public boolean isAtLowerLimit() {
-    	return spark.getReverseLimitSwitch(Type.kNormallyOpen).isPressed();
+    	return lowerLimit.isPressed();
     }
 
     @Override
 	public boolean isAtUpperLimit() {
-    	return spark.getForwardLimitSwitch(Type.kNormallyOpen).isPressed();
+    	return upperLimit.isPressed();
     }
 
     public void resetPosition(){
-        spark.getEncoder().setPosition(0);
+        encoder.setPosition(0);
     }
 
     public boolean isEnabled() {

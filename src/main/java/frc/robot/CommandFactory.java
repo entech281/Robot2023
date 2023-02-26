@@ -76,11 +76,19 @@ public class CommandFactory {
     }
     
     public Command deployHighCommand() {
+    	//note that the subsystems will HOME before the moves are complete!
     	return new SequentialCommandGroup(
     			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH,true),
     			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH, true ),
     			new GripperCommand( gripperSubsystem, GripperState.kOpen) 
     	);
+    }
+    public Command carryPosition() {
+    	return new SequentialCommandGroup(
+    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY,true),
+    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY, true ),
+    			new GripperCommand( gripperSubsystem, GripperState.kClose) 
+    	);    	
     }
     
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){

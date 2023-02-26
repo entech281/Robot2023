@@ -26,7 +26,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 	
 	  //for match
 	  public ElbowSubsystem () {
-		    positionController = new SparkMaxPositionController(elbowMotor,
+		    positionController = new SparkMaxPositionController(
 		    new PositionControllerConfig.Builder("ELBOW")
 		    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ELBOW.HOMING.HOME_POSITION_COUNTS )
 		    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_COUNTS)
@@ -44,8 +44,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 			elbowMotor.getPIDController().setI(ELBOW.TUNING.I_GAIN);
 			elbowMotor.getPIDController().setD(ELBOW.TUNING.D_GAIN);
 			elbowMotor.setSmartCurrentLimit(ELBOW.SETTINGS.MAX_SPIKE_CURRENT);
-		    
-
+			positionController.setSparkMax(elbowMotor);
 		}
 	  }  
 	  	 

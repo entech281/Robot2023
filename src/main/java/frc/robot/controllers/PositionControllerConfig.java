@@ -1,5 +1,7 @@
 package frc.robot.controllers;
 
+import com.revrobotics.SparkMaxLimitSwitch.Type;
+
 public class PositionControllerConfig {
 
 
@@ -39,6 +41,31 @@ public class PositionControllerConfig {
 	}
 
 	private String name = "";
+	public void setName(String name) {
+		this.name = name;
+	}
+	public void setReversed(boolean reversed) {
+		this.reversed = reversed;
+	}
+	public void setHomePositionCounts(int homePositionCounts) {
+		this.homePositionCounts = homePositionCounts;
+	}
+	public void setBackoffCounts(int backoffCounts) {
+		this.backoffCounts = backoffCounts;
+	}
+	public void setPositionToleranceCounts(int positionToleranceCounts) {
+		this.positionToleranceCounts = positionToleranceCounts;
+	}
+	public void setHomingSpeedPercent(double homingSpeedPercent) {
+		this.homingSpeedPercent = homingSpeedPercent;
+	}
+	public void setMinPositionCounts(int minPositionCounts) {
+		this.minPositionCounts = minPositionCounts;
+	}
+	public void setMaxPositionCounts(int maxPositionCounts) {
+		this.maxPositionCounts = maxPositionCounts;
+	}
+
 	private boolean reversed = false;
 	private int homePositionCounts = 0;
 	private int backoffCounts = 0;
@@ -46,6 +73,31 @@ public class PositionControllerConfig {
 	private double homingSpeedPercent = 10.0;	
 	private int minPositionCounts = 0;
 	private int maxPositionCounts = 0;
+	private boolean swapLimitSwitches = false;
+
+
+	public Type getLowerLimitSwitchType() {
+		return lowerLimitSwitchType;
+	}
+	public void setLowerLimitSwitchType(Type lowerLimitSwitchType) {
+		this.lowerLimitSwitchType = lowerLimitSwitchType;
+	}
+	public Type getUpperLimitSwitchType() {
+		return upperLimitSwitchType;
+	}
+	public void setUpperLimitSwitchType(Type upperLimitSwitchType) {
+		this.upperLimitSwitchType = upperLimitSwitchType;
+	}
+
+	private Type lowerLimitSwitchType = Type.kNormallyOpen;
+	private Type upperLimitSwitchType = Type.kNormallyOpen;
+	
+	public boolean isSwapLimitSwitches() {
+		return swapLimitSwitches;
+	}
+	public void setSwapLimitSwitches(boolean swapLimitSwitches) {
+		this.swapLimitSwitches = swapLimitSwitches;
+	}
 
 	public static class Builder {
 		public Builder(String name ) {
@@ -70,6 +122,11 @@ public class PositionControllerConfig {
 			c.backoffCounts = backoffCounts;
 			c.homingSpeedPercent = homingSpeedPercent;
 			c.homePositionCounts = homePositionCounts;
+			return this;
+		}
+		public Builder withLimitSwitchTypes ( Type lowerLimitSwitchType, Type upperLimitSwitchType) {
+			c.lowerLimitSwitchType = lowerLimitSwitchType;
+			c.upperLimitSwitchType = upperLimitSwitchType;
 			return this;
 		}
 		public PositionControllerConfig build() {

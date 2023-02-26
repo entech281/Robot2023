@@ -11,6 +11,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import frc.robot.controllers.SparkMaxPositionController.MotionState;
@@ -28,7 +29,9 @@ public class TestSparkMaxPositionController {
 	protected PositionControllerConfig config;
 	protected SparkMaxPositionController c;
 	protected CANSparkMax mockMotor;
-	
+	protected MockLimitSwitch fakeUpperLimit = new MockLimitSwitch();
+	protected MockLimitSwitch fakeLowerLimit = new MockLimitSwitch();
+	protected MockRevEncoder encoder = new MockRevEncoder();	
 
 	@BeforeEach
 	public void setupMockController() {
@@ -38,14 +41,36 @@ public class TestSparkMaxPositionController {
 				.withReversed(false)
 				.withSoftLimits(LOWER_LIMIT, UPPER_LIMIT).build();
 
-		mockMotor = createMockSparkMax();
-		c = new SparkMaxPositionController(mockMotor,config);
+
+		mockMotor = mock(CANSparkMax.class, Mockito.RETURNS_DEEP_STUBS);
+		
+		SparkMaxLimitSwitch lowerLimit = mock(SparkMaxLimitSwitch.class);
+		SparkMaxLimitSwitch upperLimit = mock(SparkMaxLimitSwitch.class);
+		
+		//when(fakeMotor.getEncoder()).thenReturn(encoder);
+		when(lowerLimit.isPressed()).thenAnswer(new Answer<Boolean>() {
+
+			@Override
+			public Boolean answer(InvocationOnMock invocation) throws Throwable {
+				return fakeLowerLimit.isPressed();
+			}
+			
+		});
+		when(upperLimit.isPressed()).thenAnswer(new Answer<Boolean>() {
+
+			@Override
+			public Boolean answer(InvocationOnMock invocation) throws Throwable {
+				return fakeUpperLimit.isPressed();
+			}
+			
+		});		
+
+		c = new SparkMaxPositionController(mockMotor,config,lowerLimit, upperLimit,encoder);
 		c.setEnabled(true);		
 	}
 	
 	@Test
 	public void testSetupInitiallyUninitialized(){
-
 		assertLimits(c,false,false);
 		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
 	}
@@ -57,6 +82,14 @@ public class TestSparkMaxPositionController {
 		c.update();
 		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
 	}	
+	
+	@Test
+	public void testReverseDireciton() {
+		config.setReversed(true);
+		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
+		c.requestPosition(200);
+		verify(mockMotor).set(-HOMING_SPEED);
+	}
 	
 	@Test
 	public void testPositionRequestResultsInHoming() throws Exception{
@@ -79,9 +112,8 @@ public class TestSparkMaxPositionController {
 		
 		
 		//as soon as we hit the limit, we will back off of the limit switch and move away BACKCOFF_CONTS 
-		lowerLimit.setPressed(true); 
+		fakeLowerLimit.setPressed(true); 
 		c.update(); 
-		assertTrue(lowerLimit.isPressed());
 		assertTrue(c.isAtLowerLimit());
 		assertEquals(0, c.getActualPosition());
 		verify(mockMotor.getPIDController()).setReference((double)BACKOFF_COUNTS,CANSparkMax.ControlType.kPosition);
@@ -91,12 +123,14 @@ public class TestSparkMaxPositionController {
 		assertEquals(REQUESTED_POSITION, c.getRequestedPosition());
 
 		//once to BACKOFF_COUNTS -1, we should be marked HOME. position should be HOME_COUNTS
-		lowerLimit.setPressed(false);
+		fakeLowerLimit.setPressed(false);
 		encoder.setPosition(BACKOFF_COUNTS-1);
 		c.update();
 		assertLimits(c,false,false);
 		assertFalse(c.isAtRequestedPosition());  //the users' requested position is still REQUESTED_POSITION
-		assertPositionAndState(c,HOME_COUNTS,MotionState.HOMED);
+		assertFalse(c.isAtLowerLimit());
+		assertEquals(MotionState.HOMED, c.getMotionState());
+		assertEquals(HOME_COUNTS, c.getActualPosition());
 
 	}
 
@@ -112,33 +146,8 @@ public class TestSparkMaxPositionController {
 	}		
 	
 	
-	protected MockLimitSwitch upperLimit = new MockLimitSwitch();
-	protected MockLimitSwitch lowerLimit = new MockLimitSwitch();
-	protected MockRevEncoder encoder = new MockRevEncoder();
+
 	
-	protected CANSparkMax createMockSparkMax() {
-		CANSparkMax fakeMotor = mock(CANSparkMax.class, Mockito.RETURNS_DEEP_STUBS);				
-		when(fakeMotor.getEncoder()).thenReturn(encoder);
-		when(fakeMotor.getForwardLimitSwitch(Type.kNormallyOpen).isPressed()).thenAnswer(new Answer<Boolean>() {
-
-			@Override
-			public Boolean answer(InvocationOnMock invocation) throws Throwable {
-				return upperLimit.isPressed();
-			}
-			
-		});
-		when(fakeMotor.getReverseLimitSwitch(Type.kNormallyOpen).isPressed()).thenAnswer(new Answer<Boolean>() {
-
-			@Override
-			public Boolean answer(InvocationOnMock invocation) throws Throwable {
-				return lowerLimit.isPressed();
-			}
-			
-		});
-
-		return fakeMotor;
-	}
-
 	
 	
 }
