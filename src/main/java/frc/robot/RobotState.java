@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import frc.robot.commands.supplier.TargetYawSupplier;
 import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.commands.supplier.TargetNodeSupplier;
@@ -14,7 +15,7 @@ import frc.robot.pose.AprilTagLocation.AprilTagIDLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.pose.TargetNode;
-public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSupplier,ScoringLocationSupplier , TargetNodeSupplier{
+public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSupplier,ScoringLocationSupplier , TargetNodeSupplier, TargetYawSupplier{
 
 	public static final double DISTANCE_UNKNOWN = -1;
 	public static final double CLOSE_ENOUGH_TO_DEPLOY_METERS = 1.2192 + 0.4064; //arm is 1.2192 meters in front of robot
@@ -26,14 +27,19 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 		this.bestAprilTagTarget = bestAprilTagTarget;
 	}
 
-	public Optional<Double> getAlignAngle() {
-		return alignAngle;
+
+	public void setTargetYawAngle(double alignAngle) {
+		this.targetYawAngle = Optional.of(alignAngle);
 	}
 
-	public void setAlignAngle(Optional<Double> alignAngle) {
-		this.alignAngle = alignAngle;
+	public String getAlignAngleString() {
+		if ( targetYawAngle.isPresent()) {
+			return targetYawAngle.get()+"";
+		}
+		else {
+			return "<NONE>";
+		}
 	}
-
 	private Optional<Pose2d> estimatedPose;
 	
 	public void setEstimatedPose(Optional<Pose2d> estimatedPose) {
@@ -41,7 +47,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	}
 
 	private Optional<RecognizedAprilTagTarget> bestAprilTagTarget = Optional.empty();
-	private Optional<Double> alignAngle= Optional.empty();
+	private Optional<Double> targetYawAngle= Optional.empty();
 	private Optional<TargetNode> targetNode = Optional.empty();
 
 	public void setTargetNode(Optional<TargetNode> targetNode) {
@@ -61,6 +67,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	public boolean canDeploy() {
 		return getTargetDistance() < CLOSE_ENOUGH_TO_DEPLOY_METERS;
 	}
+	
 	@Override
 	public void initSendable(SendableBuilder sb) {
 	    sb.addDoubleProperty("Yaw", this::getYawAngleDegrees, null);
@@ -68,6 +75,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	    sb.addDoubleProperty("Distance Meters", this::getTargetDistance, null);
 	    sb.addBooleanProperty("CanDeploy", this::canDeploy, null);
 		sb.addStringProperty("Estimated Pose", () -> { return estimatedPose + ""; }, null);
+		sb.addDoubleProperty("TargetYaw", this::getTargetYawAngleNumber,null );
 	}
 
 	public double getTargetDistance() {
@@ -108,5 +116,19 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	@Override
 	public Optional<TargetNode> getSelectedTarget() {
 		return targetNode;
+	}
+
+	public double getTargetYawAngleNumber() {
+		if ( getTargetYawAngle().isPresent()) {
+			return getTargetYawAngle().get();
+		}
+		else {
+			return 360.0;
+		}
+	}
+	@Override
+	public Optional<Double> getTargetYawAngle() {
+		// TODO Auto-generated method stub
+		return targetYawAngle;
 	}
 }

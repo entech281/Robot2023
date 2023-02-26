@@ -8,7 +8,9 @@ import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.oi.ShuffleboardFieldDisplay;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.PoseEstimator;
+import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.ScoringLocation;
+import frc.robot.pose.TargetNode;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
@@ -28,6 +30,7 @@ import frc.robot.subsystems.VisionSubsystem;
  */
 public class RobotContext {
 	
+	public static final double ANGLE_NOT_FOUND = 999;
 	//inject just what we need. later we might need arm-- we can add it then
 	public RobotContext( AlignmentCalculator alignmentCalculator, 
 			RobotState robotState, 
@@ -43,6 +46,7 @@ public class RobotContext {
 	    this.robotState = robotState;
 	    this.poseEstimator = poseEstimator;
 	    this.driverControls = driverControls;
+	    this.alignmentCalculator = alignmentCalculator;
 	}
 
 	
@@ -75,8 +79,13 @@ public class RobotContext {
         
         if ( robotState.getScoringLocation().isPresent()) {
         	ScoringLocation scoreloc = robotState.getScoringLocation().get();
-            fieldDisplay.displayScoringSolution(estimatedRobotPose.get(),scoreloc.computeAbsolutePose()); 
+        	Pose2d absoluteScoringPose = scoreloc.computeAbsolutePose();
+        	Pose2d realRobotPose = estimatedRobotPose.get();
+            fieldDisplay.displayScoringSolution(realRobotPose,absoluteScoringPose); 
+            double targetYaw = alignmentCalculator.calculateAngleToScoringLocation(absoluteScoringPose, realRobotPose);
+            robotState.setTargetYawAngle(targetYaw);
         }
+           
         
     }    
 
@@ -87,6 +96,7 @@ public class RobotContext {
 	private PoseEstimator poseEstimator;
 	private ShuffleboardFieldDisplay fieldDisplay;
 	private ShuffleboardDriverControls driverControls;
+	private AlignmentCalculator alignmentCalculator;
 	
 	
 }

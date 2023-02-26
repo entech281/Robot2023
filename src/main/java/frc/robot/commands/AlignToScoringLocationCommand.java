@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotYawPIDController;
+import frc.robot.commands.supplier.TargetYawSupplier;
 import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.filters.DriveInput;
@@ -26,15 +27,9 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
     protected final DriveSubsystem drive;
     protected final RobotYawPIDController pid;
     protected final Supplier<DriveInput> operatorInput;
-    private ScoringLocationSupplier scoringLocationSupplier;
     private EstimatedPoseSupplier currentPoseSupplier;
+    private TargetYawSupplier alignAngleSupplier;
     private AlignmentCalculator alignCalculator = new AlignmentCalculator();
-    public static final double P_GAIN = 0.01;
-	public static final double I_GAIN = 0.55;
-    public static final double D_GAIN = 0;
-    public static final double ANGLE_TOLERANCE = 1;
-    public static final double SPEED_LIMIT = 0.75;
-    public static final int STOP_COUNT = 4;
 
     
     /**
@@ -44,12 +39,12 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
      */
     public AlignToScoringLocationCommand(DriveSubsystem drive,
     		Supplier<DriveInput> operatorInput, 
-    		ScoringLocationSupplier scoringLocationSupplier, 
-    		EstimatedPoseSupplier currentPoseSupplier) {
+    		EstimatedPoseSupplier currentPoseSupplier,
+    		TargetYawSupplier alignAngleSupplier) {
         super(drive);
         this.drive = drive;
         this.operatorInput = operatorInput;        
-        this.scoringLocationSupplier = scoringLocationSupplier;
+        this.alignAngleSupplier = alignAngleSupplier;
         this.currentPoseSupplier = currentPoseSupplier;
         
         pid = new RobotYawPIDController();        
@@ -57,28 +52,25 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-    	if ( scoringLocationSupplier.getScoringLocation().isPresent()) {
-        	ScoringLocation currentScoringLocation = scoringLocationSupplier.getScoringLocation().get();
+        DriveInput di = operatorInput.get();
+        
+    	if ( alignAngleSupplier.getTargetYawAngle().isPresent() && currentPoseSupplier.getEstimatedPose().isPresent()) {
+    		
         	Pose2d estimatedPose = currentPoseSupplier.getEstimatedPose().get();
         	
-        	/**
-        	 * TODO:the above is too basic. We need to handle what happens if:
-        	 *   -- the command is started without a scoringlocation or an estimated pose
-        	 *   -- we lose either one during one execution loop
-        	 *   -- the scoring location changes from the originally provided one
-        	 */
+        	double currentRobotAngle = estimatedPose.getRotation().getDegrees();
         	
-        	double angleToTargetDegrees = alignCalculator.calculateAngleToScoringLocation(currentScoringLocation, estimatedPose);
-        	
+        	double objectiveAngle = alignAngleSupplier.getTargetYawAngle().get();
+        	SmartDashboard.putNumber("ObjectiveAngleFromAlign", objectiveAngle);
+        	SmartDashboard.putData(pid);
+
         	pid.setSetpoint(0);
-            SmartDashboard.putNumber("Auto Align Angle", angleToTargetDegrees);
-        	
-            double calcValue = pid.calculate(angleToTargetDegrees, 0.0);
-            DriveInput di = operatorInput.get();
-            di.setRotation(-calcValue);
+
+            double calcValue = pid.calculate(objectiveAngle);
+
+            di.setRotation(calcValue);
             drive.drive(di);    		
     	} else {
-            DriveInput di = new DriveInput(0, 0, 0, 0);
             drive.drive(di);
         }
 
@@ -91,7 +83,7 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
 
     @Override
     public boolean isFinished() {
-    	return pid.isStable();    	
+    	return false;    	
     }
 
     @Override
