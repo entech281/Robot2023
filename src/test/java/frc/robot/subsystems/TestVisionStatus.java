@@ -19,7 +19,7 @@ public class TestVisionStatus {
 		VisionStatus vs = new VisionStatus();
 		vs.setLatency(2.2);
 		vs.setPhotonEstimatedPose(new Pose3d());
-		vs.addRecognizedTarget(new RecognizedAprilTagTarget(new Transform3d(), AprilTagLocation.BLUE_LEFT));
+		vs.addRecognizedTarget(new RecognizedAprilTagTarget(new Transform3d(), AprilTagLocation.BLUE_LEFT,null));
 		String s = vs + "";
 		System.out.println(s);
 		

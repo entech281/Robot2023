@@ -126,7 +126,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	  //Transform3d T = PoseUtil.cameraToTargetDirectlyInFrontOfCamera(24);
 	  Transform3d T = PoseUtil.cameraToTarget(Units.inchesToMeters(48),Units.inchesToMeters(3),180);
 	  newStatus.setLatency(20);
-	  newStatus.addRecognizedTarget(new RecognizedAprilTagTarget(T, AprilTagLocation.BLUE_MIDDLE));
+	  newStatus.addRecognizedTarget(new RecognizedAprilTagTarget(T, AprilTagLocation.BLUE_MIDDLE,null));
 	    
 	  currentStatus = newStatus;
 	  debugStatus();
@@ -148,8 +148,7 @@ private void debugStatus() {
       else {
     	  DriverStation.reportWarning("Photon Vision Target with bad tag id'" + tagId + "'", false);  
       }
-
-      return new RecognizedAprilTagTarget (t3d,loc);
+      return new RecognizedAprilTagTarget (t3d,loc,t);
   }
   
   private static boolean isValidTagId(int tagId) {
