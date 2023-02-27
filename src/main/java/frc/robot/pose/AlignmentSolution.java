@@ -1,12 +1,5 @@
 package frc.robot.pose;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.commands.instructions.AlignmentInstruction;
-
 /**
  * An alignment solution should include everything we need if we
  * wanted to execute a fully autonomous score from our current position.

@@ -12,7 +12,6 @@ import org.mockito.stubbing.Answer;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import frc.robot.controllers.SparkMaxPositionController.MotionState;
 

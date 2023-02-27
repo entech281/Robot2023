@@ -51,7 +51,6 @@ public class RobotContext {
 	    driveSubsystem = drive;
 	    navXSubSystem = navx;
 	    visionSubsystem = vision;
-		this.alignmentCalculator = alignmentCalculator;
 	    this.fieldDisplay=fieldDisplay;
 	    this.robotState = robotState;
 	    this.poseEstimator = poseEstimator;
@@ -59,7 +58,6 @@ public class RobotContext {
 	    this.elbowSubsystem = elbowSubsystem;
 	    this.armSubsystem = armSubsystem;
 	    this.gripperSubsystem = gripperSubsystem;
-	    this.alignmentCalculator = alignmentCalculator;
 	}
 
 	
@@ -113,7 +111,6 @@ public class RobotContext {
     private ElbowSubsystem elbowSubsystem;
     private GripperSubsystem gripperSubsystem;
 	private PoseEstimator poseEstimator;
-	private AlignmentCalculator alignmentCalculator;
 	private ShuffleboardFieldDisplay fieldDisplay;
 	private ShuffleboardDriverControls driverControls;
 }
