@@ -5,11 +5,13 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.FilteredDriveCommand;
+import frc.robot.commands.GripperCommand;
+import frc.robot.commands.PositionArmCommand;
+import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
@@ -22,9 +24,11 @@ import frc.robot.filters.DriveInput;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElbowSubsystem;
+import frc.robot.subsystems.GripperSubsystem;
+import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.VisionSubsystem;
-
 /**
  *
  * @author dcowden 
@@ -32,19 +36,22 @@ import frc.robot.subsystems.VisionSubsystem;
  */
 public class CommandFactory {
 
-	public static final double SNAP_YAW_ANGLE = 160.0;
 	private RobotState robotState;
 	private DriveSubsystem driveSubsystem;
 	private VisionSubsystem visionSubsystem;
 	private NavXSubSystem navxSubsystem;
 	private ArmSubsystem armSubsystem;
+	private ElbowSubsystem elbowSubsystem;
+	private GripperSubsystem gripperSubsystem;
     
-    public CommandFactory(RobotState robotState, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm){
+    public CommandFactory(RobotState robotState, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm, ElbowSubsystem elbowSubsystem,GripperSubsystem gripperSubsystem){
     	this.driveSubsystem = drive;
     	this.navxSubsystem = navx;
     	this.visionSubsystem = vision;
     	this.armSubsystem = arm;
         this.robotState = robotState;
+        this.elbowSubsystem = elbowSubsystem;
+        this.gripperSubsystem = gripperSubsystem;
 
     }
     
@@ -64,6 +71,22 @@ public class CommandFactory {
 
     }
     
+    public Command deployHighCommand() {
+    	//note that the subsystems will HOME before the moves are complete!
+    	return new SequentialCommandGroup(
+    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH,true),
+    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH, true ),
+    			new GripperCommand( gripperSubsystem, GripperState.kOpen) 
+    	);
+    }
+    //this is probably also the home position
+    public Command carryPosition() {
+    	return new SequentialCommandGroup(
+    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY,true),
+    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY, true ),
+    			new GripperCommand( gripperSubsystem, GripperState.kClose) 
+    	);    	
+    }
     
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
     	return new DriveInputYawMixer(robotState, operatorJoystickInput);
@@ -95,19 +118,6 @@ public class CommandFactory {
     
     public Command snapYawDegreesCommand(double angle) {
         return new SnapYawDegreesCommand(driveSubsystem, angle,robotState );
-    }
-
-    public Command getAutonomousCommand() {
-        return snapYawDegreesCommand(SNAP_YAW_ANGLE);
-    }
-
-    public Command autoCommand1() {
-        return new SequentialCommandGroup(
-            new DriveDirectionCommand(driveSubsystem, 0.5,0.0, 0.25)
-            , new DriveDirectionCommand(driveSubsystem, 0.0, 0.5, 0.25)
-            , new DriveDirectionCommand(driveSubsystem, -0.5,0.0, 0.25)
-            , new DriveDirectionCommand(driveSubsystem, 0.0, -0.5, 0.25)
-        );
     }
 
     public Command getZeroGyro() {

@@ -18,65 +18,16 @@ import frc.robot.commands.instructions.AlignmentInstruction;
  * as the basis for our calculations, and the scoring node we are going after
  * @author dcowden
  */
-public class AlignmentSolution implements Sendable{
+public class AlignmentSolution {
     
-    public enum AlignmentStrategy{
-        HOPELESS_I_GIVE_UP,
-        DEPLOY_NOW,
-        ROTATE_AND_DEPLOY,
-        ROTATE_THEN_FOWARD,
-        ORTHOGONAL_APPOROACH,
-        NO_STRATEGY_SELECTED,
-        CONFUSED
-    }
-    
-    public AlignmentSolution(AlignmentStrategy strategy) {
-    	this.strategy = strategy;
-    }
-    public boolean hasInstructions() {
-    	return ! alignmentInstructions.isEmpty();
-    }
-    public void setScoringLocation(ScoringLocation scoringLocation) {
-    	this.scoringLocation = scoringLocation;
-    }
-    public ScoringLocation getScoringLocation() {
-        return scoringLocation;
-    }
+	private double alignAngle = 0.0;
+
+	public double getAlignAngle() {
+		return alignAngle;
+	}
+
+	public void setAlignAngle(double alignAngle) {
+		this.alignAngle = alignAngle;
+	}
   
-    
-    public AlignmentStrategy getStrategy() {
-        return strategy;
-    }
-
-    public void setStrategy(AlignmentStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public void addAlignmentInstruction( AlignmentInstruction is ){
-        alignmentInstructions.add(is);
-    }
-    public List<AlignmentInstruction> getAlignmentInstructions() {
-        return alignmentInstructions;
-    }
-    
-    @Override
-    public void initSendable(SendableBuilder sb) {
-        sb.addStringProperty("Alignment strategy", this::toString, null);
-    }    
-    
-    @Override
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.strategy);
-        sb.append(" : ");
-        for ( AlignmentInstruction ai: alignmentInstructions){
-            sb.append("\t* ").append (ai).append("\n");
-        }
-        return sb.toString();
-    }
-    
-    private final List<AlignmentInstruction> alignmentInstructions = new ArrayList<>();
-    private AlignmentStrategy strategy =  AlignmentStrategy.NO_STRATEGY_SELECTED;
-    private ScoringLocation scoringLocation;    
-
 }

@@ -1,25 +1,29 @@
 package frc.robot.controllers;
 
+import frc.robot.controllers.SparkMaxPositionController.MotionState;
 
 public interface PositionController {
 
-    double getDesiredPosition();
-    double getActualPosition();
+	int getActualPosition();
 
-    void setDesiredPosition(double preset);
+	double getRequestedPosition();
 
-    boolean isInMotion();
-    boolean isAtDesiredPosition();
+	boolean isAtRequestedPosition();
 
-    default void resetPosition(){
-        setDesiredPosition(0.0);
-    }
-    boolean isReversed();
-    boolean isAtLowerLimit();
-    boolean isAtUpperLimit();
-    boolean isEnabled();
+	void setEnabled(boolean enabled);
 
-    //should detect if the controller is available
-    void configure();	
-	
+	void update();
+
+	void requestPosition(int requestedPosition);
+
+	boolean isAtLowerLimit();
+
+	boolean isAtUpperLimit();
+
+	boolean inMotion();
+
+	boolean isHomed();
+
+	MotionState getMotionState();
+
 }

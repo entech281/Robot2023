@@ -1,49 +1,34 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import frc.robot.RobotConstants;
+import static frc.robot.RobotConstants.ARM.*;
 
 /**
  *
  * @author dcowden
  */
-public class ArmStatus implements Sendable, SubsystemStatus{
+public class ArmStatus  implements SubsystemStatus{
 
-    private boolean clawOpen = RobotConstants.ARM.INIT_CLAW_STATE;
-    private double armExtension = RobotConstants.ARM.MIN_EXTENSION_METERS;
-    private double verticalAngle= RobotConstants.ARM.MIN_ANGLE_DEGREES;
+    private double actualPostion;
+    private int armCounts;
     
-    
-    public void setClawOpen(boolean clawOpen) {
-        this.clawOpen = clawOpen;
+    /**reality note:  
+    * 42 counts per ref
+    * gearbox: 48 to 1
+    * sprocket diameter approx. 1.5" 
+    * -- 4.71 inch/ref --> ABOUT 0.002 inches per count    
+    **/
+    public ArmStatus ( int armCounts) {
+    	this.armCounts = armCounts;
+    	this.actualPostion = MIN_EXTENSION_METERS + armCounts/ SETTINGS.COUNTS_PER_METER;
     }
 
-    public boolean getClawOpen(){
-        return clawOpen;
-    }
-
-    public void setArmExtension(double armExtension){
-        this.armExtension = armExtension;
-    }
-
-    public double getArmExtension(){
-        return armExtension;
+    public int getArmExtensionCounts() {
+    	return armCounts;
     }
     
-    public void setVerticalAngle(double verticalAngle){
-        this.verticalAngle = verticalAngle;
+    public double getArmExtensionMeters(){
+        return actualPostion;
     }
 
-    public double getVerticalAngle(){
-        return verticalAngle;
-    }
-
-    @Override
-    public void initSendable(SendableBuilder sb) {
-        sb.addBooleanProperty("Claw", this::getClawOpen, null);
-        sb.addDoubleProperty("ArmExtension", this::getArmExtension, null);
-        sb.addDoubleProperty("Vertical Angle", this::getVerticalAngle, null);
-    }
 
 }

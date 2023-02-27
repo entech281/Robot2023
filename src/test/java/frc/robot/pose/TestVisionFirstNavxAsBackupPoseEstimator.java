@@ -69,7 +69,7 @@ public class TestVisionFirstNavxAsBackupPoseEstimator {
 		vs.setBestTarget(
 				new RecognizedAprilTagTarget(
 						cameraToTarget,
-						AprilTagLocation.RED_MIDDLE
+						AprilTagLocation.RED_MIDDLE, null
 				)				
 		);
 		

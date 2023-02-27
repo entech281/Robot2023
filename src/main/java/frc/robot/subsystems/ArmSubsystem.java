@@ -6,121 +6,98 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
-import frc.robot.controllers.PositionController;
+import frc.robot.RobotConstants.ARM;
+import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
 
+import static frc.robot.RobotConstants.ARM.*;
 /**
  *
  * @author dcowden
  */
 public class ArmSubsystem extends EntechSubsystem{
+	
 
   private CANSparkMax telescopeMotor;
-  private PositionController controller;
-  
-  public interface Presets {
-	  public static double HOME =  0.0;
-	  public static double CARRY = 20.0;
-	  public static double SCORE_LOW = 20.0;
-	  public static double SCORE_MIDDLE = 85.0;
-	  public static double SCORE_HIGH = 95.0;
-  }
-  
-  public static int TOLERANCE_COUNTS = 50; 
+  private SparkMaxPositionController positionController;
   private boolean enabled = false;
-  private boolean homed = false;
+  
+  //for unit testing
+  public ArmSubsystem( CANSparkMax motor, PositionControllerConfig config) {
+	  this.enabled=true;
+	  this.telescopeMotor = motor;
+	  this.positionController = new SparkMaxPositionController(config);
+  }  
 
   
-  public ArmStatus getStatus(){
-      return new ArmStatus();
-  }
-  public boolean isHome() {
-	  return homed;
-  }
+  //for match
+  public ArmSubsystem() {
+	    positionController = new SparkMaxPositionController(
+	    new PositionControllerConfig.Builder("ARM")
+	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ARM.HOMING.HOME_POSITION_COUNTS )
+	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_COUNTS)
+	    	.withReversed(ARM.SETTINGS.MOTOR_REVERSED)
+	    	.withLimitSwitchTypes(Type.kNormallyOpen,Type.kNormallyOpen)
+	    	.withSwappedLimitSwitches(false)
+	    	.withSoftLimits(ARM.HOMING.MIN_POSITION_COUNTS, ARM.HOMING.MAX_POSITION_COUNTS)
+	    	.build()	    		
+	    );
+  }  
   
-  public void home() {
-	  controller.setDesiredPosition(Presets.HOME);
-  }
-  
-  public void carry() {
-	  goToPositionIfHomed(Presets.CARRY);
-  }
-  
-  public void scoreLow() {
-	  goToPositionIfHomed(Presets.SCORE_LOW);
-  }
-  
-  public void scoreMiddle() {
-	  goToPositionIfHomed(Presets.SCORE_MIDDLE);
-  }
-  
-  public void scoreHigh() {
-	  goToPositionIfHomed(Presets.SCORE_HIGH);
-  }
-  
-  private void goToPositionIfHomed(double position) {
-	  if ( isHome()) {
-		  controller.setDesiredPosition(position);
-	  }
-	  
-  }
   @Override
   public void initialize() {
 	if ( enabled ) {
 	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
-	    controller = new SparkMaxPositionController(telescopeMotor,false,TOLERANCE_COUNTS);
+	    telescopeMotor.getPIDController().setP(TUNING.P_GAIN);
+	    telescopeMotor.getPIDController().setI(TUNING.I_GAIN);
+	    telescopeMotor.getPIDController().setD(TUNING.D_GAIN);
+	    telescopeMotor.setSmartCurrentLimit(SETTINGS.MAX_SPIKE_CURRENT);
+	    positionController.setSparkMax(telescopeMotor);
 	}
-
+  }  
+  
+  public ArmStatus getStatus(){
+      return new ArmStatus(positionController.getActualPosition());
   }
-  public void stop() {
-	  telescopeMotor.set(0);
-  }
-  public void reset() {
-	  controller.resetPosition();
-  }
-  public boolean isAtLowerLimit() {
-	  return controller.isAtLowerLimit();
-  }
-
-  public boolean isAtUpperLimit() {
-	  return controller.isAtUpperLimit();
+ 
+  public void requestPosition(int requestedPosition) {
+	  positionController.requestPosition(requestedPosition);
   }
   
+  public void stop() {
+	  positionController.stop();
+  }
+  
+  public boolean isAtRequestedPosition() {
+	  return positionController.isAtRequestedPosition();
+  }  
+  
+  
+  public void periodic() {	 
+	  if (enabled ) {
+		  positionController.update();
+	  }
+  }
+    
   @Override
   public void initSendable(SendableBuilder builder) {
-	  if ( enabled ) {
-	      builder.setSmartDashboardType(getName());
-	      builder.addStringProperty("Arm:", () -> { return controller+""; }, null);		  
-	      builder.addBooleanProperty("InMotion", () -> { return controller.isInMotion(); }, null);
-	      builder.addBooleanProperty("Enabled", () -> { return controller.isEnabled(); }, null);
-	  }
-  }
-
-  @Override
-  public void periodic() {
-     if (enabled ) {
-    	 checkForHomed();
-    	 checkArrivedPosition();
-     }
-  }
-
-  private void checkArrivedPosition() {
-	  if ( enabled ) {
-		  if (controller.isAtDesiredPosition()) {
-			  stop();
-		  }
-	  }
-  }
-  private void checkForHomed() {
-      if (isAtLowerLimit()) {
-          reset();
-          homed = true;
-      }
-      if (!isHome()) {
-     	 home();
-      }	  
+      builder.setSmartDashboardType(getName());
+	  positionController.initSendable(builder);	      
   }
   
+  public boolean isHomed() {
+	  return positionController.isHomed();
+  }
+  
+  public int getActualPosition() {
+	  return positionController.getActualPosition();
+  }
+  
+  public boolean inMotion() {
+	  return positionController.inMotion();
+  }
+ 
+
   @Override
   public void simulationPeriodic() {
     
