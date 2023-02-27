@@ -20,10 +20,6 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 
 	public static final double DISTANCE_UNKNOWN = -1;
 	public static final double CLOSE_ENOUGH_TO_DEPLOY_METERS = 1.2192 + 0.4064; //arm is 1.2192 meters in front of robot
-<<<<<<< HEAD
-	private double angleToTarget;
-
-=======
 	private Optional<RecognizedAprilTagTarget> bestAprilTagTarget = Optional.empty();
 	private Optional<Double> targetYawAngle= Optional.empty();
 	private Optional<Double> photonYawAngle= Optional.empty();
@@ -39,7 +35,6 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	}	
 	
 	
->>>>>>> 61ee82a51648446e6e628a5a66b3a434a7a153d2
 	public Optional<RecognizedAprilTagTarget> getBestAprilTagTarget() {
 		return bestAprilTagTarget;
 	}
@@ -82,7 +77,6 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	    sb.addDoubleProperty("Distance Meters", this::getTargetDistance, null);
 	    sb.addBooleanProperty("CanDeploy", this::canDeploy, null);
 		sb.addStringProperty("Estimated Pose", () -> { return estimatedPose + ""; }, null);
-		sb.addDoubleProperty("Angle To Target", this::getAngleToTarget, null);
 		sb.addDoubleProperty("TargetYaw", () -> { return SendableUtil.doubleForOptional(getTargetYawAngle()); },null );
 		sb.addDoubleProperty("PhotonYaw", () -> { return SendableUtil.doubleForOptional(getPhotonYawAngle()) ;},null );
 	}
@@ -127,18 +121,9 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 		return targetNode;
 	}
 
-<<<<<<< HEAD
-	public double getAngleToTarget() {
-		return this.angleToTarget;
-	}
-
-	public void setAngleToTarget(double angleToTarget) {
-		this.angleToTarget = angleToTarget;
-=======
 
 	@Override
 	public Optional<Double> getTargetYawAngle() {		
 		return targetYawAngle;
->>>>>>> 61ee82a51648446e6e628a5a66b3a434a7a153d2
 	}
 }

@@ -116,6 +116,4 @@ public class RobotContext {
 	private AlignmentCalculator alignmentCalculator;
 	private ShuffleboardFieldDisplay fieldDisplay;
 	private ShuffleboardDriverControls driverControls;
-	private AlignmentCalculator alignmentCalculator;
-	
 }
