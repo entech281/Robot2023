@@ -113,6 +113,8 @@ public class SparkMaxPositionController implements Sendable, PositionController{
   	      builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
   	      builder.addIntegerProperty("ActualPos", this::getActualPosition, null);
   	      builder.addBooleanProperty("Homed", this::isHomed, null);
+  	      builder.addBooleanProperty("UpperLimit", this::isAtLowerLimit, null);
+  	      builder.addBooleanProperty("LowerLimit", this::isAtUpperLimit, null);
   	  }
     }  
 	
@@ -127,7 +129,12 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 	}
     @Override
 	public boolean isAtLowerLimit() {
-    	return lowerLimit.isPressed();
+    	if ( hasSpark() ) {
+    		return lowerLimit.isPressed();
+    	}
+    	else {
+    		return false;
+    	}
     }    
     
     @Override
@@ -139,7 +146,12 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 
     @Override
 	public boolean isAtUpperLimit() {
-    	return upperLimit.isPressed();
+    	if ( hasSpark() ) {
+    		return upperLimit.isPressed();
+    	}
+    	else {
+    		return false;
+    	}
     }    
  
     public boolean isEnabled() {
