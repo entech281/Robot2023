@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class AlignmentCalculator {
 	
 	public double calculateAngleToScoringLocation(Pose2d scoringLocation, Pose2d estimatedRobotPose) {
-		Translation2d t = scoringLocation.minus(estimatedRobotPose).getTranslation();
+		Translation2d t = estimatedRobotPose.minus(scoringLocation).getTranslation();
 		double robotToScoringLocationAngle = Units.radiansToDegrees(Math.atan2(t.getY(), t.getX()));
 		
 		double fieldAbsoluteTargetAngle = scoringLocation.getRotation().rotateBy(Rotation2d.fromDegrees(180)).getDegrees();

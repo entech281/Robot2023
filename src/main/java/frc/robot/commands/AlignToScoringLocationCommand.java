@@ -64,9 +64,9 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         	SmartDashboard.putNumber("ObjectiveAngleFromAlign", objectiveAngle);
         	SmartDashboard.putData(pid);
 
-        	pid.setSetpoint(0);
+        	pid.setSetpoint(objectiveAngle);
 
-            double calcValue = pid.calculate(objectiveAngle);
+            double calcValue = pid.calculate(currentRobotAngle);
 
             di.setRotation(calcValue);
             drive.drive(di);    		
