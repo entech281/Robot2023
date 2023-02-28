@@ -64,6 +64,9 @@ public class ArmSubsystem extends EntechSubsystem{
 	  positionController.requestPosition(requestedPosition);
   }
   
+  public void forgetHome() {
+	  positionController.forgetHome();
+  }
   public void stop() {
 	  positionController.stop();
   }

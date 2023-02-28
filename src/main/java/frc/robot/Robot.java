@@ -87,6 +87,11 @@ public class Robot extends TimedRobot {
 	autoChoices.forEach((c)->{
 		shuffleboardControls.addAutoCommandChoice(c);
 	});
+	ShuffleboardTab t = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.DEBUG);
+	t.add("PositionArmCommandCARRY", commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.CARRY));
+	t.add("PositionArmCommandHIGH", commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH));
+	t.add("PositionArmCommandHOME", commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.HOME));
+	t.add("ArmForgetHome", commandFactory.forgetArmHome());
   }
 
   private void doPeriodic() {

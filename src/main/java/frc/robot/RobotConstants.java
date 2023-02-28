@@ -52,13 +52,13 @@ public final class RobotConstants {
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=10.0;
-    		public static final int HOME_POSITION_BACKOFF_COUNTS=20;
+    		public static final int HOME_POSITION_BACKOFF_COUNTS=42;
     		public static final int HOME_POSITION_COUNTS=0;
-    		public static final int MAX_POSITION_COUNTS=1000;
-    		public static final int MIN_POSITION_COUNTS=10;
+    		public static final int MIN_POSITION_COUNTS=0;
+    		public static final int MAX_POSITION_COUNTS=420;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.1;
+    		public static final double P_GAIN=0.01;
     		public static final double I_GAIN=0.0;
     		public static final double D_GAIN=0.0;
     	}

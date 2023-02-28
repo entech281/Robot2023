@@ -66,7 +66,7 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
 
             double calcValue = pid.calculate(currentRobotAngle);
 
-            di.setRotation(calcValue);
+            di.setRotation(-calcValue);
 
             drive.drive(di);
     	} else {

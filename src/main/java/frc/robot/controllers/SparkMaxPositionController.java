@@ -86,6 +86,10 @@ public class SparkMaxPositionController implements Sendable, PositionController{
   	  return axisState+"";
     }    
     
+	public void forgetHome() {
+		axisState = MotionState.UNINITIALIZED;
+		spark.stopMotor();
+	}
     @Override
 	public MotionState getMotionState() {
   	  return axisState;

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
+import frc.robot.commands.ArmForgetHomeCommand;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
@@ -71,6 +72,13 @@ public class CommandFactory {
 
     }
     
+    public Command moveArmCommand(int position) {
+    	Command p = new PositionArmCommand ( armSubsystem,position,true);
+    	return p;
+    }
+    public Command forgetArmHome() {
+    	return new ArmForgetHomeCommand( armSubsystem);
+    }
     public Command deployHighCommand() {
     	//note that the subsystems will HOME before the moves are complete!
     	return new SequentialCommandGroup(
