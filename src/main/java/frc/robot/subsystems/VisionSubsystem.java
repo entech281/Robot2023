@@ -36,7 +36,9 @@ public class VisionSubsystem extends EntechSubsystem {
   private PhotonCamera camera;
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
   private PhotonPoseEstimator photonPoseEstimator;
+  public static final double NO_GOOD_ANGLE=-299;
   
+  private double lastPhotonYawAngle = 0;
   @Override
   public void initialize() {
 
@@ -60,12 +62,14 @@ public class VisionSubsystem extends EntechSubsystem {
      sb.addBooleanProperty("HasPhotonPose", this::hasPhotonPose, null);
      sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
      sb.addStringProperty("Target", this::getBestTagName, null);
+     sb.addDoubleProperty("PhotonYaw", () -> { return lastPhotonYawAngle;} , null);
   }
   
   
   public VisionStatus getStatus() {
 	  return currentStatus;
   }
+  
   
   private boolean hasTargets() {
 	  return currentStatus.hasTargets();
@@ -90,7 +94,7 @@ public class VisionSubsystem extends EntechSubsystem {
   private void updateStatus(){
 	  
 	  	VisionStatus newStatus = new VisionStatus();
-	  	
+	  	lastPhotonYawAngle = NO_GOOD_ANGLE;
 	    PhotonPipelineResult result = camera.getLatestResult();
 	    newStatus.setLatency(camera.getLatestResult().getLatencyMillis());
 
@@ -102,6 +106,7 @@ public class VisionSubsystem extends EntechSubsystem {
 		    PhotonTrackedTarget  bestTarget = result.getBestTarget();
 		    if ( bestTarget != null ) {
 		    	newStatus.setBestTarget(createRecognizedTarget(bestTarget));
+		    	lastPhotonYawAngle = bestTarget.getYaw();
 		    }	    	    	
 	    }
  
