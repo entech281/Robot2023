@@ -74,7 +74,7 @@ public class ArmSubsystem extends EntechSubsystem{
   
   
   public void periodic() {	 
-	  if (enabled ) {
+	  if (enabled) {
 		  positionController.update();
 	  }
   }

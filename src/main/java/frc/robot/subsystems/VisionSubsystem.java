@@ -95,19 +95,19 @@ public class VisionSubsystem extends EntechSubsystem {
 	    newStatus.setLatency(camera.getLatestResult().getLatencyMillis());
 
 	    if ( result.hasTargets()) {
-	        for ( PhotonTrackedTarget t: result.getTargets()){	          
+	        for (PhotonTrackedTarget t: result.getTargets()){	          
 	        	newStatus.addRecognizedTarget(createRecognizedTarget(t));
 	        }	   	    
 
 		    PhotonTrackedTarget  bestTarget = result.getBestTarget();
-		    if ( bestTarget != null ) {
+		    if (bestTarget != null) {
 		    	newStatus.setBestTarget(createRecognizedTarget(bestTarget));
 		    }	    	    	
 	    }
  
 		Optional<EstimatedRobotPose> updatedPose = photonPoseEstimator.update();
 		  
-		if ( updatedPose.isPresent()) {
+		if (updatedPose.isPresent()) {
 			newStatus.setPhotonEstimatedPose(updatedPose.get().estimatedPose);  
 		}		    
 
@@ -157,7 +157,7 @@ private void debugStatus() {
   
   @Override
   public void periodic() {
-	  if ( Robot.isReal()) {
+	  if (Robot.isReal()) {
 		  updateStatus();  
 	  }
 	  else {

@@ -24,7 +24,7 @@ public class GripperSubsystem extends EntechSubsystem implements Sendable{
 	
 	@Override
 	public void initialize() {
-		if (enabled ) {
+		if (enabled) {
 			gripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.GRIPPER_OPEN, RobotConstants.PNEUMATICS.GRIPPER_CLOSE);
 		}
 		
@@ -32,14 +32,14 @@ public class GripperSubsystem extends EntechSubsystem implements Sendable{
 	
 	@Override
 	public void periodic() {
-	  if ( enabled ) {
+	  if (enabled) {
 		  handleSolenoid();
 	  }
 	}
 	
     @Override
     public void initSendable(SendableBuilder builder) {
-  	  if ( enabled ) {
+  	  if (enabled) {
   	      builder.setSmartDashboardType(getName());		  
   	      builder.addBooleanProperty("Open", this::isOpen, null);
   	  }

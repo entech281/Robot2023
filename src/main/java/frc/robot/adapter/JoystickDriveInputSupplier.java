@@ -15,7 +15,7 @@ public class JoystickDriveInputSupplier implements Supplier<DriveInput>{
 
 	@Override
 	public DriveInput get() {
-		return new DriveInput(-joystick.getY(),joystick.getX(), joystick.getZ() );
+		return new DriveInput(-joystick.getY(), joystick.getX(), joystick.getZ() );
 	}
 
 }
