@@ -6,25 +6,21 @@ package frc.robot;
 
 import java.util.List;
 
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.ExceptionHandler;
 import frc.robot.oi.OperatorInterface;
 import frc.robot.oi.ShuffleboardDriverControls;
-import frc.robot.oi.ShuffleboardFieldDisplay;
 import frc.robot.oi.ShuffleboardInterface;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
-import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
+import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
 
 /**
