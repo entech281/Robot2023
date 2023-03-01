@@ -24,7 +24,7 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	private Optional<Double> targetYawAngle= Optional.empty();
 	private Optional<Double> photonYawAngle= Optional.empty();
 	private Optional<TargetNode> targetNode = Optional.empty();	
-	private Optional<Pose2d> estimatedPose;	
+	private Optional<Pose2d> estimatedPose = Optional.empty();	
 	
 	public Optional<Double> getPhotonYawAngle() {
 		return photonYawAngle;
@@ -63,7 +63,12 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	
 	@Override
 	public double getYawAngleDegrees() {
-		return estimatedPose.get().getRotation().getDegrees();
+		if ( estimatedPose.isPresent()) {
+			return estimatedPose.get().getRotation().getDegrees();
+		}
+		else {
+			return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
+		}
 	}
 
 	public boolean canDeploy() {

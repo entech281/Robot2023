@@ -13,6 +13,7 @@ import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
 
 import static frc.robot.RobotConstants.ARM.*;
+
 /**
  *
  * @author dcowden
@@ -33,7 +34,7 @@ public class ArmSubsystem extends EntechSubsystem{
   
   public SparkMaxPositionController getPositionController() {
 	return positionController;
-}
+  }
 
 //for match
   public ArmSubsystem() {
@@ -45,6 +46,7 @@ public class ArmSubsystem extends EntechSubsystem{
 		double RPM  = 1.0;
 		double ACCEL = 1500;
 		int SMART_MOTION_SLOT=0;
+		
 		//following example from here:
 		//https://github.com/REVrobotics/SPARK-MAX-Examples/blob/master/Java/Smart%20Motion%20Example/src/main/java/frc/robot/Robot.java
 	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushless);
@@ -54,12 +56,15 @@ public class ArmSubsystem extends EntechSubsystem{
 	    pid.setD(TUNING.D_GAIN);
 	    pid.setOutputRange(-1.0,1.0);
 	    pid.setSmartMotionMaxVelocity(10000*RPM, SMART_MOTION_SLOT);
+	    pid.setSmartMotionMaxAccel(ACCEL, SMART_MOTION_SLOT);
 	    pid.setSmartMotionMinOutputVelocity(0, SMART_MOTION_SLOT);
 	    pid.setSmartMotionMaxAccel(1500, SMART_MOTION_SLOT);
 
 	    telescopeMotor.set(0);
 	    telescopeMotor.setIdleMode(IdleMode.kBrake);
 	    telescopeMotor.clearFaults();
+	    telescopeMotor.setInverted(ARM.SETTINGS.MOTOR_REVERSED);
+	    telescopeMotor.getEncoder().setPositionConversionFactor(ARM.SETTINGS.COUNTS_PER_METER);
 	    
 	    PositionControllerConfig conf = new PositionControllerConfig.Builder("ARM")
 	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_METERS ,ARM.HOMING.HOME_POSITION_METERS )
@@ -88,6 +93,7 @@ public class ArmSubsystem extends EntechSubsystem{
   public void forgetHome() {
 	  positionController.forgetHome();
   }
+  
   public void stop() {
 	  positionController.stop();
   }
@@ -96,6 +102,27 @@ public class ArmSubsystem extends EntechSubsystem{
 	  return positionController.isAtRequestedPosition();
   }  
   
+  public double getRequestedPosition() {
+	  if ( isEnabled()) {
+		  return positionController.getRequestedPosition();
+	  }
+	  else {
+		  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
+	  }
+  }
+  
+  public double getActualPosition() {
+	  if ( isEnabled()) {
+		  return positionController.getActualPosition();
+	  }
+	  else {
+		  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
+	  }	  
+  }
+  
+  public boolean isEnabled() {
+	  return enabled;
+  }
   
   public void periodic() {	 
 	  if (enabled ) {
@@ -106,20 +133,14 @@ public class ArmSubsystem extends EntechSubsystem{
   @Override
   public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType(getName());  
+      builder.addBooleanProperty("Enabled", this::isEnabled, null);
+      if ( enabled ) {
+          builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
+          builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);      	  
+      }
+    
   }
-  
-  public boolean isHomed() {
-	  return positionController.isHomed();
-  }
-  
-  public double getActualPosition() {
-	  return positionController.getActualPosition();
-  }
-  
-  public boolean inMotion() {
-	  return positionController.inMotion();
-  }
- 
 
   @Override
   public void simulationPeriodic() {

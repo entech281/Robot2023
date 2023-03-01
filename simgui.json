@@ -11,6 +11,11 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Debug/ArmForgetHome": "Command",
+      "/Shuffleboard/Debug/PositionArmCommand": "Command",
+      "/Shuffleboard/Debug/PositionArmCommandCARRY": "Command",
+      "/Shuffleboard/Debug/PositionArmCommandHIGH": "Command",
+      "/Shuffleboard/Debug/PositionArmCommandHOME": "Command",
       "/Shuffleboard/Match/DriveSubsystem": "Subsystem",
       "/Shuffleboard/Match/Estimated Location": "Field2d",
       "/Shuffleboard/Match/SendableChooser[0]": "String Chooser",

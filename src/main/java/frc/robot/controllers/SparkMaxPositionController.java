@@ -118,7 +118,9 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     	if ( isHomed() ) {
     		return isWithinToleranceOfPosition(requestedPosition);
     	}
-		return false;
+    	else {
+    		return false;
+    	}
 	}    
     
 

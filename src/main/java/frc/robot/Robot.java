@@ -10,7 +10,6 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.ExceptionHandler;
@@ -81,8 +80,13 @@ public class Robot extends TimedRobot {
 			shuffleboardControls
 	);
 	
-	MATCH_TAB.add(arm.getPositionController());
-	
+	if ( arm.isEnabled()) {
+		MATCH_TAB.add("ArmController",arm.getPositionController());		
+	}
+	if ( elbow.isEnabled()) {
+		MATCH_TAB.add("ElbowController",elbow.getPositionController());		
+	}
+
 	
 	commandFactory = new CommandFactory(robotState,drive,navx,vision,arm,elbow,gripper);
 	oi = new OperatorInterface(commandFactory,shuffleboardControls);

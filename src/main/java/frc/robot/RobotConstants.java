@@ -17,6 +17,9 @@ public final class RobotConstants {
         public static final int PWM_0 = 0;
         public static final int PWM_1 = 1;
     }
+    public interface INDICATOR_VALUES{
+    	public static final double POSITION_UNKNOWN=-1.0;
+    }
     public interface VISION {
         //public static final double CAMERA_TO_BUMPER = 17.785; //don't need?
         
