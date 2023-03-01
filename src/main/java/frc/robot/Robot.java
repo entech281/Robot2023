@@ -81,6 +81,8 @@ public class Robot extends TimedRobot {
 			shuffleboardControls
 	);
 	
+	MATCH_TAB.add(arm.getPositionController());
+	
 	
 	commandFactory = new CommandFactory(robotState,drive,navx,vision,arm,elbow,gripper);
 	oi = new OperatorInterface(commandFactory,shuffleboardControls);
@@ -90,13 +92,10 @@ public class Robot extends TimedRobot {
 		shuffleboardControls.addAutoCommandChoice(c);
 	});
 	ShuffleboardTab t = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.DEBUG);
-	t.add("PositionArmCommandCARRY", (Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.CARRY));
-	t.add("PositionArmCommandHIGH", (Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH));
-	t.add("PositionArmCommandHOME", (Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.HOME));
-	t.add((Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH));
-	//t.putData("PositionArmCommandHIGH",(Sendable) commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH));
-	//SmartDashboard.putData
-	//t.add("PositionArmCommandHOME", commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.HOME))
+	t.add("PositionArmCommandCARRY", (Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS));
+	t.add("PositionArmCommandHIGH", (Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS));
+	t.add("PositionArmCommandHOME", (Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.HOME_METERS));
+	t.add((Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS));
 	t.add("ArmForgetHome", (Sendable)commandFactory.forgetArmHome());
   }
 

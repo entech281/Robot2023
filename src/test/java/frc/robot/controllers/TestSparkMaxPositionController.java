@@ -18,13 +18,13 @@ import frc.robot.controllers.SparkMaxPositionController.MotionState;
 
 public class TestSparkMaxPositionController {
 
-	final double HOMING_SPEED=33.0;
-	final int BACKOFF_COUNTS = 10;
-	final int HOME_COUNTS = 20;
-	final int POSITION_TOLERANCE = 2;
-	final int LOWER_LIMIT = 30;
-	final int UPPER_LIMIT = 800;
-	final int REQUESTED_POSITION = 500;	
+	final double HOMING_SPEED=0.33;
+	final double BACKOFF = 0.01;
+	final double HOME = 20;
+	final double POSITION_TOLERANCE = 2;
+	final double LOWER_LIMIT = 30;
+	final double UPPER_LIMIT = 800;
+	final double REQUESTED_POSITION = 500;	
 	
 	protected PositionControllerConfig config;
 	protected SparkMaxPositionController c;
@@ -36,9 +36,8 @@ public class TestSparkMaxPositionController {
 	@BeforeEach
 	public void setupMockController() {
 		config = new PositionControllerConfig.Builder("test")
-				.withHomingOptions(HOMING_SPEED , BACKOFF_COUNTS, HOME_COUNTS)
+				.withHomingOptions(HOMING_SPEED , BACKOFF, HOME)
 				.withPositionTolerance(POSITION_TOLERANCE)
-				.withReversed(false)
 				.withSoftLimits(LOWER_LIMIT, UPPER_LIMIT).build();
 
 
@@ -65,7 +64,7 @@ public class TestSparkMaxPositionController {
 		});		
 
 		c = new SparkMaxPositionController(mockMotor,config,lowerLimit, upperLimit,encoder);
-		c.setEnabled(true);		
+	
 	}
 	
 	@Test
@@ -81,14 +80,6 @@ public class TestSparkMaxPositionController {
 		c.update();
 		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
 	}	
-	
-	@Test
-	public void testReverseDireciton() {
-		config.setReversed(true);
-		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
-		c.requestPosition(200);
-		verify(mockMotor).set(-HOMING_SPEED);
-	}
 	
 	@Test
 	public void testPositionRequestResultsInHoming() throws Exception{
@@ -115,7 +106,7 @@ public class TestSparkMaxPositionController {
 		c.update(); 
 		assertTrue(c.isAtLowerLimit());
 		assertEquals(0, c.getActualPosition());
-		verify(mockMotor.getPIDController()).setReference((double)BACKOFF_COUNTS,CANSparkMax.ControlType.kPosition);
+		verify(mockMotor.getPIDController()).setReference((double)BACKOFF,CANSparkMax.ControlType.kSmartMotion);
 		
 		assertEquals(MotionState.BACKING_OFF, c.getMotionState());
 		assertFalse(c.isAtRequestedPosition());	
@@ -123,13 +114,13 @@ public class TestSparkMaxPositionController {
 
 		//once to BACKOFF_COUNTS -1, we should be marked HOME. position should be HOME_COUNTS
 		fakeLowerLimit.setPressed(false);
-		encoder.setPosition(BACKOFF_COUNTS-1);
+		encoder.setPosition(BACKOFF-1);
 		c.update();
 		assertLimits(c,false,false);
 		assertFalse(c.isAtRequestedPosition());  //the users' requested position is still REQUESTED_POSITION
 		assertFalse(c.isAtLowerLimit());
 		assertEquals(MotionState.HOMED, c.getMotionState());
-		assertEquals(HOME_COUNTS, c.getActualPosition());
+		assertEquals(HOME, c.getActualPosition());
 
 	}
 

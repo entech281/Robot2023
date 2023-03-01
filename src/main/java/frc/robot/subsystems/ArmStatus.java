@@ -9,7 +9,6 @@ import static frc.robot.RobotConstants.ARM.*;
 public class ArmStatus  implements SubsystemStatus{
 
     private double actualPostion;
-    private int armCounts;
     
     /**reality note:  
     * 42 counts per ref
@@ -17,13 +16,8 @@ public class ArmStatus  implements SubsystemStatus{
     * sprocket diameter approx. 1.5" 
     * -- 4.71 inch/ref --> ABOUT 0.002 inches per count    
     **/
-    public ArmStatus ( int armCounts) {
-    	this.armCounts = armCounts;
-    	this.actualPostion = MIN_EXTENSION_METERS + armCounts/ SETTINGS.COUNTS_PER_METER;
-    }
-
-    public int getArmExtensionCounts() {
-    	return armCounts;
+    public ArmStatus ( double actualPostion) {
+    	this.actualPostion = actualPostion;
     }
     
     public double getArmExtensionMeters(){

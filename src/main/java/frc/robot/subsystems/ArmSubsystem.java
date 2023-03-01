@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
@@ -18,47 +19,61 @@ import static frc.robot.RobotConstants.ARM.*;
  */
 public class ArmSubsystem extends EntechSubsystem{
 	
-
   private CANSparkMax telescopeMotor;
   private SparkMaxPositionController positionController;
   private boolean enabled = true;
   
   //for unit testing
-  public ArmSubsystem( CANSparkMax motor, PositionControllerConfig config) {
+  public ArmSubsystem( CANSparkMax motor, SparkMaxPositionController controller) {
 	  this.enabled=true;
 	  this.telescopeMotor = motor;
-	  this.positionController = new SparkMaxPositionController(config);
+	  this.positionController = controller;
 	  
   }  
-
   
-  //for match
-  public ArmSubsystem() {
-	    positionController = new SparkMaxPositionController(
-	    new PositionControllerConfig.Builder("ARM")
-	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ARM.HOMING.HOME_POSITION_COUNTS )
-	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_COUNTS)
-	    	.withReversed(ARM.SETTINGS.MOTOR_REVERSED)
-	    	.withLimitSwitchTypes(Type.kNormallyOpen,Type.kNormallyOpen)
-	    	.withSwappedLimitSwitches(true)
-	    	.withSoftLimits(ARM.HOMING.MIN_POSITION_COUNTS, ARM.HOMING.MAX_POSITION_COUNTS)
-	    	.build()	    		
-	    );
+  public SparkMaxPositionController getPositionController() {
+	return positionController;
+}
 
+//for match
+  public ArmSubsystem() {
   }  
   
   @Override
   public void initialize() {
 	if ( enabled ) {
+		double RPM  = 1.0;
+		double ACCEL = 1500;
+		int SMART_MOTION_SLOT=0;
+		//following example from here:
+		//https://github.com/REVrobotics/SPARK-MAX-Examples/blob/master/Java/Smart%20Motion%20Example/src/main/java/frc/robot/Robot.java
 	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushless);
-	    telescopeMotor.getPIDController().setP(TUNING.P_GAIN);
-	    telescopeMotor.getPIDController().setI(TUNING.I_GAIN);
-	    telescopeMotor.getPIDController().setD(TUNING.D_GAIN);
-	    telescopeMotor.setSmartCurrentLimit(SETTINGS.MAX_SPIKE_CURRENT);
-	    positionController.setSparkMax(telescopeMotor);
+	    SparkMaxPIDController pid = telescopeMotor.getPIDController();
+	    pid.setP(TUNING.P_GAIN);
+	    pid.setI(TUNING.I_GAIN);
+	    pid.setD(TUNING.D_GAIN);
+	    pid.setOutputRange(-1.0,1.0);
+	    pid.setSmartMotionMaxVelocity(10000*RPM, SMART_MOTION_SLOT);
+	    pid.setSmartMotionMinOutputVelocity(0, SMART_MOTION_SLOT);
+	    pid.setSmartMotionMaxAccel(1500, SMART_MOTION_SLOT);
+
 	    telescopeMotor.set(0);
 	    telescopeMotor.setIdleMode(IdleMode.kBrake);
 	    telescopeMotor.clearFaults();
+	    
+	    PositionControllerConfig conf = new PositionControllerConfig.Builder("ARM")
+	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_METERS ,ARM.HOMING.HOME_POSITION_METERS )
+	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_METERS)
+	    	.build();	    		
+
+	    positionController = new SparkMaxPositionController(
+	    		telescopeMotor,
+	    		conf,
+				telescopeMotor.getReverseLimitSwitch(Type.kNormallyOpen),	    		
+				telescopeMotor.getForwardLimitSwitch(Type.kNormallyOpen),
+	    		telescopeMotor.getEncoder()
+	    );
+	    
 	}
   }  
   
@@ -66,7 +81,7 @@ public class ArmSubsystem extends EntechSubsystem{
       return new ArmStatus(positionController.getActualPosition());
   }
  
-  public void requestPosition(int requestedPosition) {
+  public void requestPosition(double requestedPosition) {
 	  positionController.requestPosition(requestedPosition);
   }
   
@@ -90,15 +105,14 @@ public class ArmSubsystem extends EntechSubsystem{
     
   @Override
   public void initSendable(SendableBuilder builder) {
-      builder.setSmartDashboardType(getName());
-	  positionController.initSendable(builder);	      
+      builder.setSmartDashboardType(getName());  
   }
   
   public boolean isHomed() {
 	  return positionController.isHomed();
   }
   
-  public int getActualPosition() {
+  public double getActualPosition() {
 	  return positionController.getActualPosition();
   }
   

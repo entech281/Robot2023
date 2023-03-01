@@ -24,19 +24,18 @@ public class ArmForgetHomeCommand extends EntechCommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+	    armSubsystem.forgetHome();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.forgetHome();
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armSubsystem.stop();
   }
 
   // Returns true when the command should end.

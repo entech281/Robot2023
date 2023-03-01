@@ -10,14 +10,14 @@ import frc.robot.subsystems.ArmSubsystem;
 public class PositionArmCommand extends EntechCommandBase {
 
   private final ArmSubsystem armSubsystem;
-  private final int requestedPosition;
+  private final double requestedPosition;
   private boolean waitToComplete = false;
   /**
    * Creates a new PositionArmCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PositionArmCommand(ArmSubsystem subsystem, int requestedPosition, boolean waitToComplete) {
+  public PositionArmCommand(ArmSubsystem subsystem, double requestedPosition, boolean waitToComplete) {
       super(subsystem);
       armSubsystem = subsystem;
       this.requestedPosition = requestedPosition;

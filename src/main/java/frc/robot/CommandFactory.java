@@ -72,7 +72,7 @@ public class CommandFactory {
 
     }
     
-    public Command moveArmCommand(int position) {
+    public Command moveArmCommand(double position) {
     	Command p = new PositionArmCommand ( armSubsystem,position,true);
     	return p;
     }
@@ -82,16 +82,16 @@ public class CommandFactory {
     public Command deployHighCommand() {
     	//note that the subsystems will HOME before the moves are complete!
     	return new SequentialCommandGroup(
-    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH,true),
-    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH, true ),
+    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS,true),
+    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true ),
     			new GripperCommand( gripperSubsystem, GripperState.kOpen) 
     	);
     }
     //this is probably also the home position
     public Command carryPosition() {
     	return new SequentialCommandGroup(
-    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY,true),
-    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY, true ),
+    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true),
+    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true ),
     			new GripperCommand( gripperSubsystem, GripperState.kClose) 
     	);    	
     }

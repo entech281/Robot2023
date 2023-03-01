@@ -19,24 +19,14 @@ public class ElbowSubsystem extends EntechSubsystem{
 	
 	  
 	  //for unit testing
-	  public ElbowSubsystem( CANSparkMax motor, PositionControllerConfig config) {
+	  public ElbowSubsystem( CANSparkMax motor, SparkMaxPositionController controller) {
 		  this.enabled=true;
 		  this.elbowMotor = motor;
-		  this.positionController = new SparkMaxPositionController(config);
+		  this.positionController = controller;
 	  }  	  
 	
 	  //for match
 	  public ElbowSubsystem () {
-		    positionController = new SparkMaxPositionController(
-		    new PositionControllerConfig.Builder("ELBOW")
-		    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_COUNTS ,ELBOW.HOMING.HOME_POSITION_COUNTS )
-		    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_COUNTS)
-		    	.withReversed(ELBOW.SETTINGS.MOTOR_REVERSED)
-		    	.withLimitSwitchTypes(Type.kNormallyOpen,Type.kNormallyOpen)
-		    	.withSwappedLimitSwitches(false)		    	
-		    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_COUNTS, ELBOW.HOMING.MAX_POSITION_COUNTS)
-		    	.build()	    		
-		    );		  
 		  
 	  }
 	  @Override
@@ -47,11 +37,25 @@ public class ElbowSubsystem extends EntechSubsystem{
 			elbowMotor.getPIDController().setI(ELBOW.TUNING.I_GAIN);
 			elbowMotor.getPIDController().setD(ELBOW.TUNING.D_GAIN);
 			elbowMotor.setSmartCurrentLimit(ELBOW.SETTINGS.MAX_SPIKE_CURRENT);
-			positionController.setSparkMax(elbowMotor);
+
+			PositionControllerConfig conf =  new PositionControllerConfig.Builder("ELBOW")
+			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_METERS ,ELBOW.HOMING.HOME_POSITION_METERS )
+			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_METERS)  	
+			    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_METERS, ELBOW.HOMING.MAX_POSITION_METERS)
+			    	.build();
+			
+		    positionController = new SparkMaxPositionController(
+		    		elbowMotor,
+		    		conf,
+		    		elbowMotor.getReverseLimitSwitch(Type.kNormallyOpen),	    		
+		    		elbowMotor.getForwardLimitSwitch(Type.kNormallyOpen),
+		    		elbowMotor.getEncoder()
+		    );			
+			
 		}
 	  }  
 	  	 
-	  public void requestPosition(int requestedPosition) {
+	  public void requestPosition(double requestedPosition) {
 		  positionController.requestPosition(requestedPosition);
 	  }
 	  
@@ -80,7 +84,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 		  return positionController.isHomed();
 	  }
 	  
-	  public int getActualPosition() {
+	  public double getActualPosition() {
 		  return positionController.getActualPosition();
 	  }
 	  
