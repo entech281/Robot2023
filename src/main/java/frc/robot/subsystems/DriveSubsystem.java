@@ -103,4 +103,9 @@ public class DriveSubsystem extends EntechSubsystem {
     rearLeftTalon.setNeutralMode(NeutralMode.Brake);
     rearRightTalon.setNeutralMode(NeutralMode.Brake);
   }
+
+@Override
+public boolean isEnabled() {
+	return true;
+}
 }

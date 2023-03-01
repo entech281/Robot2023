@@ -8,8 +8,7 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.ARM;
-
-import static frc.robot.RobotConstants.ELBOW;
+import frc.robot.RobotConstants.ELBOW;
 import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
 
@@ -45,9 +44,9 @@ public class ElbowSubsystem extends EntechSubsystem{
 			elbowMotor.set(0);
 			elbowMotor.setIdleMode(IdleMode.kBrake);
 			elbowMotor.clearFaults();
-			elbowMotor.setInverted(ELBOW.SETTINGS.MOTOR_REVERSED);
-		    elbowMotor.getEncoder().setPositionConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);			
-			
+			elbowMotor.setInverted(ELBOW.SETTINGS.MOTOR_REVERSED);	
+		    elbowMotor.getEncoder().setPositionConversionFactor( 1.0/ ELBOW.SETTINGS.COUNTS_PER_DEGREE);
+		    elbowMotor.getEncoder().setVelocityConversionFactor(1.0 / ELBOW.SETTINGS.COUNTS_PER_DEGREE);			
 			PositionControllerConfig conf =  new PositionControllerConfig.Builder("ELBOW")
 			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_METERS ,ELBOW.HOMING.HOME_POSITION_METERS )
 			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_METERS)  	
@@ -129,7 +128,12 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  
 	  @Override
 	  public ElbowStatus getStatus() {
-		 return new ElbowStatus(positionController.getActualPosition());
+		  if ( enabled) {
+			  return new ElbowStatus(positionController.getActualPosition()); 
+		  }
+		  else {
+			  return new ElbowStatus(RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN);
+		  }
 	  }
 
 }

@@ -30,6 +30,11 @@ public class PositionElbowCommand extends EntechCommandBase {
 
   }
 
+  @Override  
+  public String getName() {
+	return super.getName() + "@" + desiredPosition + "m";
+  }  
+  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {

@@ -160,4 +160,9 @@ public class NavXSubSystem extends EntechSubsystem  {
 		super.simulationPeriodic();
 	}
 
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
 }

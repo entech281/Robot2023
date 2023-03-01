@@ -24,7 +24,12 @@ public class PositionArmCommand extends EntechCommandBase {
       this.waitToComplete = waitToComplete;
   }
 
-  // Called when the command is initially scheduled.
+  @Override
+	public String getName() {
+		return super.getName() + "@" + requestedPosition + "m";
+	}
+
+// Called when the command is initially scheduled.
   @Override
   public void initialize() {
 

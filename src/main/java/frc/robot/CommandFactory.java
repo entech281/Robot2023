@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.RobotConstants.ARM;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.ArmForgetHomeCommand;
@@ -29,6 +30,7 @@ import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
+import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
 /**
  *
@@ -45,18 +47,18 @@ public class CommandFactory {
 	private ElbowSubsystem elbowSubsystem;
 	private GripperSubsystem gripperSubsystem;
     
-    public CommandFactory(RobotState robotState, DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm, ElbowSubsystem elbowSubsystem,GripperSubsystem gripperSubsystem){
-    	this.driveSubsystem = drive;
-    	this.navxSubsystem = navx;
-    	this.visionSubsystem = vision;
-    	this.armSubsystem = arm;
+    public CommandFactory(RobotState robotState, SubsystemHolder allSubsystems ){
+    	this.driveSubsystem = allSubsystems.getDrive();
+    	this.navxSubsystem = allSubsystems.getNavx();
+    	this.visionSubsystem = allSubsystems.getVision();
+    	this.armSubsystem = allSubsystems.getArm();
+        this.elbowSubsystem = allSubsystems.getElbow();
+        this.gripperSubsystem = allSubsystems.getGripper();
         this.robotState = robotState;
-        this.elbowSubsystem = elbowSubsystem;
-        this.gripperSubsystem = gripperSubsystem;
-
     }
     
     public List<Command> getAutoCommandChoices(){
+    	//these commands will be available for autonomous mode on the PREMATCH tab
     	Command c1 = new NudgeDirectionCommand(driveSubsystem,NudgeDirectionCommand.DIRECTION.FORWARD);
     	c1.setName("Nudge Forward");
     	Command c2 = new NudgeDirectionCommand(driveSubsystem,NudgeDirectionCommand.DIRECTION.RIGHT);
@@ -71,7 +73,17 @@ public class CommandFactory {
     	return List.of( c1, c2, c3);
 
     }
-    
+    public List<Command> getTestCommands(){
+    	//these will be available to run ad-hoc on the TESTING tab
+    	return List.of (
+    			moveArmCommand(ARM.POSITION_PRESETS.MAX_METERS),
+    			moveArmCommand(ARM.POSITION_PRESETS.SCORE_HIGH_METERS),
+    			moveArmCommand(ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS),
+    			forgetArmHome()    			
+    	);
+    			
+    	
+    }
     public Command moveArmCommand(double position) {
     	Command p = new PositionArmCommand ( armSubsystem,position,true);
     	return p;

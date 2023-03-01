@@ -64,8 +64,8 @@ public class ArmSubsystem extends EntechSubsystem{
 	    telescopeMotor.setIdleMode(IdleMode.kBrake);
 	    telescopeMotor.clearFaults();
 	    telescopeMotor.setInverted(ARM.SETTINGS.MOTOR_REVERSED);
-	    telescopeMotor.getEncoder().setPositionConversionFactor(ARM.SETTINGS.COUNTS_PER_METER);
-	    
+	    telescopeMotor.getEncoder().setPositionConversionFactor( 1.0/ ARM.SETTINGS.COUNTS_PER_METER);
+	    telescopeMotor.getEncoder().setVelocityConversionFactor(1.0 / ARM.SETTINGS.COUNTS_PER_METER);
 	    PositionControllerConfig conf = new PositionControllerConfig.Builder("ARM")
 	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_METERS ,ARM.HOMING.HOME_POSITION_METERS )
 	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_METERS)
@@ -83,7 +83,12 @@ public class ArmSubsystem extends EntechSubsystem{
   }  
   
   public ArmStatus getStatus(){
-      return new ArmStatus(positionController.getActualPosition());
+	  if ( enabled) {
+		  return new ArmStatus(positionController.getActualPosition()); 
+	  }
+	  else {
+		  return new ArmStatus(RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN);
+	  }      
   }
  
   public void requestPosition(double requestedPosition) {

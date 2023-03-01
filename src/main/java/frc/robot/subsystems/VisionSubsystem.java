@@ -36,6 +36,7 @@ public class VisionSubsystem extends EntechSubsystem {
   private PhotonCamera camera;
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
   private PhotonPoseEstimator photonPoseEstimator;
+  private boolean enabled=true;
   
   @Override
   public void initialize() {
@@ -164,4 +165,9 @@ private void debugStatus() {
 		  updateStatusSimulated();
 	  }
   }
+
+@Override
+public boolean isEnabled() {
+	return enabled;
+}
 }

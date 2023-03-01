@@ -12,7 +12,6 @@ public class GripperSubsystem extends EntechSubsystem implements Sendable{
 	private int gripperSolenoidCounter;
 	private GripperState gripperState;
 	
-	
 	public GripperState getGripperState() {
 		return gripperState;
 	}
@@ -72,6 +71,11 @@ public class GripperSubsystem extends EntechSubsystem implements Sendable{
 	@Override
 	public GripperStatus getStatus() {
 		return new GripperStatus(gripperState);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 	

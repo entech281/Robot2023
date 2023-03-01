@@ -51,7 +51,7 @@ public final class RobotConstants {
     		public static final double MOVE_TOLERANCE_METERS=0.05; 
     		public static final int CURRENT_LIMIT_AMPS=4;
     		public static final int MAX_SPIKE_CURRENT=10;
-    		public static final double COUNTS_PER_METER=500*39;
+    		public static final double COUNTS_PER_METER=16692.0; //TODO: check. 42 counts/ rev. 48:1 gearbox. approx 1.5" pulley
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
@@ -87,7 +87,7 @@ public final class RobotConstants {
     		public static final double MOVE_TOLERANCE_METERS=10; 
     		public static final int CURRENT_LIMIT_AMPS=4;
     		public static final int MAX_SPIKE_CURRENT=10;
-    		public static final double COUNTS_PER_DEGREE=100; //TODO: SET CORRECT
+    		public static final double COUNTS_PER_DEGREE=12; //TODO: correct. 42 counts/rev. 100:1 gearbox.
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
@@ -155,7 +155,7 @@ public final class RobotConstants {
     	public interface TABS{
         	public static final String PREMATCH="PreMatch";
         	public static final String MATCH="Match";
-        	public static final String DEBUG="Debug";    		
+        	public static final String DEBUG="Testing";    		
     	}
 
     	public static boolean DEFAULT_YAW_LOCK = false;
