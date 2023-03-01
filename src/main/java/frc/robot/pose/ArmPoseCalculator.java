@@ -18,12 +18,12 @@ public class ArmPoseCalculator {
 	}
 
     private boolean canDeploy(double targetDistance, double elbowAngle){
-       //calculate max horizontal arm reach
-        double maxHorizontalArmReach = RobotConstants.ARM.MAX_EXTENSION_METERS * Math.sin(elbowAngle);
-       //calculate min horizontal arm reach
-       double minHorizontalArmReach = RobotConstants.ARM.MIN_EXTENSION_METERS * Math.sin(elbowAngle);
+        double maxHorizontalArmReach = RobotConstants.ARM.MAX_EXTENSION_METERS * Math.sin(Math.toRadians(elbowAngle));
+        double minHorizontalArmReach = RobotConstants.ARM.MIN_EXTENSION_METERS * Math.sin(Math.toRadians(elbowAngle));
         boolean tooFar = targetDistance > maxHorizontalArmReach;
         boolean tooClose = targetDistance < minHorizontalArmReach;
+        //System.out.println("targetDistance: " + targetDistance + ", maxHorizontalArmReach" + maxHorizontalArmReach);
+        //System.out.println("Too Far: " + tooFar + ", Too Close:" + tooClose);
         
         boolean canDeploy = !tooFar && !tooClose;
         return canDeploy;
