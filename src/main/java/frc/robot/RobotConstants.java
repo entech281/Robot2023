@@ -51,14 +51,14 @@ public final class RobotConstants {
     		public static final double COUNTS_PER_METER=500*39;
     	} 
     	public interface HOMING{
-    		public static final double HOMING_SPEED_PERCENT=10.0;
+    		public static final double HOMING_SPEED_PERCENT=0.1;
     		public static final int HOME_POSITION_BACKOFF_COUNTS=42;
     		public static final int HOME_POSITION_COUNTS=0;
     		public static final int MIN_POSITION_COUNTS=0;
     		public static final int MAX_POSITION_COUNTS=420;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.01;
+    		public static final double P_GAIN=0.1;
     		public static final double I_GAIN=0.0;
     		public static final double D_GAIN=0.0;
     	}
@@ -138,7 +138,7 @@ public final class RobotConstants {
         public static final int FRONT_RIGHT_MOTOR = 7;
         public static final int REAR_LEFT_MOTOR = 8;
         public static final int ELBOW_MOTOR_ID = 3;
-        public static final int TELESCOPE_MOTOR_ID = 2;
+        public static final int TELESCOPE_MOTOR_ID = 10;
     }
     public interface DIGITAL_IO {
 

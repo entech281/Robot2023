@@ -6,9 +6,11 @@ package frc.robot;
 
 import java.util.List;
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.ExceptionHandler;
@@ -88,10 +90,14 @@ public class Robot extends TimedRobot {
 		shuffleboardControls.addAutoCommandChoice(c);
 	});
 	ShuffleboardTab t = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.DEBUG);
-	t.add("PositionArmCommandCARRY", commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.CARRY));
-	t.add("PositionArmCommandHIGH", commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH));
-	t.add("PositionArmCommandHOME", commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.HOME));
-	t.add("ArmForgetHome", commandFactory.forgetArmHome());
+	t.add("PositionArmCommandCARRY", (Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.CARRY));
+	t.add("PositionArmCommandHIGH", (Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH));
+	t.add("PositionArmCommandHOME", (Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.HOME));
+	t.add((Sendable)commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH));
+	//t.putData("PositionArmCommandHIGH",(Sendable) commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH));
+	//SmartDashboard.putData
+	//t.add("PositionArmCommandHOME", commandFactory.moveArmCommand(RobotConstants.ARM.POSITION_PRESETS.HOME))
+	t.add("ArmForgetHome", (Sendable)commandFactory.forgetArmHome());
   }
 
   private void doPeriodic() {

@@ -59,6 +59,8 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 		this.upperLimit = upperLimit;
 		this.encoder = encoder;
 		this.config = config;
+		this.spark.set(0);
+
 	}
     //for stupid wpilib where the max has to be set up in initialize, not in constructor
 	public SparkMaxPositionController (  PositionControllerConfig config) {
@@ -115,13 +117,25 @@ public class SparkMaxPositionController implements Sendable, PositionController{
   	      builder.addStringProperty("Status:", this::getHomingStateString , null);		  
   	      builder.addBooleanProperty("InMotion", this::inMotion, null);
   	      builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+  	      builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
   	      builder.addIntegerProperty("ActualPos", this::getActualPosition, null);
   	      builder.addBooleanProperty("Homed", this::isHomed, null);
   	      builder.addBooleanProperty("UpperLimit", this::isAtLowerLimit, null);
   	      builder.addBooleanProperty("LowerLimit", this::isAtUpperLimit, null);
+  	      builder.addDoubleProperty("MotorOuptut", this::getMotorOutput, null);
   	  }
     }  
 	
+	
+	public double getMotorOutput() {
+		if ( hasSpark() ) {
+			return spark.getAppliedOutput();
+		}
+		else {
+			return 0.0;
+		}
+		
+	}
 	
 	public boolean inMotion() {
 		if ( hasSpark() ) {
@@ -201,12 +215,12 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 
     private void setLimitSwitches ( CANSparkMax spark) {
 		if ( config.isSwapLimitSwitches()) {
-			upperLimit = spark.getReverseLimitSwitch(config.getUpperLimitSwitchType());
-			lowerLimit = spark.getForwardLimitSwitch(config.getLowerLimitSwitchType());
+			upperLimit = spark.getForwardLimitSwitch(config.getUpperLimitSwitchType());
+			lowerLimit = spark.getReverseLimitSwitch(config.getLowerLimitSwitchType());
 		}
 		else {
-			lowerLimit = spark.getReverseLimitSwitch(config.getLowerLimitSwitchType());
-			upperLimit = spark.getForwardLimitSwitch(config.getUpperLimitSwitchType());			
+			lowerLimit = spark.getForwardLimitSwitch(config.getLowerLimitSwitchType());
+			upperLimit = spark.getReverseLimitSwitch(config.getUpperLimitSwitchType());			
 		}		
 	}
 
@@ -235,12 +249,14 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     
     @Override
 	public void update() {	 
-  	  if (enabled ) {
+  	  if (enabled && hasSpark()) {
       	 switch ( axisState) {
       		 case UNINITIALIZED:
+      			 //spark.set(0);
       			 break;
       		 case FINDING_LIMIT:
       			 if ( isAtLowerLimit() ) {
+      				spark.set(0);
       				encoder.setPosition(0);
       				setPositionInternal(config.getBackoffCounts());
       				axisState = MotionState.BACKING_OFF;
@@ -254,7 +270,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
       			 }
       			 break;
       		 case HOMED:
-      			 setPositionInternal(requestedPosition);
+      			 //setPositionInternal(requestedPosition);
       			 if (isAtLowerLimit()  ) {
       				 stop();
       				 DriverStation.reportWarning("Low Limit Reached! Please Move Axis off the switch. We will home on next comamand." , false);

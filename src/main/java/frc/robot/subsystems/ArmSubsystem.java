@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
@@ -20,13 +21,14 @@ public class ArmSubsystem extends EntechSubsystem{
 
   private CANSparkMax telescopeMotor;
   private SparkMaxPositionController positionController;
-  private boolean enabled = false;
+  private boolean enabled = true;
   
   //for unit testing
   public ArmSubsystem( CANSparkMax motor, PositionControllerConfig config) {
 	  this.enabled=true;
 	  this.telescopeMotor = motor;
 	  this.positionController = new SparkMaxPositionController(config);
+	  
   }  
 
   
@@ -38,21 +40,25 @@ public class ArmSubsystem extends EntechSubsystem{
 	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_COUNTS)
 	    	.withReversed(ARM.SETTINGS.MOTOR_REVERSED)
 	    	.withLimitSwitchTypes(Type.kNormallyOpen,Type.kNormallyOpen)
-	    	.withSwappedLimitSwitches(false)
+	    	.withSwappedLimitSwitches(true)
 	    	.withSoftLimits(ARM.HOMING.MIN_POSITION_COUNTS, ARM.HOMING.MAX_POSITION_COUNTS)
 	    	.build()	    		
 	    );
+
   }  
   
   @Override
   public void initialize() {
 	if ( enabled ) {
-	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
+	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushless);
 	    telescopeMotor.getPIDController().setP(TUNING.P_GAIN);
 	    telescopeMotor.getPIDController().setI(TUNING.I_GAIN);
 	    telescopeMotor.getPIDController().setD(TUNING.D_GAIN);
 	    telescopeMotor.setSmartCurrentLimit(SETTINGS.MAX_SPIKE_CURRENT);
 	    positionController.setSparkMax(telescopeMotor);
+	    telescopeMotor.set(0);
+	    telescopeMotor.setIdleMode(IdleMode.kBrake);
+	    telescopeMotor.clearFaults();
 	}
   }  
   
