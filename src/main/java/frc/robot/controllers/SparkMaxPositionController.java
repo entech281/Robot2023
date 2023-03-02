@@ -193,6 +193,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
       				encoder.setPosition(config.getHomePosition());
       				 //telescopeMotor.stopMotor();  future configurable? this will stop the motor. Not doing this leaves the motor on and locked on this position 
       				 axisState = MotionState.HOMED;
+      				 requestedPosition = config.getHomePosition();
       			 }
       			 break;
       		 case HOMED:
