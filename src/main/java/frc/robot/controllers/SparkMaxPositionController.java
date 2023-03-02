@@ -158,7 +158,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     }
  
     private void startHoming() {
-		  spark.set(config.getHomingSpeedPercent());
+		  spark.set(-config.getHomingSpeedPercent()); //move towards lower limit
 		  axisState = MotionState.FINDING_LIMIT;    	
     }
     
@@ -167,13 +167,17 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     }
 
     private void setPositionInternal(double desiredPosition) {
-    	spark.getPIDController().setReference(desiredPosition, CANSparkMax.ControlType.kSmartMotion);
+    	spark.getPIDController().setReference(desiredPosition, CANSparkMax.ControlType.kPosition);
     }
     
     public void stop() {
     	spark.stopMotor();
     }
     
+    private void stopWithWarning(String warningMessage) {
+    	stop();
+    	DriverStation.reportWarning(warningMessage,false);
+    }
     @Override
 	public void update() {	 
       	 switch ( axisState) {
@@ -190,7 +194,10 @@ public class SparkMaxPositionController implements Sendable, PositionController{
       			 break;
       		 case BACKING_OFF:
       			 if ( isWithinToleranceOfPosition(config.getBackoff())) {
-      				encoder.setPosition(config.getHomePosition());
+      				 if ( isAtLowerLimit() ) {
+      					stopWithWarning("Low Limit Still active after trying to back off: " + config.getBackoff() + ". try increasing backoff amount");
+      				 }
+      				 encoder.setPosition(config.getHomePosition());
       				 //telescopeMotor.stopMotor();  future configurable? this will stop the motor. Not doing this leaves the motor on and locked on this position 
       				 axisState = MotionState.HOMED;      				 
       			 }
@@ -198,13 +205,11 @@ public class SparkMaxPositionController implements Sendable, PositionController{
       		 case HOMED:
       			 setPositionInternal(requestedPosition);
       			 if (isAtLowerLimit()  ) {
-      				 stop();
-      				 DriverStation.reportWarning("Low Limit Reached! Please Move Axis off the switch. We will home on next comamand." , false);
+      				 stopWithWarning("Low Limit Reached! Please Move Axis off the switch. We will home on next comamand.");
       				 axisState = MotionState.UNINITIALIZED;
       			 }
       			 if ( isAtUpperLimit() ) {
-      				 stop();
-      				 DriverStation.reportWarning("Upper Limit Reached! Please Move Axis off the switch. We will home on next comamand." , false);
+      				 stopWithWarning("Upper Limit Reached! Please Move Axis off the switch. We will home on next comamand." );
       				 axisState = MotionState.UNINITIALIZED;
       			 }
   	     }

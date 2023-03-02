@@ -55,10 +55,10 @@ public class ArmSubsystem extends EntechSubsystem{
 	    pid.setI(TUNING.I_GAIN);
 	    pid.setD(TUNING.D_GAIN);
 	    pid.setOutputRange(-1.0,1.0);
-	    pid.setSmartMotionMaxVelocity(10000*RPM, SMART_MOTION_SLOT);
-	    pid.setSmartMotionMaxAccel(ACCEL, SMART_MOTION_SLOT);
-	    pid.setSmartMotionMinOutputVelocity(0, SMART_MOTION_SLOT);
-	    pid.setSmartMotionMaxAccel(1500, SMART_MOTION_SLOT);
+	    //pid.setSmartMotionMaxVelocity(10000*RPM, SMART_MOTION_SLOT);
+	    //pid.setSmartMotionMaxAccel(ACCEL, SMART_MOTION_SLOT);
+	    //pid.setSmartMotionMinOutputVelocity(0, SMART_MOTION_SLOT);
+	    //pid.setSmartMotionMaxAccel(1500, SMART_MOTION_SLOT);
 
 	    telescopeMotor.set(0);
 	    telescopeMotor.setIdleMode(IdleMode.kBrake);
@@ -67,6 +67,7 @@ public class ArmSubsystem extends EntechSubsystem{
 	    telescopeMotor.getEncoder().setPositionConversionFactor( 1.0/ ARM.SETTINGS.COUNTS_PER_METER);
 	    telescopeMotor.getEncoder().setVelocityConversionFactor(1.0 / ARM.SETTINGS.COUNTS_PER_METER);
 	    PositionControllerConfig conf = new PositionControllerConfig.Builder("ARM")
+	    	.withSoftLimits(ARM.POSITION_PRESETS.MIN_METERS, ARM.POSITION_PRESETS.MAX_METERS)
 	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_METERS ,ARM.HOMING.HOME_POSITION_METERS )
 	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_METERS)
 	    	.build();	    		
@@ -74,8 +75,8 @@ public class ArmSubsystem extends EntechSubsystem{
 	    positionController = new SparkMaxPositionController(
 	    		telescopeMotor,
 	    		conf,
-				telescopeMotor.getReverseLimitSwitch(Type.kNormallyOpen),	    		
-				telescopeMotor.getForwardLimitSwitch(Type.kNormallyOpen),
+				telescopeMotor.getForwardLimitSwitch(Type.kNormallyOpen),	    		
+				telescopeMotor.getReverseLimitSwitch(Type.kNormallyOpen),
 	    		telescopeMotor.getEncoder()
 	    );
 	    

@@ -48,10 +48,10 @@ public final class RobotConstants {
     public interface ARM{
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = false;
-    		public static final double MOVE_TOLERANCE_METERS=0.05; 
+    		public static final double MOVE_TOLERANCE_METERS=0.01; 
     		public static final int CURRENT_LIMIT_AMPS=4;
     		public static final int MAX_SPIKE_CURRENT=10;
-    		public static final double COUNTS_PER_METER=16692.0; //TODO: check. 42 counts/ rev. 48:1 gearbox. approx 1.5" pulley
+    		public static final double COUNTS_PER_METER=100.0; //TODO: check. 42 counts/ rev. 48:1 gearbox. approx 1.5" pulley
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
@@ -61,7 +61,7 @@ public final class RobotConstants {
     		public static final double MAX_POSITION_METERS=420;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.1;
+    		public static final double P_GAIN=1.0;
     		public static final double I_GAIN=0.0;
     		
     		public static final double D_GAIN=0.0;

@@ -12,7 +12,6 @@ import org.mockito.stubbing.Answer;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import frc.robot.controllers.SparkMaxPositionController.MotionState;
 
@@ -106,7 +105,7 @@ public class TestSparkMaxPositionController {
 		c.update(); 
 		assertTrue(c.isAtLowerLimit());
 		assertEquals(0, c.getActualPosition());
-		verify(mockMotor.getPIDController()).setReference((double)BACKOFF,CANSparkMax.ControlType.kSmartMotion);
+		verify(mockMotor.getPIDController()).setReference((double)BACKOFF,CANSparkMax.ControlType.kPosition);
 		
 		assertEquals(MotionState.BACKING_OFF, c.getMotionState());
 		assertFalse(c.isAtRequestedPosition());	
