@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.ElbowStatus;
-import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.ELBOW;
 
 public class TestArmPoseCalculator {

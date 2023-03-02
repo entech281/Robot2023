@@ -9,12 +9,12 @@ import java.lang.Math;
 public class ArmPoseCalculator {
     
     public ArmPoseResult getDeploymentStatus(Pose2d estimatedPose, ScoringLocation target, ElbowStatus elbowAngle) {
-		Translation2d start = estimatedPose.getTranslation();
-		Translation2d end = target.computeAbsolutePose().getTranslation();
+        Translation2d start = estimatedPose.getTranslation();
+        Translation2d end = target.computeAbsolutePose().getTranslation();
         ArmPoseResult armPose = new ArmPoseResult();
         armPose.setTargetDistance(end.getDistance(start));
         armPose.setCanDeploy(canDeploy(armPose.targetDistance, elbowAngle.getVerticalAngle()));
-		return armPose;
+        return armPose;
 	}
 
     private boolean canDeploy(double targetDistance, double elbowAngle){
@@ -23,8 +23,7 @@ public class ArmPoseCalculator {
         boolean tooFar = targetDistance > maxHorizontalArmReach;
         boolean tooClose = targetDistance < minHorizontalArmReach;
         //System.out.println("targetDistance: " + targetDistance + ", maxHorizontalArmReach" + maxHorizontalArmReach);
-        //System.out.println("Too Far: " + tooFar + ", Too Close:" + tooClose);
-        
+        //System.out.println("Too Far: " + tooFar + ", Too Close:" + tooClose);    
         boolean canDeploy = !tooFar && !tooClose;
         return canDeploy;
     }
