@@ -2,13 +2,14 @@ package frc.robot.pose;
 
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.ElbowStatus;
+import frc.robot.subsystems.ArmStatus;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import java.lang.Math;
 
 public class ArmPoseCalculator {
     
-    public ArmPoseResult getDeploymentStatus(Pose2d estimatedPose, ScoringLocation target, ElbowStatus elbowAngle) {
+    public ArmPoseResult getDeploymentStatus(Pose2d estimatedPose, ScoringLocation target, ElbowStatus elbowAngle, ArmStatus armStatus) {
         Translation2d start = estimatedPose.getTranslation();
         Translation2d end = target.computeAbsolutePose().getTranslation();
         ArmPoseResult armPose = new ArmPoseResult();
