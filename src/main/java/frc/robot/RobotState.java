@@ -10,7 +10,6 @@ import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.commands.supplier.TargetNodeSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
-import frc.robot.pose.AlignmentSolution;
 import frc.robot.pose.AprilTagLocation.AprilTagIDLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.ScoringLocation;

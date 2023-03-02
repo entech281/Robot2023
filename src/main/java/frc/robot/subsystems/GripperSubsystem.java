@@ -1,12 +1,11 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.RobotConstants;
 
-public class GripperSubsystem extends EntechSubsystem implements Sendable{
+public class GripperSubsystem extends EntechSubsystem {
 
 	private DoubleSolenoid gripperSolenoid;	
 	private int gripperSolenoidCounter;

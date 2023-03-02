@@ -2,16 +2,11 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.supplier.TargetYawSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
-import frc.robot.commands.supplier.EstimatedPoseSupplier;
-import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.controllers.RobotYawPIDController;
 import frc.robot.filters.DriveInput;
-import frc.robot.pose.AlignmentCalculator;
-import frc.robot.pose.ScoringLocation;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
