@@ -192,12 +192,11 @@ public class SparkMaxPositionController implements Sendable, PositionController{
       			 if ( isWithinToleranceOfPosition(config.getBackoff())) {
       				encoder.setPosition(config.getHomePosition());
       				 //telescopeMotor.stopMotor();  future configurable? this will stop the motor. Not doing this leaves the motor on and locked on this position 
-      				 axisState = MotionState.HOMED;
-      				 requestedPosition = config.getHomePosition();
+      				 axisState = MotionState.HOMED;      				 
       			 }
       			 break;
       		 case HOMED:
-      			 //setPositionInternal(requestedPosition);
+      			 setPositionInternal(requestedPosition);
       			 if (isAtLowerLimit()  ) {
       				 stop();
       				 DriverStation.reportWarning("Low Limit Reached! Please Move Axis off the switch. We will home on next comamand." , false);
