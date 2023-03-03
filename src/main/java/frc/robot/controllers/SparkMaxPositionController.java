@@ -158,8 +158,13 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     }
  
     private void startHoming() {
-		  spark.set(-config.getHomingSpeedPercent()); //move towards lower limit
-		  axisState = MotionState.FINDING_LIMIT;    	
+    	if ( isAtLowerLimit() ) {
+    		spark.set(0);
+    	}
+    	else {
+  		  spark.set(-config.getHomingSpeedPercent()); //move towards lower limit
+    	}
+    	axisState = MotionState.FINDING_LIMIT;    
     }
     
     public void resetPosition(){
@@ -169,7 +174,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     private void setPositionInternal(double desiredPosition) {
     	spark.getPIDController().setReference(desiredPosition, CANSparkMax.ControlType.kPosition);
     }
-    
+
     public void stop() {
     	spark.stopMotor();
     }

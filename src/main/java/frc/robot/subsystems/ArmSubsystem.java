@@ -75,8 +75,8 @@ public class ArmSubsystem extends EntechSubsystem{
 	    positionController = new SparkMaxPositionController(
 	    		telescopeMotor,
 	    		conf,
-				telescopeMotor.getForwardLimitSwitch(Type.kNormallyOpen),	    		
-				telescopeMotor.getReverseLimitSwitch(Type.kNormallyOpen),
+				telescopeMotor.getReverseLimitSwitch(Type.kNormallyOpen),	    		
+				telescopeMotor.getForwardLimitSwitch(Type.kNormallyOpen),
 	    		telescopeMotor.getEncoder()
 	    );
 	    
