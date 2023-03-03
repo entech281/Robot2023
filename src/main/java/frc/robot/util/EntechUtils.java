@@ -41,4 +41,5 @@ public final class EntechUtils {
         }
         return angle;
     }
+
 }

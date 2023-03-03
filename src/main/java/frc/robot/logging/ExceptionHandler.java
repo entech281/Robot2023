@@ -8,6 +8,7 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.util.EntechUtils;
 
 /**
  * Captures Exceptions,and logs a copy of each unique one to the shuffleboard testing tab
@@ -20,8 +21,8 @@ public class ExceptionHandler {
 	private Map<String,Throwable> errorMap = new HashMap<>();
 	public ExceptionHandler() {
 		testingTab = Shuffleboard.getTab("Testing");
-		testingTab.addString("Robot Exception Text", this::getUniqueExceptions);
-		testingTab.addInteger("Robot Exception Count", this::getExceptionCount).withWidget(BuiltInWidgets.kDial);
+		testingTab.addString("Robot Exception Text", this::getUniqueExceptions).withSize(5, 2).withPosition(0, 5);
+		testingTab.addInteger("Robot Exception Count", this::getExceptionCount).withWidget(BuiltInWidgets.kDial).withSize(2, 1).withPosition(0, 4);
 	}
 	
 	public void handleException(Throwable error) {

@@ -13,6 +13,7 @@ public abstract class EntechSubsystem extends SubsystemBase {
     public EntechSubsystem() {        
     }
 	public abstract void initialize();
+	public abstract boolean isEnabled();
     public abstract SubsystemStatus getStatus();
     
     
