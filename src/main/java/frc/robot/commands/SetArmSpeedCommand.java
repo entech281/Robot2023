@@ -21,7 +21,7 @@ public class SetArmSpeedCommand extends EntechCommandBase {
       super(subsystem);
       armSubsystem = subsystem;
       this.desiredSpeed = desiredSpeed;
-  
+  }
 
   @Override
 	public String getName() {
