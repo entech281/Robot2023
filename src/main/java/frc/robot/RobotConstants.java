@@ -70,7 +70,7 @@ public final class RobotConstants {
     		  public static double MIN_METERS= 0;
     		  public static double CARRY_METERS = 0.1;
     		  public static double SCORE_MIDDLE_METERS = 0.2;
-    		  public static double SCORE_HIGH_METERS = 0.5;
+    		  public static double SCORE_HIGH_METERS = 0.4;
     		  public static double MAX_METERS = 0.5;
     	}
         
@@ -90,10 +90,10 @@ public final class RobotConstants {
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
-    		public static final double HOME_POSITION_BACKOFF_DEGREES=0.01;
-    		public static final double HOME_POSITION_METERS=3.0;
+    		public static final double HOME_POSITION_BACKOFF_DEGREES=1.0;
+    		public static final double HOME_POSITION_METERS=1.0;
     		public static final double MAX_POSITION_DEGREES=50.0;
-    		public static final double MIN_POSITION_DEGREES=0.0;
+    		public static final double MIN_POSITION_DEGREES=0.9;
     	}
     	public interface TUNING{
     		public static final double P_GAIN=0.1;

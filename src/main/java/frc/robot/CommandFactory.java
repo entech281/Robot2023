@@ -83,6 +83,8 @@ public class CommandFactory {
     			moveArmCommand(ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS),
     			elbowSpeedCommand(0.1),
     			armSpeedCommand(0.1),
+    			elbowSpeedCommand(0),
+    			armSpeedCommand(0),    			
     			moveElbowCommand(ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES),
     			forgetArmHome()    			
     	);

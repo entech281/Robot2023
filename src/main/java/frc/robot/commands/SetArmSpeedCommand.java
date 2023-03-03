@@ -25,7 +25,7 @@ public class SetArmSpeedCommand extends EntechCommandBase {
 
   @Override
 	public String getName() {
-		return super.getName() + "s=" + desiredSpeed ;
+		return super.getName() + ",s=" + desiredSpeed ;
 	}
 
 // Called when the command is initially scheduled.

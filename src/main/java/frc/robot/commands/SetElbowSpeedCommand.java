@@ -31,7 +31,7 @@ public class SetElbowSpeedCommand extends EntechCommandBase {
 
   @Override  
   public String getName() {
-	return super.getName() + "s=" + desiredSpeed;
+	return super.getName() + ",s=" + desiredSpeed;
   }  
   
   // Called every time the scheduler runs while the command is scheduled.
