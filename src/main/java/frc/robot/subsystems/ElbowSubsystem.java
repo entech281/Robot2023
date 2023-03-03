@@ -47,9 +47,9 @@ public class ElbowSubsystem extends EntechSubsystem{
 		    elbowMotor.getEncoder().setPositionConversionFactor( 1.0/ ELBOW.SETTINGS.COUNTS_PER_DEGREE);
 		    elbowMotor.getEncoder().setVelocityConversionFactor(1.0 / ELBOW.SETTINGS.COUNTS_PER_DEGREE);			
 			PositionControllerConfig conf =  new PositionControllerConfig.Builder("ELBOW")
-			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_METERS ,ELBOW.HOMING.HOME_POSITION_METERS )
-			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_METERS)  	
-			    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_METERS, ELBOW.HOMING.MAX_POSITION_METERS)
+			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_DEGREES ,ELBOW.HOMING.HOME_POSITION_METERS )
+			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_DEGREES)  	
+			    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_DEGREES, ELBOW.HOMING.MAX_POSITION_DEGREES)
 			    	.build();
 			
 		    positionController = new SparkMaxPositionController(

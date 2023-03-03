@@ -51,14 +51,13 @@ public final class RobotConstants {
     		public static final double MOVE_TOLERANCE_METERS=0.01; 
     		public static final int CURRENT_LIMIT_AMPS=4;
     		public static final int MAX_SPIKE_CURRENT=10;
-    		public static final double COUNTS_PER_METER=100.0; //TODO: check. 42 counts/ rev. 48:1 gearbox. approx 1.5" pulley
+    		public static final double COUNTS_PER_METER=42*48*3.14*1.5/39.37; //TODO: check. 42 counts/ rev. 48:1 gearbox. approx 1.5" pulley
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
     		public static final double HOME_POSITION_BACKOFF_METERS=0.1;
     		public static final double HOME_POSITION_METERS=0;
     		public static final double MIN_POSITION_METERS=0;
-    		public static final double MAX_POSITION_METERS=420;
     	}
     	public interface TUNING{
     		public static final double P_GAIN=1.0;
@@ -72,7 +71,7 @@ public final class RobotConstants {
     		  public static double CARRY_METERS = 0.1;
     		  public static double SCORE_MIDDLE_METERS = 0.2;
     		  public static double SCORE_HIGH_METERS = 0.5;
-    		  public static double MAX_METERS = 1.0;
+    		  public static double MAX_METERS = 0.5;
     	}
         
         public static final double MIN_EXTENSION_METERS = 0.9906; //39 inches from center of robot to center of claw
@@ -84,17 +83,17 @@ public final class RobotConstants {
         public static final double MAX_ANGLE_DEGREES = 107.0; //17 degrees above horizontal (90)
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = false;
-    		public static final double MOVE_TOLERANCE_METERS=10; 
+    		public static final double MOVE_TOLERANCE_DEGREES=0.5; 
     		public static final int CURRENT_LIMIT_AMPS=4;
     		public static final int MAX_SPIKE_CURRENT=10;
-    		public static final double COUNTS_PER_DEGREE=12; //TODO: correct. 42 counts/rev. 100:1 gearbox.
+    		public static final double COUNTS_PER_DEGREE=42*100/360.0; //TODO: correct. 42 counts/rev. 100:1 gearbox.
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
-    		public static final double HOME_POSITION_BACKOFF_METERS=0.01;
-    		public static final double HOME_POSITION_METERS=0;
-    		public static final double MAX_POSITION_METERS=1.0;
-    		public static final double MIN_POSITION_METERS=0.0;
+    		public static final double HOME_POSITION_BACKOFF_DEGREES=0.01;
+    		public static final double HOME_POSITION_METERS=3.0;
+    		public static final double MAX_POSITION_DEGREES=50.0;
+    		public static final double MIN_POSITION_DEGREES=0.0;
     	}
     	public interface TUNING{
     		public static final double P_GAIN=0.1;
@@ -103,11 +102,11 @@ public final class RobotConstants {
     	}
     	public interface POSITION_PRESETS{
     		  public static double HOME_DEGREES =  0;
-    		  public static double MIN_DEGREES = 0;
+    		  public static double MIN_DEGREES = 2;
     		  public static int CARRY_DEGREES = 20;
-    		  public static double SCORE_MIDDLE_DEGREES = 85;
-    		  public static double SCORE_HIGH_DEGREES = 9;
-    		  public static double MAX_DEGREES = 107.0;
+    		  public static double SCORE_MIDDLE_DEGREES = 30;
+    		  public static double SCORE_HIGH_DEGREES = 40;
+    		  public static double MAX_DEGREES = 60.0;
     	}    	
     }
     public interface GRIPPER{

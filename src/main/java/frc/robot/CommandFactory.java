@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotConstants.ARM;
+import frc.robot.RobotConstants.ELBOW;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.ArmForgetHomeCommand;
@@ -34,6 +35,7 @@ import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.commands.PositionElbowCommand;
 /**
  *
  * @author dcowden 
@@ -78,11 +80,10 @@ public class CommandFactory {
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
-    			moveArmCommand(ARM.POSITION_PRESETS.MAX_METERS),
-    			moveArmCommand(ARM.POSITION_PRESETS.SCORE_HIGH_METERS),
     			moveArmCommand(ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS),
     			elbowSpeedCommand(0.1),
     			armSpeedCommand(0.1),
+    			moveElbowCommand(ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES),
     			forgetArmHome()    			
     	);
     			
@@ -92,6 +93,11 @@ public class CommandFactory {
     	Command p = new PositionArmCommand ( armSubsystem,position,true);
     	return p;
     }
+    public Command moveElbowCommand(double position) {
+    	Command p = new PositionElbowCommand ( elbowSubsystem,position,true);
+    	return p;
+    }    
+    
     public Command forgetArmHome() {
     	return new ArmForgetHomeCommand( armSubsystem);
     }
