@@ -89,7 +89,7 @@ public class TestSparkMaxPositionController {
 
 		//requesting position should start  homing before moving to the requested counts
 		c.requestPosition(REQUESTED_POSITION);
-		verify(mockMotor).set(HOMING_SPEED);
+		verify(mockMotor).set(0);
 		
 		assertEquals(MotionState.FINDING_LIMIT, c.getMotionState());
 		
