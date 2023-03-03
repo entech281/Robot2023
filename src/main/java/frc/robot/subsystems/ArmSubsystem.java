@@ -82,6 +82,10 @@ public class ArmSubsystem extends EntechSubsystem{
 	    
 	}
   }  
+
+  public void setMotorSpeed(double speed) {
+	  telescopeMotor.set(speed);
+  }  
   
   public ArmStatus getStatus(){
 	  if ( enabled) {
@@ -143,11 +147,18 @@ public class ArmSubsystem extends EntechSubsystem{
       if ( enabled ) {
           builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
           builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);      	  
+          builder.addDoubleProperty("ActualPos", this::getActualPosition, null); 
+          builder.addDoubleProperty("MotorOutput", this::getMotorSpeed, null); 
       }
     
   }
 
+  private double getMotorSpeed() {
+	  if (enabled) {
+		  return telescopeMotor.getAppliedOutput();
+	  }
+	  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
+  }
   @Override
   public void simulationPeriodic() {
     

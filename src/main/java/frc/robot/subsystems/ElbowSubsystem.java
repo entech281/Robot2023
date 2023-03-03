@@ -7,7 +7,6 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
-import frc.robot.RobotConstants.ARM;
 import frc.robot.RobotConstants.ELBOW;
 import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
@@ -17,7 +16,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 
 	  private CANSparkMax elbowMotor;
 	  private SparkMaxPositionController positionController;
-	  private boolean enabled = false;	
+	  private boolean enabled = true;	
 	
 	  
 	  //for unit testing
@@ -35,7 +34,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  @Override
 	  public void initialize() {
 		if ( enabled ) {
-			elbowMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
+			elbowMotor = new CANSparkMax(RobotConstants.CAN.ELBOW_MOTOR_ID, MotorType.kBrushless);
 			elbowMotor.getPIDController().setP(ELBOW.TUNING.P_GAIN);
 			elbowMotor.getPIDController().setI(ELBOW.TUNING.I_GAIN);
 			elbowMotor.getPIDController().setD(ELBOW.TUNING.D_GAIN);
@@ -63,7 +62,16 @@ public class ElbowSubsystem extends EntechSubsystem{
 			
 		}
 	  }  
+	  private double getMotorSpeed() {
+		  if (enabled) {
+			  return elbowMotor.getAppliedOutput();
+		  }
+		  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
+	  }
 	  
+	  public void setMotorSpeed(double speed) {
+		  	elbowMotor.set(speed);
+	  }
 	  public double getRequestedPosition() {
 		  if ( isEnabled()) {
 			  return positionController.getRequestedPosition();
@@ -116,7 +124,8 @@ public class ElbowSubsystem extends EntechSubsystem{
 	      if ( enabled ) {
 	          builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
 	          builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-	          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);      	  
+	          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);  
+	          builder.addDoubleProperty("MotorOutput", this::getMotorSpeed, null); 	          
 	      }
 	  }
 	 

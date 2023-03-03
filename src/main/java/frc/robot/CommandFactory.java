@@ -14,7 +14,9 @@ import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.PositionArmCommand;
 import frc.robot.commands.PositionElbowCommand;
+import frc.robot.commands.SetArmSpeedCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
+import frc.robot.commands.SetElbowSpeedCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
@@ -79,6 +81,8 @@ public class CommandFactory {
     			moveArmCommand(ARM.POSITION_PRESETS.MAX_METERS),
     			moveArmCommand(ARM.POSITION_PRESETS.SCORE_HIGH_METERS),
     			moveArmCommand(ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS),
+    			elbowSpeedCommand(0.1),
+    			armSpeedCommand(0.1),
     			forgetArmHome()    			
     	);
     			
@@ -91,6 +95,15 @@ public class CommandFactory {
     public Command forgetArmHome() {
     	return new ArmForgetHomeCommand( armSubsystem);
     }
+    
+    public Command elbowSpeedCommand(double speed) {
+    	return new SetElbowSpeedCommand(elbowSubsystem,speed);
+    }
+    
+    public Command armSpeedCommand(double speed) {
+    	return new SetArmSpeedCommand(armSubsystem,speed);
+    }    
+    
     public Command deployHighCommand() {
     	//note that the subsystems will HOME before the moves are complete!
     	return new SequentialCommandGroup(
