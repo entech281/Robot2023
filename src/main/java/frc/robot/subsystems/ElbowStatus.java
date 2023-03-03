@@ -19,5 +19,10 @@ public class ElbowStatus implements SubsystemStatus{
     public double getVerticalAngle(){
         return verticalAngle;
     }
+
+    @Override
+	public String toString() {
+		return "Elbow Status: [counts:" + counts + ", verticalAngle=" + verticalAngle + "]";
+	}
 	
 }
