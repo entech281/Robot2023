@@ -80,7 +80,9 @@ public class ElbowSubsystem extends EntechSubsystem{
 			  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
 		  }
 	  }
-	  
+	  public void forgetHome() {
+		  positionController.forgetHome();
+	  }
 	  public double getActualPosition() {
 		  if ( isEnabled()) {
 			  return positionController.getActualPosition();

@@ -11,6 +11,7 @@ import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.ArmForgetHomeCommand;
 import frc.robot.commands.DriveDirectionCommand;
+import frc.robot.commands.ElbowForgetHomeCommand;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.PositionArmCommand;
@@ -86,7 +87,8 @@ public class CommandFactory {
     			elbowSpeedCommand(0),
     			armSpeedCommand(0),    			
     			moveElbowCommand(ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES),
-    			forgetArmHome()    			
+    			forgetArmHome(),
+    			forgetElbowHome()   
     	);
     			
     	
@@ -103,7 +105,9 @@ public class CommandFactory {
     public Command forgetArmHome() {
     	return new ArmForgetHomeCommand( armSubsystem);
     }
-    
+    public Command forgetElbowHome() {
+    	return new ElbowForgetHomeCommand( elbowSubsystem);
+    }    
     public Command elbowSpeedCommand(double speed) {
     	return new SetElbowSpeedCommand(elbowSubsystem,speed);
     }

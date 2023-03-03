@@ -56,7 +56,7 @@ public final class RobotConstants {
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
     		public static final double HOME_POSITION_BACKOFF_METERS=0.1;
-    		public static final double HOME_POSITION_METERS=0;
+    		public static final double HOME_POSITION_METERS=0.1;
     		public static final double MIN_POSITION_METERS=0;
     	}
     	public interface TUNING{
@@ -90,10 +90,10 @@ public final class RobotConstants {
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
-    		public static final double HOME_POSITION_BACKOFF_DEGREES=1.0;
-    		public static final double HOME_POSITION_METERS=1.0;
+    		public static final double HOME_POSITION_BACKOFF_DEGREES=3.0;
+    		public static final double HOME_POSITION_METERS=3.0;
     		public static final double MAX_POSITION_DEGREES=50.0;
-    		public static final double MIN_POSITION_DEGREES=0.9;
+    		public static final double MIN_POSITION_DEGREES=3.1;
     	}
     	public interface TUNING{
     		public static final double P_GAIN=0.1;
@@ -102,11 +102,11 @@ public final class RobotConstants {
     	}
     	public interface POSITION_PRESETS{
     		  public static double HOME_DEGREES =  0;
-    		  public static double MIN_DEGREES = 2;
+    		  public static double MIN_DEGREES = 4;
     		  public static int CARRY_DEGREES = 20;
     		  public static double SCORE_MIDDLE_DEGREES = 30;
     		  public static double SCORE_HIGH_DEGREES = 40;
-    		  public static double MAX_DEGREES = 60.0;
+    		  public static double MAX_DEGREES = 50.0;
     	}    	
     }
     public interface GRIPPER{
