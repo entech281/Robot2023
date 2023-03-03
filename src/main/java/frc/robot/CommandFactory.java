@@ -67,7 +67,9 @@ public class CommandFactory {
         , new DriveDirectionCommand(driveSubsystem, 0.0, -2, 0.5)
         );
         c3.setName("Autonomous");
-    	return List.of( c1, c2, c3);
+        Command c4 = driveDistanceCommand(2);
+        c4.setName("MoveForward");
+    	return List.of( c1, c2, c3 ,c4);
 
     }
     
@@ -146,5 +148,9 @@ public class CommandFactory {
 
     public Command nudgeYawRightCommand() {
         return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.RIGHT,robotState);
+    }
+
+    public Command driveDistanceCommand(double distanceMeters) {
+        return new DriveDirectionCommand(driveSubsystem, distanceMeters, 0, 0);
     }
 }
