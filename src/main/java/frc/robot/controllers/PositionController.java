@@ -14,7 +14,7 @@ public interface PositionController {
 
 	void update();
 
-	void requestPosition(int requestedPosition);
+	void requestPosition(double requestedPosition);
 
 	boolean isAtLowerLimit();
 

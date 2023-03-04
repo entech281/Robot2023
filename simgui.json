@@ -5,12 +5,20 @@
         "header": {
           "open": true
         }
+      },
+      "window": {
+        "visible": false
       }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/MecanumDrive[1]": "MecanumDrive",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/Shuffleboard/Match/DriveSubsystem": "Subsystem",
       "/Shuffleboard/Match/Estimated Location": "Field2d",
       "/Shuffleboard/Match/SendableChooser[0]": "String Chooser",
@@ -20,15 +28,21 @@
     }
   },
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
     "Retained Values": {
       "open": false
     },
     "transitory": {
       "LiveWindow": {
         ".status": {
+          "open": true
+        },
+        "open": true
+      },
+      "Shuffleboard": {
+        "Match": {
+          "ArmSubsystem": {
+            "open": true
+          },
           "open": true
         },
         "open": true
@@ -58,7 +72,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 338
+          "height": 323
         }
       ]
     }

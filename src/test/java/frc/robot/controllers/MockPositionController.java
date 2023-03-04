@@ -57,7 +57,7 @@ public class MockPositionController implements PositionController{
 		this.motionState = motionState;
 	}
 	private int actualPosition  = 0;
-	private int requestedPosition = 0;
+	private double requestedPosition = 0;
 	private boolean inMotion = false;
 	private boolean homed = false;
 	private MotionState motionState;
@@ -93,7 +93,7 @@ public class MockPositionController implements PositionController{
 	}
 
 	@Override
-	public void requestPosition(int requestedPosition) {
+	public void requestPosition(double requestedPosition) {
 		this.requestedPosition = requestedPosition;
 		
 	}

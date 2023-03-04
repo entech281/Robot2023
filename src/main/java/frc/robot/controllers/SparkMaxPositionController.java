@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @author davec
  *
  */
-public class SparkMaxPositionController implements Sendable, PositionController{
+public class SparkMaxPositionController implements Sendable, PositionController {
 
 	public enum MotionState { BACKING_OFF, FINDING_LIMIT, HOMED, UNINITIALIZED }
 	
@@ -47,7 +47,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     private RelativeEncoder encoder;
 
     private SparkMaxLimitSwitch lowerLimit;
-    private int requestedPosition = 0;
+    private double requestedPosition = 0;
     protected CANSparkMax spark;    
     private SparkMaxLimitSwitch upperLimit;
     
@@ -105,7 +105,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 
 	@Override
     public void initSendable(SendableBuilder builder) {
-  	  if ( enabled ) {
+  	  if (enabled) {
   	      builder.setSmartDashboardType("PositionController:" + config.getName());
   	      builder.addStringProperty("Status:", this::getHomingStateString , null);		  
   	      builder.addBooleanProperty("InMotion", this::inMotion, null);
@@ -114,8 +114,13 @@ public class SparkMaxPositionController implements Sendable, PositionController{
   	      builder.addBooleanProperty("Homed", this::isHomed, null);
   	      builder.addBooleanProperty("UpperLimit", this::isAtLowerLimit, null);
   	      builder.addBooleanProperty("LowerLimit", this::isAtUpperLimit, null);
+          builder.addDoubleProperty("PID P", this::getP, this::setP);
+          builder.addDoubleProperty("PID I", this::getI, this::setI);
+          builder.addDoubleProperty("PID D", this::getD, this::setD);
+          builder.addDoubleProperty("PID SetPoint", this::getRequestedPosition, this::requestPosition);
+          builder.addDoubleProperty("PID FF", this::getFF, this::setFF);
   	  }
-    }  
+    }
 	
 	
 	public boolean inMotion() {
@@ -136,14 +141,14 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     	}
     }    
     
-    @Override
+  @Override
 	public boolean isAtRequestedPosition() {
 		
 		return isWithinToleranceOfPosition(requestedPosition);
 	}    
     
 
-    @Override
+  @Override
 	public boolean isAtUpperLimit() {
     	if ( hasSpark() ) {
     		return upperLimit.isPressed();
@@ -157,7 +162,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
         return this.enabled;
     }    
 
-    @Override
+  @Override
 	public boolean isHomed() {
   	  return axisState == MotionState.HOMED;
     }    
@@ -166,13 +171,13 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 	  	return position >= config.getMinPositionCounts() && position <= config.getMaxPositionCounts() ;
  	}
     
-    protected boolean isWithinToleranceOfPosition( int position) {
+    protected boolean isWithinToleranceOfPosition(double position) {
 		double actualPosition = encoder.getPosition();
 		return Math.abs(actualPosition - position) < config.getPositionToleranceCounts();
 	}
     
-    @Override
-	public void requestPosition(int requestedPosition) {
+  @Override
+	public void requestPosition(double requestedPosition) {
   	  if ( isPositionWithinSoftLimits(requestedPosition)) {
   		  this.requestedPosition = requestedPosition;		  
   		  if (axisState == MotionState.UNINITIALIZED) {
@@ -189,7 +194,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
         encoder.setPosition(0);
     }
 
-    @Override
+  @Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
@@ -205,7 +210,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 		}		
 	}
 
-    private void setPositionInternal(int desiredPosition) {
+    private void setPositionInternal(double desiredPosition) {
     	spark.getPIDController().setReference(correctDirection(desiredPosition), CANSparkMax.ControlType.kPosition);
     }
 
@@ -244,7 +249,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
       		 case BACKING_OFF:
       			 if ( isWithinToleranceOfPosition(config.getBackoffCounts())) {
       				encoder.setPosition(config.getHomePositionCounts());
-      				 //telescopeMotor.stopMotor();  future configurable? this will stop the motor. Not doing this leaves the motor on and locked on this position 
+      				 //spark.stopMotor();  future configurable? this will stop the motor. Not doing this leaves the motor on and locked on this position 
       				 axisState = MotionState.HOMED;
       			 }
       			 break;
@@ -263,5 +268,55 @@ public class SparkMaxPositionController implements Sendable, PositionController{
   	     }
   	  }
     }
+    private double getP() {
+      if (spark != null) {
+        return spark.getPIDController().getP();
+      }
+      return 0;
+    }
+  
+    private void setP(double p) {
+      if (spark != null) {
+        spark.getPIDController().setP(p);
+      }
+    }
+  
+    private double getI() {
+      if (spark != null) {
+        return spark.getPIDController().getI();
+      }
+      return 0;
+    }
+  
+    private void setI(double i) {
+      if (spark != null) {
+        spark.getPIDController().setI(i);
+      }
+    }
+  
+    private double getD() {
+      if (spark != null) {
+        return spark.getPIDController().getD();
+      }
+      return 0;
+    }
+  
+    private void setD(double d) {
+      if (spark != null) {
+        spark.getPIDController().setD(d);
+      }
+    }
 
+    private double getFF() {
+      if (spark != null) {
+        return spark.getPIDController().getFF();
+      }
+      return 0;
+    }
+
+    private void setFF(double f) {
+      if (spark != null) {
+        spark.getPIDController().setFF(f);
+      }
+    }
 }

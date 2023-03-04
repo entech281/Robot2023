@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
@@ -21,6 +22,8 @@ public class ArmSubsystem extends EntechSubsystem{
   private CANSparkMax telescopeMotor;
   private SparkMaxPositionController positionController;
   private boolean enabled = false;
+
+  
   
   //for unit testing
   public ArmSubsystem( CANSparkMax motor, PositionControllerConfig config) {
@@ -46,14 +49,15 @@ public class ArmSubsystem extends EntechSubsystem{
   
   @Override
   public void initialize() {
-	if ( enabled ) {
+	  if ( enabled ) {
 	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushed);
+      telescopeMotor.getEncoder().setPositionConversionFactor(0.04826);
 	    telescopeMotor.getPIDController().setP(TUNING.P_GAIN);
 	    telescopeMotor.getPIDController().setI(TUNING.I_GAIN);
 	    telescopeMotor.getPIDController().setD(TUNING.D_GAIN);
 	    telescopeMotor.setSmartCurrentLimit(SETTINGS.MAX_SPIKE_CURRENT);
 	    positionController.setSparkMax(telescopeMotor);
-	}
+	  }
   }  
   
   public ArmStatus getStatus(){
@@ -82,7 +86,7 @@ public class ArmSubsystem extends EntechSubsystem{
   @Override
   public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType(getName());
-	  positionController.initSendable(builder);	      
+	    positionController.initSendable(builder);
   }
   
   public boolean isHomed() {
