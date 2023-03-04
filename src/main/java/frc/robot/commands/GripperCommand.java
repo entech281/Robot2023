@@ -13,11 +13,19 @@ public class GripperCommand extends EntechCommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
+  public GripperCommand(GripperSubsystem subsystem, GripperSubsystem.GripperState state, String name) {
+      super(subsystem);
+      gripperSubsystem = subsystem;
+      this.state = state;
+      this.setName(name);
+  }
+ 
   public GripperCommand(GripperSubsystem subsystem, GripperSubsystem.GripperState state) {
       super(subsystem);
       gripperSubsystem = subsystem;
       this.state = state;
-  }
+  }  
+
 
   // Called when the command is initially scheduled.
   @Override

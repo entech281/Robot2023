@@ -142,8 +142,10 @@ public final class RobotConstants {
 
     }
     public interface PNEUMATICS {
-        public static final int GRIPPER_OPEN = 1;
-        public static final int GRIPPER_CLOSE = 2;
+        public static final int LEFT_GRIPPER_OPEN = 2;
+        public static final int LEFT_GRIPPER_CLOSE = 3;
+        public static final int RIGHT_GRIPPER_OPEN = 4;
+        public static final int RIGHT_GRIPPER_CLOSE = 5;        
     }    
     public interface SHUFFLEBOARD {
     	public interface TABS{

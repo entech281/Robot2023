@@ -91,22 +91,24 @@ public class CommandFactory {
     			new HomeElbowCommand(elbowSubsystem),
     			new PositionArmCommand(armSubsystem,0.35, true),
     			new PositionArmCommand(armSubsystem,0, true),
-    			new PositionArmCommand(armSubsystem,0.1, true),
+    			//new PositionArmCommand(armSubsystem,0.1, true),
     			new PositionArmCommand(armSubsystem,0.2, true),
     			new PositionElbowCommand(elbowSubsystem,30, true),
     			new PositionElbowCommand(elbowSubsystem,60,true),
     			new PositionElbowCommand(elbowSubsystem,90, true),
     			new PositionElbowCommand(elbowSubsystem,4, true),
-    			new HomeArmCommand(armSubsystem),
-    			armSpeedCommand(-0.1),
-    			armSpeedCommand(0.2),
-    			elbowSpeedCommand(0),
-    			elbowSpeedCommand(0.1),
-    			elbowSpeedCommand(-0.1),
-    			armSpeedCommand(0),    			
+    			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
+    			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
+    			new HomeArmCommand(armSubsystem)
+    			//armSpeedCommand(-0.1),
+    			//armSpeedCommand(0.2),
+    			//elbowSpeedCommand(0),
+    			//elbowSpeedCommand(0.1),
+    			//elbowSpeedCommand(-0.1),
+    			//armSpeedCommand(0),    			
     			//moveElbowCommand(ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES),
-    			forgetArmHome(),
-    			forgetElbowHome()   
+    			//forgetArmHome(),
+    			//forgetElbowHome()   
     	);
     			
     	
