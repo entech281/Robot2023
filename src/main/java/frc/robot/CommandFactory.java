@@ -6,6 +6,8 @@ import java.util.function.Supplier;
 import javax.swing.text.Position;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.adapter.DriveInputYawMixer;
@@ -163,7 +165,7 @@ public class CommandFactory {
 
     public Command farScoringPositionCommand() {
         return new SequentialCommandGroup(
-            groundRetractedPosition(),
+            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
                 new PositionElbowCommand(elbowSubsystem, 10, true),
                 new PositionTelescopeCommand(armSubsystem, 99, true)
@@ -173,7 +175,7 @@ public class CommandFactory {
 
     public Command middleScoringPositioCommand() {
         return new SequentialCommandGroup(
-            groundRetractedPosition(),
+            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
                 new PositionElbowCommand(elbowSubsystem, 8, true),
                 new PositionTelescopeCommand(armSubsystem, 99, true)
@@ -183,14 +185,14 @@ public class CommandFactory {
 
     public Command groundScoringPosition() {
         return new ParallelCommandGroup(
-            groundRetractedPosition(),
+            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new PositionTelescopeCommand(armSubsystem, 75, true)
         );
     }
 
     public Command LoadingPositionCommand() {
         return new SequentialCommandGroup(
-            groundRetractedPosition(),
+            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
                 new PositionElbowCommand(elbowSubsystem, 10, true),
                 new PositionTelescopeCommand(armSubsystem, 99, true)

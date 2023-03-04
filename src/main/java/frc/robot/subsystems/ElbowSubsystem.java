@@ -96,14 +96,9 @@ public class ElbowSubsystem extends EntechSubsystem{
 		  return positionController.inMotion();
 	  }
 	 
-	//   public boolean isSafeToTelescope() {
-	// 	double currentAngle = ;
-	// 	if (currentAngle < 20) {
-	// 		return false;
-	// 	} else {
-	// 		return true;
-	// 	}
-	//   }
+	  public boolean isSafeToExtendArm() {
+		return false;
+	  }
 
 	  @Override
 	  public void simulationPeriodic() {
