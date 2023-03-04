@@ -7,55 +7,43 @@ package frc.robot.commands;
 import frc.robot.subsystems.ElbowSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class PositionElbowCommand extends EntechCommandBase {
+public class HomeElbowCommand extends EntechCommandBase {
 
   private final ElbowSubsystem elbowSubsystem;
-  private final double desiredPosition;
-  private boolean waitToComplete = false;
+
   /**
    * Creates a new PositionArmCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PositionElbowCommand(ElbowSubsystem elbowSubsystem, double desiredPosition, boolean waitToComplete) {
-      super(elbowSubsystem);
-      this.elbowSubsystem = elbowSubsystem;
-      this.desiredPosition = desiredPosition;
-      this.waitToComplete = waitToComplete;
+  public HomeElbowCommand(ElbowSubsystem subsystem) {
+      super(subsystem);
+      elbowSubsystem = subsystem;
+
   }
 
-  // Called when the command is initially scheduled.
+
+// Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
   }
 
-  @Override  
-  public String getName() {
-	return super.getName() + "@" + desiredPosition + "deg";
-  }  
-  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elbowSubsystem.requestPosition(desiredPosition);
+	  elbowSubsystem.home();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-	  elbowSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	  if ( waitToComplete) {
-		  return elbowSubsystem.isAtRequestedPosition();
-	  }
-	  else {
-		  return true;
-	  }
+	  return true;
   }
 
   // Returns true if this command should run when robot is disabled.

@@ -30,16 +30,6 @@ public class PositionControllerConfig {
 	}
 
 
-	public double getBackoff() {
-		return backoff;
-	}
-
-
-	public void setBackoff(double backoff) {
-		this.backoff = backoff;
-	}
-
-
 	public double getPositionTolerance() {
 		return positionTolerance;
 	}
@@ -80,7 +70,6 @@ public class PositionControllerConfig {
 	}
 
 	private double homePosition = 0;
-	private double backoff = 0;
 	private double positionTolerance = 5;
 	private double homingSpeedPercent = 10.0;	
 	private double minPosition = 0;
@@ -118,8 +107,7 @@ public class PositionControllerConfig {
 			c.inverted = inverted;
 			return this;
 		}
-		public Builder withHomingOptions ( double homingSpeedPercent, double backoffCounts , double homePositionCounts) {
-			c.backoff = backoffCounts;
+		public Builder withHomingOptions ( double homingSpeedPercent, double homePositionCounts) {
 			c.homingSpeedPercent = homingSpeedPercent;
 			c.homePosition = homePositionCounts;
 			return this;

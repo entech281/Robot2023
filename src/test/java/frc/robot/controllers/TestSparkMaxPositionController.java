@@ -35,7 +35,7 @@ public class TestSparkMaxPositionController {
 	@BeforeEach
 	public void setupMockController() {
 		config = new PositionControllerConfig.Builder("test")
-				.withHomingOptions(HOMING_SPEED , BACKOFF, HOME)
+				.withHomingOptions(HOMING_SPEED , HOME)
 				.withPositionTolerance(POSITION_TOLERANCE)
 				.withInverted(false)
 				.withSoftLimits(LOWER_LIMIT, UPPER_LIMIT).build();

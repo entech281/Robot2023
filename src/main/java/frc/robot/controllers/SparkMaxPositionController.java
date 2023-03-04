@@ -109,6 +109,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   
 	public void home() {
     	startHoming();
+    	requestedPosition = config.getHomePosition();
     }
 
 	@Override
@@ -229,6 +230,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 
     private void setPositionInternal(double desiredPosition) {
     	spark.getPIDController().setReference(correctDirection(desiredPosition), CANSparkMax.ControlType.kPosition);
+    	spark.getPIDController().setIAccum(0);
     }
 
     private void setEncoder( double value ) {

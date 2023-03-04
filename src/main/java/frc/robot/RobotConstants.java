@@ -49,8 +49,8 @@ public final class RobotConstants {
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = true;
     		public static final double MOVE_TOLERANCE_METERS=0.005; 
-    		public static final int CURRENT_LIMIT_AMPS=4;
-    		public static final int MAX_SPIKE_CURRENT=10;
+    		public static final int CURRENT_LIMIT_AMPS=8;
+    		public static final int MAX_SPIKE_CURRENT=20;
     		public static final double COUNTS_PER_METER=0.004826; //TODO: check. 42 counts/ rev. 48:1 gearbox. approx 1.5" pulley
     	} 
     	public interface HOMING{
@@ -84,18 +84,17 @@ public final class RobotConstants {
     		public static final double MOVE_TOLERANCE_DEGREES=0.5; 
     		public static final int CURRENT_LIMIT_AMPS=4;
     		public static final int MAX_SPIKE_CURRENT=10;
-    		public static final double COUNTS_PER_DEGREE=42*100/360.0; //TODO: correct. 42 counts/rev. 100:1 gearbox.
+    		public static final double COUNTS_PER_DEGREE=2.1383; 
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
-    		public static final double HOME_POSITION_BACKOFF_DEGREES=3.0;
-    		public static final double HOME_POSITION_METERS=3.0;
-    		public static final double MAX_POSITION_DEGREES=50.0;
-    		public static final double MIN_POSITION_DEGREES=3.1;
+    		public static final double HOME_POSITION_DEGREES=3.0;
+    		public static final double MAX_POSITION_DEGREES=100.0;
+    		public static final double MIN_POSITION_DEGREES=3.0;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.1;
-    		public static final double I_GAIN=0.0;
+    		public static final double P_GAIN=0.022;
+    		public static final double I_GAIN=0.0001;
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{

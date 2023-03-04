@@ -68,7 +68,7 @@ public class ArmSubsystem extends EntechSubsystem{
 	    telescopeMotor.getEncoder().setVelocityConversionFactor(ARM.SETTINGS.COUNTS_PER_METER);
 	    PositionControllerConfig conf = new PositionControllerConfig.Builder("ARM")
 	    	.withSoftLimits(ARM.POSITION_PRESETS.MIN_METERS, ARM.POSITION_PRESETS.MAX_METERS)
-	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_METERS ,ARM.HOMING.HOME_POSITION_METERS )
+	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_METERS )
 	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_METERS)
 	    	.withInverted(true)
 	    	.build();	    		

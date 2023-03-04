@@ -15,6 +15,7 @@ import frc.robot.commands.ElbowForgetHomeCommand;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
+import frc.robot.commands.HomeElbowCommand;
 import frc.robot.commands.PositionArmCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.SetArmSpeedCommand;
@@ -87,18 +88,25 @@ public class CommandFactory {
     			//moveArmCommand(ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS),
     			//elbowSpeedCommand(0.1),
     			//elbowSpeedCommand(-0.1),
+    			new HomeElbowCommand(elbowSubsystem),
     			new PositionArmCommand(armSubsystem,0.35, true),
     			new PositionArmCommand(armSubsystem,0, true),
     			new PositionArmCommand(armSubsystem,0.1, true),
     			new PositionArmCommand(armSubsystem,0.2, true),
+    			new PositionElbowCommand(elbowSubsystem,30, true),
+    			new PositionElbowCommand(elbowSubsystem,60,true),
+    			new PositionElbowCommand(elbowSubsystem,90, true),
+    			new PositionElbowCommand(elbowSubsystem,4, true),
     			new HomeArmCommand(armSubsystem),
     			armSpeedCommand(-0.1),
     			armSpeedCommand(0.2),
-    			//elbowSpeedCommand(0),    			
+    			elbowSpeedCommand(0),
+    			elbowSpeedCommand(0.1),
+    			elbowSpeedCommand(-0.1),
     			armSpeedCommand(0),    			
     			//moveElbowCommand(ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES),
-    			forgetArmHome()
-    			//forgetElbowHome()   
+    			forgetArmHome(),
+    			forgetElbowHome()   
     	);
     			
     	

@@ -47,7 +47,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 		    elbowMotor.getEncoder().setPositionConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);
 		    elbowMotor.getEncoder().setVelocityConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);			
 			PositionControllerConfig conf =  new PositionControllerConfig.Builder("ELBOW")
-			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_DEGREES ,ELBOW.HOMING.HOME_POSITION_METERS )
+			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_DEGREES  )
 			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_DEGREES)  	
 			    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_DEGREES, ELBOW.HOMING.MAX_POSITION_DEGREES)
 			    	.withInverted(true)
@@ -63,6 +63,12 @@ public class ElbowSubsystem extends EntechSubsystem{
 			
 		}
 	  }  
+	  
+	  public void home() {
+		  positionController.home();
+	  }
+	  
+
 	  
 	  public boolean isSafeToExtendArm() {
 		  return this.getActualPosition() > ELBOW.POSITION_PRESETS.SAFE_ANGLE;
