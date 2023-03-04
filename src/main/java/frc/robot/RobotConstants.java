@@ -47,7 +47,7 @@ public final class RobotConstants {
     }
     public interface ARM{
     	public interface SETTINGS{
-    		public static boolean MOTOR_REVERSED = false;
+    		public static boolean MOTOR_REVERSED = true;
     		public static final double MOVE_TOLERANCE_METERS=0.01; 
     		public static final int CURRENT_LIMIT_AMPS=4;
     		public static final int MAX_SPIKE_CURRENT=10;
@@ -136,8 +136,8 @@ public final class RobotConstants {
     	public static final int REAR_LEFT_MOTOR = 3;
     	public static final int REAR_RIGHT_MOTOR = 4; 
     	
-        public static final int ELBOW_MOTOR_ID = 5;
-        public static final int TELESCOPE_MOTOR_ID = 6;
+        public static final int ELBOW_MOTOR_ID = 6;
+        public static final int TELESCOPE_MOTOR_ID = 5;
         
     }
     public interface DIGITAL_IO {
