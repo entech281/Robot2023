@@ -85,7 +85,17 @@ public class PositionControllerConfig {
 	private double homingSpeedPercent = 10.0;	
 	private double minPosition = 0;
 	private double maxPosition = 0;
+	private boolean inverted = false;
 
+
+	public boolean isInverted() {
+		return inverted;
+	}
+
+
+	public void setInverted(boolean inverted) {
+		this.inverted = inverted;
+	}
 
 
 	public static class Builder {
@@ -102,6 +112,10 @@ public class PositionControllerConfig {
 
 		public Builder withPositionTolerance( double positionToleranceCounts) {
 			c.positionTolerance= positionToleranceCounts;
+			return this;
+		}
+		public Builder withInverted(boolean inverted) {
+			c.inverted = inverted;
 			return this;
 		}
 		public Builder withHomingOptions ( double homingSpeedPercent, double backoffCounts , double homePositionCounts) {

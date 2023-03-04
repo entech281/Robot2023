@@ -17,7 +17,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  private CANSparkMax elbowMotor;
 	  private SparkMaxPositionController positionController;
 	  private boolean enabled = true;	
-	
+
 	  
 	  //for unit testing
 	  public ElbowSubsystem( CANSparkMax motor, SparkMaxPositionController controller) {
@@ -44,12 +44,13 @@ public class ElbowSubsystem extends EntechSubsystem{
 			elbowMotor.setIdleMode(IdleMode.kBrake);
 			elbowMotor.clearFaults();
 			elbowMotor.setInverted(ELBOW.SETTINGS.MOTOR_REVERSED);	
-		    elbowMotor.getEncoder().setPositionConversionFactor( 1.0/ ELBOW.SETTINGS.COUNTS_PER_DEGREE);
-		    elbowMotor.getEncoder().setVelocityConversionFactor(1.0 / ELBOW.SETTINGS.COUNTS_PER_DEGREE);			
+		    elbowMotor.getEncoder().setPositionConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);
+		    elbowMotor.getEncoder().setVelocityConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);			
 			PositionControllerConfig conf =  new PositionControllerConfig.Builder("ELBOW")
 			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_BACKOFF_DEGREES ,ELBOW.HOMING.HOME_POSITION_METERS )
 			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_DEGREES)  	
 			    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_DEGREES, ELBOW.HOMING.MAX_POSITION_DEGREES)
+			    	.withInverted(true)
 			    	.build();
 			
 		    positionController = new SparkMaxPositionController(
@@ -70,8 +71,9 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  }
 	  
 	  public void setMotorSpeed(double speed) {
-		  	elbowMotor.set(speed);
+		  positionController.setMotorSpeed(speed);
 	  }
+	  
 	  public double getRequestedPosition() {
 		  if ( isEnabled()) {
 			  return positionController.getRequestedPosition();

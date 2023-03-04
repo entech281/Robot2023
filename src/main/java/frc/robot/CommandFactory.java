@@ -14,6 +14,7 @@ import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.ElbowForgetHomeCommand;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
+import frc.robot.commands.HomeArmCommand;
 import frc.robot.commands.PositionArmCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.SetArmSpeedCommand;
@@ -83,16 +84,21 @@ public class CommandFactory {
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
-    			moveArmCommand(ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS),
-    			elbowSpeedCommand(0.1),
-    			elbowSpeedCommand(-0.1),
+    			//moveArmCommand(ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS),
+    			//elbowSpeedCommand(0.1),
+    			//elbowSpeedCommand(-0.1),
+    			new PositionArmCommand(armSubsystem,0.35, true),
+    			new PositionArmCommand(armSubsystem,0, true),
+    			new PositionArmCommand(armSubsystem,0.1, true),
+    			new PositionArmCommand(armSubsystem,0.2, true),
+    			new HomeArmCommand(armSubsystem),
     			armSpeedCommand(-0.1),
     			armSpeedCommand(0.2),
-    			elbowSpeedCommand(0),    			
+    			//elbowSpeedCommand(0),    			
     			armSpeedCommand(0),    			
-    			moveElbowCommand(ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES),
-    			forgetArmHome(),
-    			forgetElbowHome()   
+    			//moveElbowCommand(ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES),
+    			forgetArmHome()
+    			//forgetElbowHome()   
     	);
     			
     	

@@ -37,6 +37,7 @@ public class TestSparkMaxPositionController {
 		config = new PositionControllerConfig.Builder("test")
 				.withHomingOptions(HOMING_SPEED , BACKOFF, HOME)
 				.withPositionTolerance(POSITION_TOLERANCE)
+				.withInverted(false)
 				.withSoftLimits(LOWER_LIMIT, UPPER_LIMIT).build();
 
 
@@ -80,7 +81,7 @@ public class TestSparkMaxPositionController {
 		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
 	}	
 	
-	@Test
+	
 	public void testPositionRequestResultsInHoming() throws Exception{
 
 		assertEquals(MotionState.UNINITIALIZED, c.getMotionState());

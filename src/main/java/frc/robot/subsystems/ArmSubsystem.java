@@ -64,12 +64,13 @@ public class ArmSubsystem extends EntechSubsystem{
 	    telescopeMotor.setIdleMode(IdleMode.kBrake);
 	    telescopeMotor.clearFaults();
 	    telescopeMotor.setInverted(ARM.SETTINGS.MOTOR_REVERSED);
-	    telescopeMotor.getEncoder().setPositionConversionFactor( 1.0/ ARM.SETTINGS.COUNTS_PER_METER);
-	    telescopeMotor.getEncoder().setVelocityConversionFactor(1.0 / ARM.SETTINGS.COUNTS_PER_METER);
+	    telescopeMotor.getEncoder().setPositionConversionFactor( ARM.SETTINGS.COUNTS_PER_METER);
+	    telescopeMotor.getEncoder().setVelocityConversionFactor(ARM.SETTINGS.COUNTS_PER_METER);
 	    PositionControllerConfig conf = new PositionControllerConfig.Builder("ARM")
 	    	.withSoftLimits(ARM.POSITION_PRESETS.MIN_METERS, ARM.POSITION_PRESETS.MAX_METERS)
 	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_BACKOFF_METERS ,ARM.HOMING.HOME_POSITION_METERS )
 	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_METERS)
+	    	.withInverted(true)
 	    	.build();	    		
 
 	    positionController = new SparkMaxPositionController(
@@ -84,7 +85,7 @@ public class ArmSubsystem extends EntechSubsystem{
   }  
 
   public void setMotorSpeed(double speed) {
-	  telescopeMotor.set(speed);
+	  positionController.setMotorSpeed(speed);
   }  
   
   public ArmStatus getStatus(){
@@ -103,7 +104,9 @@ public class ArmSubsystem extends EntechSubsystem{
   public void forgetHome() {
 	  positionController.forgetHome();
   }
-  
+  public void home() {
+	  positionController.home();
+  }
   public void stop() {
 	  positionController.stop();
   }
