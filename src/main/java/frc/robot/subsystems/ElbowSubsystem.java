@@ -63,6 +63,11 @@ public class ElbowSubsystem extends EntechSubsystem{
 			
 		}
 	  }  
+	  
+	  public boolean isSafeToExtendArm() {
+		  return this.getActualPosition() > ELBOW.POSITION_PRESETS.SAFE_ANGLE;
+	  }
+	  
 	  private double getMotorSpeed() {
 		  if (enabled) {
 			  return elbowMotor.getAppliedOutput();
@@ -129,7 +134,8 @@ public class ElbowSubsystem extends EntechSubsystem{
 	          builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
 	          builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
 	          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);  
-	          builder.addDoubleProperty("MotorOutput", this::getMotorSpeed, null); 	          
+	          builder.addDoubleProperty("MotorOutput", this::getMotorSpeed, null); 	  
+	          builder.addBooleanProperty("CanExtendArm", this::isSafeToExtendArm, null);
 	      }
 	  }
 	 

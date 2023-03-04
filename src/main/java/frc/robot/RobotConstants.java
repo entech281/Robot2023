@@ -100,8 +100,9 @@ public final class RobotConstants {
     	}
     	public interface POSITION_PRESETS{
     		  public static int CARRY_DEGREES = 20;
-    		  public static double SCORE_MIDDLE_DEGREES = 30;
-    		  public static double SCORE_HIGH_DEGREES = 40;
+    		  public static double SCORE_MIDDLE_DEGREES = 60;
+    		  public static double SCORE_HIGH_DEGREES = 90;
+    		  public static double SAFE_ANGLE=30.0;
     	}    	
     }
     public interface GRIPPER{
