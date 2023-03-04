@@ -17,7 +17,7 @@ import static frc.robot.RobotConstants.ARM.*;
  */
 public class ArmSubsystem extends EntechSubsystem{
 	
-
+  private static final int NUGE_COUNT = 20;
   private CANSparkMax telescopeMotor;
   private SparkMaxPositionController positionController;
   private boolean enabled = false;
@@ -73,7 +73,7 @@ public class ArmSubsystem extends EntechSubsystem{
   }  
   
   
-  public void periodic() {	 
+  public void periodic() { 
 	  if (enabled ) {
 		  positionController.update();
 	  }
@@ -82,7 +82,7 @@ public class ArmSubsystem extends EntechSubsystem{
   @Override
   public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType(getName());
-	  positionController.initSendable(builder);	      
+	  positionController.initSendable(builder);
   }
   
   public boolean isHomed() {
@@ -97,6 +97,13 @@ public class ArmSubsystem extends EntechSubsystem{
 	  return positionController.inMotion();
   }
  
+  public void nudgeArmForward() {
+    positionController.requestPosition(getActualPosition() + NUGE_COUNT);
+  }
+
+  public void nudgeArmBackwards() {
+    positionController.requestPosition(getActualPosition() - NUGE_COUNT);
+  }
 
   @Override
   public void simulationPeriodic() {

@@ -66,15 +66,14 @@ public class PositionControllerConfig {
 		this.maxPositionCounts = maxPositionCounts;
 	}
 
+	private boolean swapLimitSwitches = false;
 	private boolean reversed = false;
-	private int homePositionCounts = 0;
-	private int backoffCounts = 0;
+	private double homingSpeedPercent = 10.0;
 	private int positionToleranceCounts = 5;
-	private double homingSpeedPercent = 10.0;	
+	private int homePositionCounts = 0;
 	private int minPositionCounts = 0;
 	private int maxPositionCounts = 0;
-	private boolean swapLimitSwitches = false;
-
+	private int backoffCounts = 0;
 
 	public Type getLowerLimitSwitchType() {
 		return lowerLimitSwitchType;

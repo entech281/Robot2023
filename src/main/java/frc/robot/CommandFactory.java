@@ -3,14 +3,17 @@ package frc.robot;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javax.swing.text.Position;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
-import frc.robot.commands.PositionArmCommand;
+import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
 import frc.robot.commands.SimpleDriveCommand;
@@ -76,7 +79,7 @@ public class CommandFactory {
     public Command deployHighCommand() {
     	//note that the subsystems will HOME before the moves are complete!
     	return new SequentialCommandGroup(
-    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH,true),
+    			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH,true),
     			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH, true ),
     			new GripperCommand( gripperSubsystem, GripperState.kOpen) 
     	);
@@ -84,7 +87,7 @@ public class CommandFactory {
     //this is probably also the home position
     public Command carryPosition() {
     	return new SequentialCommandGroup(
-    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY,true),
+    			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY,true),
     			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY, true ),
     			new GripperCommand( gripperSubsystem, GripperState.kClose) 
     	);    	
@@ -152,5 +155,62 @@ public class CommandFactory {
 
     public Command driveDistanceCommand(double distanceMeters) {
         return new DriveDirectionCommand(driveSubsystem, distanceMeters, 0, 0);
+    }
+
+    public Command groundRetractedPosition() {
+        return new PositionElbowCommand(elbowSubsystem, 3, true);
+    }
+
+    public Command farScoringPositionCommand() {
+        return new SequentialCommandGroup(
+            groundRetractedPosition(),
+            new ParallelCommandGroup(
+                new PositionElbowCommand(elbowSubsystem, 10, true),
+                new PositionTelescopeCommand(armSubsystem, 99, true)
+            )
+        );
+    }
+
+    public Command middleScoringPositioCommand() {
+        return new SequentialCommandGroup(
+            groundRetractedPosition(),
+            new ParallelCommandGroup(
+                new PositionElbowCommand(elbowSubsystem, 8, true),
+                new PositionTelescopeCommand(armSubsystem, 99, true)
+            )
+        );
+    }
+
+    public Command groundScoringPosition() {
+        return new ParallelCommandGroup(
+            groundRetractedPosition(),
+            new PositionTelescopeCommand(armSubsystem, 75, true)
+        );
+    }
+
+    public Command LoadingPositionCommand() {
+        return new SequentialCommandGroup(
+            groundRetractedPosition(),
+            new ParallelCommandGroup(
+                new PositionElbowCommand(elbowSubsystem, 10, true),
+                new PositionTelescopeCommand(armSubsystem, 99, true)
+            )
+        );
+    }
+
+    public void nudgeElbowUp() {
+        elbowSubsystem.nudgeElbowUp();
+    }
+
+    public void nudgeElbowDown() {
+        elbowSubsystem.nudgeElbowDown();
+    }
+
+    public void nugeArmForward() {
+        armSubsystem.nudgeArmForward();
+    }
+
+    public void nudgeArmBackwards() {
+        armSubsystem.nudgeArmBackwards();
     }
 }

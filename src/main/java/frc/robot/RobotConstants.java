@@ -45,10 +45,10 @@ public final class RobotConstants {
     public interface ARM{
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = false;
-    		public static final int MOVE_TOLERANCE_COUNTS=10; 
-    		public static final int CURRENT_LIMIT_AMPS=4;
-    		public static final int MAX_SPIKE_CURRENT=10;
-    		public static final double COUNTS_PER_METER=500*39;
+    		public static final int MOVE_TOLERANCE_COUNTS = 10; 
+    		public static final int CURRENT_LIMIT_AMPS = 4;
+    		public static final int MAX_SPIKE_CURRENT = 10;
+    		public static final double COUNTS_PER_METER = 0.004826;
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=10.0;

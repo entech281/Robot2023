@@ -13,10 +13,10 @@ import frc.robot.controllers.SparkMaxPositionController;
 
 public class ElbowSubsystem extends EntechSubsystem{
 
+	  private static final int NUDGE_COUNT = 20;
 	  private CANSparkMax elbowMotor;
 	  private SparkMaxPositionController positionController;
-	  private boolean enabled = false;	
-	
+	  private boolean enabled = false;
 	  
 	  //for unit testing
 	  public ElbowSubsystem( CANSparkMax motor, PositionControllerConfig config) {
@@ -75,6 +75,14 @@ public class ElbowSubsystem extends EntechSubsystem{
 	      builder.setSmartDashboardType(getName());
 		  positionController.initSendable(builder);	      
 	  }
+
+	  public void nudgeElbowDown() {
+		positionController.requestPosition(getActualPosition() - NUDGE_COUNT);
+	  }
+
+	  public void nudgeElbowUp() {
+		positionController.requestPosition(getActualPosition() + NUDGE_COUNT);
+	  }
 	  
 	  public boolean isHomed() {
 		  return positionController.isHomed();
@@ -88,6 +96,14 @@ public class ElbowSubsystem extends EntechSubsystem{
 		  return positionController.inMotion();
 	  }
 	 
+	//   public boolean isSafeToTelescope() {
+	// 	double currentAngle = ;
+	// 	if (currentAngle < 20) {
+	// 		return false;
+	// 	} else {
+	// 		return true;
+	// 	}
+	//   }
 
 	  @Override
 	  public void simulationPeriodic() {
@@ -98,5 +114,4 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  public ElbowStatus getStatus() {
 		 return new ElbowStatus(getActualPosition());
 	  }
-
 }
