@@ -30,7 +30,7 @@ import frc.robot.RobotConstants.SHUFFLEBOARD;
  * @author davec
  *
  */
-public class SparkMaxPositionController implements Sendable, PositionController{
+public class SparkMaxPositionController implements Sendable, PositionController {
 
 	public enum MotionState { BACKING_OFF, FINDING_LIMIT, HOMED, UNINITIALIZED }
 	
@@ -89,16 +89,20 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 
 	@Override
     public void initSendable(SendableBuilder builder) {
-      builder.setSmartDashboardType("PositionController:" + config.getName());
-      builder.addStringProperty("Status:", this::getStateString , null);		  
-      builder.addBooleanProperty("InMotion", this::inMotion, null);
-      builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-      builder.addDoubleProperty("ActualPos", this::getActualPosition, null);
-      builder.addBooleanProperty("Homed", this::isHomed, null);
-      builder.addBooleanProperty("UpperLimit", this::isAtLowerLimit, null);
-      builder.addBooleanProperty("LowerLimit", this::isAtUpperLimit, null);
-      builder.addDoubleProperty("MotorOuptut", this::getMotorOutput, null);
-    }  
+  	    builder.setSmartDashboardType("PositionController:" + config.getName());
+  	    // builder.addStringProperty("Status:", this::getHomingStateString , null);		  
+  	    builder.addBooleanProperty("InMotion", this::inMotion, null);
+  	    builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+  	    builder.addDoubleProperty("ActualPos", this::getActualPosition, null);
+  	    builder.addBooleanProperty("Homed", this::isHomed, null);
+  	    builder.addBooleanProperty("UpperLimit", this::isAtLowerLimit, null);
+  	    builder.addBooleanProperty("LowerLimit", this::isAtUpperLimit, null);
+        builder.addDoubleProperty("PID P", this::getP, this::setP);
+        builder.addDoubleProperty("PID I", this::getI, this::setI);
+        builder.addDoubleProperty("PID D", this::getD, this::setD);
+        builder.addDoubleProperty("PID SetPoint", this::getRequestedPosition, this::requestPosition);
+        builder.addDoubleProperty("PID FF", this::getFF, this::setFF);
+    }
 	
 	
 	public double getMotorOutput() {
@@ -113,7 +117,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
     	return lowerLimit.isPressed();
     }    
     
-    @Override
+  	@Override
 	public boolean isAtRequestedPosition() {
     	if ( isHomed() ) {
     		return isWithinToleranceOfPosition(requestedPosition);
@@ -124,7 +128,7 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 	}    
     
 
-    @Override
+  	@Override
 	public boolean isAtUpperLimit() {
     	return upperLimit.isPressed();
     }    
@@ -139,12 +143,12 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 	  	return position >= config.getMinPosition() && position <= config.getMaxPosition() ;
  	}
     
-    protected boolean isWithinToleranceOfPosition( double position) {
+    protected boolean isWithinToleranceOfPosition(double position) {
 		double actualPosition = encoder.getPosition();
 		return Math.abs(actualPosition - position) < config.getPositionTolerance();
 	}
     
-    @Override
+  	@Override
 	public void requestPosition(double requestedPosition) {
   	  if ( isPositionWithinSoftLimits(requestedPosition)) {
   		  this.requestedPosition = requestedPosition;		  
@@ -216,7 +220,59 @@ public class SparkMaxPositionController implements Sendable, PositionController{
       			 if ( isAtUpperLimit() ) {
       				 stopWithWarning("Upper Limit Reached! Please Move Axis off the switch. We will home on next comamand." );
       				 axisState = MotionState.UNINITIALIZED;
-      			 }
-  	     }
-  	  }
+      			}
+  	    }
+  	}
+	
+    private double getP() {
+      if (spark != null) {
+        return spark.getPIDController().getP();
+      }
+      return 0;
+    }
+  
+    private void setP(double p) {
+      if (spark != null) {
+        spark.getPIDController().setP(p);
+      }
+    }
+  
+    private double getI() {
+      if (spark != null) {
+        return spark.getPIDController().getI();
+      }
+      return 0;
+    }
+  
+    private void setI(double i) {
+      if (spark != null) {
+        spark.getPIDController().setI(i);
+      }
+    }
+  
+    private double getD() {
+      if (spark != null) {
+        return spark.getPIDController().getD();
+      }
+      return 0;
+    }
+  
+    private void setD(double d) {
+      if (spark != null) {
+        spark.getPIDController().setD(d);
+      }
+    }
+
+    private double getFF() {
+      if (spark != null) {
+        return spark.getPIDController().getFF();
+      }
+      return 0;
+    }
+
+    private void setFF(double f) {
+      if (spark != null) {
+        spark.getPIDController().setFF(f);
+      }
+    }
 }

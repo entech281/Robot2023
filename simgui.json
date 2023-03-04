@@ -5,12 +5,20 @@
         "header": {
           "open": true
         }
+      },
+      "window": {
+        "visible": false
       }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/MecanumDrive[1]": "MecanumDrive",
+      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
       "/Shuffleboard/Debug/ArmForgetHome": "Command",
       "/Shuffleboard/Debug/PositionArmCommand": "Command",
       "/Shuffleboard/Debug/PositionArmCommandCARRY": "Command",
@@ -21,19 +29,35 @@
       "/Shuffleboard/Match/SendableChooser[0]": "String Chooser",
       "/Shuffleboard/Match/TargetNode": "String Chooser",
       "/Shuffleboard/PreMatch/AutoCommand": "String Chooser",
+      "/Shuffleboard/Testing/ArmForgetHomeCommand": "Command",
+      "/Shuffleboard/Testing/ElbowForgetHomeCommand": "Command",
+      "/Shuffleboard/Testing/PositionArmCommand@0.3m": "Command",
+      "/Shuffleboard/Testing/PositionElbowCommand@30.0m": "Command",
+      "/Shuffleboard/Testing/SetArmSpeedCommand,s=-0.1": "Command",
+      "/Shuffleboard/Testing/SetArmSpeedCommand,s=0.0": "Command",
+      "/Shuffleboard/Testing/SetArmSpeedCommand,s=0.2": "Command",
+      "/Shuffleboard/Testing/SetElbowSpeedCommand,s=-0.1": "Command",
+      "/Shuffleboard/Testing/SetElbowSpeedCommand,s=0.0": "Command",
+      "/Shuffleboard/Testing/SetElbowSpeedCommand,s=0.1": "Command",
       "/SmartDashboard/DriveSubsystem": "Subsystem"
     }
   },
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
     "Retained Values": {
       "open": false
     },
     "transitory": {
       "LiveWindow": {
         ".status": {
+          "open": true
+        },
+        "open": true
+      },
+      "Shuffleboard": {
+        "Match": {
+          "ArmSubsystem": {
+            "open": true
+          },
           "open": true
         },
         "open": true
@@ -63,7 +87,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 338
+          "height": 323
         }
       ]
     }

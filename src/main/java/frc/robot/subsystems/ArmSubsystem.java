@@ -2,9 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
-import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
@@ -150,7 +150,7 @@ public class ArmSubsystem extends EntechSubsystem{
           builder.addDoubleProperty("ActualPos", this::getActualPosition, null); 
           builder.addDoubleProperty("MotorOutput", this::getMotorSpeed, null); 
       }
-    
+	  positionController.initSendable(builder);
   }
 
   private double getMotorSpeed() {
