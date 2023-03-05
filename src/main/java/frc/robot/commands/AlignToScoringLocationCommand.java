@@ -73,7 +73,7 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        drive.brake();
+        drive.stop();
     }
 
     @Override
