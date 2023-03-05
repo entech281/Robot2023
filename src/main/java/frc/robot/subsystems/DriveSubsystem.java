@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
+import frc.robot.RobotConstants.DRIVE;
 import frc.robot.filters.DriveInput;
 
 /**
@@ -58,6 +59,11 @@ public class DriveSubsystem extends EntechSubsystem {
     rearLeftSparkMax.setInverted(false);
     frontRightSparkMax.setInverted(true);
     rearRightSparkMax.setInverted(true);
+    
+    frontLeftSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
+    rearLeftSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
+    frontRightSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
+    rearRightSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);    
 
     // Just gonna leave that there
     // frontLeftSparkMax.setSmartCurrentLimit(AMP_CURRENT_LIMIT);

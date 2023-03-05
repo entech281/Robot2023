@@ -115,6 +115,9 @@ public final class RobotConstants {
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
     }
+    public interface DRIVE{
+    	public static final int CURRENT_LIMIT_AMPS = 30;
+    }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
         public static final int AUTO_ALIGN_DRIVE = 2;
