@@ -122,11 +122,11 @@ public boolean isEnabled() {
   }
 
   public double getAveragePosition() {
-    double possition = 0;
-    possition += frontLeftEncoder.getPosition();
-    possition += rearLeftEncoder.getPosition();
-    possition += frontRightEncoder.getPosition();
-    possition += rearRightEncoder.getPosition();
-    return possition / 4;
+    double position = 0;
+    position += frontLeftEncoder.getPosition();
+    position += rearLeftEncoder.getPosition();
+    position += frontRightEncoder.getPosition();
+    position += rearRightEncoder.getPosition();
+    return position / 4;
   }
 }

@@ -8,12 +8,11 @@ import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class DriveDistance extends EntechCommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private static final double countsPerMeters = (0.478779 * 42);
-  private static final double encoderGearRatio = 9.92;
-  private static final double speedLimt = 0.875;
-  private final double desiredDistance;
+public class DriveDistanceCommand extends EntechCommandBase {
+  private static final double COUNTS_PER_METER = (0.478779 * 42);
+  private static final double ENCODER_GEAR_RATIO = 9.92;
+  private static final double SPEED_LIMIT = 0.875;
+  private final double desiredDistanceMeters;
   private final DriveSubsystem drive;
 
   /**
@@ -21,10 +20,10 @@ public class DriveDistance extends EntechCommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveDistance(DriveSubsystem drive, double desiredDistance) {
+  public DriveDistanceCommand(DriveSubsystem drive, double desiredDistanceMeters) {
       super(drive);
       this.drive = drive;
-      this.desiredDistance = desiredDistance;
+      this.desiredDistanceMeters = desiredDistanceMeters;
   }
 
   @Override
@@ -35,7 +34,7 @@ public class DriveDistance extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.drive(new DriveInput(speedLimt, 0, 0, 0));
+    drive.drive(new DriveInput(SPEED_LIMIT, 0, 0, 0));
   }
 
   // Called once the command ends or is interrupted
@@ -48,7 +47,7 @@ public class DriveDistance extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return desiredDistance <= (drive.getAveragePosition() / encoderGearRatio) / countsPerMeters;
+    return desiredDistanceMeters >= Math.abs(drive.getAveragePosition() / ENCODER_GEAR_RATIO / COUNTS_PER_METER);
   }
 
   // Returns true if this command should run when robot is disabled.
