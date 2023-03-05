@@ -15,7 +15,7 @@ import frc.robot.controllers.SparkMaxPositionController;
 
 public class ElbowSubsystem extends EntechSubsystem{
 
-    private static final int NUDGE_COUNT = 20;
+    private static final double NUDGE_COUNT = 7.0;
 	  private CANSparkMax elbowMotor;
 	  private SparkMaxPositionController positionController;
 
@@ -139,18 +139,18 @@ public class ElbowSubsystem extends EntechSubsystem{
 		  }
 	  }
 
-	  @Override
-	  public void initSendable(SendableBuilder builder) {
-		  super.initSendable(builder);		  
-	      builder.setSmartDashboardType(getName());  
-	      builder.addDoubleProperty("Position", this::getPosition, this::setPosition);	      
-	      if ( enabled ) {
-	          //builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
-	          //builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-	          //builder.addDoubleProperty("ActualPos", this::getActualPosition, null);  	  
-	          //builder.addBooleanProperty("CanExtendArm", this::isSafeToExtendArm, null);
-	      }
-	  }
+//	  @Override
+//	  public void initSendable(SendableBuilder builder) {
+//		  super.initSendable(builder);		  
+//	      builder.setSmartDashboardType(getName());  
+//	      builder.addDoubleProperty("Position", this::getPosition, this::setPosition);	      
+//	      if ( enabled ) {
+//	          //builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
+//	          //builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+//	          //builder.addDoubleProperty("ActualPos", this::getActualPosition, null);  	  
+//	          //builder.addBooleanProperty("CanExtendArm", this::isSafeToExtendArm, null);
+//	      }
+//	  }
 
 
 	  @Override

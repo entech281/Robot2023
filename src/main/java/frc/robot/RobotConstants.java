@@ -92,7 +92,7 @@ public final class RobotConstants {
     	}
     	public interface TUNING{
     		public static final double P_GAIN=0.04;
-    		public static final double I_GAIN=0.0005;
+    		public static final double I_GAIN=0.002;
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
@@ -101,7 +101,7 @@ public final class RobotConstants {
     		  public static double SAFE_ANGLE = 31.0;    		  
     		  public static double SCORE_MIDDLE_DEGREES = 60;
     		  public static double SCORE_HIGH_DEGREES = 90;    		  
-      		  public static final double MAX_POSITION_DEGREES=100.0;    		  
+      		  public static final double MAX_POSITION_DEGREES=115.0;    		  
     	}    	
     }
     public interface GRIPPER{
@@ -137,10 +137,10 @@ public final class RobotConstants {
     public interface OPERATOR_STICK {
         public static final int GRIPPER = 1;
         public interface POV {
-            public static final int UP = 0;
-            public static final int IN = 90;
-            public static final int DOWN = 180;
-            public static final int OUT = 270;
+            public static final int UP = 90;
+            public static final int IN = 180;
+            public static final int DOWN = 270;
+            public static final int OUT = 0;
         }
     }
     public interface CAN {
