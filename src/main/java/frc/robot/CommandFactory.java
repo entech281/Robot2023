@@ -225,12 +225,20 @@ public class CommandFactory {
         return new NudgeElbowDownCommand(elbowSubsystem, false);
     }
 
-    public Command NudgeArmForwardCommand() {
+    public Command nudgeArmForwardCommand() {
         return new NudgeTelescopeForwardCommand(armSubsystem, false);
     }
 
-    public Command nudgeArmBackwardsCommand() {
+    public Command nudgeArmBackwardCommand() {
         return new NudgeTelescopeBackwardsCommand(armSubsystem, false);
+    }
+
+    public Command openGripperCommand() {
+        return new GripperCommand(gripperSubsystem, GripperState.kOpen);
+    }
+
+    public Command closeGripperCommand() {
+        return new GripperCommand(gripperSubsystem, GripperState.kClose);
     }
 
     public Command farScoringPositionCommand() {
@@ -262,7 +270,7 @@ public class CommandFactory {
         );
     }
 
-    public Command LoadingPositionCommand() {
+    public Command loadingPositionCommand() {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(

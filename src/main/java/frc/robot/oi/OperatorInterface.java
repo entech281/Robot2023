@@ -9,6 +9,7 @@ public class OperatorInterface {
 
 	private ShuffleboardDriverControls shuffleboardControls;	
     private CommandJoystick driveStick;
+    private CommandJoystick operatorStick;
     private CommandFactory commandFactory;
     private JoystickDriveInputSupplier hidJoystickDriveInputSupplier;
     
@@ -16,6 +17,7 @@ public class OperatorInterface {
     	this.shuffleboardControls = shuffleboard;
         this.commandFactory = cf;
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
+        this.operatorStick = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_JOYSTICK);
         this.hidJoystickDriveInputSupplier = new JoystickDriveInputSupplier(driveStick.getHID());
         setupButtons();
 
@@ -56,7 +58,23 @@ public class OperatorInterface {
 	        .onTrue(commandFactory.nudgeYawLeftCommand());
 	
 	    driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_RIGHT)
-        .onTrue(commandFactory.nudgeYawRightCommand());    	
+            .onTrue(commandFactory.nudgeYawRightCommand());    	
+
+        operatorStick.button(RobotConstants.OPERATOR_STICK.GRIPPER)
+            .onTrue(commandFactory.openGripperCommand())
+            .onFalse(commandFactory.closeGripperCommand());
+
+	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.UP)
+	        .onTrue(commandFactory.nudgeElbowUpCommand());
+	
+	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.DOWN)
+	        .onTrue(commandFactory.nudgeElbowDownCommand());
+	
+	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.IN)
+	        .onTrue(commandFactory.nudgeArmBackwardCommand());
+	
+	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.OUT)
+	        .onTrue(commandFactory.nudgeArmForwardCommand());
     }
     
     public void setDefaultDriveCommand() {
