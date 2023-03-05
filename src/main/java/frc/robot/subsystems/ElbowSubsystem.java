@@ -47,9 +47,9 @@ public class ElbowSubsystem extends EntechSubsystem{
 		    elbowMotor.getEncoder().setPositionConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);
 		    elbowMotor.getEncoder().setVelocityConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);			
 			PositionControllerConfig conf =  new PositionControllerConfig.Builder("ELBOW")
-			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT,ELBOW.HOMING.HOME_POSITION_DEGREES  )
+			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT  )
 			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_DEGREES)  	
-			    	.withSoftLimits(ELBOW.HOMING.MIN_POSITION_DEGREES, ELBOW.HOMING.MAX_POSITION_DEGREES)
+			    	.withSoftLimits(ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, ELBOW.POSITION_PRESETS.MAX_POSITION_DEGREES)
 			    	.withInverted(true)
 			    	.build();
 			
@@ -72,14 +72,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  public boolean isSafeToExtendArm() {
 		  return this.getActualPosition() > ELBOW.POSITION_PRESETS.SAFE_ANGLE;
 	  }
-	  
-	  private double getMotorSpeed() {
-		  if (enabled) {
-			  return elbowMotor.getAppliedOutput();
-		  }
-		  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
-	  }
-	  
+	    
 	  public void setMotorSpeed(double speed) {
 		  positionController.setMotorSpeed(speed);
 	  }
@@ -92,9 +85,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 			  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
 		  }
 	  }
-	  public void forgetHome() {
-		  positionController.forgetHome();
-	  }
+	  
 	  public double getActualPosition() {
 		  if ( isEnabled()) {
 			  return positionController.getActualPosition();
@@ -138,8 +129,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 	      if ( enabled ) {
 	          builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
 	          builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-	          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);  
-	          builder.addDoubleProperty("MotorOutput", this::getMotorSpeed, null); 	  
+	          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);  	  
 	          builder.addBooleanProperty("CanExtendArm", this::isSafeToExtendArm, null);
 	      }
 	  }

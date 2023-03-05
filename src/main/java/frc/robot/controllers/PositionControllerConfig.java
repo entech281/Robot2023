@@ -19,17 +19,6 @@ public class PositionControllerConfig {
 	}
 
 
-
-	public double getHomePosition() {
-		return homePosition;
-	}
-
-
-	public void setHomePosition(double homePosition) {
-		this.homePosition = homePosition;
-	}
-
-
 	public double getPositionTolerance() {
 		return positionTolerance;
 	}
@@ -69,7 +58,6 @@ public class PositionControllerConfig {
 		this.maxPosition = maxPosition;
 	}
 
-	private double homePosition = 0;
 	private double positionTolerance = 5;
 	private double homingSpeedPercent = 10.0;	
 	private double minPosition = 0;
@@ -93,9 +81,9 @@ public class PositionControllerConfig {
 		}
 		private PositionControllerConfig c = new PositionControllerConfig();
 		
-		public Builder withSoftLimits(double lowerLimitCounts, double upperLimitCounts) {
-			c.maxPosition=upperLimitCounts;
-			c.minPosition=lowerLimitCounts;
+		public Builder withSoftLimits(double lowerLimit, double upperLimit) {
+			c.maxPosition=upperLimit;
+			c.minPosition=lowerLimit;
 			return this;
 		}
 
@@ -107,9 +95,8 @@ public class PositionControllerConfig {
 			c.inverted = inverted;
 			return this;
 		}
-		public Builder withHomingOptions ( double homingSpeedPercent, double homePositionCounts) {
+		public Builder withHomingOptions ( double homingSpeedPercent) {
 			c.homingSpeedPercent = homingSpeedPercent;
-			c.homePosition = homePositionCounts;
 			return this;
 		}
 

@@ -105,11 +105,6 @@ public class MockPositionController implements PositionController{
 	}
 
 	@Override
-	public boolean inMotion() {
-		return inMotion;
-	}
-
-	@Override
 	public boolean isHomed() {
 		return homed;
 	}

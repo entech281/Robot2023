@@ -37,7 +37,7 @@ public class ArmEmergencyStopCommand extends EntechCommandBase {
   public void execute() {
     armSubsystem.stop();
     elbowSubsystem.stop();
-    DriverStation.reportWarning("Detected Arm CRASH!!!", false);
+    DriverStation.reportWarning("Detected Arm CRASH We were about to move the arm into the carry position with the arm extended!!!", false);
   }
 
   // Called once the command ends or is interrupted.

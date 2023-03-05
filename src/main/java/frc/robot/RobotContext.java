@@ -111,12 +111,16 @@ public class RobotContext {
             double targetYaw = alignmentCalculator.calculateAngleToScoringLocation(absoluteScoringPose, realRobotPose);
             robotState.setTargetYawAngle(targetYaw);
         }
-           
-        if ( armSubsystem.getActualPosition() > ARM.POSITION_PRESETS.SAFE && elbowSubsystem.getActualPosition() < ELBOW.POSITION_PRESETS.SAFE_ANGLE) {
-        	CommandScheduler.getInstance().schedule(new ArmEmergencyStopCommand(armSubsystem,elbowSubsystem));
-        }
+        installArmSafetyWatchdog();
+
     }    
 
+    private void installArmSafetyWatchdog() {
+        if ( armSubsystem.getActualPosition() > ARM.POSITION_PRESETS.SAFE && elbowSubsystem.getActualPosition() < ELBOW.POSITION_PRESETS.SAFE_ANGLE) {
+        	CommandScheduler.getInstance().schedule(new ArmEmergencyStopCommand(armSubsystem,elbowSubsystem));
+        }    	
+    }
+    
     private RobotState robotState;
 	private DriveSubsystem driveSubsystem;
     private NavXSubSystem navXSubSystem;

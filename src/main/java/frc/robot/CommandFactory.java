@@ -5,13 +5,9 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.RobotConstants.ARM;
-import frc.robot.RobotConstants.ELBOW;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
-import frc.robot.commands.ArmForgetHomeCommand;
 import frc.robot.commands.DriveDirectionCommand;
-import frc.robot.commands.ElbowForgetHomeCommand;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
@@ -20,7 +16,6 @@ import frc.robot.commands.PositionArmCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.SetArmSpeedCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
-import frc.robot.commands.SetElbowSpeedCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
@@ -38,7 +33,6 @@ import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.commands.PositionElbowCommand;
 /**
  *
  * @author dcowden 
@@ -85,56 +79,20 @@ public class CommandFactory {
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
-    			//moveArmCommand(ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS),
-    			//elbowSpeedCommand(0.1),
-    			//elbowSpeedCommand(-0.1),
-    			new HomeElbowCommand(elbowSubsystem),
-    			new PositionArmCommand(armSubsystem,0.35, false),
-    			new PositionArmCommand(armSubsystem,0.2, false),
-    			new PositionArmCommand(armSubsystem,0.08, false),
-    			//new PositionArmCommand(armSubsystem,0.1, true),
-    			new PositionElbowCommand(elbowSubsystem,25, false),
-    			new PositionElbowCommand(elbowSubsystem,60,false),
-    			new PositionElbowCommand(elbowSubsystem,90, false),
-    			new PositionElbowCommand(elbowSubsystem,4, false),
-    			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
-    			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
-    			new HomeArmCommand(armSubsystem),
-    			armSpeedCommand(0.1)
-    			//armSpeedCommand(0.2),
-    			//elbowSpeedCommand(0),
-    			//elbowSpeedCommand(0.1),
-    			//elbowSpeedCommand(-0.1),
-    			//armSpeedCommand(0),    			
-    			//moveElbowCommand(ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES),
-    			//forgetArmHome(),
-    			//forgetElbowHome()   
+			new HomeElbowCommand(elbowSubsystem),
+			new PositionArmCommand(armSubsystem,0.35, false),
+			new PositionArmCommand(armSubsystem,0.2, false),
+			new PositionArmCommand(armSubsystem,0.08, false),
+			new PositionElbowCommand(elbowSubsystem,25, false),
+			new PositionElbowCommand(elbowSubsystem,60,false),
+			new PositionElbowCommand(elbowSubsystem,90, false),
+			new PositionElbowCommand(elbowSubsystem,4, false),
+			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
+			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
+			new HomeArmCommand(armSubsystem),
+			new SetArmSpeedCommand(armSubsystem,0.1)
     	);
-    			
-    	
     }
-    public Command moveArmCommand(double position) {
-    	Command p = new PositionArmCommand ( armSubsystem,position,true);
-    	return p;
-    }
-    public Command moveElbowCommand(double position) {
-    	Command p = new PositionElbowCommand ( elbowSubsystem,position,true);
-    	return p;
-    }    
-    
-    public Command forgetArmHome() {
-    	return new ArmForgetHomeCommand( armSubsystem);
-    }
-    public Command forgetElbowHome() {
-    	return new ElbowForgetHomeCommand( elbowSubsystem);
-    }    
-    public Command elbowSpeedCommand(double speed) {
-    	return new SetElbowSpeedCommand(elbowSubsystem,speed);
-    }
-    
-    public Command armSpeedCommand(double speed) {
-    	return new SetArmSpeedCommand(armSubsystem,speed);
-    }    
     
     public Command deployHighCommand() {
     	//note that the subsystems will HOME before the moves are complete!

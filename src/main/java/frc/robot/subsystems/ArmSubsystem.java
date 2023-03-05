@@ -36,29 +36,19 @@ public class ArmSubsystem extends EntechSubsystem{
 	return positionController;
   }
 
-//for match
+  //for match
   public ArmSubsystem() {
   }  
   
   @Override
   public void initialize() {
 	if ( enabled ) {
-		double RPM  = 1.0;
-		double ACCEL = 1500;
-		int SMART_MOTION_SLOT=0;
-		
-		//following example from here:
-		//https://github.com/REVrobotics/SPARK-MAX-Examples/blob/master/Java/Smart%20Motion%20Example/src/main/java/frc/robot/Robot.java
 	    telescopeMotor = new CANSparkMax(RobotConstants.CAN.TELESCOPE_MOTOR_ID, MotorType.kBrushless);
 	    SparkMaxPIDController pid = telescopeMotor.getPIDController();
 	    pid.setP(TUNING.P_GAIN);
 	    pid.setI(TUNING.I_GAIN);
 	    pid.setD(TUNING.D_GAIN);
 	    pid.setOutputRange(-1.0,1.0);
-	    //pid.setSmartMotionMaxVelocity(10000*RPM, SMART_MOTION_SLOT);
-	    //pid.setSmartMotionMaxAccel(ACCEL, SMART_MOTION_SLOT);
-	    //pid.setSmartMotionMinOutputVelocity(0, SMART_MOTION_SLOT);
-	    //pid.setSmartMotionMaxAccel(1500, SMART_MOTION_SLOT);
 
 	    telescopeMotor.set(0);
 	    telescopeMotor.setIdleMode(IdleMode.kBrake);
@@ -68,7 +58,7 @@ public class ArmSubsystem extends EntechSubsystem{
 	    telescopeMotor.getEncoder().setVelocityConversionFactor(ARM.SETTINGS.COUNTS_PER_METER);
 	    PositionControllerConfig conf = new PositionControllerConfig.Builder("ARM")
 	    	.withSoftLimits(ARM.POSITION_PRESETS.MIN_METERS, ARM.POSITION_PRESETS.MAX_METERS)
-	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT,ARM.HOMING.HOME_POSITION_METERS )
+	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT)
 	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_METERS)
 	    	.withInverted(true)
 	    	.build();	    		
@@ -79,8 +69,7 @@ public class ArmSubsystem extends EntechSubsystem{
 				telescopeMotor.getReverseLimitSwitch(Type.kNormallyOpen),	    		
 				telescopeMotor.getForwardLimitSwitch(Type.kNormallyOpen),
 	    		telescopeMotor.getEncoder()
-	    );
-	    
+	    );	    
 	}
   }  
 
@@ -101,9 +90,6 @@ public class ArmSubsystem extends EntechSubsystem{
 	  positionController.requestPosition(requestedPosition);
   }
   
-  public void forgetHome() {
-	  positionController.forgetHome();
-  }
   public void home() {
 	  positionController.home();
   }
@@ -133,6 +119,7 @@ public class ArmSubsystem extends EntechSubsystem{
 	  }	  
   }
   
+  @Override
   public boolean isEnabled() {
 	  return enabled;
   }
@@ -147,6 +134,8 @@ public class ArmSubsystem extends EntechSubsystem{
   public boolean isArmRetracted() {
 	  return positionController.getActualPosition()< ARM.POSITION_PRESETS.SAFE;
   }
+  
+  
   @Override
   public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType(getName());  
@@ -155,17 +144,9 @@ public class ArmSubsystem extends EntechSubsystem{
           builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
           builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
           builder.addDoubleProperty("ActualPos", this::getActualPosition, null); 
-          builder.addDoubleProperty("MotorOutput", this::getMotorSpeed, null); 
       }
-	  positionController.initSendable(builder);
   }
-
-  private double getMotorSpeed() {
-	  if (enabled) {
-		  return telescopeMotor.getAppliedOutput();
-	  }
-	  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
-  }
+  
   @Override
   public void simulationPeriodic() {
     
