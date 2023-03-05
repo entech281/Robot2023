@@ -53,7 +53,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        drive.brake();
+        drive.stop();
     }
 
     @Override
