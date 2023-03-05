@@ -58,7 +58,7 @@ public final class RobotConstants {
     		public static final double HOMING_SPEED_PERCENT=0.1;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=30.0;
+    		public static final double P_GAIN=12.0;
     		public static final double I_GAIN=0.0;
     		public static final double D_GAIN=0.0;
     	}
