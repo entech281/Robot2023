@@ -17,9 +17,20 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  private CANSparkMax elbowMotor;
 	  private SparkMaxPositionController positionController;
 	  private boolean enabled = true;	
-
+	  private double position = ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES;
 	  
-	  //for unit testing
+	  public double getPosition() {
+		return position;
+	  }
+
+	  public void setPosition(double position) {
+		if ( this.positionController  != null) {
+			this.positionController.requestPosition(position);
+		}
+		this.position = position;
+	  }
+
+	//for unit testing
 	  public ElbowSubsystem( CANSparkMax motor, SparkMaxPositionController controller) {
 		  this.enabled=true;
 		  this.elbowMotor = motor;
@@ -124,13 +135,14 @@ public class ElbowSubsystem extends EntechSubsystem{
 	    
 	  @Override
 	  public void initSendable(SendableBuilder builder) {
+		  super.initSendable(builder);		  
 	      builder.setSmartDashboardType(getName());  
-	      builder.addBooleanProperty("Enabled", this::isEnabled, null);
+	      builder.addDoubleProperty("Position", this::getPosition, this::setPosition);	      
 	      if ( enabled ) {
-	          builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
-	          builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-	          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);  	  
-	          builder.addBooleanProperty("CanExtendArm", this::isSafeToExtendArm, null);
+	          //builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
+	          //builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+	          //builder.addDoubleProperty("ActualPos", this::getActualPosition, null);  	  
+	          //builder.addBooleanProperty("CanExtendArm", this::isSafeToExtendArm, null);
 	      }
 	  }
 	 

@@ -89,7 +89,7 @@ public final class RobotConstants {
     		public static final double HOMING_SPEED_PERCENT=0.1;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.03;
+    		public static final double P_GAIN=0.04;
     		public static final double I_GAIN=0.0001;
     		public static final double D_GAIN=0.0;
     	}
@@ -143,10 +143,10 @@ public final class RobotConstants {
 
     }
     public interface PNEUMATICS {
-        public static final int LEFT_GRIPPER_OPEN = 2;
-        public static final int LEFT_GRIPPER_CLOSE = 3;
-        public static final int RIGHT_GRIPPER_OPEN = 5;
-        public static final int RIGHT_GRIPPER_CLOSE = 4;        
+        public static final int LEFT_GRIPPER_OPEN = 3;
+        public static final int LEFT_GRIPPER_CLOSE = 2;
+        public static final int RIGHT_GRIPPER_OPEN = 4;
+        public static final int RIGHT_GRIPPER_CLOSE = 5;        
     }    
     public interface SHUFFLEBOARD {
     	public interface TABS{
