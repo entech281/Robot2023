@@ -4,24 +4,13 @@ import frc.robot.controllers.SparkMaxPositionController.MotionState;
 
 public interface PositionController {
 
-	int getActualPosition();
-
+	double getActualPosition();
 	double getRequestedPosition();
-
 	boolean isAtRequestedPosition();
-
-	void setEnabled(boolean enabled);
-
 	void update();
-
-	void requestPosition(int requestedPosition);
-
+	void requestPosition(double requestedPosition);
 	boolean isAtLowerLimit();
-
 	boolean isAtUpperLimit();
-
-	boolean inMotion();
-
 	boolean isHomed();
 
 	MotionState getMotionState();

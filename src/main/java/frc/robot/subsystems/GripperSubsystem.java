@@ -1,31 +1,32 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.RobotConstants;
 
-public class GripperSubsystem extends EntechSubsystem implements Sendable{
+public class GripperSubsystem extends EntechSubsystem {
 
-	private DoubleSolenoid gripperSolenoid;	
+	private DoubleSolenoid leftGripperSolenoid;	
+	private DoubleSolenoid rightGripperSolenoid;
+	
 	private int gripperSolenoidCounter;
 	private GripperState gripperState;
-	
 	
 	public GripperState getGripperState() {
 		return gripperState;
 	}
 
-	private boolean enabled = false;
-	private final int SOLENOID_HIT_COUNT = 10;
+	private boolean enabled = true;
+	private final int SOLENOID_HIT_COUNT = 20;
 	
 	public enum GripperState { kClose, kOpen }
 	
 	@Override
 	public void initialize() {
 		if (enabled ) {
-			gripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.GRIPPER_OPEN, RobotConstants.PNEUMATICS.GRIPPER_CLOSE);
+			leftGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.LEFT_GRIPPER_OPEN, RobotConstants.PNEUMATICS.LEFT_GRIPPER_CLOSE);
+			rightGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.RIGHT_GRIPPER_OPEN, RobotConstants.PNEUMATICS.RIGHT_GRIPPER_CLOSE);
 		}
 		
 	}
@@ -35,6 +36,11 @@ public class GripperSubsystem extends EntechSubsystem implements Sendable{
 	  if ( enabled ) {
 		  handleSolenoid();
 	  }
+	}
+	
+	public void setSolenoids(DoubleSolenoid.Value newValue) {
+        leftGripperSolenoid.set(newValue);
+        rightGripperSolenoid.set(newValue);		
 	}
 	
     @Override
@@ -49,14 +55,14 @@ public class GripperSubsystem extends EntechSubsystem implements Sendable{
 	      if (gripperSolenoidCounter < SOLENOID_HIT_COUNT) {
 	          gripperSolenoidCounter += 1;
 	          if (gripperState == GripperState.kOpen) {
-	              gripperSolenoid.set(DoubleSolenoid.Value.kForward);
+	        	  setSolenoids(DoubleSolenoid.Value.kForward);
 	          } else if (gripperState == GripperState.kClose) {
-	              gripperSolenoid.set(DoubleSolenoid.Value.kReverse);
+	        	  setSolenoids(DoubleSolenoid.Value.kReverse);	        	  
 	          } else {
-	              gripperSolenoid.set(DoubleSolenoid.Value.kOff);
+	        	  setSolenoids(DoubleSolenoid.Value.kOff);	
 	          }
 	      } else {
-            gripperSolenoid.set(DoubleSolenoid.Value.kOff);
+	    	  setSolenoids(DoubleSolenoid.Value.kOff);
           }		
 	}
     public void setGripperState(GripperState state) {
@@ -72,6 +78,11 @@ public class GripperSubsystem extends EntechSubsystem implements Sendable{
 	@Override
 	public GripperStatus getStatus() {
 		return new GripperStatus(gripperState);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 	

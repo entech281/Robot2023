@@ -9,7 +9,6 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -158,6 +157,11 @@ public class NavXSubSystem extends EntechSubsystem  {
 	public void simulationPeriodic() {
 		// TODO Auto-generated method stub
 		super.simulationPeriodic();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 
 }

@@ -6,8 +6,12 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobotConstants.ARM;
+import frc.robot.RobotConstants.ELBOW;
+import frc.robot.commands.ArmEmergencyStopCommand;
 import frc.robot.oi.ShuffleboardDriverControls;
-import frc.robot.oi.ShuffleboardFieldDisplay;
+import frc.robot.oi.ShuffleboardInterface;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.PoseEstimator;
 import frc.robot.pose.ScoringLocation;
@@ -40,7 +44,7 @@ public class RobotContext {
 	//inject just what we need. later we might need arm-- we can add it then
 	public RobotContext( AlignmentCalculator alignmentCalculator, 
 			RobotState robotState, 
-			ShuffleboardFieldDisplay fieldDisplay, 
+			ShuffleboardInterface fieldDisplay, 
 			DriveSubsystem drive, NavXSubSystem navx, 
 			VisionSubsystem vision, 
 		    ArmSubsystem armSubsystem,
@@ -93,7 +97,9 @@ public class RobotContext {
         
         if ( vs.getBestAprilTagTarget().isPresent()) {
         	PhotonTrackedTarget pt = vs.getBestAprilTagTarget().get().getPhotonTarget();
-        	robotState.setPhotonYawAngle(Optional.of(pt.getYaw()));
+        	if ( pt != null) {
+        		robotState.setPhotonYawAngle(Optional.of(pt.getYaw()));
+        	}        	
         }
         
         if ( robotState.getScoringLocation().isPresent()) {
@@ -105,10 +111,16 @@ public class RobotContext {
             double targetYaw = alignmentCalculator.calculateAngleToScoringLocation(absoluteScoringPose, realRobotPose);
             robotState.setTargetYawAngle(targetYaw);
         }
-           
-        
+        installArmSafetyWatchdog();
+
     }    
 
+    private void installArmSafetyWatchdog() {
+        if ( armSubsystem.getActualPosition() > ARM.POSITION_PRESETS.SAFE && elbowSubsystem.getActualPosition() < ELBOW.POSITION_PRESETS.SAFE_ANGLE) {
+        	CommandScheduler.getInstance().schedule(new ArmEmergencyStopCommand(armSubsystem,elbowSubsystem));
+        }    	
+    }
+    
     private RobotState robotState;
 	private DriveSubsystem driveSubsystem;
     private NavXSubSystem navXSubSystem;
@@ -118,7 +130,7 @@ public class RobotContext {
     private GripperSubsystem gripperSubsystem;
 	private PoseEstimator poseEstimator;
 	private AlignmentCalculator alignmentCalculator;
-	private ShuffleboardFieldDisplay fieldDisplay;
+	private ShuffleboardInterface fieldDisplay;
 	private ShuffleboardDriverControls driverControls;
 	
 	

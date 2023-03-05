@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.util.PoseUtil;
 
 public class TestOurAprilTagsMatchFirstOnes {
 

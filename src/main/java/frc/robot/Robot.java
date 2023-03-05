@@ -6,15 +6,15 @@ package frc.robot;
 
 import java.util.List;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.ExceptionHandler;
 import frc.robot.oi.OperatorInterface;
 import frc.robot.oi.ShuffleboardDriverControls;
-import frc.robot.oi.ShuffleboardFieldDisplay;
+import frc.robot.oi.ShuffleboardInterface;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
@@ -22,6 +22,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
+import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
 
 /**
@@ -36,8 +37,10 @@ public class Robot extends TimedRobot {
   private Command autoCommand;
   private RobotContext robotContext;
   private ShuffleboardDriverControls shuffleboardControls;
+  private ShuffleboardInterface shuffleboardInterface;
+  private SubsystemHolder allSubsystems;
   private ExceptionHandler exceptionHandler = new ExceptionHandler();
-  private NavXSubSystem navx;
+
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -45,50 +48,48 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-
-	ShuffleboardTab MATCH_TAB = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.MATCH);
-	
-	
-	shuffleboardControls = new ShuffleboardDriverControls();
-	ShuffleboardFieldDisplay fieldDisplay = new ShuffleboardFieldDisplay();
-	RobotState robotState = new RobotState();	  
 	  
 	DriveSubsystem drive = new DriveSubsystem();
 	VisionSubsystem vision = new VisionSubsystem();
-	navx = new NavXSubSystem();
+	NavXSubSystem navx = new NavXSubSystem();
 	ArmSubsystem arm = new ArmSubsystem();
 	ElbowSubsystem elbow = new ElbowSubsystem();
 	GripperSubsystem gripper = new GripperSubsystem();
 	
-	List.of(drive,vision,navx,arm,elbow,gripper).forEach((s)-> {
-		s.initialize();		
+	allSubsystems = new SubsystemHolder(drive,navx,vision,arm,elbow,gripper);
+	
+	allSubsystems.asList().forEach((s)-> {
+		if ( s.isEnabled()) {
+			s.initialize();
+		}				
 	});
 	
-	//adding these individually so we can lay them out nicely
-	MATCH_TAB.add(drive).withSize(2, 1).withPosition(4,2);
-	MATCH_TAB.add(vision).withSize(2, 2).withPosition(4,0);
-	MATCH_TAB.add(navx).withSize(2, 2).withPosition(6,0);
-	MATCH_TAB.add(arm).withSize(2, 2).withPosition(6,2);
-	MATCH_TAB.add(elbow).withSize(2, 2).withPosition(8,2);
-	MATCH_TAB.add(gripper).withSize(2, 1).withPosition(4,3);
-	MATCH_TAB.add("RobotState",robotState).withSize(2, 2).withPosition(8, 0);
+	shuffleboardControls = new ShuffleboardDriverControls();	
+	shuffleboardInterface = new ShuffleboardInterface();	
 	
-
+	RobotState robotState = new RobotState();	  
 	robotContext = new RobotContext(new AlignmentCalculator(),
-			robotState, fieldDisplay,drive,navx,vision, arm, elbow, gripper, new VisionFirstNavxAsBackupPoseEstimator(true),
+			robotState, shuffleboardInterface,drive,navx,vision, arm, elbow, gripper, new VisionFirstNavxAsBackupPoseEstimator(true),
 			shuffleboardControls
-	);
+	);	
+	commandFactory = new CommandFactory(robotState,allSubsystems);
 	
-	
-	commandFactory = new CommandFactory(robotState,drive,navx,vision,arm,elbow,gripper);
 	oi = new OperatorInterface(commandFactory,shuffleboardControls);
-	List<Command> autoChoices = commandFactory.getAutoCommandChoices();
+	setupShuffleboardInterface();
 
-	autoChoices.forEach((c)->{
-		shuffleboardControls.addAutoCommandChoice(c);
-	});
+	Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
+	c.enableDigital();
+	
   }
-
+  private void setupShuffleboardInterface() {
+			
+		shuffleboardInterface.addSubsystems(allSubsystems);
+		shuffleboardInterface.addTestCommands(commandFactory.getTestCommands());
+		List<Command> autoChoices = commandFactory.getAutoCommandChoices();
+		autoChoices.forEach((c)->{
+			shuffleboardControls.addAutoCommandChoice(c);
+		});	  
+  }
   private void doPeriodic() {
 	  try {
 			robotContext.periodic();	  
@@ -118,9 +119,10 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {}
+  
   @Override
   public void disabledExit() {
-    navx.assignAlliance();
+    allSubsystems.getNavx().assignAlliance();
   }
 
   @Override

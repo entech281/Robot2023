@@ -23,7 +23,7 @@ public class TestArmPoseCalculator {
 
         System.out.println(armPoseAnswer);
         assertEquals(1.42, armPoseAnswer.targetDistance, TOLERANCE_DISTANCE);
-        assertEquals(true, armPoseAnswer.canDeploy);
+        assertEquals(false, armPoseAnswer.canDeploy);
     }
 
     @Test

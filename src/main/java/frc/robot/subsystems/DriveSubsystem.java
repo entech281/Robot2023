@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -15,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
+import frc.robot.RobotConstants.DRIVE;
 import frc.robot.filters.DriveInput;
 
 /**
@@ -23,17 +25,19 @@ import frc.robot.filters.DriveInput;
  * @author aheitkamp
  */
 public class DriveSubsystem extends EntechSubsystem {
+  // private static final int AMP_CURRENT_LIMIT = 25;
+
+  private RelativeEncoder frontLeftEncoder;
+  private RelativeEncoder rearLeftEncoder;
+  private RelativeEncoder frontRightEncoder;
+  private RelativeEncoder rearRightEncoder;
+
   private CANSparkMax frontLeftSparkMax;
   private CANSparkMax rearLeftSparkMax;
   private CANSparkMax frontRightSparkMax;
   private CANSparkMax rearRightSparkMax;
   private MecanumDrive robotDrive;
   
-  /**
-   *
-   * 
-   * @param navX The NavXSubsystem that some filters use and the drive in field absolute
-   */
   public DriveSubsystem() {
   }
 
@@ -47,7 +51,7 @@ public class DriveSubsystem extends EntechSubsystem {
     rearLeftSparkMax   = new CANSparkMax(RobotConstants.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
     frontRightSparkMax = new CANSparkMax(RobotConstants.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
     rearRightSparkMax  = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
-    robotDrive      = new MecanumDrive(frontLeftSparkMax, rearLeftSparkMax, frontRightSparkMax, rearRightSparkMax);
+    robotDrive         = new MecanumDrive(frontLeftSparkMax, rearLeftSparkMax, frontRightSparkMax, rearRightSparkMax);
 
     robotDrive.setDeadband(0.1);
 
@@ -55,20 +59,26 @@ public class DriveSubsystem extends EntechSubsystem {
     rearLeftSparkMax.setInverted(false);
     frontRightSparkMax.setInverted(true);
     rearRightSparkMax.setInverted(true);
+    
+    frontLeftSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
+    rearLeftSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
+    frontRightSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
+    rearRightSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);    
 
+
+    frontLeftEncoder = frontLeftSparkMax.getEncoder();
+    rearLeftEncoder = rearLeftSparkMax.getEncoder();
+    frontRightEncoder = frontRightSparkMax.getEncoder();
+    rearRightEncoder = rearRightSparkMax.getEncoder();
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Front Left Talon", frontLeftSparkMax.get());
-    SmartDashboard.putNumber("Front Right Talon", frontRightSparkMax.get());
-    SmartDashboard.putNumber("Back Left Talon", rearLeftSparkMax.get());
-    SmartDashboard.putNumber("Back Right Talon", rearRightSparkMax.get());
-    //SmartDashboard.putNumber("Driver Input Forward", loggingDriveInput.getForward());
-    //SmartDashboard.putNumber("Driver Input Left", loggingDriveInput.getRight());
-    //SmartDashboard.putNumber("Driver Input Rotation", loggingDriveInput.getRotation());
-    //SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
-    //SmartDashboard.putNumber("Auto Align Angle", autoAlignAngle);
+    SmartDashboard.putNumber("Front Left SparkMax", frontLeftSparkMax.get());
+    SmartDashboard.putNumber("Front Right SparkMax", frontRightSparkMax.get());
+    SmartDashboard.putNumber("Back Left SparkMax", rearLeftSparkMax.get());
+    SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.get());
+    SmartDashboard.putNumber("Average Position", getAveragePosition());
 
     robotDrive.feed();
     robotDrive.feedWatchdog();
@@ -79,7 +89,6 @@ public class DriveSubsystem extends EntechSubsystem {
   }
   
   public void drive(DriveInput di) {
-
     robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
   }
 
@@ -99,5 +108,25 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightSparkMax.setIdleMode(IdleMode.kBrake);
     rearLeftSparkMax.setIdleMode(IdleMode.kBrake);
     rearRightSparkMax.setIdleMode(IdleMode.kBrake);
+  }
+
+@Override
+public boolean isEnabled() {
+	return true;
+}
+  public void resetEncoders() {
+    frontLeftEncoder.setPosition(0);
+    rearLeftEncoder.setPosition(0);
+    frontRightEncoder.setPosition(0);
+    rearRightEncoder.setPosition(0);
+  }
+
+  public double getAveragePosition() {
+    double possition = 0;
+    possition += frontLeftEncoder.getPosition();
+    possition += rearLeftEncoder.getPosition();
+    possition += frontRightEncoder.getPosition();
+    possition += rearRightEncoder.getPosition();
+    return possition / 4;
   }
 }

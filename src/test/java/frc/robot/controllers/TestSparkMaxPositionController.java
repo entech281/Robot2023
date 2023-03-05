@@ -5,27 +5,25 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.SparkMaxLimitSwitch.Type;
 
+import frc.robot.RobotConstants;
 import frc.robot.controllers.SparkMaxPositionController.MotionState;
 
 public class TestSparkMaxPositionController {
 
-	final double HOMING_SPEED=33.0;
-	final int BACKOFF_COUNTS = 10;
-	final int HOME_COUNTS = 20;
-	final int POSITION_TOLERANCE = 2;
-	final int LOWER_LIMIT = 30;
-	final int UPPER_LIMIT = 800;
-	final int REQUESTED_POSITION = 500;	
-	
+	final double HOMING_SPEED=0.33;
+	final double POSITION_TOLERANCE = 2;
+	final double LOWER_LIMIT = 30;
+	final double UPPER_LIMIT = 800;
+	final double REQUESTED_POSITION = 500;	
+	final double COMPARE_TOLERANCE = 0.00001;
 	protected PositionControllerConfig config;
 	protected SparkMaxPositionController c;
 	protected CANSparkMax mockMotor;
@@ -36,11 +34,10 @@ public class TestSparkMaxPositionController {
 	@BeforeEach
 	public void setupMockController() {
 		config = new PositionControllerConfig.Builder("test")
-				.withHomingOptions(HOMING_SPEED , BACKOFF_COUNTS, HOME_COUNTS)
+				.withHomingOptions(HOMING_SPEED)
 				.withPositionTolerance(POSITION_TOLERANCE)
-				.withReversed(false)
+				.withInverted(false)
 				.withSoftLimits(LOWER_LIMIT, UPPER_LIMIT).build();
-
 
 		mockMotor = mock(CANSparkMax.class, Mockito.RETURNS_DEEP_STUBS);
 		
@@ -53,7 +50,6 @@ public class TestSparkMaxPositionController {
 			public Boolean answer(InvocationOnMock invocation) throws Throwable {
 				return fakeLowerLimit.isPressed();
 			}
-			
 		});
 		when(upperLimit.isPressed()).thenAnswer(new Answer<Boolean>() {
 
@@ -61,11 +57,86 @@ public class TestSparkMaxPositionController {
 			public Boolean answer(InvocationOnMock invocation) throws Throwable {
 				return fakeUpperLimit.isPressed();
 			}
-			
 		});		
-
 		c = new SparkMaxPositionController(mockMotor,config,lowerLimit, upperLimit,encoder);
-		c.setEnabled(true);		
+	
+	}
+	
+	@Test
+	public void testInvertedAxis() {
+		//in an inverted test, the encoder reads backwards, 
+		//and the limit switches are reversed
+		
+		PositionControllerConfig config2 = new PositionControllerConfig.Builder("test")
+				.withHomingOptions(HOMING_SPEED)
+				.withPositionTolerance(POSITION_TOLERANCE)
+				.withInverted(true)
+				.withSoftLimits(LOWER_LIMIT, UPPER_LIMIT).build();
+
+		CANSparkMax mockMotor2 = mock(CANSparkMax.class, Mockito.RETURNS_DEEP_STUBS);
+		
+		SparkMaxLimitSwitch lowerLimit = mock(SparkMaxLimitSwitch.class);
+		SparkMaxLimitSwitch upperLimit = mock(SparkMaxLimitSwitch.class);
+		
+		when(lowerLimit.isPressed()).thenAnswer(new Answer<Boolean>() {
+			@Override
+			public Boolean answer(InvocationOnMock invocation) throws Throwable {
+				return fakeLowerLimit.isPressed();
+			}
+		});
+		when(upperLimit.isPressed()).thenAnswer(new Answer<Boolean>() {
+
+			@Override
+			public Boolean answer(InvocationOnMock invocation) throws Throwable {
+				return fakeUpperLimit.isPressed();
+			}
+		});		
+		SparkMaxPositionController sm = new SparkMaxPositionController(mockMotor2,config2,lowerLimit, upperLimit,encoder);
+		
+		sm.requestPosition(REQUESTED_POSITION);
+		sm.update();
+		assertEquals(REQUESTED_POSITION,sm.getRequestedPosition());
+		assertPositionAndState(sm,0,MotionState.FINDING_LIMIT);
+		
+		//positive motor speed, opposite from the usual direction
+		verify(mockMotor2, Mockito.atLeastOnce()).set(HOMING_SPEED);				
+
+		//lowerLimit should do nothing, since they are reversed
+		fakeLowerLimit.setPressed(true);
+		sm.update();
+		assertEquals(MotionState.FINDING_LIMIT, sm.getMotionState());
+		
+		//upperLimit should trigger home
+		fakeUpperLimit.setPressed(true);
+		sm.update();
+		sm.update();
+		assertEquals(MotionState.HOMED, sm.getMotionState());
+		
+		//lower limit should be negative, vs positive
+		assertEquals(encoder.getPosition(),-LOWER_LIMIT, COMPARE_TOLERANCE);
+		
+		//should be heading to negative reference
+		verify(mockMotor2.getPIDController()).setReference((double)-REQUESTED_POSITION,CANSparkMax.ControlType.kPosition);
+	}
+	
+	//when a position is requested, but then a command runs that sets the speed manually,
+	//we should cancel the existing requested position. othrewise, we'll
+	//fly back to the previously requested position
+	@Test
+	public void testUsingSpeedControlInvalidatesRequestedPosition() {
+		c.requestPosition(REQUESTED_POSITION);
+		c.update();
+		assertPositionAndState(c,0,MotionState.FINDING_LIMIT);
+		fakeLowerLimit.setPressed(true);
+		c.update();
+		c.update();
+		assertEquals(MotionState.HOMED, c.getMotionState());
+		assertEquals(REQUESTED_POSITION,c.getRequestedPosition(),COMPARE_TOLERANCE);
+		encoder.setPosition(300);
+		//on our way, we get a manual speed request
+		c.setMotorSpeed(-10.0);
+		assertEquals(RobotConstants.INDICATOR_VALUES.POSITION_NOT_SET, c.getRequestedPosition());
+		assertFalse(c.isAtRequestedPosition());
 	}
 	
 	@Test
@@ -83,14 +154,6 @@ public class TestSparkMaxPositionController {
 	}	
 	
 	@Test
-	public void testReverseDireciton() {
-		config.setReversed(true);
-		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
-		c.requestPosition(200);
-		verify(mockMotor).set(-HOMING_SPEED);
-	}
-	
-	@Test
 	public void testPositionRequestResultsInHoming() throws Exception{
 
 		assertEquals(MotionState.UNINITIALIZED, c.getMotionState());
@@ -99,7 +162,8 @@ public class TestSparkMaxPositionController {
 
 		//requesting position should start  homing before moving to the requested counts
 		c.requestPosition(REQUESTED_POSITION);
-		verify(mockMotor).set(HOMING_SPEED);
+		verify(mockMotor).set(0);
+		verify(mockMotor).set(-HOMING_SPEED);
 		
 		assertEquals(MotionState.FINDING_LIMIT, c.getMotionState());
 		
@@ -110,26 +174,26 @@ public class TestSparkMaxPositionController {
 		assertEquals(MotionState.FINDING_LIMIT, c.getMotionState());
 		
 		
-		//as soon as we hit the limit, we will back off of the limit switch and move away BACKCOFF_CONTS 
 		fakeLowerLimit.setPressed(true); 
 		c.update(); 
+		c.update();
 		assertTrue(c.isAtLowerLimit());
-		assertEquals(0, c.getActualPosition());
-		verify(mockMotor.getPIDController()).setReference((double)BACKOFF_COUNTS,CANSparkMax.ControlType.kPosition);
+
+		verify(mockMotor.getPIDController()).setReference((double)REQUESTED_POSITION,CANSparkMax.ControlType.kPosition);
+		assertEquals(MotionState.HOMED, c.getMotionState());		
+		assertEquals(LOWER_LIMIT, c.getActualPosition());
 		
-		assertEquals(MotionState.BACKING_OFF, c.getMotionState());
 		assertFalse(c.isAtRequestedPosition());	
 		assertEquals(REQUESTED_POSITION, c.getRequestedPosition());
 
-		//once to BACKOFF_COUNTS -1, we should be marked HOME. position should be HOME_COUNTS
 		fakeLowerLimit.setPressed(false);
-		encoder.setPosition(BACKOFF_COUNTS-1);
+		c.update();
 		c.update();
 		assertLimits(c,false,false);
 		assertFalse(c.isAtRequestedPosition());  //the users' requested position is still REQUESTED_POSITION
 		assertFalse(c.isAtLowerLimit());
 		assertEquals(MotionState.HOMED, c.getMotionState());
-		assertEquals(HOME_COUNTS, c.getActualPosition());
+		assertEquals(LOWER_LIMIT, c.getActualPosition());
 
 	}
 
@@ -140,13 +204,8 @@ public class TestSparkMaxPositionController {
 	}
 
 	protected void assertPositionAndState(SparkMaxPositionController c, int expectedPosition, MotionState expectedState) {
-		assertEquals(expectedPosition,c.getActualPosition());		
+		assertEquals(expectedPosition,c.getActualPosition(),COMPARE_TOLERANCE);		
 		assertEquals(expectedState,c.getMotionState());
 	}		
-	
-	
 
-	
-	
-	
 }

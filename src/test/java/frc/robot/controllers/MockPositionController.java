@@ -41,11 +41,11 @@ public class MockPositionController implements PositionController{
 		this.upperLimitTripped = upperLimitTripped;
 	}
 
-	public void setActualPosition(int actualPosition) {
+	public void setActualPosition(double actualPosition) {
 		this.actualPosition = actualPosition;
 	}
 
-	public void setRequestedPosition(int requestedPosition) {
+	public void setRequestedPosition(double requestedPosition) {
 		this.requestedPosition = requestedPosition;
 	}
 
@@ -56,8 +56,8 @@ public class MockPositionController implements PositionController{
 	public void setMotionState(MotionState motionState) {
 		this.motionState = motionState;
 	}
-	private int actualPosition  = 0;
-	private int requestedPosition = 0;
+	private double actualPosition  = 0;
+	private double requestedPosition = 0;
 	private boolean inMotion = false;
 	private boolean homed = false;
 	private MotionState motionState;
@@ -69,7 +69,7 @@ public class MockPositionController implements PositionController{
 	}
 
 	@Override
-	public int getActualPosition() {
+	public double getActualPosition() {
 		return actualPosition;
 	}
 
@@ -84,16 +84,12 @@ public class MockPositionController implements PositionController{
 	}
 
 	@Override
-	public void setEnabled(boolean enabled) {
-	}
-
-	@Override
 	public void update() {
 		
 	}
 
 	@Override
-	public void requestPosition(int requestedPosition) {
+	public void requestPosition(double requestedPosition) {
 		this.requestedPosition = requestedPosition;
 		
 	}
@@ -106,11 +102,6 @@ public class MockPositionController implements PositionController{
 	@Override
 	public boolean isAtUpperLimit() {
 		return upperLimitTripped;
-	}
-
-	@Override
-	public boolean inMotion() {
-		return inMotion;
 	}
 
 	@Override

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Timer;
 
 /** An example command that uses an example subsystem. */
 public class DriveDirectionCommand extends EntechCommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem drive;
   private double forwardDistance;
   private double rightDistance;

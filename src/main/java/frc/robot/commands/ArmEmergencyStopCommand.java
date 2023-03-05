@@ -4,30 +4,27 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ElbowSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class PositionArmCommand extends EntechCommandBase {
+public class ArmEmergencyStopCommand extends EntechCommandBase {
 
   private final ArmSubsystem armSubsystem;
-  private final double requestedPosition;
-  private boolean waitToComplete = false;
+  private final ElbowSubsystem elbowSubsystem;
+
   /**
    * Creates a new PositionArmCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PositionArmCommand(ArmSubsystem subsystem, double requestedPosition, boolean waitToComplete) {
-      super(subsystem);
-      armSubsystem = subsystem;
-      this.requestedPosition = requestedPosition;
-      this.waitToComplete = waitToComplete;
+  public ArmEmergencyStopCommand(ArmSubsystem subsystem,ElbowSubsystem elbowSubsystem) {
+      super(subsystem,elbowSubsystem);
+      this.armSubsystem = subsystem;
+      this.elbowSubsystem = elbowSubsystem;
   }
 
-  @Override
-	public String getName() {
-		return super.getName() + "@" + requestedPosition + "m";
-	}
 
 // Called when the command is initially scheduled.
   @Override
@@ -38,24 +35,20 @@ public class PositionArmCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.requestPosition(requestedPosition);
+    armSubsystem.stop();
+    elbowSubsystem.stop();
+    DriverStation.reportWarning("Detected Arm CRASH We were about to move the arm into the carry position with the arm extended!!!", false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	  if ( waitToComplete) {
-		  return armSubsystem.isAtRequestedPosition();
-	  }
-	  else {
-		  return true;
-	  }
+	  return true;
   }
 
   // Returns true if this command should run when robot is disabled.

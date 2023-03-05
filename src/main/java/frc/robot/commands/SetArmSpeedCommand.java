@@ -7,26 +7,25 @@ package frc.robot.commands;
 import frc.robot.subsystems.ArmSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class PositionArmCommand extends EntechCommandBase {
+public class SetArmSpeedCommand extends EntechCommandBase {
 
   private final ArmSubsystem armSubsystem;
-  private final double requestedPosition;
-  private boolean waitToComplete = false;
+  private final double desiredSpeed;
+
   /**
    * Creates a new PositionArmCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PositionArmCommand(ArmSubsystem subsystem, double requestedPosition, boolean waitToComplete) {
+  public SetArmSpeedCommand(ArmSubsystem subsystem, double desiredSpeed) {
       super(subsystem);
       armSubsystem = subsystem;
-      this.requestedPosition = requestedPosition;
-      this.waitToComplete = waitToComplete;
+      this.desiredSpeed = desiredSpeed;
   }
 
   @Override
 	public String getName() {
-		return super.getName() + "@" + requestedPosition + "m";
+		return super.getName() + ",s=" + desiredSpeed ;
 	}
 
 // Called when the command is initially scheduled.
@@ -38,7 +37,7 @@ public class PositionArmCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.requestPosition(requestedPosition);
+    armSubsystem.setMotorSpeed(desiredSpeed);
   }
 
   // Called once the command ends or is interrupted.
@@ -50,12 +49,7 @@ public class PositionArmCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	  if ( waitToComplete) {
-		  return armSubsystem.isAtRequestedPosition();
-	  }
-	  else {
-		  return true;
-	  }
+	  return false;
   }
 
   // Returns true if this command should run when robot is disabled.

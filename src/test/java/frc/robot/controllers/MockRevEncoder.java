@@ -14,13 +14,11 @@ public class MockRevEncoder implements RelativeEncoder{
 	
 	@Override
 	public double getPosition() {
-		// TODO Auto-generated method stub
 		return position;
 	}
 
 	@Override
 	public double getVelocity() {
-		// TODO Auto-generated method stub
 		return velocity;
 	}
 

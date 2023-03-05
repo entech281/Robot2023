@@ -36,7 +36,10 @@ public class VisionSubsystem extends EntechSubsystem {
   private PhotonCamera camera;
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
   private PhotonPoseEstimator photonPoseEstimator;
+  private boolean enabled=true;
+
   public static final double NO_GOOD_ANGLE=-299;
+
   
   private double lastPhotonYawAngle = 0;
   @Override
@@ -169,4 +172,9 @@ private void debugStatus() {
 		  updateStatusSimulated();
 	  }
   }
+
+@Override
+public boolean isEnabled() {
+	return enabled;
+}
 }

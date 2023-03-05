@@ -1,13 +1,15 @@
 package frc.robot.controllers;
 
+import java.util.Optional;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
-import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.RobotConstants;
 
 /**
  * Overview:
@@ -30,62 +32,55 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @author davec
  *
  */
-public class SparkMaxPositionController implements Sendable, PositionController{
+public class SparkMaxPositionController implements Sendable, PositionController {
 
-	public enum MotionState { BACKING_OFF, FINDING_LIMIT, HOMED, UNINITIALIZED }
+	public enum MotionState { FINDING_LIMIT, HOMED, UNINITIALIZED }
 	
-
 	public static final int CAN_TIMEOUT_MILLIS = 1000;	
-	
-	
-	public static final int NO_POSITION = -999;	
-	
 	private MotionState axisState = MotionState.UNINITIALIZED;
-	
 	private PositionControllerConfig config;
 	
-	private boolean enabled = true;	
     private RelativeEncoder encoder;
-
-    private SparkMaxLimitSwitch lowerLimit;
-    private int requestedPosition = 0;
-    protected CANSparkMax spark;    
     private SparkMaxLimitSwitch upperLimit;
-    
-    //for unit testing
+    private SparkMaxLimitSwitch lowerLimit;
+    private Optional<Double> requestedPosition = Optional.empty();
+    protected CANSparkMax spark;    
+
 	public SparkMaxPositionController (CANSparkMax spark,  PositionControllerConfig config, SparkMaxLimitSwitch lowerLimit, SparkMaxLimitSwitch upperLimit, RelativeEncoder encoder) {
 		this.spark = spark;		
-		this.lowerLimit = lowerLimit;
-		this.upperLimit = upperLimit;
+		
+		if ( config.isInverted()) {
+			this.lowerLimit = upperLimit;
+			this.upperLimit = lowerLimit;	
+		}
+		else {
+			this.lowerLimit = lowerLimit;
+			this.upperLimit = upperLimit;			
+		}
+
 		this.encoder = encoder;
 		this.config = config;
+		setMotorSpeed(0);
 	}
-    //for stupid wpilib where the max has to be set up in initialize, not in constructor
-	public SparkMaxPositionController (  PositionControllerConfig config) {
-		this.config = config;
-	}
-    protected double correctDirection(double input){
-        if ( config.isReversed() ){
-            return -input;
-        }
-        else{
-            return input;
-        }
-    }    
+    
     @Override
-	public int getActualPosition() {
-    	if ( hasSpark()) {
-    		return (int)encoder.getPosition();
-    	}
-    	else {
-    		return NO_POSITION;
-    	}
+	public double getActualPosition() {
+    	return getEncoderValue();
     }
-    
-	public String getHomingStateString() {
-  	  return axisState+"";
-    }    
-    
+
+  	@Override
+	public void requestPosition(double requestedPosition) {
+  	  if ( isPositionWithinSoftLimits(requestedPosition)) {
+  		  this.requestedPosition = Optional.of(requestedPosition);		  
+  		  if (axisState == MotionState.UNINITIALIZED) {
+  			startHoming();
+  		  }
+  	  }
+  	  else {
+  		  DriverStation.reportWarning("Invalid Position " + requestedPosition, false);
+  	  }
+    }	
+	
     @Override
 	public MotionState getMotionState() {
   	  return axisState;
@@ -93,176 +88,153 @@ public class SparkMaxPositionController implements Sendable, PositionController{
 
     @Override
 	public double getRequestedPosition() {
-        return requestedPosition;
-    }    
-    
-    private boolean hasSpark() {
-    	return spark != null;
-    }
+    	if ( requestedPosition.isPresent()) {
+    		return requestedPosition.get();
+    	}
+    	else {
+    		return RobotConstants.INDICATOR_VALUES.POSITION_NOT_SET;
+    	}
+    }      
   
 	public void home() {
-    	requestPosition(config.getHomePositionCounts());
+    	requestedPosition = Optional.of(config.getMinPosition());		
+    	startHoming();
     }
 
 	@Override
     public void initSendable(SendableBuilder builder) {
-  	  if ( enabled ) {
-  	      builder.setSmartDashboardType("PositionController:" + config.getName());
-  	      builder.addStringProperty("Status:", this::getHomingStateString , null);		  
-  	      builder.addBooleanProperty("InMotion", this::inMotion, null);
-  	      builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-  	      builder.addIntegerProperty("ActualPos", this::getActualPosition, null);
-  	      builder.addBooleanProperty("Homed", this::isHomed, null);
-  	      builder.addBooleanProperty("UpperLimit", this::isAtLowerLimit, null);
-  	      builder.addBooleanProperty("LowerLimit", this::isAtUpperLimit, null);
-  	  }
-    }  
+  	    builder.setSmartDashboardType("PositionController:" + config.getName());
+  	    builder.addStringProperty("Status:", this::getStatusString , null);		  
+  	    builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+  	    builder.addDoubleProperty("ActualPos", this::getActualPosition, null);
+  	    builder.addDoubleProperty("MotorOut", this::getMotorOutput, null);
+  	    builder.addBooleanProperty("Homed", this::isHomed, null);
+  	    builder.addBooleanProperty("UpperLimit", this::isAtUpperLimit, null);
+  	    builder.addBooleanProperty("LowerLimit", this::isAtLowerLimit, null);
+
+    }
 	
-	
-	public boolean inMotion() {
-		if ( hasSpark() ) {
-			return encoder.getVelocity() > 0;
+	public String getStatusString() {
+		if ( axisState == MotionState.HOMED) {
+			if ( requestedPosition.isPresent()) {
+				if ( this.isAtRequestedPosition()) {
+					return "ARRIVED";
+				}
+				else{
+					return "MOVING";
+				}
+			}
+			else {
+				return "HOMED/IDLE";
+			}
 		}
 		else {
-			return false;
-		}
+			return this.axisState+"";
+		}		
 	}
+	public PositionControllerConfig getConfig() {
+		return this.config;
+	}
+	
+	public double getMotorOutput() {
+			return spark.getAppliedOutput();
+	}
+	
     @Override
 	public boolean isAtLowerLimit() {
-    	if ( hasSpark() ) {
-    		return lowerLimit.isPressed();
-    	}
-    	else {
-    		return false;
-    	}
+    	return lowerLimit.isPressed();
     }    
-    
-    @Override
-	public boolean isAtRequestedPosition() {
-		
-		return isWithinToleranceOfPosition(requestedPosition);
-	}    
     
 
-    @Override
+    public void setMotorSpeed(double input) {    	
+    	cancelRequestedPosition();
+    	setMotorSpeedInternal(input);
+    }
+    
+    public void setMotorSpeedInternal(double input) {
+    	spark.set(correctDirection(input));
+    }
+    
+  	@Override
+	public boolean isAtRequestedPosition() {
+  		if ( requestedPosition.isPresent()) {
+  	    	if ( isHomed() ) {
+  	    		return Math.abs(getEncoderValue() - requestedPosition.get()) < config.getPositionTolerance();
+  	    	}			
+  		}
+  		return false;
+	}    
+    
+  	@Override
 	public boolean isAtUpperLimit() {
-    	if ( hasSpark() ) {
-    		return upperLimit.isPressed();
-    	}
-    	else {
-    		return false;
-    	}
-    }    
- 
-    public boolean isEnabled() {
-        return this.enabled;
+    	return upperLimit.isPressed();
     }    
 
     @Override
 	public boolean isHomed() {
   	  return axisState == MotionState.HOMED;
-    }    
+    }
     
+    private void cancelRequestedPosition() {
+    	this.requestedPosition= Optional.empty();
+    }
     private boolean isPositionWithinSoftLimits(double position) {
-	  	return position >= config.getMinPositionCounts() && position <= config.getMaxPositionCounts() ;
+	  	return position >= config.getMinPosition() && position <= config.getMaxPosition() ;
  	}
     
-    protected boolean isWithinToleranceOfPosition( int position) {
-		double actualPosition = encoder.getPosition();
-		return Math.abs(actualPosition - position) < config.getPositionToleranceCounts();
-	}
-    
-    @Override
-	public void requestPosition(int requestedPosition) {
-  	  if ( isPositionWithinSoftLimits(requestedPosition)) {
-  		  this.requestedPosition = requestedPosition;		  
-  		  if (axisState == MotionState.UNINITIALIZED) {
-  			  spark.set(correctDirection(config.getHomingSpeedPercent()));
-  			  axisState = MotionState.FINDING_LIMIT;
-  		  }		  
-  	  }
-  	  else {
-  		  DriverStation.reportWarning("Invalid Position " + requestedPosition, false);
-  	  }
-    }
- 
-    public void resetPosition(){
-        encoder.setPosition(0);
-    }
 
-    @Override
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-    private void setLimitSwitches ( CANSparkMax spark) {
-		if ( config.isSwapLimitSwitches()) {
-			upperLimit = spark.getReverseLimitSwitch(config.getUpperLimitSwitchType());
-			lowerLimit = spark.getForwardLimitSwitch(config.getLowerLimitSwitchType());
+	private double correctDirection(double input) {
+		if ( config.isInverted()) {
+			return -input;
 		}
 		else {
-			lowerLimit = spark.getReverseLimitSwitch(config.getLowerLimitSwitchType());
-			upperLimit = spark.getForwardLimitSwitch(config.getUpperLimitSwitchType());			
-		}		
+			return input;
+		}
 	}
-
-    private void setPositionInternal(int desiredPosition) {
-    	spark.getPIDController().setReference(correctDirection(desiredPosition), CANSparkMax.ControlType.kPosition);
+  	
+    private void startHoming() {
+    	if ( isAtLowerLimit() ) {
+    		setMotorSpeed(0);
+    	}
+    	else {
+    		setMotorSpeedInternal(-config.getHomingSpeedPercent());
+    	}
+    	axisState = MotionState.FINDING_LIMIT;    
+    }
+   
+    private void updateRequestedPosition() {
+    	if ( requestedPosition.isPresent()) {
+        	spark.getPIDController().setReference(correctDirection(requestedPosition.get()), CANSparkMax.ControlType.kPosition);
+        	spark.getPIDController().setIAccum(0);    		
+    	}
     }
 
+    private void setEncoder( double value ) {
+    	encoder.setPosition(correctDirection(value));
+    }
     
-    /**
-	 * I hate this! but its necesary because:
-	 * wpilib initializes sendables before INITIALIZE is called on the subsystem
-	 * but i want to populate this controll in the senable
-	 * but to do that, i'd ahve to put that code in the constructor, meaning we try to load the motors too early
-	 * BUT this forces us to deal with having all methods inside senadable deal with a null spark max!! CMON WPILIB!
-	 * @param spark
-	 */
-	public void setSparkMax ( CANSparkMax spark ) {
-		this.spark = spark;
-		this.encoder = spark.getEncoder();
-		setLimitSwitches(spark);
-	}
-    
+    private double getEncoderValue() {
+    	return correctDirection(encoder.getPosition());
+    }
     public void stop() {
     	spark.stopMotor();
     }
     
     @Override
 	public void update() {	 
-  	  if (enabled ) {
       	 switch ( axisState) {
       		 case UNINITIALIZED:
       			 break;
       		 case FINDING_LIMIT:
       			 if ( isAtLowerLimit() ) {
-      				encoder.setPosition(0);
-      				setPositionInternal(config.getBackoffCounts());
-      				axisState = MotionState.BACKING_OFF;
-      			 }
-      			 break;
-      		 case BACKING_OFF:
-      			 if ( isWithinToleranceOfPosition(config.getBackoffCounts())) {
-      				encoder.setPosition(config.getHomePositionCounts());
-      				 //telescopeMotor.stopMotor();  future configurable? this will stop the motor. Not doing this leaves the motor on and locked on this position 
-      				 axisState = MotionState.HOMED;
+      				setMotorSpeedInternal(0);
+      				setEncoder(config.getMinPosition());
+      				axisState = MotionState.HOMED;
       			 }
       			 break;
       		 case HOMED:
-      			 setPositionInternal(requestedPosition);
-      			 if (isAtLowerLimit()  ) {
-      				 stop();
-      				 DriverStation.reportWarning("Low Limit Reached! Please Move Axis off the switch. We will home on next comamand." , false);
-      				 axisState = MotionState.UNINITIALIZED;
-      			 }
-      			 if ( isAtUpperLimit() ) {
-      				 stop();
-      				 DriverStation.reportWarning("Upper Limit Reached! Please Move Axis off the switch. We will home on next comamand." , false);
-      				 axisState = MotionState.UNINITIALIZED;
-      			 }
-  	     }
-  	  }
-    }
-
+      			 updateRequestedPosition();
+  	    }
+  	}
+  
 }
