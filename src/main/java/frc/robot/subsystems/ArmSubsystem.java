@@ -33,6 +33,9 @@ public class ArmSubsystem extends EntechSubsystem{
 	return position;
 }
 
+public void homePosition() {
+	setPosition(ARM.POSITION_PRESETS.MIN_METERS);
+}
 public void setPosition(double position) {
 	if ( this.positionController  != null) {
 		this.positionController.requestPosition(position);

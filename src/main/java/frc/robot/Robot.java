@@ -159,6 +159,10 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
     oi.setDefaultDriveCommand();
+    
+    //reset positions on arms
+    allSubsystems.getArm().homePosition();
+    //allSubsystems.getElbow().homePosition();
   }
 
   /** This function is called periodically during operator control. */

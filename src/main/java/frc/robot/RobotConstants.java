@@ -96,7 +96,7 @@ public final class RobotConstants {
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES=3.0;    		
     		  public static double CARRY_DEGREES = 20.0;
-    		  public static double SAFE_ANGLE=30.0;    		  
+    		  public static double SAFE_ANGLE=31.0;    		  
     		  public static double SCORE_MIDDLE_DEGREES = 60;
     		  public static double SCORE_HIGH_DEGREES = 90;    		  
       		  public static final double MAX_POSITION_DEGREES=100.0;    		  

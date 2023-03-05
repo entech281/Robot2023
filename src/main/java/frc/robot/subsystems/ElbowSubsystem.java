@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
+import frc.robot.RobotConstants.ARM;
 import frc.robot.RobotConstants.ELBOW;
 import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
@@ -31,7 +32,10 @@ public class ElbowSubsystem extends EntechSubsystem{
 		}
 		this.position = position;
 	  }
-
+	  public void homePosition() {
+			setPosition(ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES);
+		}
+	  
 	//for unit testing
 	  public ElbowSubsystem( CANSparkMax motor, SparkMaxPositionController controller) {
 		  this.enabled=true;
