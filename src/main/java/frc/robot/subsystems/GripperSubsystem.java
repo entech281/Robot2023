@@ -47,7 +47,7 @@ public class GripperSubsystem extends EntechSubsystem {
     public void initSendable(SendableBuilder builder) {
   	  if ( enabled ) {
   	      builder.setSmartDashboardType(getName());		  
-  	      builder.addBooleanProperty("Open", this::isOpen, null);
+  	      builder.addBooleanProperty("Open", this::isOpen, this::setOpen);
   	  }
     }	
 	
@@ -74,6 +74,14 @@ public class GripperSubsystem extends EntechSubsystem {
     public boolean isOpen() {
     	return gripperState == GripperState.kOpen;
     }
+	public void setOpen(boolean open) {
+		if (open) {
+			gripperState = GripperState.kOpen;
+		}
+		else {
+			gripperState = GripperState.kClose;
+		}
+	}
 	
 	@Override
 	public GripperStatus getStatus() {

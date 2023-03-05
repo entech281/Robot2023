@@ -48,13 +48,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
 	  
-	DriveSubsystem drive = new DriveSubsystem();
-	VisionSubsystem vision = new VisionSubsystem();
-	NavXSubSystem navx = new NavXSubSystem();
 	ArmSubsystem arm = new ArmSubsystem();
 	ElbowSubsystem elbow = new ElbowSubsystem();
-	GripperSubsystem gripper = new GripperSubsystem();
+	GripperSubsystem gripper = new GripperSubsystem();	  
+	VisionSubsystem vision = new VisionSubsystem();
+	NavXSubSystem navx = new NavXSubSystem();
+	DriveSubsystem drive = new DriveSubsystem();
+
 	
 	allSubsystems = new SubsystemHolder(drive,navx,vision,arm,elbow,gripper);
 	
@@ -157,6 +159,10 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
     oi.setDefaultDriveCommand();
+    
+    //reset positions on arms
+    allSubsystems.getArm().homePosition();
+    //allSubsystems.getElbow().homePosition();
   }
 
   /** This function is called periodically during operator control. */
