@@ -1,5 +1,7 @@
 package frc.robot.controllers;
 
+import java.util.Optional;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -7,6 +9,7 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.RobotConstants;
 
 /**
  * Overview:
@@ -40,7 +43,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     private RelativeEncoder encoder;
     private SparkMaxLimitSwitch upperLimit;
     private SparkMaxLimitSwitch lowerLimit;
-    private double requestedPosition = 0;
+    private Optional<Double> requestedPosition = Optional.empty();
     protected CANSparkMax spark;    
 
 	public SparkMaxPositionController (CANSparkMax spark,  PositionControllerConfig config, SparkMaxLimitSwitch lowerLimit, SparkMaxLimitSwitch upperLimit, RelativeEncoder encoder) {
@@ -68,7 +71,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   	@Override
 	public void requestPosition(double requestedPosition) {
   	  if ( isPositionWithinSoftLimits(requestedPosition)) {
-  		  this.requestedPosition = requestedPosition;		  
+  		  this.requestedPosition = Optional.of(requestedPosition);		  
   		  if (axisState == MotionState.UNINITIALIZED) {
   			startHoming();
   		  }
@@ -85,11 +88,16 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 
     @Override
 	public double getRequestedPosition() {
-        return requestedPosition;
+    	if ( requestedPosition.isPresent()) {
+    		return requestedPosition.get();
+    	}
+    	else {
+    		return RobotConstants.INDICATOR_VALUES.POSITION_NOT_SET;
+    	}
     }      
   
 	public void home() {
-    	requestedPosition = config.getMinPosition();		
+    	requestedPosition = Optional.of(config.getMinPosition());		
     	startHoming();
     }
 
@@ -122,18 +130,29 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     	return lowerLimit.isPressed();
     }    
     
-    public void setMotorSpeed(double input) {
+
+    public void setMotorSpeed(double input) {    	
+    	cancelRequestedPosition();
+    	setMotorSpeedInternal(input);
+    }
+    
+    public void setMotorSpeedInternal(double input) {
     	spark.set(correctDirection(input));
     }
     
   	@Override
 	public boolean isAtRequestedPosition() {
-    	if ( isHomed() ) {
-    		return Math.abs(getEncoderValue() - requestedPosition) < config.getPositionTolerance();
-    	}
-    	else {
-    		return false;
-    	}
+  		if ( requestedPosition.isPresent()) {
+  	    	if ( isHomed() ) {
+  	    		return Math.abs(getEncoderValue() - requestedPosition.get()) < config.getPositionTolerance();
+  	    	}
+  	    	else {
+  	    		return false;
+  	    	}  			
+  		}
+  		else {
+  			return false;
+  		}
 	}    
     
   	@Override
@@ -146,14 +165,14 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   	  return axisState == MotionState.HOMED;
     }
     
+    private void cancelRequestedPosition() {
+    	this.requestedPosition= Optional.empty();
+    }
     private boolean isPositionWithinSoftLimits(double position) {
 	  	return position >= config.getMinPosition() && position <= config.getMaxPosition() ;
  	}
     
-    protected boolean isErrorLessThanTolerance( double val1, double val2, double tolerance) {
-    	return Math.abs(val1 - val2)< tolerance;
-    }
-    
+
 	private double correctDirection(double input) {
 		if ( config.isInverted()) {
 			return -input;
@@ -168,14 +187,16 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     		setMotorSpeed(0);
     	}
     	else {
-    		setMotorSpeed(-config.getHomingSpeedPercent());
+    		setMotorSpeedInternal(-config.getHomingSpeedPercent());
     	}
     	axisState = MotionState.FINDING_LIMIT;    
     }
    
-    private void setPositionInternal(double desiredPosition) {
-    	spark.getPIDController().setReference(correctDirection(desiredPosition), CANSparkMax.ControlType.kPosition);
-    	spark.getPIDController().setIAccum(0);
+    private void updateRequestedPosition() {
+    	if ( requestedPosition.isPresent()) {
+        	spark.getPIDController().setReference(correctDirection(requestedPosition.get()), CANSparkMax.ControlType.kPosition);
+        	spark.getPIDController().setIAccum(0);    		
+    	}
     }
 
     private void setEncoder( double value ) {
@@ -196,13 +217,13 @@ public class SparkMaxPositionController implements Sendable, PositionController 
       			 break;
       		 case FINDING_LIMIT:
       			 if ( isAtLowerLimit() ) {
-      				setMotorSpeed(0);
+      				setMotorSpeedInternal(0);
       				setEncoder(config.getMinPosition());
       				axisState = MotionState.HOMED;
       			 }
       			 break;
       		 case HOMED:
-      			 setPositionInternal(requestedPosition);
+      			 updateRequestedPosition();
   	    }
   	}
   

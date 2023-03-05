@@ -13,6 +13,7 @@ import org.mockito.stubbing.Answer;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
 
+import frc.robot.RobotConstants;
 import frc.robot.controllers.SparkMaxPositionController.MotionState;
 
 public class TestSparkMaxPositionController {
@@ -116,6 +117,26 @@ public class TestSparkMaxPositionController {
 		
 		//should be heading to negative reference
 		verify(mockMotor2.getPIDController()).setReference((double)-REQUESTED_POSITION,CANSparkMax.ControlType.kPosition);
+	}
+	
+	//when a position is requested, but then a command runs that sets the speed manually,
+	//we should cancel the existing requested position. othrewise, we'll
+	//fly back to the previously requested position
+	@Test
+	public void testUsingSpeedControlInvalidatesRequestedPosition() {
+		c.requestPosition(REQUESTED_POSITION);
+		c.update();
+		assertPositionAndState(c,0,MotionState.FINDING_LIMIT);
+		fakeLowerLimit.setPressed(true);
+		c.update();
+		c.update();
+		assertEquals(MotionState.HOMED, c.getMotionState());
+		assertEquals(REQUESTED_POSITION,c.getRequestedPosition(),COMPARE_TOLERANCE);
+		encoder.setPosition(300);
+		//on our way, we get a manual speed request
+		c.setMotorSpeed(-10.0);
+		assertEquals(RobotConstants.INDICATOR_VALUES.POSITION_NOT_SET, c.getRequestedPosition());
+		assertFalse(c.isAtRequestedPosition());
 	}
 	
 	@Test
