@@ -59,7 +59,11 @@ public class OperatorInterface {
 	
 	    driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_RIGHT)
             .onTrue(commandFactory.nudgeYawRightCommand());    	
-	
+
+        operatorStick.button(RobotConstants.OPERATOR_STICK.GRIPPER)
+            .onTrue(commandFactory.openGripperCommand())
+            .onFalse(commandFactory.closeGripperCommand());
+
 	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.UP)
 	        .onTrue(commandFactory.nudgeElbowUpCommand());
 	

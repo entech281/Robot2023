@@ -202,6 +202,14 @@ public class CommandFactory {
         return new NudgeTelescopeBackwardsCommand(armSubsystem, false);
     }
 
+    public Command openGripperCommand() {
+        return new GripperCommand(gripperSubsystem, GripperState.kOpen);
+    }
+
+    public Command closeGripperCommand() {
+        return new GripperCommand(gripperSubsystem, GripperState.kClose);
+    }
+
     public Command farScoringPositionCommand() {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),

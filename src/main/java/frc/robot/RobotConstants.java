@@ -133,6 +133,7 @@ public final class RobotConstants {
         }
     }
     public interface OPERATOR_STICK {
+        public static final int GRIPPER = 1;
         public interface POV {
             public static final int UP = 0;
             public static final int IN = 90;
