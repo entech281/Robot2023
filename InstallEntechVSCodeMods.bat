@@ -1,4 +1,4 @@
-SET VERSION="2023.3.2"
+SET VERSION="2023.4.2"
 SET INSTALL_DIR="C:\Users\Public\wpilib\2023\vscode\data\extensions\wpilibsuite.vscode-wpilib-%VERSION%\resources\java\src\commands"
 
 @ECHO OFF
