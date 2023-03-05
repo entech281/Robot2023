@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DriveDirectionCommand;
@@ -82,25 +83,53 @@ public class CommandFactory {
         c3.setName("Autonomous");
         Command c4 = driveDistanceCommand(2);
         c4.setName("MoveForward");
-    	return List.of( c1, c2, c3 ,c4);
+        Command c5 = autonomousFarCommand();
+        c5.setName("Autonomous Far");
+        Command c6 = middleScoringPositioCommand();
+        c6.setName("Autonomous Middle");
+        Command c7 = autonomusMiddleCommand();
+        c7.setName("Ground Scoring");
+        Command c8 = LoadingPositionCommand();
+        c8.setName("Loading");
+    	return List.of( c1, c2, c3 ,c4, c5, c6, c7, c8);
 
     }
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
 			new HomeElbowCommand(elbowSubsystem),
-			new PositionTelescopeCommand(armSubsystem,0.35, false),
+			new PositionTelescopeCommand(armSubsystem,1.4, false),
 			new PositionTelescopeCommand(armSubsystem,0.2, false),
 			new PositionTelescopeCommand(armSubsystem,0.08, false),
-			new PositionElbowCommand(elbowSubsystem,25, false),
+			new PositionElbowCommand(elbowSubsystem,100, false),
 			new PositionElbowCommand(elbowSubsystem,60,false),
 			new PositionElbowCommand(elbowSubsystem,90, false),
 			new PositionElbowCommand(elbowSubsystem,4, false),
 			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
 			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
 			new HomeArmCommand(armSubsystem),
-			new SetArmSpeedCommand(armSubsystem,0.1)
+			new SetArmSpeedCommand(armSubsystem,0.1),
+            new HomeArmCommand(armSubsystem, true)
     	);
+    }
+
+    public Command autonomousFarCommand() {
+        return new SequentialCommandGroup(
+            new PositionElbowCommand(elbowSubsystem, 100, true)
+            , new PositionTelescopeCommand(armSubsystem, 1.38, true)
+            , new GripperCommand(gripperSubsystem, GripperState.kOpen)
+            , new WaitCommand(1)
+            , new GripperCommand(gripperSubsystem, GripperState.kClose)
+            , new HomeArmCommand(armSubsystem, true)
+            , new HomeElbowCommand(elbowSubsystem, true)
+        );
+    }
+
+    public Command autonomusMiddleCommand() {
+        return new SequentialCommandGroup(
+        new PositionElbowCommand(elbowSubsystem, 80, true)
+        , new PositionTelescopeCommand(armSubsystem, 1.1, true)
+        );
     }
 
     public Command deployHighCommand() {
@@ -208,7 +237,7 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
-                new PositionElbowCommand(elbowSubsystem, 91, true),
+                new PositionElbowCommand(elbowSubsystem, 100, true),
                 new PositionTelescopeCommand(armSubsystem, 1.4, true)
             )
         );

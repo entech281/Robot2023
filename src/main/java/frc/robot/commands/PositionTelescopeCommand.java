@@ -39,7 +39,7 @@ public class PositionTelescopeCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.requestPosition(requestedPosition - RobotConstants.ARM.MIN_EXTENSION_METERS);
+    armSubsystem.requestPosition(requestedPosition - RobotConstants.ARM.POSITION_PRESETS.MIN_ARM_LENGTH_M);
   }
 
   // Called once the command ends or is interrupted.

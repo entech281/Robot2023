@@ -10,6 +10,7 @@ import frc.robot.subsystems.ElbowSubsystem;
 public class HomeElbowCommand extends EntechCommandBase {
 
   private final ElbowSubsystem elbowSubsystem;
+  private boolean waitToComplete = false;
 
   /**
    * Creates a new PositionArmCommand.
@@ -17,10 +18,14 @@ public class HomeElbowCommand extends EntechCommandBase {
    * @param subsystem The subsystem used by this command.
    */
   public HomeElbowCommand(ElbowSubsystem subsystem) {
-      super(subsystem);
-      elbowSubsystem = subsystem;
+    super(subsystem);
+    elbowSubsystem = subsystem;
 
-  }
+}public HomeElbowCommand(ElbowSubsystem subsystem, boolean waitToComplete) {
+  super(subsystem);
+  elbowSubsystem = subsystem;
+  this.waitToComplete = waitToComplete;
+}
 
 
 // Called when the command is initially scheduled.
@@ -43,7 +48,11 @@ public class HomeElbowCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	  return true;
+	  if ( waitToComplete) {
+		  return elbowSubsystem.isAtRequestedPosition();
+	  } else {
+		  return true;
+	  }
   }
 
   // Returns true if this command should run when robot is disabled.
