@@ -9,6 +9,7 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.ARM;
+import frc.robot.RobotConstants.ELBOW;
 import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
 
@@ -25,6 +26,22 @@ public class ArmSubsystem extends EntechSubsystem{
   private SparkMaxPositionController positionController;
   private boolean enabled = true;
 
+
+  private double position = ARM.POSITION_PRESETS.MIN_METERS;
+  
+  public double getPosition() {
+	return position;
+}
+
+public void homePosition() {
+	setPosition(ARM.POSITION_PRESETS.MIN_METERS);
+}
+public void setPosition(double position) {
+	if ( this.positionController  != null) {
+		this.positionController.requestPosition(position);
+	}	
+	this.position = position;
+}  
   //for unit testing
   public ArmSubsystem( CANSparkMax motor, SparkMaxPositionController controller) {
 	  this.enabled=true;
@@ -147,12 +164,14 @@ public class ArmSubsystem extends EntechSubsystem{
 
   @Override
   public void initSendable(SendableBuilder builder) {
-      builder.setSmartDashboardType(getName());
-      builder.addBooleanProperty("Enabled", this::isEnabled, null);
+
+	  super.initSendable(builder);
+      builder.setSmartDashboardType(getName());  
+      builder.addDoubleProperty("Position", this::getPosition, this::setPosition);
       if ( enabled ) {
-          builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
-          builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);
+          //builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
+          //builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+          //builder.addDoubleProperty("ActualPos", this::getActualPosition, null); 
       }
   }
 

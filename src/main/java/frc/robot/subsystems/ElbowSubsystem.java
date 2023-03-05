@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.RobotConstants;
+import frc.robot.RobotConstants.ARM;
 import frc.robot.RobotConstants.ELBOW;
 import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
@@ -17,10 +18,25 @@ public class ElbowSubsystem extends EntechSubsystem{
     private static final int NUDGE_COUNT = 20;
 	  private CANSparkMax elbowMotor;
 	  private SparkMaxPositionController positionController;
-	  private boolean enabled = true;
 
+	  private boolean enabled = true;	
+	  private double position = ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES;
+	  
+	  public double getPosition() {
+		return position;
+	  }
 
-	  //for unit testing
+	  public void setPosition(double position) {
+		if ( this.positionController  != null) {
+			this.positionController.requestPosition(position);
+		}
+		this.position = position;
+	  }
+	  public void homePosition() {
+			setPosition(ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES);
+		}
+	  
+	//for unit testing
 	  public ElbowSubsystem( CANSparkMax motor, SparkMaxPositionController controller) {
 		  this.enabled=true;
 		  this.elbowMotor = motor;
@@ -125,13 +141,14 @@ public class ElbowSubsystem extends EntechSubsystem{
 
 	  @Override
 	  public void initSendable(SendableBuilder builder) {
-	      builder.setSmartDashboardType(getName());
-	      builder.addBooleanProperty("Enabled", this::isEnabled, null);
+		  super.initSendable(builder);		  
+	      builder.setSmartDashboardType(getName());  
+	      builder.addDoubleProperty("Position", this::getPosition, this::setPosition);	      
 	      if ( enabled ) {
-	          builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
-	          builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-	          builder.addDoubleProperty("ActualPos", this::getActualPosition, null);
-	          builder.addBooleanProperty("CanExtendArm", this::isSafeToExtendArm, null);
+	          //builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
+	          //builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+	          //builder.addDoubleProperty("ActualPos", this::getActualPosition, null);  	  
+	          //builder.addBooleanProperty("CanExtendArm", this::isSafeToExtendArm, null);
 	      }
 	  }
 

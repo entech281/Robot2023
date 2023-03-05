@@ -30,11 +30,23 @@
       "/Shuffleboard/Match/TargetNode": "String Chooser",
       "/Shuffleboard/PreMatch/AutoCommand": "String Chooser",
       "/Shuffleboard/Testing/ArmForgetHomeCommand": "Command",
+      "/Shuffleboard/Testing/CloseGripper": "Command",
       "/Shuffleboard/Testing/ElbowForgetHomeCommand": "Command",
+      "/Shuffleboard/Testing/HomeArmCommand": "Command",
+      "/Shuffleboard/Testing/HomeElbowCommand": "Command",
+      "/Shuffleboard/Testing/OpenGripper": "Command",
+      "/Shuffleboard/Testing/PositionArmCommand@0.08m": "Command",
+      "/Shuffleboard/Testing/PositionArmCommand@0.2m": "Command",
+      "/Shuffleboard/Testing/PositionArmCommand@0.35m": "Command",
       "/Shuffleboard/Testing/PositionArmCommand@0.3m": "Command",
+      "/Shuffleboard/Testing/PositionElbowCommand@25.0deg": "Command",
       "/Shuffleboard/Testing/PositionElbowCommand@30.0m": "Command",
+      "/Shuffleboard/Testing/PositionElbowCommand@4.0deg": "Command",
+      "/Shuffleboard/Testing/PositionElbowCommand@60.0deg": "Command",
+      "/Shuffleboard/Testing/PositionElbowCommand@90.0deg": "Command",
       "/Shuffleboard/Testing/SetArmSpeedCommand,s=-0.1": "Command",
       "/Shuffleboard/Testing/SetArmSpeedCommand,s=0.0": "Command",
+      "/Shuffleboard/Testing/SetArmSpeedCommand,s=0.1": "Command",
       "/Shuffleboard/Testing/SetArmSpeedCommand,s=0.2": "Command",
       "/Shuffleboard/Testing/SetElbowSpeedCommand,s=-0.1": "Command",
       "/Shuffleboard/Testing/SetElbowSpeedCommand,s=0.0": "Command",
@@ -87,7 +99,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 323
+          "height": 338
         }
       ]
     }
