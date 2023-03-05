@@ -6,6 +6,10 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobotConstants.ARM;
+import frc.robot.RobotConstants.ELBOW;
+import frc.robot.commands.ArmEmergencyStopCommand;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.oi.ShuffleboardInterface;
 import frc.robot.pose.AlignmentCalculator;
@@ -108,7 +112,9 @@ public class RobotContext {
             robotState.setTargetYawAngle(targetYaw);
         }
            
-        
+        if ( armSubsystem.getActualPosition() > ARM.POSITION_PRESETS.SAFE && elbowSubsystem.getActualPosition() < ELBOW.POSITION_PRESETS.SAFE_ANGLE) {
+        	CommandScheduler.getInstance().schedule(new ArmEmergencyStopCommand(armSubsystem,elbowSubsystem));
+        }
     }    
 
     private RobotState robotState;

@@ -18,7 +18,7 @@ public class GripperSubsystem extends EntechSubsystem {
 	}
 
 	private boolean enabled = true;
-	private final int SOLENOID_HIT_COUNT = 40;
+	private final int SOLENOID_HIT_COUNT = 20;
 	
 	public enum GripperState { kClose, kOpen }
 	

@@ -69,7 +69,6 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  }
 	  
 
-	  
 	  public boolean isSafeToExtendArm() {
 		  return this.getActualPosition() > ELBOW.POSITION_PRESETS.SAFE_ANGLE;
 	  }

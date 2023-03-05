@@ -143,6 +143,10 @@ public class ArmSubsystem extends EntechSubsystem{
 	  }
   }
     
+  
+  public boolean isArmRetracted() {
+	  return positionController.getActualPosition()< ARM.POSITION_PRESETS.SAFE;
+  }
   @Override
   public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType(getName());  

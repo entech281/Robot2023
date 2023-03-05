@@ -56,7 +56,7 @@ public final class RobotConstants {
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT=0.1;
     		public static final double HOME_POSITION_BACKOFF_METERS=0.1;
-    		public static final double HOME_POSITION_METERS=0.1;
+    		public static final double HOME_POSITION_METERS=0.02;
     	}
     	public interface TUNING{
     		public static final double P_GAIN=30.0;
@@ -69,6 +69,7 @@ public final class RobotConstants {
     		  public static double CARRY_METERS = 0.1;
     		  public static double SCORE_MIDDLE_METERS = 0.3;
     		  public static double SCORE_HIGH_METERS = 0.4;
+    		  public static double SAFE = 0.1;
     		  public static double MAX_METERS = 0.5;
     	}
         
@@ -93,7 +94,7 @@ public final class RobotConstants {
     		public static final double MIN_POSITION_DEGREES=3.0;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.022;
+    		public static final double P_GAIN=0.03;
     		public static final double I_GAIN=0.0001;
     		public static final double D_GAIN=0.0;
     	}
@@ -144,8 +145,8 @@ public final class RobotConstants {
     public interface PNEUMATICS {
         public static final int LEFT_GRIPPER_OPEN = 2;
         public static final int LEFT_GRIPPER_CLOSE = 3;
-        public static final int RIGHT_GRIPPER_OPEN = 4;
-        public static final int RIGHT_GRIPPER_CLOSE = 5;        
+        public static final int RIGHT_GRIPPER_OPEN = 5;
+        public static final int RIGHT_GRIPPER_CLOSE = 4;        
     }    
     public interface SHUFFLEBOARD {
     	public interface TABS{
