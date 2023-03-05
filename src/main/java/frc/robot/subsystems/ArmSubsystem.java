@@ -21,7 +21,7 @@ import static frc.robot.RobotConstants.ARM.*;
  */
 public class ArmSubsystem extends EntechSubsystem{
 
-  private static final int NUDGE_COUNT = 20;
+  private static final double NUDGE_COUNT = 0.1;
   private CANSparkMax telescopeMotor;
   private SparkMaxPositionController positionController;
   private boolean enabled = true;
@@ -170,18 +170,18 @@ public void setPosition(double position) {
   }
 
 
-  @Override
-  public void initSendable(SendableBuilder builder) {
-
-	  super.initSendable(builder);
-      builder.setSmartDashboardType(getName());  
-      builder.addDoubleProperty("Position", this::getPosition, this::setPosition);
-      if ( enabled ) {
-          //builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
-          //builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
-          //builder.addDoubleProperty("ActualPos", this::getActualPosition, null); 
-      }
-  }
+//  @Override
+//  public void initSendable(SendableBuilder builder) {
+//
+//	  super.initSendable(builder);
+//      builder.setSmartDashboardType(getName());  
+//      builder.addDoubleProperty("Position", this::getPosition, this::setPosition);
+//      if ( enabled ) {
+//          //builder.addBooleanProperty("AtSetPoint", this::isAtRequestedPosition, null);
+//          //builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+//          //builder.addDoubleProperty("ActualPos", this::getActualPosition, null); 
+//      }
+//  }
 
   @Override
   public void simulationPeriodic() {

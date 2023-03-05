@@ -89,7 +89,7 @@ public class CommandFactory {
         c6.setName("Autonomous Middle");
         Command c7 = autonomusMiddleCommand();
         c7.setName("Ground Scoring");
-        Command c8 = LoadingPositionCommand();
+        Command c8 = loadingPositionCommand();
         c8.setName("Loading");
     	return List.of( c1, c2, c3 ,c4, c5, c6, c7, c8);
 

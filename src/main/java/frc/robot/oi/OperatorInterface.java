@@ -65,16 +65,16 @@ public class OperatorInterface {
             .onFalse(commandFactory.closeGripperCommand());
 
 	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.UP)
-	        .onTrue(commandFactory.nudgeElbowUpCommand());
+	        .whileTrue(commandFactory.nudgeElbowUpCommand());
 	
 	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.DOWN)
-	        .onTrue(commandFactory.nudgeElbowDownCommand());
+	        .whileTrue(commandFactory.nudgeElbowDownCommand());
 	
 	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.IN)
-	        .onTrue(commandFactory.nudgeArmBackwardCommand());
+	        .whileTrue(commandFactory.nudgeArmBackwardCommand());
 	
 	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.OUT)
-	        .onTrue(commandFactory.nudgeArmForwardCommand());
+	        .whileTrue(commandFactory.nudgeArmForwardCommand());
     }
     
     public void setDefaultDriveCommand() {
