@@ -20,24 +20,28 @@ public class HomeElbowCommand extends EntechCommandBase {
   public HomeElbowCommand(ElbowSubsystem subsystem) {
     super(subsystem);
     elbowSubsystem = subsystem;
+ 
+  }
+  public HomeElbowCommand(ElbowSubsystem subsystem, boolean waitToComplete) {
+	  super(subsystem);
+	  elbowSubsystem = subsystem;
+	  this.waitToComplete = waitToComplete;
+  }
 
-}public HomeElbowCommand(ElbowSubsystem subsystem, boolean waitToComplete) {
-  super(subsystem);
-  elbowSubsystem = subsystem;
-  this.waitToComplete = waitToComplete;
-}
-
-
+  @Override
+  public String getName(){
+     return super.getName() + "wait:" + waitToComplete;
+  }
+  
 // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+	  elbowSubsystem.home();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-	  elbowSubsystem.home();
   }
 
   // Called once the command ends or is interrupted.

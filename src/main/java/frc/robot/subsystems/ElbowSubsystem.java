@@ -5,9 +5,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
+
 import frc.robot.RobotConstants;
-import frc.robot.RobotConstants.ARM;
 import frc.robot.RobotConstants.ELBOW;
 import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
