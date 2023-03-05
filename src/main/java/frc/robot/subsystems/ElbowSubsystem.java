@@ -14,8 +14,10 @@ import frc.robot.controllers.SparkMaxPositionController;
 
 public class ElbowSubsystem extends EntechSubsystem{
 
+    private static final int NUDGE_COUNT = 20;
 	  private CANSparkMax elbowMotor;
 	  private SparkMaxPositionController positionController;
+
 	  private boolean enabled = true;	
 	  private double position = ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES;
 	  
@@ -35,59 +37,59 @@ public class ElbowSubsystem extends EntechSubsystem{
 		  this.enabled=true;
 		  this.elbowMotor = motor;
 		  this.positionController = controller;
-	  }  	  
-	
+	  }
+
 	  //for match
 	  public ElbowSubsystem () {
-		  
+
 	  }
-	  
+
 	  @Override
 	  public void initialize() {
 		if ( enabled ) {
-			elbowMotor = new CANSparkMax(RobotConstants.CAN.ELBOW_MOTOR_ID, MotorType.kBrushless);
-			elbowMotor.getPIDController().setP(ELBOW.TUNING.P_GAIN);
-			elbowMotor.getPIDController().setI(ELBOW.TUNING.I_GAIN);
-			elbowMotor.getPIDController().setD(ELBOW.TUNING.D_GAIN);
-			elbowMotor.setSmartCurrentLimit(ELBOW.SETTINGS.MAX_SPIKE_CURRENT);
+		    elbowMotor = new CANSparkMax(RobotConstants.CAN.ELBOW_MOTOR_ID, MotorType.kBrushless);
+		    elbowMotor.getPIDController().setP(ELBOW.TUNING.P_GAIN);
+		    elbowMotor.getPIDController().setI(ELBOW.TUNING.I_GAIN);
+		    elbowMotor.getPIDController().setD(ELBOW.TUNING.D_GAIN);
+		    elbowMotor.setSmartCurrentLimit(ELBOW.SETTINGS.MAX_SPIKE_CURRENT);
 
-			elbowMotor.set(0);
-			elbowMotor.setIdleMode(IdleMode.kBrake);
-			elbowMotor.clearFaults();
-			elbowMotor.setInverted(ELBOW.SETTINGS.MOTOR_REVERSED);	
+		    elbowMotor.set(0);
+		    elbowMotor.setIdleMode(IdleMode.kBrake);
+		    elbowMotor.clearFaults();
+		    elbowMotor.setInverted(ELBOW.SETTINGS.MOTOR_REVERSED);
 		    elbowMotor.getEncoder().setPositionConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);
-		    elbowMotor.getEncoder().setVelocityConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);			
+		    elbowMotor.getEncoder().setVelocityConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);
 			PositionControllerConfig conf =  new PositionControllerConfig.Builder("ELBOW")
 			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT  )
-			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_DEGREES)  	
+			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_DEGREES)
 			    	.withSoftLimits(ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, ELBOW.POSITION_PRESETS.MAX_POSITION_DEGREES)
 			    	.withInverted(true)
 			    	.build();
-			
+
 		    positionController = new SparkMaxPositionController(
 		    		elbowMotor,
 		    		conf,
-		    		elbowMotor.getReverseLimitSwitch(Type.kNormallyOpen),	    		
+		    		elbowMotor.getReverseLimitSwitch(Type.kNormallyOpen),
 		    		elbowMotor.getForwardLimitSwitch(Type.kNormallyOpen),
 		    		elbowMotor.getEncoder()
-		    );			
-			
+		    );
+
 		}
-	  }  
-	  
+	  }
+
 	  public void home() {
 		  positionController.home();
 	  }
-	  
+
 
 	  public boolean isSafeToExtendArm() {
 		  return this.getActualPosition() > ELBOW.POSITION_PRESETS.SAFE_ANGLE;
 	  }
-	    
+
 	  public void setMotorSpeed(double speed) {
 		  positionController.setMotorSpeed(speed);
 	  }
-	  
+
 	  public double getRequestedPosition() {
 		  if ( isEnabled()) {
 			  return positionController.getRequestedPosition();
@@ -96,43 +98,43 @@ public class ElbowSubsystem extends EntechSubsystem{
 			  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
 		  }
 	  }
-	  
+
 	  public double getActualPosition() {
 		  if ( isEnabled()) {
 			  return positionController.getActualPosition();
 		  }
 		  else {
 			  return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
-		  }	  
+		  }
 	  }
-	  
+
 	  public boolean isEnabled() {
 		  return enabled;
 	  }
-	  
+
 	  public SparkMaxPositionController getPositionController() {
 			return positionController;
-	  }	  
-	  
+	  }
+
 	  public void requestPosition(double requestedPosition) {
 		  positionController.requestPosition(requestedPosition);
 	  }
-	  
+
 	  public void stop() {
 		  positionController.stop();
 	  }
-	  
+
 	  public boolean isAtRequestedPosition() {
 		  return positionController.isAtRequestedPosition();
-	  }  
-	  
-	  
-	  public void periodic() {	 
+	  }
+
+
+	  public void periodic() {
 		  if (enabled ) {
 			  positionController.update();
 		  }
 	  }
-	    
+
 	  @Override
 	  public void initSendable(SendableBuilder builder) {
 		  super.initSendable(builder);		  
@@ -145,21 +147,29 @@ public class ElbowSubsystem extends EntechSubsystem{
 	          //builder.addBooleanProperty("CanExtendArm", this::isSafeToExtendArm, null);
 	      }
 	  }
-	 
+
 
 	  @Override
 	  public void simulationPeriodic() {
-	    
+
 	  }
-	  
+
 	  @Override
 	  public ElbowStatus getStatus() {
 		  if ( enabled) {
-			  return new ElbowStatus(positionController.getActualPosition()); 
+			  return new ElbowStatus(positionController.getActualPosition());
 		  }
 		  else {
 			  return new ElbowStatus(RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN);
 		  }
+	  }
+
+	  public void nudgeElbowDown() {
+		positionController.requestPosition(getActualPosition() - NUDGE_COUNT);
+	  }
+
+	  public void nudgeElbowUp() {
+		positionController.requestPosition(getActualPosition() + NUDGE_COUNT);
 	  }
 
 }

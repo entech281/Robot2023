@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
@@ -12,7 +15,7 @@ import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
 import frc.robot.commands.HomeElbowCommand;
-import frc.robot.commands.PositionArmCommand;
+import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.SetArmSpeedCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
@@ -21,6 +24,10 @@ import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
+import frc.robot.commands.nudge.NudgeElbowDownCommand;
+import frc.robot.commands.nudge.NudgeElbowUpCommand;
+import frc.robot.commands.nudge.NudgeTelescopeBackwardsCommand;
+import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.commands.supplier.TargetNodeSupplier;
 import frc.robot.filters.DriveInput;
@@ -35,7 +42,7 @@ import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
 /**
  *
- * @author dcowden 
+ * @author dcowden
  * @author aheitkamp
  */
 public class CommandFactory {
@@ -47,7 +54,7 @@ public class CommandFactory {
 	private ArmSubsystem armSubsystem;
 	private ElbowSubsystem elbowSubsystem;
 	private GripperSubsystem gripperSubsystem;
-    
+
     public CommandFactory(RobotState robotState, SubsystemHolder allSubsystems ){
     	this.driveSubsystem = allSubsystems.getDrive();
     	this.navxSubsystem = allSubsystems.getNavx();
@@ -57,7 +64,7 @@ public class CommandFactory {
         this.gripperSubsystem = allSubsystems.getGripper();
         this.robotState = robotState;
     }
-    
+
     public List<Command> getAutoCommandChoices(){
     	//these commands will be available for autonomous mode on the PREMATCH tab
     	Command c1 = new NudgeDirectionCommand(driveSubsystem,NudgeDirectionCommand.DIRECTION.FORWARD);
@@ -65,10 +72,10 @@ public class CommandFactory {
     	Command c2 = new NudgeDirectionCommand(driveSubsystem,NudgeDirectionCommand.DIRECTION.RIGHT);
     	c2.setName("Nudge Right");
         Command c3 = new SequentialCommandGroup(
-        new DriveDirectionCommand(driveSubsystem, 2,0.0, 0.5)
-        , new DriveDirectionCommand(driveSubsystem, 0.0, 2, 0.5)
-        , new DriveDirectionCommand(driveSubsystem, -2,0.0, 0.5)
-        , new DriveDirectionCommand(driveSubsystem, 0.0, -2, 0.5)
+            new DriveDirectionCommand(driveSubsystem, 2,0.0, 0.5)
+            , new DriveDirectionCommand(driveSubsystem, 0.0, 2, 0.5)
+            , new DriveDirectionCommand(driveSubsystem, -2,0.0, 0.5)
+            , new DriveDirectionCommand(driveSubsystem, 0.0, -2, 0.5)
         );
         c3.setName("Autonomous");
         Command c4 = driveDistanceCommand(2);
@@ -80,9 +87,9 @@ public class CommandFactory {
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
 			new HomeElbowCommand(elbowSubsystem),
-			new PositionArmCommand(armSubsystem,0.35, false),
-			new PositionArmCommand(armSubsystem,0.2, false),
-			new PositionArmCommand(armSubsystem,0.08, false),
+			new PositionTelescopeCommand(armSubsystem,0.35, false),
+			new PositionTelescopeCommand(armSubsystem,0.2, false),
+			new PositionTelescopeCommand(armSubsystem,0.08, false),
 			new PositionElbowCommand(elbowSubsystem,25, false),
 			new PositionElbowCommand(elbowSubsystem,60,false),
 			new PositionElbowCommand(elbowSubsystem,90, false),
@@ -93,28 +100,28 @@ public class CommandFactory {
 			new SetArmSpeedCommand(armSubsystem,0.1)
     	);
     }
-    
+
     public Command deployHighCommand() {
     	//note that the subsystems will HOME before the moves are complete!
     	return new SequentialCommandGroup(
-    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS,true),
+    			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS,true),
     			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true ),
-    			new GripperCommand( gripperSubsystem, GripperState.kOpen) 
+    			new GripperCommand( gripperSubsystem, GripperState.kOpen)
     	);
     }
     //this is probably also the home position
     public Command carryPosition() {
     	return new SequentialCommandGroup(
-    			new PositionArmCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true),
+    			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true),
     			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true ),
-    			new GripperCommand( gripperSubsystem, GripperState.kClose) 
-    	);    	
+    			new GripperCommand( gripperSubsystem, GripperState.kClose)
+    	);
     }
-    
+
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
     	return new DriveInputYawMixer(robotState, operatorJoystickInput);
     }
-    
+
     public void setDefaultDriveCommand (Command newDefaultCommand ) {
     	driveSubsystem.setDefaultCommand(newDefaultCommand);
     }
@@ -122,7 +129,7 @@ public class CommandFactory {
     public Command filteredDriveCommand( Supplier<DriveInput> operatorInput, ShuffleboardDriverControls driverControls) {
     	return new FilteredDriveCommand(driveSubsystem,addYawToOperatorJoystickInput( operatorInput),driverControls);
     }
-    
+
     public Command driveCommand(Supplier<DriveInput> operatorInput) {
         return new SimpleDriveCommand(driveSubsystem, addYawToOperatorJoystickInput(operatorInput));
     }
@@ -132,13 +139,13 @@ public class CommandFactory {
 	}
 
 	public Command setDriverYawEnableCommand(ShuffleboardDriverControls shuffleboardControls , boolean newValue) {
-		return new SetDriverYawEnableCommand(shuffleboardControls,newValue);		
+		return new SetDriverYawEnableCommand(shuffleboardControls,newValue);
 	}
-	
+
     public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {
-  		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState, robotState  );    	
-    }    
-    
+  		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState, robotState  );
+    }
+
     public Command snapYawDegreesCommand(double angle) {
         return new SnapYawDegreesCommand(driveSubsystem, angle,robotState );
     }
@@ -173,5 +180,62 @@ public class CommandFactory {
 
     public Command driveDistanceCommand(double distanceMeters) {
         return new DriveDirectionCommand(driveSubsystem, distanceMeters, 0, 0);
+    }
+
+    public Command groundRetractedPosition() {
+        return new PositionElbowCommand(elbowSubsystem, 3, true);
+    }
+
+    public Command nudgeElbowUpCommand() {
+        return new NudgeElbowUpCommand(elbowSubsystem, false);
+    }
+
+    public Command nudgeElbowDownCommand() {
+        return new NudgeElbowDownCommand(elbowSubsystem, false);
+    }
+
+    public Command NudgeArmForwardCommand() {
+        return new NudgeTelescopeForwardCommand(armSubsystem, false);
+    }
+
+    public Command nudgeArmBackwardsCommand() {
+        return new NudgeTelescopeBackwardsCommand(armSubsystem, false);
+    }
+
+    public Command farScoringPositionCommand() {
+        return new SequentialCommandGroup(
+            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
+            new ParallelCommandGroup(
+                new PositionElbowCommand(elbowSubsystem, 10, true),
+                new PositionTelescopeCommand(armSubsystem, 99, true)
+            )
+        );
+    }
+
+    public Command middleScoringPositioCommand() {
+        return new SequentialCommandGroup(
+            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
+            new ParallelCommandGroup(
+                new PositionElbowCommand(elbowSubsystem, 8, true),
+                new PositionTelescopeCommand(armSubsystem, 99, true)
+            )
+        );
+    }
+
+    public Command groundScoringPosition() {
+        return new ParallelCommandGroup(
+            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
+            new PositionTelescopeCommand(armSubsystem, 75, true)
+        );
+    }
+
+    public Command LoadingPositionCommand() {
+        return new SequentialCommandGroup(
+            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
+            new ParallelCommandGroup(
+                new PositionElbowCommand(elbowSubsystem, 10, true),
+                new PositionTelescopeCommand(armSubsystem, 99, true)
+            )
+        );
     }
 }

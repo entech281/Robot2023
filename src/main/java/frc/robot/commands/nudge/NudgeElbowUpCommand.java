@@ -2,34 +2,28 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.nudge;
 
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ElbowSubsystem;
+import frc.robot.commands.EntechCommandBase;
 
 /** An example command that uses an example subsystem. */
-public class PositionArmCommand extends EntechCommandBase {
+public class NudgeElbowUpCommand extends EntechCommandBase {
 
-  private final ArmSubsystem armSubsystem;
-  private final double requestedPosition;
+  private final ElbowSubsystem elbowSubsystem;
   private boolean waitToComplete = false;
   /**
    * Creates a new PositionArmCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PositionArmCommand(ArmSubsystem subsystem, double requestedPosition, boolean waitToComplete) {
-      super(subsystem);
-      armSubsystem = subsystem;
-      this.requestedPosition = requestedPosition;
+  public NudgeElbowUpCommand(ElbowSubsystem elbowSubsystem, boolean waitToComplete) {
+      super(elbowSubsystem);
+      this.elbowSubsystem = elbowSubsystem;
       this.waitToComplete = waitToComplete;
   }
 
-  @Override
-	public String getName() {
-		return super.getName() + "@" + requestedPosition + "m";
-	}
-
-// Called when the command is initially scheduled.
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
@@ -38,20 +32,20 @@ public class PositionArmCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.requestPosition(requestedPosition);
+    elbowSubsystem.nudgeElbowUp();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armSubsystem.stop();
+	  elbowSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
 	  if ( waitToComplete) {
-		  return armSubsystem.isAtRequestedPosition();
+		  return elbowSubsystem.isAtRequestedPosition();
 	  }
 	  else {
 		  return true;
