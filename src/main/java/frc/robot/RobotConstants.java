@@ -111,6 +111,7 @@ public final class RobotConstants {
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
+        public static final int OPERATOR_JOYSTICK = 1;
     }
     public interface DRIVE{
     	public static final int CURRENT_LIMIT_AMPS = 30;
@@ -129,6 +130,14 @@ public final class RobotConstants {
             public static final int RIGHT = 90;
             public static final int BACKWARD = 180;
             public static final int LEFT = 270;
+        }
+    }
+    public interface OPERATOR_STICK {
+        public interface POV {
+            public static final int UP = 0;
+            public static final int IN = 90;
+            public static final int DOWN = 180;
+            public static final int OUT = 270;
         }
     }
     public interface CAN {
