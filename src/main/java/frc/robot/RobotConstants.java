@@ -63,12 +63,14 @@ public final class RobotConstants {
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
-    		  public static double MIN_METERS= 0.02;
-    		  public static double CARRY_METERS = 0.1;
-    		  public static double SCORE_MIDDLE_METERS = 0.3;
-    		  public static double SCORE_HIGH_METERS = 0.4;
-    		  public static double SAFE = 0.1;
-    		  public static double MAX_METERS = 0.5;
+    		  public static final double MIN_METERS= 0.02;
+    		  public static final double CARRY_METERS = 0.1;
+    		  public static final double SCORE_MIDDLE_METERS = 0.3;
+    		  public static final double SCORE_HIGH_METERS = 0.4;
+    		  public static final double SAFE = 0.1;
+    		  public static final double MAX_METERS = 0.5; //0.52 max extension
+              public static final double MIN_ARM_LENGTH_M = 0.97155; 
+              public static final double MAX_ARM_LENGTH_M = 1.47155;
     	}
         
         public static final double MIN_EXTENSION_METERS = 0.9906; //39 inches from center of robot to center of claw
@@ -96,7 +98,7 @@ public final class RobotConstants {
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES=3.0;    		
     		  public static double CARRY_DEGREES = 20.0;
-    		  public static double SAFE_ANGLE=30.0;    		  
+    		  public static double SAFE_ANGLE = 32.0;    		  
     		  public static double SCORE_MIDDLE_DEGREES = 60;
     		  public static double SCORE_HIGH_DEGREES = 90;    		  
       		  public static final double MAX_POSITION_DEGREES=100.0;    		  

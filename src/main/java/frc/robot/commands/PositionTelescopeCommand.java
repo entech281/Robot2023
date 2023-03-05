@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.RobotConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 /** An example command that uses an example subsystem. */
@@ -38,7 +39,7 @@ public class PositionTelescopeCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.requestPosition(requestedPosition);
+    armSubsystem.requestPosition(requestedPosition - RobotConstants.ARM.MIN_EXTENSION_METERS);
   }
 
   // Called once the command ends or is interrupted.

@@ -3,6 +3,8 @@ package frc.robot;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javax.swing.text.Position;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -87,9 +89,9 @@ public class CommandFactory {
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
 			new HomeElbowCommand(elbowSubsystem),
-			new PositionArmCommand(armSubsystem,0.35, false),
-			new PositionArmCommand(armSubsystem,0.2, false),
-			new PositionArmCommand(armSubsystem,0.08, false),
+			new PositionTelescopeCommand(armSubsystem,0.35, false),
+			new PositionTelescopeCommand(armSubsystem,0.2, false),
+			new PositionTelescopeCommand(armSubsystem,0.08, false),
 			new PositionElbowCommand(elbowSubsystem,25, false),
 			new PositionElbowCommand(elbowSubsystem,60,false),
 			new PositionElbowCommand(elbowSubsystem,90, false),
@@ -183,7 +185,7 @@ public class CommandFactory {
     }
 
     public Command groundRetractedPosition() {
-        return new PositionElbowCommand(elbowSubsystem, 3, true);
+        return new PositionElbowCommand(elbowSubsystem, 12, true);
     }
 
     public Command nudgeElbowUpCommand() {
@@ -206,8 +208,8 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
-                new PositionElbowCommand(elbowSubsystem, 10, true),
-                new PositionTelescopeCommand(armSubsystem, 99, true)
+                new PositionElbowCommand(elbowSubsystem, 91, true),
+                new PositionTelescopeCommand(armSubsystem, 1.4, true)
             )
         );
     }
@@ -216,16 +218,18 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
-                new PositionElbowCommand(elbowSubsystem, 8, true),
-                new PositionTelescopeCommand(armSubsystem, 99, true)
+                new PositionElbowCommand(elbowSubsystem, 63, true),
+                new PositionTelescopeCommand(armSubsystem, 1.1, true)
             )
         );
     }
 
     public Command groundScoringPosition() {
         return new ParallelCommandGroup(
-            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
-            new PositionTelescopeCommand(armSubsystem, 75, true)
+            new ConditionalCommand(new InstantCommand(), 
+            new SequentialCommandGroup( groundRetractedPosition(), new PositionElbowCommand(elbowSubsystem, 35, false)),
+            elbowSubsystem::isSafeToExtendArm),
+            new PositionTelescopeCommand(armSubsystem, 0, true)
         );
     }
 
@@ -233,8 +237,8 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
-                new PositionElbowCommand(elbowSubsystem, 10, true),
-                new PositionTelescopeCommand(armSubsystem, 99, true)
+                new PositionElbowCommand(elbowSubsystem, 90, true),
+                new PositionTelescopeCommand(armSubsystem, 1.4, true)
             )
         );
     }
