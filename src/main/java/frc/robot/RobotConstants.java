@@ -49,13 +49,13 @@ public final class RobotConstants {
     public interface ARM{
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = true;
-    		public static final double MOVE_TOLERANCE_METERS=0.005; 
+    		public static final double MOVE_TOLERANCE_METERS=0.012; 
     		public static final int CURRENT_LIMIT_AMPS=8;
     		public static final int MAX_SPIKE_CURRENT=12;
     		public static final double COUNTS_PER_METER=0.004826; 
     	} 
     	public interface HOMING{
-    		public static final double HOMING_SPEED_PERCENT=0.1;
+    		public static final double HOMING_SPEED_PERCENT=0.35;
     	}
     	public interface TUNING{
     		public static final double P_GAIN=12.0;
@@ -63,12 +63,14 @@ public final class RobotConstants {
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
-    		  public static double MIN_METERS= 0.02;
-    		  public static double CARRY_METERS = 0.1;
-    		  public static double SCORE_MIDDLE_METERS = 0.3;
-    		  public static double SCORE_HIGH_METERS = 0.4;
-    		  public static double SAFE = 0.1;
-    		  public static double MAX_METERS = 0.5;
+    		  public static final double MIN_METERS= 0.02;
+    		  public static final double CARRY_METERS = 0.1;
+    		  public static final double SCORE_MIDDLE_METERS = 0.3;
+    		  public static final double SCORE_HIGH_METERS = 0.4;
+    		  public static final double SAFE = 0.1;
+    		  public static final double MAX_METERS = 0.56; //0.52 max extension
+              public static final double MIN_ARM_LENGTH_M = 0.87155; 
+              public static final double MAX_ARM_LENGTH_M = 1.47155;
     	}
         
         public static final double MIN_EXTENSION_METERS = 0.9906; //39 inches from center of robot to center of claw
@@ -80,7 +82,7 @@ public final class RobotConstants {
         public static final double MAX_ANGLE_DEGREES = 107.0; //17 degrees above horizontal (90)
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = false;
-    		public static final double MOVE_TOLERANCE_DEGREES=0.5; 
+    		public static final double MOVE_TOLERANCE_DEGREES= 1; 
     		public static final int CURRENT_LIMIT_AMPS=8;
     		public static final int MAX_SPIKE_CURRENT=12;
     		public static final double COUNTS_PER_DEGREE=2.1383; 
@@ -90,13 +92,13 @@ public final class RobotConstants {
     	}
     	public interface TUNING{
     		public static final double P_GAIN=0.04;
-    		public static final double I_GAIN=0.0001;
+    		public static final double I_GAIN=0.0005;
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES=3.0;    		
     		  public static double CARRY_DEGREES = 20.0;
-    		  public static double SAFE_ANGLE=31.0;    		  
+    		  public static double SAFE_ANGLE = 31.0;    		  
     		  public static double SCORE_MIDDLE_DEGREES = 60;
     		  public static double SCORE_HIGH_DEGREES = 90;    		  
       		  public static final double MAX_POSITION_DEGREES=100.0;    		  

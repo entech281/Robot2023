@@ -195,6 +195,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     private void startHoming() {
     	if ( isAtLowerLimit() ) {
     		setMotorSpeed(0);
+			axisState = MotionState.HOMED;
     	}
     	else {
     		setMotorSpeedInternal(-config.getHomingSpeedPercent());

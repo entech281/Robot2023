@@ -10,6 +10,7 @@ import frc.robot.subsystems.ArmSubsystem;
 public class HomeArmCommand extends EntechCommandBase {
 
   private final ArmSubsystem armSubsystem;
+  private boolean waitToComplete = false;
 
   /**
    * Creates a new PositionArmCommand.
@@ -18,11 +19,19 @@ public class HomeArmCommand extends EntechCommandBase {
    */
   public HomeArmCommand(ArmSubsystem subsystem) {
       super(subsystem);
-      armSubsystem = subsystem;
+      this.armSubsystem = subsystem;
 
   }
+  public HomeArmCommand(ArmSubsystem subsystem, boolean waitToComplete) {
+    super(subsystem);
+    this.armSubsystem = subsystem;
+    this.waitToComplete = waitToComplete;
+}
 
-
+  @Override
+  public String getName(){
+     return super.getName() + "wait:" + waitToComplete;
+  }
 // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -43,7 +52,11 @@ public class HomeArmCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	  return true;
+	  if (waitToComplete) {
+		  return armSubsystem.isHomed();
+	  } else {
+      return false;
+    }
   }
 
   // Returns true if this command should run when robot is disabled.

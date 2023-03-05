@@ -10,17 +10,17 @@ import frc.robot.subsystems.ElbowSubsystem;
 public class PositionElbowCommand extends EntechCommandBase {
 
   private final ElbowSubsystem elbowSubsystem;
-  private final double desiredPosition;
+  private final double desiredAngle;
   private boolean waitToComplete = false;
   /**
    * Creates a new PositionArmCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public PositionElbowCommand(ElbowSubsystem elbowSubsystem, double desiredPosition, boolean waitToComplete) {
+  public PositionElbowCommand(ElbowSubsystem elbowSubsystem, double desiredAngle, boolean waitToComplete) {
       super(elbowSubsystem);
       this.elbowSubsystem = elbowSubsystem;
-      this.desiredPosition = desiredPosition;
+      this.desiredAngle = desiredAngle;
       this.waitToComplete = waitToComplete;
   }
 
@@ -32,13 +32,13 @@ public class PositionElbowCommand extends EntechCommandBase {
 
   @Override  
   public String getName() {
-	return super.getName() + "@" + desiredPosition + "deg";
+	return super.getName() + "@" + desiredAngle + "deg";
   }  
   
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elbowSubsystem.requestPosition(desiredPosition);
+    elbowSubsystem.requestPosition(desiredAngle);
   }
 
   // Called once the command ends or is interrupted.

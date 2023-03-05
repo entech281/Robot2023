@@ -128,6 +128,14 @@ public void setPosition(double position) {
 	  }
   }
 
+  public boolean isHomed() {
+	if(isEnabled()){
+		return positionController.isHomed();
+	} else {
+		return false;
+	}
+  }
+
   public double getActualPosition() {
 	  if ( isEnabled()) {
 		  return positionController.getActualPosition();
