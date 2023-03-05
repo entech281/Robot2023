@@ -104,7 +104,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 	@Override
     public void initSendable(SendableBuilder builder) {
   	    builder.setSmartDashboardType("PositionController:" + config.getName());
-  	    builder.addStringProperty("Status:", this::getHomingStateString , null);		  
+  	    builder.addStringProperty("Status:", this::getStatusString , null);		  
   	    builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
   	    builder.addDoubleProperty("ActualPos", this::getActualPosition, null);
   	    builder.addDoubleProperty("MotorOut", this::getMotorOutput, null);
@@ -114,8 +114,23 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 
     }
 	
-	public String getHomingStateString() {
-		return this.axisState+"";
+	public String getStatusString() {
+		if ( axisState == MotionState.HOMED) {
+			if ( requestedPosition.isPresent()) {
+				if ( this.isAtRequestedPosition()) {
+					return "ARRIVED";
+				}
+				else{
+					return "MOVING";
+				}
+			}
+			else {
+				return "HOMED/IDLE";
+			}
+		}
+		else {
+			return this.axisState+"";
+		}		
 	}
 	public PositionControllerConfig getConfig() {
 		return this.config;
@@ -145,14 +160,9 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   		if ( requestedPosition.isPresent()) {
   	    	if ( isHomed() ) {
   	    		return Math.abs(getEncoderValue() - requestedPosition.get()) < config.getPositionTolerance();
-  	    	}
-  	    	else {
-  	    		return false;
-  	    	}  			
+  	    	}			
   		}
-  		else {
-  			return false;
-  		}
+  		return false;
 	}    
     
   	@Override
