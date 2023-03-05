@@ -87,9 +87,9 @@ public class CommandFactory {
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
 			new HomeElbowCommand(elbowSubsystem),
-			new PositionArmCommand(armSubsystem,0.35, false),
-			new PositionArmCommand(armSubsystem,0.2, false),
-			new PositionArmCommand(armSubsystem,0.08, false),
+			new PositionTelescopeCommand(armSubsystem,0.35, false),
+			new PositionTelescopeCommand(armSubsystem,0.2, false),
+			new PositionTelescopeCommand(armSubsystem,0.08, false),
 			new PositionElbowCommand(elbowSubsystem,25, false),
 			new PositionElbowCommand(elbowSubsystem,60,false),
 			new PositionElbowCommand(elbowSubsystem,90, false),
