@@ -126,10 +126,12 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   	    builder.addStringProperty("Status:", this::getStatusString , null);		  
   	    builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
   	    builder.addDoubleProperty("ActualPos", this::getActualPosition, null);
+  	    builder.addBooleanProperty("InPosition", this::isAtRequestedPosition, null);  	    
   	    builder.addDoubleProperty("MotorOut", this::getMotorOutput, null);
   	    builder.addBooleanProperty("Homed", this::isHomed, null);
   	    builder.addBooleanProperty("UpperLimit", this::isAtUpperLimit, null);
   	    builder.addBooleanProperty("LowerLimit", this::isAtLowerLimit, null);
+
 
     }
 	
