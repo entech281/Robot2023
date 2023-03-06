@@ -82,7 +82,7 @@ public final class RobotConstants {
         public static final double MAX_ANGLE_DEGREES = 107.0; //17 degrees above horizontal (90)
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = false;
-    		public static final double MOVE_TOLERANCE_DEGREES= 1; 
+    		public static final double MOVE_TOLERANCE_DEGREES= 1.0; 
     		public static final int CURRENT_LIMIT_AMPS=8;
     		public static final int MAX_SPIKE_CURRENT=12;
     		public static final double COUNTS_PER_DEGREE=2.1383; 

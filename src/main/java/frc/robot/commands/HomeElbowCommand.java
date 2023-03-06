@@ -53,7 +53,7 @@ public class HomeElbowCommand extends EntechCommandBase {
   @Override
   public boolean isFinished() {
 	  if ( waitToComplete) {
-		  return elbowSubsystem.isAtRequestedPosition();
+		  return elbowSubsystem.isHomed();
 	  } else {
 		  return true;
 	  }

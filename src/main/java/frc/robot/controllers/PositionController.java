@@ -1,6 +1,6 @@
 package frc.robot.controllers;
 
-import frc.robot.controllers.SparkMaxPositionController.MotionState;
+import frc.robot.controllers.SparkMaxPositionController.HomingState;
 
 public interface PositionController {
 
@@ -13,6 +13,6 @@ public interface PositionController {
 	boolean isAtUpperLimit();
 	boolean isHomed();
 
-	MotionState getMotionState();
+	HomingState getMotionState();
 
 }

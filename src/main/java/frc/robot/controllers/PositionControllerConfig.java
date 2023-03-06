@@ -64,7 +64,6 @@ public class PositionControllerConfig {
 	private double maxPosition = 0;
 	private boolean inverted = false;
 
-
 	public boolean isInverted() {
 		return inverted;
 	}
