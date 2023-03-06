@@ -65,10 +65,10 @@ public class Robot extends TimedRobot {
 			s.initialize();
 		}				
 	});
-	
+
 	shuffleboardControls = new ShuffleboardDriverControls();	
 	shuffleboardInterface = new ShuffleboardInterface();	
-	
+
 	RobotState robotState = new RobotState();	  
 	robotContext = new RobotContext(new AlignmentCalculator(),
 			robotState, shuffleboardInterface,drive,navx,vision, arm, elbow, gripper, new VisionFirstNavxAsBackupPoseEstimator(true),
@@ -78,7 +78,6 @@ public class Robot extends TimedRobot {
 	
 	oi = new OperatorInterface(commandFactory,shuffleboardControls);
 	setupShuffleboardInterface();
-
 	Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
 	c.enableDigital();
 	
@@ -136,7 +135,8 @@ public class Robot extends TimedRobot {
 
     // Get selected routine 
     autoCommand = shuffleboardControls.getSelectedAutoCommand();
-
+    allSubsystems.getArm().clearRequestedPosition();
+    allSubsystems.getElbow().clearRequestedPosition();
     // schedule the autonomous command
     if (autoCommand != null) {
       autoCommand.schedule();
@@ -161,8 +161,8 @@ public class Robot extends TimedRobot {
     oi.setDefaultDriveCommand();
     
     //reset positions on arms
-    allSubsystems.getArm().homePosition();
-    //allSubsystems.getElbow().homePosition();
+    allSubsystems.getArm().clearRequestedPosition();
+    allSubsystems.getElbow().clearRequestedPosition();
   }
 
   /** This function is called periodically during operator control. */

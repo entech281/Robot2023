@@ -1,7 +1,7 @@
 package frc.robot.controllers;
 
 
-import frc.robot.controllers.SparkMaxPositionController.MotionState;
+import frc.robot.controllers.SparkMaxPositionController.HomingState;
 
 /**
  * for unit testing position controller and subsystems that 
@@ -53,14 +53,14 @@ public class MockPositionController implements PositionController{
 		this.homed = homed;
 	}
 
-	public void setMotionState(MotionState motionState) {
+	public void setMotionState(HomingState motionState) {
 		this.motionState = motionState;
 	}
 	private double actualPosition  = 0;
 	private double requestedPosition = 0;
 	private boolean inMotion = false;
 	private boolean homed = false;
-	private MotionState motionState;
+	private HomingState motionState;
 	private boolean lowerLimitTripped = false;
 	private boolean upperLimitTripped = false;
 
@@ -110,7 +110,7 @@ public class MockPositionController implements PositionController{
 	}
 
 	@Override
-	public MotionState getMotionState() {
+	public HomingState getMotionState() {
 		return motionState;
 	}
 

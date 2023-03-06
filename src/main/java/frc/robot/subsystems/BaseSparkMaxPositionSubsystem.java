@@ -1,15 +1,17 @@
-package frc.robot.controllers;
+package frc.robot.subsystems;
 
 import java.util.Optional;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
+import frc.robot.controllers.PositionControllerConfig;
 
 /**
  * Overview:
@@ -32,21 +34,33 @@ import frc.robot.RobotConstants;
  * @author davec
  *
  */
-public class SparkMaxPositionController implements Sendable, PositionController {
+public abstract class BaseSparkMaxPositionSubsystem extends EntechSubsystem{
 
-	public enum HomingState { FINDING_LIMIT, HOMED, UNINITIALIZED }
-	
+	public enum HomingState { FINDING_LIMIT, HOMED, UNINITIALIZED }	
 	public static final int CAN_TIMEOUT_MILLIS = 1000;	
 	protected CANSparkMax spark;
 	private HomingState axisState = HomingState.UNINITIALIZED;
-	
+	protected boolean enabled = false;
     private PositionControllerConfig config;
     private RelativeEncoder encoder;
     private SparkMaxLimitSwitch lowerLimit;
     private Optional<Double> requestedPosition = Optional.empty();
     private SparkMaxLimitSwitch upperLimit;    
-
-	public SparkMaxPositionController (CANSparkMax spark,  PositionControllerConfig config, SparkMaxLimitSwitch lowerLimit, 
+    protected boolean liveMode = false;
+    public BaseSparkMaxPositionSubsystem () {
+    	
+    }
+    
+    public void configure(CANSparkMax spark, PositionControllerConfig config ) {
+    	configure(spark, 
+    			config, 
+    			spark.getReverseLimitSwitch(Type.kNormallyOpen), 
+    			spark.getForwardLimitSwitch(Type.kNormallyOpen),
+    			spark.getEncoder()
+    			);
+    }
+    
+    public void configure(CANSparkMax spark,  PositionControllerConfig config, SparkMaxLimitSwitch lowerLimit, 
 			SparkMaxLimitSwitch upperLimit, RelativeEncoder encoder) {
 		this.spark = spark;		
 		
@@ -61,42 +75,37 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 
 		this.encoder = encoder;
 		this.config = config;
-		clearRequestedPosition();
-	}
+		clearRequestedPosition();  
+    }
     
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled( boolean enabled) {
+		this.enabled  = enabled;
+	}
     public void clearRequestedPosition() {
     	this.requestedPosition= Optional.empty();
     	setMotorSpeedInternal(0.0);
     }
 
-  	@Override
 	public double getActualPosition() {
     	return getEncoderValue();
     }	
 	
     public PositionControllerConfig getConfig() {
 		return this.config;
-	}
-
-    @Override
-	public HomingState getMotionState() {
-  	  return axisState;
-    }      
+	}   
 
 	public double getMotorOutput() {
 			return spark.getAppliedOutput();
 	}      
 	
-	@Override
-	public double getRequestedPosition() {
-    	if ( requestedPosition.isPresent()) {
-    		return requestedPosition.get();
-    	}
-    	else {
-    		return RobotConstants.INDICATOR_VALUES.POSITION_NOT_SET;
-    	}
-    }
-	
+	public Optional<Double> getRequestedPosition() {
+		return requestedPosition;
+	}
+
 	public String getStatusString() {
 		if ( axisState == HomingState.HOMED) {
 			if ( requestedPosition.isPresent()) {
@@ -122,26 +131,47 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 	
 	@Override
     public void initSendable(SendableBuilder builder) {
-  	    builder.setSmartDashboardType("PositionController:" + config.getName());
   	    builder.addStringProperty("Status:", this::getStatusString , null);		  
-  	    builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
+  	    builder.addDoubleProperty("RequestedPos", this::getRequestedPositionAsDouble, null);
   	    builder.addDoubleProperty("ActualPos", this::getActualPosition, null);
-  	    builder.addBooleanProperty("InPosition", this::isAtRequestedPosition, null);  	    
   	    builder.addDoubleProperty("MotorOut", this::getMotorOutput, null);
   	    builder.addBooleanProperty("Homed", this::isHomed, null);
   	    builder.addBooleanProperty("UpperLimit", this::isAtUpperLimit, null);
   	    builder.addBooleanProperty("LowerLimit", this::isAtLowerLimit, null);
-
+  	    if ( liveMode ) {
+  	    	builder.addDoubleProperty("P",this::getP,this::setP);
+  	    }
 
     }
 	
-    @Override
+	/**
+	 * Live Mode things
+	 * 
+	 */
+	private void setP(double p) {
+		spark.getPIDController().setP(p);
+	}
+	private double getP() {
+		return spark.getPIDController().getP();
+	}
+	
+	private double getRequestedPositionAsDouble() {
+		if ( requestedPosition.isPresent()) {
+			return requestedPosition.get();
+		}
+		else {
+			return RobotConstants.INDICATOR_VALUES.POSITION_NOT_SET;
+		}
+	}
+	
 	public boolean isAtLowerLimit() {
     	return lowerLimit.isPressed();
     }    
-    
 
-    @Override
+	public boolean isAtUpperLimit() {
+    	return upperLimit.isPressed();
+    }	
+	
 	public boolean isAtRequestedPosition() {
   		if ( requestedPosition.isPresent()) {
   	    	if ( isHomed() ) {
@@ -151,17 +181,10 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   		return false;
 	}
     
-    @Override
-	public boolean isAtUpperLimit() {
-    	return upperLimit.isPressed();
-    }
-    
-  	@Override
-	public boolean isHomed() {
+	public boolean isHomed() {;
   	  return axisState == HomingState.HOMED;
     }    
     
-  	@Override
 	public void requestPosition(double requestedPosition) {
   	  if ( isPositionWithinSoftLimits(requestedPosition)) {
   		  this.requestedPosition = Optional.of(requestedPosition);		  
@@ -179,16 +202,13 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     	setMotorSpeedInternal(input);
     }
     
-    public void setMotorSpeedInternal(double input) {
-    	spark.set(correctDirection(input));
-    }
+
     public void stop() {
     	spark.stopMotor();
     }
     
-
-	@Override
-	public void update() {	 
+    @Override
+	public void periodic() {	 
       	 switch ( axisState) {
       		 case UNINITIALIZED:
       			 break;
@@ -201,7 +221,11 @@ public class SparkMaxPositionController implements Sendable, PositionController 
       			 updateRequestedPosition();
   	    }
   	}
-  	
+
+    private void setMotorSpeedInternal(double input) {
+    	spark.set(correctDirection(input));
+    }    
+    
     private void arrivedHome() {
 		setMotorSpeedInternal(0);
 		setEncoder(config.getMinPosition());		
@@ -228,6 +252,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     private void setEncoder( double value ) {
     	encoder.setPosition(correctDirection(value));
     }
+    
     private void startHoming() {
     	//if we are already on the limit switch, we'll get homed in the next update loop
     	setMotorSpeedInternal(-config.getHomingSpeedPercent());
@@ -240,5 +265,5 @@ public class SparkMaxPositionController implements Sendable, PositionController 
         	spark.getPIDController().setIAccum(0);    		
     	}
     }
-  
 }
+

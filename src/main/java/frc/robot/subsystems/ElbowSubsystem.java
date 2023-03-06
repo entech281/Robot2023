@@ -5,9 +5,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
+
 import frc.robot.RobotConstants;
-import frc.robot.RobotConstants.ARM;
 import frc.robot.RobotConstants.ELBOW;
 import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
@@ -41,13 +40,24 @@ public class ElbowSubsystem extends EntechSubsystem{
 		  this.enabled=true;
 		  this.elbowMotor = motor;
 		  this.positionController = controller;
+
 	  }
 
 	  //for match
 	  public ElbowSubsystem () {
 
 	  }
-
+	  public void clearRequestedPosition() {
+		  positionController.clearRequestedPosition();
+	  }
+	  public boolean isHomed() {
+		  if ( positionController != null) {
+			  return positionController.isHomed();
+		  }
+		  else {
+			  return false;
+		  }
+	  }
 	  @Override
 	  public void initialize() {
 		if ( enabled ) {
@@ -77,7 +87,6 @@ public class ElbowSubsystem extends EntechSubsystem{
 		    		elbowMotor.getForwardLimitSwitch(Type.kNormallyOpen),
 		    		elbowMotor.getEncoder()
 		    );
-
 		}
 	  }
 

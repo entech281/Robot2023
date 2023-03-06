@@ -35,13 +35,13 @@ public class HomeArmCommand extends EntechCommandBase {
 // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+	   armSubsystem.home();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.home();
+ 
   }
 
   // Called once the command ends or is interrupted.

@@ -6,10 +6,10 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
+
 import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.ARM;
-import frc.robot.RobotConstants.ELBOW;
+
 import frc.robot.controllers.PositionControllerConfig;
 import frc.robot.controllers.SparkMaxPositionController;
 
@@ -36,6 +36,7 @@ public class ArmSubsystem extends EntechSubsystem{
 public void homePosition() {
 	setPosition(ARM.POSITION_PRESETS.MIN_METERS);
 }
+
 public void setPosition(double position) {
 	if ( this.positionController  != null) {
 		this.positionController.requestPosition(position);
@@ -108,6 +109,9 @@ public void setPosition(double position) {
 	  positionController.requestPosition(requestedPosition);
   }
 
+  public void clearRequestedPosition() {
+	  positionController.clearRequestedPosition();
+  }
   public void home() {
 	  positionController.home();
   }
