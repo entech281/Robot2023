@@ -3,8 +3,6 @@ package frc.robot;
 import java.util.List;
 import java.util.function.Supplier;
 
-import javax.swing.text.Position;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -109,7 +107,8 @@ public class CommandFactory {
 			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
 			new HomeArmCommand(armSubsystem),
 			new SetArmSpeedCommand(armSubsystem,0.1),
-            new HomeArmCommand(armSubsystem, true)
+            new HomeArmCommand(armSubsystem, true),
+            homeTelescopeAndElbow()
     	);
     }
 
@@ -279,7 +278,27 @@ public class CommandFactory {
             )
         );
     }
+
+    public Command highScoringElbowPoseCommand() {
+        return new PositionElbowCommand(elbowSubsystem, 100, true);
+    }
+
+    public Command middleScoringElbowPoseCommand() {
+        return new PositionElbowCommand(elbowSubsystem, 65.22, true);
+    }
+
+    public Command grounScoringElbowPoseCommand() {
+        return new PositionElbowCommand(elbowSubsystem, 23.784, true);
+    }
+
+    public Command LoaidingScoringElbowPoseCommand() {
+        return new PositionElbowCommand(elbowSubsystem, 48.28, true);
+    }
     
+    public Command homeTelescopeAndElbow() {
+        return new SequentialCommandGroup( homeTelescopeAndElbow(), homeElbowCommand());
+    }
+
     public Command homeElbowCommand() {
         return new HomeElbowCommand(elbowSubsystem);
     }
