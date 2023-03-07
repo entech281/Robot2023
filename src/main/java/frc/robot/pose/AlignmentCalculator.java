@@ -46,9 +46,10 @@ public class AlignmentCalculator {
 			double elbowAngle = 100;
 			return new AlignmentCalculator(elbowAngle, telescopeLength);
 		} else {
-			double mastDistanceToGroundNode = 45.38;
-			double telescopeLength = Math.hypot(RobotConstants.MAST.MAST_DISTANCE_OVER_MID_NODE, mastDistanceToGroundNode);
-			double elbowAngle = Math.atan2(mastDistanceToGroundNode, RobotConstants.MAST.MAST_DISTANCE_OVER_MID_NODE);
+			double mastDistanceToGround = 45.38;
+			double robotMiddleDistanceToGround = 20;
+			double telescopeLength = Math.hypot(robotMiddleDistanceToGround, mastDistanceToGround);
+			double elbowAngle = Math.atan2(mastDistanceToGround, RobotConstants.MAST.MAST_DISTANCE_OVER_MID_NODE);
 			return new AlignmentCalculator(elbowAngle, telescopeLength);
 		}
 	}
