@@ -92,18 +92,18 @@ public class DriveSubsystem extends EntechSubsystem {
     robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
   }
 
-  public void brake() {
+  public void stop() {
     robotDrive.stopMotor();
   }
 
-  public void setCoast() {
+  public void setCoastMode() {
     frontLeftSparkMax.setIdleMode(IdleMode.kCoast);
     frontRightSparkMax.setIdleMode(IdleMode.kCoast);
     rearLeftSparkMax.setIdleMode(IdleMode.kCoast);
     rearRightSparkMax.setIdleMode(IdleMode.kCoast);
   }
 
-  public void setBrake() {
+  public void setBrakeMode() {
     frontLeftSparkMax.setIdleMode(IdleMode.kBrake);
     frontRightSparkMax.setIdleMode(IdleMode.kBrake);
     rearLeftSparkMax.setIdleMode(IdleMode.kBrake);
@@ -122,11 +122,15 @@ public boolean isEnabled() {
   }
 
   public double getAveragePosition() {
-    double possition = 0;
-    possition += frontLeftEncoder.getPosition();
-    possition += rearLeftEncoder.getPosition();
-    possition += frontRightEncoder.getPosition();
-    possition += rearRightEncoder.getPosition();
-    return possition / 4;
+    double position = 0;
+    position += frontLeftEncoder.getPosition();
+    position += rearLeftEncoder.getPosition();
+    position += frontRightEncoder.getPosition();
+    position += rearRightEncoder.getPosition();
+    return position / 4;
+  }
+
+  public double getAverageDistanceMeters() {
+    return getAveragePosition() / DRIVE.ENCODER_GEAR_RATIO / DRIVE.COUNTS_PER_METER;
   }
 }

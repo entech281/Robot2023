@@ -14,7 +14,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxLimitSwitch;
 
 import frc.robot.RobotConstants;
-import frc.robot.controllers.SparkMaxPositionController.MotionState;
+import frc.robot.controllers.SparkMaxPositionController.HomingState;
 
 public class TestSparkMaxPositionController {
 
@@ -96,7 +96,7 @@ public class TestSparkMaxPositionController {
 		sm.requestPosition(REQUESTED_POSITION);
 		sm.update();
 		assertEquals(REQUESTED_POSITION,sm.getRequestedPosition());
-		assertPositionAndState(sm,0,MotionState.FINDING_LIMIT);
+		assertPositionAndState(sm,0,HomingState.FINDING_LIMIT);
 		
 		//positive motor speed, opposite from the usual direction
 		verify(mockMotor2, Mockito.atLeastOnce()).set(HOMING_SPEED);				
@@ -104,13 +104,13 @@ public class TestSparkMaxPositionController {
 		//lowerLimit should do nothing, since they are reversed
 		fakeLowerLimit.setPressed(true);
 		sm.update();
-		assertEquals(MotionState.FINDING_LIMIT, sm.getMotionState());
+		assertEquals(HomingState.FINDING_LIMIT, sm.getMotionState());
 		
 		//upperLimit should trigger home
 		fakeUpperLimit.setPressed(true);
 		sm.update();
 		sm.update();
-		assertEquals(MotionState.HOMED, sm.getMotionState());
+		assertEquals(HomingState.HOMED, sm.getMotionState());
 		
 		//lower limit should be negative, vs positive
 		assertEquals(encoder.getPosition(),-LOWER_LIMIT, COMPARE_TOLERANCE);
@@ -126,11 +126,11 @@ public class TestSparkMaxPositionController {
 	public void testUsingSpeedControlInvalidatesRequestedPosition() {
 		c.requestPosition(REQUESTED_POSITION);
 		c.update();
-		assertPositionAndState(c,0,MotionState.FINDING_LIMIT);
+		assertPositionAndState(c,0,HomingState.FINDING_LIMIT);
 		fakeLowerLimit.setPressed(true);
 		c.update();
 		c.update();
-		assertEquals(MotionState.HOMED, c.getMotionState());
+		assertEquals(HomingState.HOMED, c.getMotionState());
 		assertEquals(REQUESTED_POSITION,c.getRequestedPosition(),COMPARE_TOLERANCE);
 		encoder.setPosition(300);
 		//on our way, we get a manual speed request
@@ -142,21 +142,22 @@ public class TestSparkMaxPositionController {
 	@Test
 	public void testSetupInitiallyUninitialized(){
 		assertLimits(c,false,false);
-		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
+		assertPositionAndState(c,0,HomingState.UNINITIALIZED);
 	}
 	
 	@Test
-	public void testCommandOutOfLimitsResultsInNoMovement() {
-		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
+	public void testCommandOutOfLimitsResultsInCappedValue() {
+		assertPositionAndState(c,0,HomingState.UNINITIALIZED);
 		c.requestPosition(UPPER_LIMIT + UPPER_LIMIT);
 		c.update();
-		assertPositionAndState(c,0,MotionState.UNINITIALIZED);
+		assertPositionAndState(c,0.0,HomingState.FINDING_LIMIT);
+        // TODO More mock action needed here.
 	}	
 	
 	@Test
 	public void testPositionRequestResultsInHoming() throws Exception{
 
-		assertEquals(MotionState.UNINITIALIZED, c.getMotionState());
+		assertEquals(HomingState.UNINITIALIZED, c.getMotionState());
 		assertFalse(c.isAtLowerLimit());
 		assertFalse(c.isAtUpperLimit());
 
@@ -165,13 +166,13 @@ public class TestSparkMaxPositionController {
 		verify(mockMotor).set(0);
 		verify(mockMotor).set(-HOMING_SPEED);
 		
-		assertEquals(MotionState.FINDING_LIMIT, c.getMotionState());
+		assertEquals(HomingState.FINDING_LIMIT, c.getMotionState());
 		
 		assertFalse(c.isAtLowerLimit());
 		assertFalse(c.isAtUpperLimit());
 		c.update();
 		c.update();
-		assertEquals(MotionState.FINDING_LIMIT, c.getMotionState());
+		assertEquals(HomingState.FINDING_LIMIT, c.getMotionState());
 		
 		
 		fakeLowerLimit.setPressed(true); 
@@ -180,7 +181,7 @@ public class TestSparkMaxPositionController {
 		assertTrue(c.isAtLowerLimit());
 
 		verify(mockMotor.getPIDController()).setReference((double)REQUESTED_POSITION,CANSparkMax.ControlType.kPosition);
-		assertEquals(MotionState.HOMED, c.getMotionState());		
+		assertEquals(HomingState.HOMED, c.getMotionState());		
 		assertEquals(LOWER_LIMIT, c.getActualPosition());
 		
 		assertFalse(c.isAtRequestedPosition());	
@@ -192,7 +193,7 @@ public class TestSparkMaxPositionController {
 		assertLimits(c,false,false);
 		assertFalse(c.isAtRequestedPosition());  //the users' requested position is still REQUESTED_POSITION
 		assertFalse(c.isAtLowerLimit());
-		assertEquals(MotionState.HOMED, c.getMotionState());
+		assertEquals(HomingState.HOMED, c.getMotionState());
 		assertEquals(LOWER_LIMIT, c.getActualPosition());
 
 	}
@@ -203,8 +204,13 @@ public class TestSparkMaxPositionController {
 		assertEquals(expectedUpperLimit,c.isAtUpperLimit());
 	}
 
-	protected void assertPositionAndState(SparkMaxPositionController c, int expectedPosition, MotionState expectedState) {
+	protected void assertPositionAndState(SparkMaxPositionController c, int expectedPosition, HomingState expectedState) {
 		assertEquals(expectedPosition,c.getActualPosition(),COMPARE_TOLERANCE);		
+		assertEquals(expectedState,c.getMotionState());
+	}		
+
+	protected void assertPositionAndState(SparkMaxPositionController c, double expectedPosition, HomingState expectedState) {
+		assertEquals(expectedPosition,c.getActualPosition(),COMPARE_TOLERANCE);
 		assertEquals(expectedState,c.getMotionState());
 	}		
 

@@ -54,7 +54,7 @@ public class AlignToAngleCommand extends EntechCommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        drive.brake();
+        drive.stop();
     }
 
     @Override

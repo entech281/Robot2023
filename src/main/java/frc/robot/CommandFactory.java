@@ -89,7 +89,7 @@ public class CommandFactory {
         c6.setName("Autonomous Middle");
         Command c7 = autonomusMiddleCommand();
         c7.setName("Ground Scoring");
-        Command c8 = LoadingPositionCommand();
+        Command c8 = loadingPositionCommand();
         c8.setName("Loading");
     	return List.of( c1, c2, c3 ,c4, c5, c6, c7, c8);
 
@@ -225,12 +225,20 @@ public class CommandFactory {
         return new NudgeElbowDownCommand(elbowSubsystem, false);
     }
 
-    public Command NudgeArmForwardCommand() {
+    public Command nudgeArmForwardCommand() {
         return new NudgeTelescopeForwardCommand(armSubsystem, false);
     }
 
-    public Command nudgeArmBackwardsCommand() {
+    public Command nudgeArmBackwardCommand() {
         return new NudgeTelescopeBackwardsCommand(armSubsystem, false);
+    }
+
+    public Command openGripperCommand() {
+        return new GripperCommand(gripperSubsystem, GripperState.kOpen);
+    }
+
+    public Command closeGripperCommand() {
+        return new GripperCommand(gripperSubsystem, GripperState.kClose);
     }
 
     public Command farScoringPositionCommand() {
@@ -262,7 +270,7 @@ public class CommandFactory {
         );
     }
 
-    public Command LoadingPositionCommand() {
+    public Command loadingPositionCommand() {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
@@ -270,5 +278,13 @@ public class CommandFactory {
                 new PositionTelescopeCommand(armSubsystem, 1.4, true)
             )
         );
+    }
+    
+    public Command homeElbowCommand() {
+        return new HomeElbowCommand(elbowSubsystem);
+    }
+
+    public Command homeTelescopeCommand() {
+        return new HomeArmCommand(armSubsystem);
     }
 }

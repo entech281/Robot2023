@@ -44,12 +44,7 @@ public class NudgeElbowUpCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	  if ( waitToComplete) {
-		  return elbowSubsystem.isAtRequestedPosition();
-	  }
-	  else {
-		  return true;
-	  }
+		  return false;
   }
 
   // Returns true if this command should run when robot is disabled.
