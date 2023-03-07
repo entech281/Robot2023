@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
 	shuffleboardInterface = new ShuffleboardInterface();	
 	
 	RobotState robotState = new RobotState();	  
-	robotContext = new RobotContext(new AlignmentCalculator(),
+	robotContext = new RobotContext(new AlignmentCalculator(kDefaultPeriod, kDefaultPeriod),
 			robotState, shuffleboardInterface,drive,navx,vision, arm, elbow, gripper, new VisionFirstNavxAsBackupPoseEstimator(true),
 			shuffleboardControls
 	);	

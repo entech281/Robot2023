@@ -9,7 +9,7 @@ import frc.robot.util.PoseUtil;
 
 public class TestAlignmentCalculator {
 
-	protected AlignmentCalculator calculator = new AlignmentCalculator();
+	protected AlignmentCalculator calculator = new AlignmentCalculator(0, 0);
 	public static final double TOLERANCE_DEGREES=1.0;
 	
 	

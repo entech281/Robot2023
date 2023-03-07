@@ -160,4 +160,8 @@ public final class RobotConstants {
     	public static boolean DEFAULT_YAW_LOCK = false;
     	public static boolean DEFAULT_FIELD_ABSOLUTE = true;
     }
+
+    public interface MAST{
+        public static final double MAST_DISTANCE_OVER_MID_NODE = 19.25;
+    }
 }
