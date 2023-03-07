@@ -164,9 +164,6 @@ public class Robot extends TimedRobot {
     }
     oi.setDefaultDriveCommand();
     
-    //reset positions on arms
-    allSubsystems.getArm().clearRequestedPosition();
-    allSubsystems.getElbow().clearRequestedPosition();
   }
 
   /** This function is called periodically during operator control. */
