@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DriveDirectionCommand;
+import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
@@ -113,6 +114,7 @@ public class CommandFactory {
     }
 
     public Command autonomousFarCommand() {
+        double MOVE_DISTANCE_METERS = -1;
         return new SequentialCommandGroup(
             new PositionElbowCommand(elbowSubsystem, 100, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
@@ -121,6 +123,7 @@ public class CommandFactory {
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
             , new HomeArmCommand(armSubsystem, true)
             , new HomeElbowCommand(elbowSubsystem, true)
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.2, 0, 0)
         );
     }
 
