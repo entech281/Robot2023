@@ -107,7 +107,8 @@ public class CommandFactory {
 			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
 			new HomeArmCommand(armSubsystem),
 			new SetArmSpeedCommand(armSubsystem,0.1),
-            new HomeArmCommand(armSubsystem, true)
+            new HomeArmCommand(armSubsystem, true),
+            homeTelescopeAndElbow()
     	);
     }
 
@@ -294,6 +295,10 @@ public class CommandFactory {
         return new PositionElbowCommand(elbowSubsystem, 48.28, true);
     }
     
+    public Command homeTelescopeAndElbow() {
+        return new SequentialCommandGroup( homeTelescopeAndElbow(), homeElbowCommand());
+    }
+
     public Command homeElbowCommand() {
         return new HomeElbowCommand(elbowSubsystem);
     }
