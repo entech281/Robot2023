@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
 import frc.robot.filters.FieldRelativeDriveInputFilter;
+import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.TurnToggleFilter;
 import frc.robot.oi.ShuffleboardDriverControls;
@@ -18,6 +19,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     private FieldRelativeDriveInputFilter fieldRelativeFilter;
     private TurnToggleFilter yawLockFilter;
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
+    private HoldYawFilter yawHoldFilter;
 
 	/**
      * Creates a new ArcadeDrive. This command will drive your robot according to
@@ -35,11 +37,13 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
         this.fieldRelativeFilter = new FieldRelativeDriveInputFilter();
         this.yawLockFilter = new TurnToggleFilter();
         this.yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
+        this.yawHoldFilter = new HoldYawFilter();
     }
 
     @Override
     public void execute() {
     	DriveInput di = operatorInput.get();
+        di.setRawYawAngleDegrees(di.getYawAngleDegrees());
     	DriveInput filtered = di;
     	
         if (jsDeadbandFilter.getEnabled()) {
@@ -53,8 +57,15 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     	}
     	
     	if (driverControls.isYawLocked()) {
-    		filtered = yawLockFilter.filter(filtered);
-    	}
+            if (yawHoldFilter.getEnabled()) {
+                filtered = yawHoldFilter.filter(filtered);
+            } else {
+    		    filtered = yawLockFilter.filter(filtered);
+            }
+    	} else {
+            // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
+            yawHoldFilter.updateSetpoint(filtered.getRawYawAngleDegrees());
+        }
     	
     	drive.drive(filtered);
     }
