@@ -166,7 +166,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   	  if ( ! isPositionWithinSoftLimits(requestedPosition)) {
         DriverStation.reportWarning("Invalid Position " + requestedPosition, false);
         requestedPosition = Math.min(requestedPosition, config.getMaxPosition());
-        requestedPosition = Math.max(requestedPosition, config.getMaxPosition());
+        requestedPosition = Math.max(requestedPosition, config.getMinPosition());
      }
   	 this.requestedPosition = Optional.of(requestedPosition);		  
   	 if (axisState == HomingState.UNINITIALIZED) {
