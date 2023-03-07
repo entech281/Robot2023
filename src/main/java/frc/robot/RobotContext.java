@@ -111,7 +111,7 @@ public class RobotContext {
             double targetYaw = alignmentCalculator.calculateAngleToScoringLocation(absoluteScoringPose, realRobotPose);
             robotState.setTargetYawAngle(targetYaw);
         }
-        installArmSafetyWatchdog();
+        //installArmSafetyWatchdog();
 
     }    
 
