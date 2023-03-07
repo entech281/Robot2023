@@ -279,4 +279,12 @@ public class CommandFactory {
             )
         );
     }
+    
+    public Command homeElbowCommand() {
+        return new HomeElbowCommand(elbowSubsystem);
+    }
+
+    public Command homeTelescopeCommand() {
+        return new HomeArmCommand(armSubsystem);
+    }
 }

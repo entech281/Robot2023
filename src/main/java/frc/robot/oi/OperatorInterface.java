@@ -2,8 +2,10 @@ package frc.robot.oi;
 
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.CommandFactory;
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.adapter.JoystickDriveInputSupplier;
+import frc.robot.commands.HomeElbowCommand;
 
 public class OperatorInterface {
 
@@ -28,13 +30,12 @@ public class OperatorInterface {
         .onTrue(commandFactory.setDriverYawEnableCommand(shuffleboardControls,true))
         .onFalse(commandFactory.setDriverYawEnableCommand(shuffleboardControls,false));
 
-	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
+	    // driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
+	    //     .onTrue(commandFactory.alignToScoringLocation(shuffleboardControls ,hidJoystickDriveInputSupplier))
+	    //     .onFalse(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
 	    
-	        .onTrue(commandFactory.alignToScoringLocation(shuffleboardControls ,hidJoystickDriveInputSupplier))
-	        .onFalse(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
-	    
-	    driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
-	        .onTrue(commandFactory.toggleFieldAbsoluteCommand(this.shuffleboardControls));
+	    // driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
+	    //     .onTrue(commandFactory.toggleFieldAbsoluteCommand(this.shuffleboardControls));
 	    
 	    driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
 	        .onTrue(commandFactory.getZeroGyro());
@@ -63,6 +64,12 @@ public class OperatorInterface {
         operatorStick.button(RobotConstants.OPERATOR_STICK.GRIPPER)
             .onTrue(commandFactory.openGripperCommand())
             .onFalse(commandFactory.closeGripperCommand());
+
+        operatorStick.button(RobotConstants.OPERATOR_STICK.HOME_ELBOW)
+            .onTrue(commandFactory.homeElbowCommand());
+
+        operatorStick.button(RobotConstants.OPERATOR_STICK.HOME_TELESCOPE)
+            .onTrue(commandFactory.homeTelescopeCommand());
 
 	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.UP)
 	        .whileTrue(commandFactory.nudgeElbowUpCommand());

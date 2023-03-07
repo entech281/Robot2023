@@ -35,7 +35,7 @@ public class ArmEmergencyStopCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSubsystem.home();
+    armSubsystem.homePosition();
     elbowSubsystem.stop();
     DriverStation.reportWarning("Detected Arm CRASH We were about to move the arm into the carry position with the arm extended!!!", false);
   }

@@ -91,14 +91,14 @@ public final class RobotConstants {
     		public static final double HOMING_SPEED_PERCENT=0.1;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.04;
+    		public static final double P_GAIN=0.16;
     		public static final double I_GAIN=0.002;
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES=3.0;    		
     		  public static double CARRY_DEGREES = 20.0;
-    		  public static double SAFE_ANGLE = 31.0;    		  
+    		  public static double SAFE_ANGLE = 15.0;    		  
     		  public static double SCORE_MIDDLE_DEGREES = 60;
     		  public static double SCORE_HIGH_DEGREES = 90;    		  
       		  public static final double MAX_POSITION_DEGREES=115.0;    		  
@@ -138,6 +138,9 @@ public final class RobotConstants {
     }
     public interface OPERATOR_STICK {
         public static final int GRIPPER = 1;
+        public static final int ARM_100 = 7;
+        public static final int HOME_TELESCOPE = 11;
+        public static final int HOME_ELBOW = 12;
         public interface POV {
             public static final int UP = 90;
             public static final int IN = 180;

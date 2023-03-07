@@ -146,11 +146,12 @@ public class TestSparkMaxPositionController {
 	}
 	
 	@Test
-	public void testCommandOutOfLimitsResultsInNoMovement() {
+	public void testCommandOutOfLimitsResultsInCappedValue() {
 		assertPositionAndState(c,0,HomingState.UNINITIALIZED);
 		c.requestPosition(UPPER_LIMIT + UPPER_LIMIT);
 		c.update();
-		assertPositionAndState(c,0,HomingState.UNINITIALIZED);
+		assertPositionAndState(c,0.0,HomingState.FINDING_LIMIT);
+        // TODO More mock action needed here.
 	}	
 	
 	@Test
@@ -205,6 +206,11 @@ public class TestSparkMaxPositionController {
 
 	protected void assertPositionAndState(SparkMaxPositionController c, int expectedPosition, HomingState expectedState) {
 		assertEquals(expectedPosition,c.getActualPosition(),COMPARE_TOLERANCE);		
+		assertEquals(expectedState,c.getMotionState());
+	}		
+
+	protected void assertPositionAndState(SparkMaxPositionController c, double expectedPosition, HomingState expectedState) {
+		assertEquals(expectedPosition,c.getActualPosition(),COMPARE_TOLERANCE);
 		assertEquals(expectedState,c.getMotionState());
 	}		
 

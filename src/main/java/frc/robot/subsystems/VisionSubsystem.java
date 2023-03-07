@@ -88,11 +88,11 @@ public class VisionSubsystem extends EntechSubsystem {
   }
   private String getBestTagName() {
 	  if ( currentStatus.getBestAprilTagTarget().isPresent()) {
+          if (currentStatus.getBestAprilTagTarget().get().getTagLocation() != null) {
 		  return currentStatus.getBestAprilTagTarget().get().getTagLocation().getLocation().toString();
+          }
 	  }
-	  else {
 		  return "NONE";
-	  }
   }
   private void updateStatus(){
 	  

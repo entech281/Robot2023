@@ -92,17 +92,21 @@ public class Robot extends TimedRobot {
 		});	  
   }
   private void doPeriodic() {
-	  try {
+    // robotContext.periodic();	  
+    // CommandScheduler.getInstance().run();		  
+    try {
 			robotContext.periodic();	  
 	  }
 	  catch (Throwable t) {
 		  exceptionHandler.handleException(t);
+          t.printStackTrace();
 	  }
 	  try {
 		    CommandScheduler.getInstance().run();		  
 	  }
 	  catch (Throwable t) {
 		  exceptionHandler.handleException(t);
+          t.printStackTrace();
 	  }
   }
   /**

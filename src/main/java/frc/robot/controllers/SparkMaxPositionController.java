@@ -163,15 +163,15 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     
   	@Override
 	public void requestPosition(double requestedPosition) {
-  	  if ( isPositionWithinSoftLimits(requestedPosition)) {
-  		  this.requestedPosition = Optional.of(requestedPosition);		  
-  		  if (axisState == HomingState.UNINITIALIZED) {
-  			startHoming();
-  		  }
-  	  }
-  	  else {
-  		  DriverStation.reportWarning("Invalid Position " + requestedPosition, false);
-  	  }
+  	  if ( ! isPositionWithinSoftLimits(requestedPosition)) {
+        DriverStation.reportWarning("Invalid Position " + requestedPosition, false);
+        requestedPosition = Math.min(requestedPosition, config.getMaxPosition());
+        requestedPosition = Math.max(requestedPosition, config.getMaxPosition());
+     }
+  	 this.requestedPosition = Optional.of(requestedPosition);		  
+  	 if (axisState == HomingState.UNINITIALIZED) {
+  		startHoming();
+     }
     }    
 
     public void setMotorSpeed(double input) {    	
