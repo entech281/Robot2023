@@ -294,9 +294,13 @@ public class CommandFactory {
     public Command LoaidingScoringElbowPoseCommand() {
         return new PositionElbowCommand(elbowSubsystem, 48.28, true);
     }
+
+    public Command carryPoseCommand() {
+        return new PositionElbowCommand(elbowSubsystem, 18, true);
+    }
     
     public Command homeTelescopeAndElbow() {
-        return new SequentialCommandGroup( homeTelescopeAndElbow(), homeElbowCommand());
+        return new SequentialCommandGroup( homeTelescopeCommand(), homeElbowCommand());
     }
 
     public Command homeElbowCommand() {
