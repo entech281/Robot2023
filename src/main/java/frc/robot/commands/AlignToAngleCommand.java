@@ -45,8 +45,7 @@ public class AlignToAngleCommand extends EntechCommandBase {
     public void execute() {
 
         double calcValue = pid.calculate(MathUtil.inputModulus(desiredAngleSupplier.get(), -180.0, 180.0), 
-                    operatorInput.get().getYawAngleDegrees() );
-
+        operatorInput.get().getYawAngleDegrees() );
         DriveInput di = operatorInput.get();
         di.setRotation(calcValue);
         drive.drive(di);
