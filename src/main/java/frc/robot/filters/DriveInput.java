@@ -11,7 +11,8 @@ public class DriveInput {
     private double forward;
     private double right;
     private double rotation;
-    private double yawAngleDegrees = 0.0; //only for field absolute driving
+    private double yawAngleDegrees = 0.0; //only for field abs
+    private double rawYawAngle = 0.0; 
     
     public double getYawAngleDegrees() {
 		return yawAngleDegrees;
@@ -20,6 +21,14 @@ public class DriveInput {
 	public void setYawAngleDegrees(double yawAngleDegrees) {
 		this.yawAngleDegrees = yawAngleDegrees;
 	}
+
+    public void setRawYawAngleDegrees(double yawAngle) {
+        rawYawAngle = yawAngle;
+    }
+
+    public double getRawYawAngleDegrees() {
+        return rawYawAngle;
+    }
 
     /**
      *
@@ -45,6 +54,7 @@ public class DriveInput {
     public DriveInput(double forward, double right, double rotation, double yawAngleDegrees) {
     	this(forward,right,rotation);
     	this.yawAngleDegrees = yawAngleDegrees;
+        this.rawYawAngle = yawAngleDegrees;
     }
 
     //copy constructor
@@ -54,6 +64,7 @@ public class DriveInput {
 		this.right = original.right;
 		this.rotation = original.rotation;
 		this.yawAngleDegrees = original.yawAngleDegrees;
+        this.rawYawAngle = original.rawYawAngle;
 	}
 
 	public double getForward() {
@@ -98,12 +109,13 @@ public class DriveInput {
             return false;
         }
         DriveInput driveInput = (DriveInput) o;
-        return forward == driveInput.forward && right == driveInput.right && rotation == driveInput.rotation && yawAngleDegrees == driveInput.yawAngleDegrees;
+        return forward == driveInput.forward && right == driveInput.right && rotation == driveInput.rotation 
+           && yawAngleDegrees == driveInput.yawAngleDegrees && rawYawAngle == driveInput.rawYawAngle;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(forward, right, rotation,yawAngleDegrees);
+        return Objects.hash(forward, right, rotation,yawAngleDegrees,rawYawAngle);
     }
 
 }
