@@ -23,7 +23,7 @@ public class OperatorInterface {
         this.commandFactory = cf;
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
         this.operatorPanel = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_PANEL);
-        this.operatorStick = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_JOYSTICK);
+        //this.operatorStick = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_JOYSTICK);
         this.hidJoystickDriveInputSupplier = new JoystickDriveInputSupplier(driveStick.getHID());
         this.gripperStateSupplier = () -> {  return operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER); }; 
         setupButtons();
@@ -98,6 +98,7 @@ public class OperatorInterface {
             .onTrue(commandFactory.carryPosition());
 
         // ******* Operator Joytick ******* 
+        /**
         operatorStick.button(RobotConstants.OPERATOR_STICK.GRIPPER)
             .onTrue(commandFactory.openGripperCommand())
             .onFalse(commandFactory.closeGripperCommand());
@@ -119,6 +120,7 @@ public class OperatorInterface {
 	
 	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.OUT)
 	        .whileTrue(commandFactory.nudgeArmForwardCommand());
+	        */
     }
     
     public void setDefaultCommands() {    	

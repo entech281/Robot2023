@@ -122,7 +122,7 @@ public class CommandFactory {
     public Command autonomousFarCommand() {
         double MOVE_DISTANCE_METERS = -1.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-
+        	new ZeroGyroCommand(navxSubsystem),
             new PositionElbowCommand(elbowSubsystem, 100, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
