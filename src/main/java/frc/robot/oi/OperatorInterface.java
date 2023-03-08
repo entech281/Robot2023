@@ -69,11 +69,13 @@ public class OperatorInterface {
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)
             .onTrue(commandFactory.closeGripperCommand())
             .onFalse(commandFactory.openGripperCommand());
+        
         if (operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER)) {
             CommandScheduler.getInstance().schedule(commandFactory.closeGripperCommand());
         } else {
             CommandScheduler.getInstance().schedule(commandFactory.openGripperCommand());
         }
+        
 	    operatorPanel.button(RobotConstants.OPERATOR_PANEL.PIVOT_UP)
 	        .whileTrue(commandFactory.nudgeElbowUpCommand());
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.PIVOT_DOWN)
@@ -84,7 +86,7 @@ public class OperatorInterface {
 	        .whileTrue(commandFactory.nudgeArmForwardCommand());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
-            .onTrue(commandFactory.loadingElbowPoseCommand());
+            .onTrue(commandFactory.loadingElbowCommand());
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
             .onTrue(commandFactory.carryPosition());
 
