@@ -117,16 +117,16 @@ public class CommandFactory {
     }
     
     public Command autonomousFarCommand() {
-        double MOVE_DISTANCE_METERS = -1;
+        double MOVE_DISTANCE_METERS = -1.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
+
             new PositionElbowCommand(elbowSubsystem, 100, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
             , new WaitCommand(1)
-            , new GripperCommand(gripperSubsystem, GripperState.kClose)
-            , new HomeArmCommand(armSubsystem, true)
-            , new HomeElbowCommand(elbowSubsystem, true)
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.2, 0, 0)
+            , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
+            , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
         );
         sg.setName("AutonomousFarCommand");
         return sg;
@@ -152,7 +152,7 @@ public class CommandFactory {
     	return new SequentialCommandGroup(
     			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true),
     			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true ),
-    			new GripperCommand( gripperSubsystem, GripperState.kClose)
+    			new GripperCommand(gripperSubsystem, GripperState.kClose)
     	);
     }
 
@@ -298,6 +298,7 @@ public class CommandFactory {
     public Command groundScoringElbowPoseCommand() {
         return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_LOW_DEGREES, true);
     }
+
 
     public Command loadingElbowPoseCommand() {
         return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true);
