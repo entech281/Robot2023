@@ -61,10 +61,10 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightSparkMax.setInverted(true);
     rearRightSparkMax.setInverted(true);
     
-    frontLeftSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
-    rearLeftSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
-    frontRightSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
-    rearRightSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);    
+    frontLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
+    rearLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
+    frontRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
+    rearRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);    
 
 
     frontLeftEncoder = frontLeftSparkMax.getEncoder();
