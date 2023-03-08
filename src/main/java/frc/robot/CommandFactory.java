@@ -109,7 +109,7 @@ public class CommandFactory {
 			new HomeArmCommand(armSubsystem),
 			new SetArmSpeedCommand(armSubsystem,0.1),
             new HomeArmCommand(armSubsystem, true),
-            homeTelescopeAndElbow()
+            homeTelescopeAndElbowCommand()
     	);
     }
 
@@ -120,9 +120,8 @@ public class CommandFactory {
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
             , new WaitCommand(1)
-            , new GripperCommand(gripperSubsystem, GripperState.kClose)
-            , new HomeArmCommand(armSubsystem, true)
-            , new HomeElbowCommand(elbowSubsystem, true)
+            , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
+            , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
             , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.2, 0, 0)
         );
     }
@@ -147,7 +146,7 @@ public class CommandFactory {
     	return new SequentialCommandGroup(
     			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true),
     			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true ),
-    			new GripperCommand( gripperSubsystem, GripperState.kClose)
+    			new GripperCommand(gripperSubsystem, GripperState.kClose)
     	);
     }
 
@@ -294,11 +293,11 @@ public class CommandFactory {
         return new PositionElbowCommand(elbowSubsystem, 23.784, true);
     }
 
-    public Command LoaidingScoringElbowPoseCommand() {
+    public Command LoaidingElbowPoseCommand() {
         return new PositionElbowCommand(elbowSubsystem, 48.28, true);
     }
     
-    public Command homeTelescopeAndElbow() {
+    public Command homeTelescopeAndElbowCommand() {
         return new SequentialCommandGroup( homeTelescopeCommand(), homeElbowCommand());
     }
 
