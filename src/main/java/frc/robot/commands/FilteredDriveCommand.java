@@ -38,6 +38,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
         this.yawLockFilter = new TurnToggleFilter();
         this.yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
         this.yawHoldFilter = new HoldYawFilter();
+        yawHoldFilter.setEnabled(false);
     }
 
     @Override

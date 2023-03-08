@@ -83,6 +83,11 @@ public class OperatorInterface {
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.TELESCOPE_OUT)
 	        .whileTrue(commandFactory.nudgeArmForwardCommand());
 
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
+            .onTrue(commandFactory.loadingPositionCommand());
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
+            .onTrue(commandFactory.carryPosition());
+
         // ******* Operator Joytick ******* 
         operatorStick.button(RobotConstants.OPERATOR_STICK.GRIPPER)
             .onTrue(commandFactory.openGripperCommand())
