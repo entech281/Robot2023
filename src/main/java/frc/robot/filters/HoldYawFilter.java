@@ -1,5 +1,6 @@
 package frc.robot.filters;
 
+import frc.robot.RobotConstants;
 import frc.robot.controllers.RobotYawPIDController;
 
 /**
@@ -16,6 +17,8 @@ public class HoldYawFilter extends DriveInputFilter {
 
     public HoldYawFilter() {
         pid = new RobotYawPIDController();
+        pid.setI(RobotConstants.DRIVE.YAW_LOCK_I_GAIN);
+        pid.setP(RobotConstants.DRIVE.YAW_LOCK_P_GAIN);
     }
 
     public DriveInput doFilter(DriveInput original) {
