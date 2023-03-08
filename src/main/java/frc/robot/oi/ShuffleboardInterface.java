@@ -44,17 +44,22 @@ public class ShuffleboardInterface {
 		});		
 	}
 	
+	public void addPreMatchCommands(List<Command> testCommands) {
+		testCommands.forEach( (c)->{
+			PREMATCH_TAB.add(c.getName(),(Sendable)c).withSize(2, 1);
+		});			
+	}
 	public void addSubsystems(SubsystemHolder allSubsystems) {
 
 		ArmSubsystem arm = allSubsystems.getArm();
 		ElbowSubsystem elbow = allSubsystems.getElbow();
 		
-		MATCH_TAB.add(allSubsystems.getDrive()).withSize(2, 1).withPosition(4,2);
+		MATCH_TAB.add(allSubsystems.getDrive()).withSize(2, 2).withPosition(4,2);
 		MATCH_TAB.add(allSubsystems.getNavx()).withSize(2, 2).withPosition(4,0);
 		MATCH_TAB.add(allSubsystems.getVision()).withSize(2, 2).withPosition(6,0);
-		MATCH_TAB.add(arm).withSize(2, 2).withPosition(6,2);
-		MATCH_TAB.add(elbow).withSize(2, 2).withPosition(8,2);
-		MATCH_TAB.add(allSubsystems.getGripper()).withSize(2, 1).withPosition(4,3);
+		MATCH_TAB.add(arm).withSize(2, 1).withPosition(6,2);
+		MATCH_TAB.add(elbow).withSize(2, 1).withPosition(6,3);
+		MATCH_TAB.add(allSubsystems.getGripper()).withSize(2, 1).withPosition(4,4);
 
 
 		if ( arm.isEnabled()) {

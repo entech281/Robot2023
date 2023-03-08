@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.RobotConstants.ARM;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DriveDirectionCommand;
@@ -42,6 +43,7 @@ import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.RobotConstants;
 /**
  *
  * @author dcowden
@@ -69,53 +71,54 @@ public class CommandFactory {
 
     public List<Command> getAutoCommandChoices(){
     	//these commands will be available for autonomous mode on the PREMATCH tab
-    	Command c1 = new NudgeDirectionCommand(driveSubsystem,NudgeDirectionCommand.DIRECTION.FORWARD);
-    	c1.setName("Nudge Forward");
-    	Command c2 = new NudgeDirectionCommand(driveSubsystem,NudgeDirectionCommand.DIRECTION.RIGHT);
-    	c2.setName("Nudge Right");
         Command c3 = new SequentialCommandGroup(
             new DriveDirectionCommand(driveSubsystem, 2,0.0, 0.5)
             , new DriveDirectionCommand(driveSubsystem, 0.0, 2, 0.5)
             , new DriveDirectionCommand(driveSubsystem, -2,0.0, 0.5)
             , new DriveDirectionCommand(driveSubsystem, 0.0, -2, 0.5)
         );
-        c3.setName("Autonomous");
+        c3.setName("SquareDance");
         Command c4 = driveDistanceCommand(2);
         c4.setName("MoveForward");
         Command c5 = autonomousFarCommand();
         c5.setName("Autonomous Far");
-        Command c6 = middleScoringPositioCommand();
+        Command c6 = middleScoringPositionCommand();
         c6.setName("Autonomous Middle");
         Command c7 = autonomusMiddleCommand();
         c7.setName("Ground Scoring");
         Command c8 = loadingPositionCommand();
         c8.setName("Loading");
-    	return List.of( c1, c2, c3 ,c4, c5, c6, c7, c8);
+    	return List.of(  c3 ,c4, c5, c6, c7, c8);
 
+    }
+    
+    public List<Command> getPrematchCommands(){
+    	return List.of(
+    		homeTelescopeAndElbow()
+    	);
     }
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
-			new HomeElbowCommand(elbowSubsystem),
 			new PositionTelescopeCommand(armSubsystem,1.4, false),
 			new PositionTelescopeCommand(armSubsystem,0.2, false),
 			new PositionTelescopeCommand(armSubsystem,0.08, false),
-			new PositionElbowCommand(elbowSubsystem,100, false),
-			new PositionElbowCommand(elbowSubsystem,60,false),
-			new PositionElbowCommand(elbowSubsystem,90, false),
-			new PositionElbowCommand(elbowSubsystem,4, false),
+			highScoringElbowPoseCommand(),
+			middleScoringElbowPoseCommand(),
+			groundScoringElbowPoseCommand(),
+			loadingElbowPoseCommand(),
+			new PositionElbowCommand(elbowSubsystem,RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, false),
 			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
 			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
 			new HomeArmCommand(armSubsystem),
-			new SetArmSpeedCommand(armSubsystem,0.1),
             new HomeArmCommand(armSubsystem, true),
             homeTelescopeAndElbow()
     	);
     }
-
+    
     public Command autonomousFarCommand() {
         double MOVE_DISTANCE_METERS = -1;
-        return new SequentialCommandGroup(
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
             new PositionElbowCommand(elbowSubsystem, 100, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
@@ -125,6 +128,8 @@ public class CommandFactory {
             , new HomeElbowCommand(elbowSubsystem, true)
             , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.2, 0, 0)
         );
+        sg.setName("AutonomousFarCommand");
+        return sg;
     }
 
     public Command autonomusMiddleCommand() {
@@ -247,17 +252,17 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
-                new PositionElbowCommand(elbowSubsystem, 100, true),
-                new PositionTelescopeCommand(armSubsystem, 1.4, true)
+                new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true),
+                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MAX_ARM_LENGTH_M, true)
             )
         );
     }
 
-    public Command middleScoringPositioCommand() {
+    public Command middleScoringPositionCommand() {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
-                new PositionElbowCommand(elbowSubsystem, 63, true),
+                new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES, true),
                 new PositionTelescopeCommand(armSubsystem, 1.1, true)
             )
         );
@@ -266,7 +271,7 @@ public class CommandFactory {
     public Command groundScoringPosition() {
         return new ParallelCommandGroup(
             new ConditionalCommand(new InstantCommand(), 
-            new SequentialCommandGroup( groundRetractedPosition(), new PositionElbowCommand(elbowSubsystem, 35, false)),
+            new SequentialCommandGroup( groundRetractedPosition(), new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_LOW_DEGREES, false)),
             elbowSubsystem::isSafeToExtendArm),
             new PositionTelescopeCommand(armSubsystem, 0, true)
         );
@@ -276,30 +281,32 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
-                new PositionElbowCommand(elbowSubsystem, 90, true),
+                new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true),
                 new PositionTelescopeCommand(armSubsystem, 1.4, true)
             )
         );
     }
 
     public Command highScoringElbowPoseCommand() {
-        return new PositionElbowCommand(elbowSubsystem, 100, true);
+        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true);
     }
 
     public Command middleScoringElbowPoseCommand() {
-        return new PositionElbowCommand(elbowSubsystem, 65.22, true);
+        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES, true);
     }
 
-    public Command grounScoringElbowPoseCommand() {
-        return new PositionElbowCommand(elbowSubsystem, 23.784, true);
+    public Command groundScoringElbowPoseCommand() {
+        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_LOW_DEGREES, true);
     }
 
-    public Command LoaidingScoringElbowPoseCommand() {
-        return new PositionElbowCommand(elbowSubsystem, 48.28, true);
-    }
+    public Command loadingElbowPoseCommand() {
+        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true);
+    }    
     
     public Command homeTelescopeAndElbow() {
-        return new SequentialCommandGroup( homeTelescopeCommand(), homeElbowCommand());
+    	SequentialCommandGroup sg =  new SequentialCommandGroup( homeTelescopeCommand(), homeElbowCommand());
+    	sg.setName("homeTelescopeAndElbow");
+    	return sg;
     }
 
     public Command homeElbowCommand() {
