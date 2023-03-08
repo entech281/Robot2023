@@ -84,7 +84,7 @@ public class OperatorInterface {
 	        .whileTrue(commandFactory.nudgeArmForwardCommand());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
-            .onTrue(commandFactory.loadingPositionCommand());
+            .onTrue(commandFactory.loadingElbowPoseCommand());
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
             .onTrue(commandFactory.carryPosition());
 

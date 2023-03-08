@@ -86,6 +86,7 @@ public class Robot extends TimedRobot {
 			
 		shuffleboardInterface.addSubsystems(allSubsystems);
 		shuffleboardInterface.addTestCommands(commandFactory.getTestCommands());
+		shuffleboardInterface.addPreMatchCommands(commandFactory.getPrematchCommands());
 		List<Command> autoChoices = commandFactory.getAutoCommandChoices();
 		autoChoices.forEach((c)->{
 			shuffleboardControls.addAutoCommandChoice(c);
