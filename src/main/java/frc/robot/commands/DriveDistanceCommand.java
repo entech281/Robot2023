@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -72,7 +73,8 @@ public class DriveDistanceCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(desiredDistanceMeters) >= Math.abs(drive.getAverageDistanceMeters());
+    // DriverStation.reportWarning("Distance: " + drive.getAverageDistanceMeters(), false);
+    return Math.abs(drive.getAverageDistanceMeters()) >= Math.abs(desiredDistanceMeters);
   }
 
   // Returns true if this command should run when robot is disabled.
