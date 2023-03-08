@@ -70,12 +70,6 @@ public class OperatorInterface {
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)
             .onTrue(commandFactory.closeGripperCommand())
             .onFalse(commandFactory.openGripperCommand());
-
-        if (operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER)) {
-            CommandScheduler.getInstance().schedule(commandFactory.closeGripperCommand());
-        } else {
-            CommandScheduler.getInstance().schedule(commandFactory.openGripperCommand());
-        }
         
 	    operatorPanel.button(RobotConstants.OPERATOR_PANEL.PIVOT_UP)
 	        .whileTrue(commandFactory.nudgeElbowUpCommand());
@@ -86,8 +80,20 @@ public class OperatorInterface {
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.TELESCOPE_OUT)
 	        .whileTrue(commandFactory.nudgeArmForwardCommand());
 
+
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
-            .onTrue(commandFactory.loadingElbowCommand());
+        .onTrue(commandFactory.loadingElbowCommand());
+
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.LEFT_APRILTAG)
+        .onTrue(commandFactory.highScoringElbowCommand());
+        
+        
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.MIDDLE_APRILTAG)
+        .onTrue(commandFactory.middleScoringElbowCommand());
+
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.RIGHT_APRILTAG)
+        .onTrue(commandFactory.groundScoringElbowCommand());        
+        
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
             .onTrue(commandFactory.carryPosition());
 
