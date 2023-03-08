@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.PositionElbowCommand;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -70,7 +73,7 @@ public final class RobotConstants {
     		  public static final double SAFE = 0.1;
     		  public static final double MAX_METERS = 0.56; //0.52 max extension
               public static final double MIN_ARM_LENGTH_M = 0.87155; 
-              public static final double MAX_ARM_LENGTH_M = 1.47155;
+              public static final double MAX_ARM_LENGTH_M = 1.4;
     	}
         
         public static final double MIN_EXTENSION_METERS = 0.9906; //39 inches from center of robot to center of claw
@@ -97,13 +100,17 @@ public final class RobotConstants {
     	}
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES=3.0;    		
-    		  public static double CARRY_DEGREES = 20.0;
-    		  public static double SAFE_ANGLE = 15.0;    		  
-    		  public static double SCORE_MIDDLE_DEGREES = 60;
-    		  public static double SCORE_HIGH_DEGREES = 90;    		  
+    		  public static double CARRY_DEGREES = 18.0;
+    		  public static double SAFE_ANGLE = 15.0;  
+    		  public static double SCORE_LOW_DEGREES= 23.784;
+    		  public static double SCORE_MIDDLE_DEGREES = 65.22;
+    		  public static double LOAD_STATION_DEGREES=90.0;
+    		  public static double SCORE_HIGH_DEGREES = 100;    		  
       		  public static final double MAX_POSITION_DEGREES=115.0;    		  
     	}    	
     }
+    
+    
     public interface GRIPPER{
     	public static final boolean INIT_CLAW_STATE = false;
     }
