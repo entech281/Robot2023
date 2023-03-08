@@ -66,6 +66,7 @@ public class GripperSubsystem extends EntechSubsystem {
           }		
 	}
     public void setGripperState(GripperState state) {
+    	//this guards against shorting a solenoid by holding it too long/often
 	    if (state != gripperState) {
 	      gripperSolenoidCounter = 0;
 	      gripperState = state;
@@ -75,11 +76,13 @@ public class GripperSubsystem extends EntechSubsystem {
     	return gripperState == GripperState.kOpen;
     }
 	public void setOpen(boolean open) {
+		//VERY IMPORTANT to use setGripperState here,
+		//so we only trigger solendoids on a changed value
 		if (open) {
-			gripperState = GripperState.kOpen;
+			setGripperState(GripperState.kClose);
 		}
 		else {
-			gripperState = GripperState.kClose;
+			setGripperState(GripperState.kOpen);
 		}
 	}
 	

@@ -1,13 +1,12 @@
 package frc.robot.oi;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.CommandFactory;
-import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.adapter.JoystickDriveInputSupplier;
-import frc.robot.commands.HomeElbowCommand;
 
 public class OperatorInterface {
 
@@ -17,6 +16,7 @@ public class OperatorInterface {
     private CommandJoystick operatorStick;
     private CommandFactory commandFactory;
     private JoystickDriveInputSupplier hidJoystickDriveInputSupplier;
+    private Supplier<Boolean> gripperStateSupplier;
     
     public OperatorInterface( final CommandFactory cf, final ShuffleboardDriverControls shuffleboard) {
     	this.shuffleboardControls = shuffleboard;
@@ -25,6 +25,7 @@ public class OperatorInterface {
         this.operatorPanel = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_PANEL);
         this.operatorStick = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_JOYSTICK);
         this.hidJoystickDriveInputSupplier = new JoystickDriveInputSupplier(driveStick.getHID());
+        this.gripperStateSupplier = () -> {  return operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER); }; 
         setupButtons();
 
     }
@@ -69,7 +70,7 @@ public class OperatorInterface {
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)
             .onTrue(commandFactory.closeGripperCommand())
             .onFalse(commandFactory.openGripperCommand());
-        
+
         if (operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER)) {
             CommandScheduler.getInstance().schedule(commandFactory.closeGripperCommand());
         } else {
@@ -114,8 +115,9 @@ public class OperatorInterface {
 	        .whileTrue(commandFactory.nudgeArmForwardCommand());
     }
     
-    public void setDefaultDriveCommand() {
+    public void setDefaultCommands() {    	
     	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
+    	commandFactory.setDefaultGripperCommand(commandFactory.gripperPanelSyncCommand(gripperStateSupplier));
     }
     
 }
