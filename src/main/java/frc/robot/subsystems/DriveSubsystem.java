@@ -13,11 +13,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
-import frc.robot.RobotConstants.DRIVE;
 import frc.robot.filters.DriveInput;
 
 /**
@@ -61,10 +61,10 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightSparkMax.setInverted(true);
     rearRightSparkMax.setInverted(true);
     
-    frontLeftSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
-    rearLeftSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
-    frontRightSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);
-    rearRightSparkMax.setSmartCurrentLimit(DRIVE.CURRENT_LIMIT_AMPS);    
+    frontLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
+    rearLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
+    frontRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
+    rearRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);    
 
 
     frontLeftEncoder = frontLeftSparkMax.getEncoder();
@@ -114,10 +114,10 @@ public class DriveSubsystem extends EntechSubsystem {
 	@Override
     public void initSendable(SendableBuilder builder) {
   	    builder.setSmartDashboardType(getName());
-  	    builder.addDoubleProperty("FrontLeft", () -> { return frontLeftSparkMax.get();} , null);
-  	    builder.addDoubleProperty("FrontRight", () -> { return frontRightSparkMax.get();} , null);
-  	    builder.addDoubleProperty("RearLeft", () -> { return rearLeftSparkMax.get();} , null);  	    
-  	    builder.addDoubleProperty("RearRight", () -> { return rearRightSparkMax.get();} , null);
+  	    builder.addDoubleProperty("FrontLeft", () -> { return frontLeftEncoder.getPosition();} , null);
+  	    builder.addDoubleProperty("FrontRight", () -> { return frontRightEncoder.getPosition();} , null);
+  	    builder.addDoubleProperty("RearLeft", () -> { return rearLeftEncoder.getPosition();} , null);  	    
+  	    builder.addDoubleProperty("RearRight", () -> { return rearRightEncoder.getPosition();} , null);
 
 
     }  
@@ -143,6 +143,8 @@ public boolean isEnabled() {
   }
 
   public double getAverageDistanceMeters() {
-    return getAveragePosition() / DRIVE.ENCODER_GEAR_RATIO / DRIVE.COUNTS_PER_METER;
+    double distance = ((getAveragePosition() / RobotConstants.DRIVE.COUNTS_PER_MOTOR_REVOLUTION) / RobotConstants.DRIVE.GEAR_BOX_RATIO) * RobotConstants.DRIVE.METERS_PER_GEARBOX_REVOLTION;
+    DriverStation.reportWarning("Distance: " + distance, false);
+    return distance;
   }
 }

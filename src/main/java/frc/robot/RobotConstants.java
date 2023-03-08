@@ -125,8 +125,9 @@ public final class RobotConstants {
     }
     public interface DRIVE {
     	public static final int CURRENT_LIMIT_AMPS = 30;
-        public static final double COUNTS_PER_METER = (0.478779 * 42);
-        public static final double ENCODER_GEAR_RATIO = 9.92;
+        public static final double COUNTS_PER_MOTOR_REVOLUTION = 42;
+        public static final double GEAR_BOX_RATIO = 9.92;
+        public static final double METERS_PER_GEARBOX_REVOLTION = 3.14*6.0/39.37;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
