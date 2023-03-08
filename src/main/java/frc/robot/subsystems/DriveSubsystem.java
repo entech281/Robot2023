@@ -114,10 +114,10 @@ public class DriveSubsystem extends EntechSubsystem {
 	@Override
     public void initSendable(SendableBuilder builder) {
   	    builder.setSmartDashboardType(getName());
-  	    builder.addDoubleProperty("FrontLeft", () -> { return frontLeftSparkMax.get();} , null);
-  	    builder.addDoubleProperty("FrontRight", () -> { return frontRightSparkMax.get();} , null);
-  	    builder.addDoubleProperty("RearLeft", () -> { return rearLeftSparkMax.get();} , null);  	    
-  	    builder.addDoubleProperty("RearRight", () -> { return rearRightSparkMax.get();} , null);
+  	    builder.addDoubleProperty("FrontLeft", () -> { return frontLeftEncoder.getPosition();} , null);
+  	    builder.addDoubleProperty("FrontRight", () -> { return frontRightEncoder.getPosition();} , null);
+  	    builder.addDoubleProperty("RearLeft", () -> { return rearLeftEncoder.getPosition();} , null);  	    
+  	    builder.addDoubleProperty("RearRight", () -> { return rearRightEncoder.getPosition();} , null);
 
 
     }  
