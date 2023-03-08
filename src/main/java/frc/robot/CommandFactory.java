@@ -114,7 +114,7 @@ public class CommandFactory {
     }
 
     public Command autonomousFarCommand() {
-        double MOVE_DISTANCE_METERS = -1;
+        double MOVE_DISTANCE_METERS = -1.;
         return new SequentialCommandGroup(
             new PositionElbowCommand(elbowSubsystem, 100, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
@@ -122,7 +122,7 @@ public class CommandFactory {
             , new WaitCommand(1)
             , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
             , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.2, 0, 0)
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
         );
     }
 
