@@ -36,7 +36,7 @@ public class VisionSubsystem extends EntechSubsystem {
   private PhotonCamera camera;
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
   private PhotonPoseEstimator photonPoseEstimator;
-  private boolean enabled=true;
+  private boolean enabled=false;
 
   public static final double NO_GOOD_ANGLE=-299;
 
@@ -60,12 +60,19 @@ public class VisionSubsystem extends EntechSubsystem {
 
   @Override
   public void initSendable(SendableBuilder sb) {
-     sb.addBooleanProperty("HasTargets", this::hasTargets, null);
-     sb.addDoubleProperty("Latency", this::getLatency, null);
-     sb.addBooleanProperty("HasPhotonPose", this::hasPhotonPose, null);
-     sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
-     sb.addStringProperty("Target", this::getBestTagName, null);
-     sb.addDoubleProperty("PhotonYaw", () -> { return lastPhotonYawAngle;} , null);
+	 
+	 if(enabled) {
+	     sb.addBooleanProperty("HasTargets", this::hasTargets, null);
+	     sb.addDoubleProperty("Latency", this::getLatency, null);
+	     sb.addBooleanProperty("HasPhotonPose", this::hasPhotonPose, null);
+	     sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
+	     sb.addStringProperty("Target", this::getBestTagName, null);
+	     sb.addDoubleProperty("PhotonYaw", () -> { return lastPhotonYawAngle;} , null);		 
+	 }
+	 else {
+		 sb.addBooleanProperty("Enabled", () -> { return false;} , null);
+	 }
+
   }
   
   
@@ -166,7 +173,9 @@ private void debugStatus() {
   @Override
   public void periodic() {
 	  if ( Robot.isReal()) {
-		  updateStatus();  
+		  if (enabled) {
+			  updateStatus();
+		  }		    
 	  }
 	  else {
 		  updateStatusSimulated();
