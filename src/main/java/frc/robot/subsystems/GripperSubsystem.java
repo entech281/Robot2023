@@ -79,10 +79,10 @@ public class GripperSubsystem extends EntechSubsystem {
 		//VERY IMPORTANT to use setGripperState here,
 		//so we only trigger solendoids on a changed value
 		if (open) {
-			setGripperState(GripperState.kOpen);
+			setGripperState(GripperState.kClose);
 		}
 		else {
-			setGripperState(GripperState.kClose);
+			setGripperState(GripperState.kOpen);
 		}
 	}
 	
