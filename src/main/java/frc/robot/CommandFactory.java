@@ -291,26 +291,34 @@ public class CommandFactory {
         );
     }
 
-    public Command highScoringElbowPoseCommand() {
-        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true);
+    /**
+     * This series moves only the elbow
+     */
+    public Command highScoringElbowCommand() {
+    	return createNamedElbowPositionCommand( RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, "highScoringElbowCommand");
     }
 
-    public Command middleScoringElbowPoseCommand() {
-        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES, true);
+    public Command middleScoringElbowCommand() {
+        return createNamedElbowPositionCommand( RobotConstants.ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES, "middleScoringElbowCommand");
     }
 
-    public Command groundScoringElbowPoseCommand() {
-        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_LOW_DEGREES, true);
+    public Command groundScoringElbowCommand() {
+        return createNamedElbowPositionCommand( RobotConstants.ELBOW.POSITION_PRESETS.SCORE_LOW_DEGREES, "groundScoringElbowCommand");
     }
 
-
-    public Command loadingElbowPoseCommand() {
-        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true);
+    public Command loadingElbowCommand() {
+        return createNamedElbowPositionCommand( RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, "loadingElbowCommand");
     }    
 
-    public Command carryElbowPoseCommand() {
-        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true);
-    }     
+    public Command carryElbowCommand() {
+        return createNamedElbowPositionCommand( RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, "carryElbowCommand");
+    }   
+    
+    private Command createNamedElbowPositionCommand(double position, String name) {
+    	Command p = new  PositionElbowCommand(elbowSubsystem, position, true);
+    	p.setName(name);
+    	return p;
+    }
     
     public Command homeTelescopeAndElbow() {
     	SequentialCommandGroup sg =  new SequentialCommandGroup( homeTelescopeCommand(), homeElbowCommand());
