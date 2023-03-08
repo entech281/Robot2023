@@ -13,10 +13,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
-import frc.robot.RobotConstants.DRIVE;
 import frc.robot.filters.DriveInput;
 
 /**
@@ -131,6 +131,8 @@ public boolean isEnabled() {
   }
 
   public double getAverageDistanceMeters() {
-    return getAveragePosition() / DRIVE.ENCODER_GEAR_RATIO / DRIVE.COUNTS_PER_METER;
+    double distance = ((getAveragePosition() / RobotConstants.DRIVE.COUNTS_PER_MOTOR_REVOLUTION) / RobotConstants.DRIVE.GEAR_BOX_RATIO) * RobotConstants.DRIVE.METERS_PER_GEARBOX_REVOLTION;
+    DriverStation.reportWarning("Distance: " + distance, false);
+    return distance;
   }
 }
