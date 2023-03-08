@@ -100,11 +100,11 @@ public class CommandFactory {
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
-			highScoringElbowPoseCommand(),
-			middleScoringElbowPoseCommand(),
-			groundScoringElbowPoseCommand(),
-			loadingElbowPoseCommand(),
-			carryElbowPoseCommand(),
+			highScoringElbowCommand(),
+			middleScoringElbowCommand(),
+			groundScoringElbowCommand(),
+			loadingElbowCommand(),
+			carryElbowCommand(),
 			new PositionTelescopeCommand(armSubsystem,1.4, false),
 			new PositionTelescopeCommand(armSubsystem,0.2, false),
 			new PositionTelescopeCommand(armSubsystem,0.08, false),
