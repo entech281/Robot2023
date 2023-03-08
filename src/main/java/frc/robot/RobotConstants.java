@@ -113,7 +113,8 @@ public final class RobotConstants {
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
-        public static final int OPERATOR_JOYSTICK = 1;
+        public static final int OPERATOR_PANEL = 1;
+        public static final int OPERATOR_JOYSTICK = 2;
     }
     public interface DRIVE {
     	public static final int CURRENT_LIMIT_AMPS = 30;
@@ -147,6 +148,19 @@ public final class RobotConstants {
             public static final int DOWN = 270;
             public static final int OUT = 0;
         }
+    }
+    public interface OPERATOR_PANEL {
+        public static final int GRIPPER = 1;
+        public static final int PIVOT_UP = 2;
+        public static final int PIVOT_DOWN = 3;
+        public static final int AUTO = 4;
+        public static final int TELESCOPE_OUT = 5;
+        public static final int TELESCOPE_IN = 6;
+        public static final int OFF = 8;
+        public static final int LOAD_APRILTAG = 9;
+        public static final int LEFT_APRILTAG = 10;
+        public static final int MIDDLE_APRILTAG = 11;
+        public static final int RIGHT_APRILTAG = 12;
     }
     public interface CAN {
     	public static final int FRONT_LEFT_MOTOR = 1;

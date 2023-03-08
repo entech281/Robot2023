@@ -1,5 +1,7 @@
 package frc.robot.oi;
 
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.CommandFactory;
 import frc.robot.Robot;
@@ -11,6 +13,7 @@ public class OperatorInterface {
 
 	private ShuffleboardDriverControls shuffleboardControls;	
     private CommandJoystick driveStick;
+    private CommandJoystick operatorPanel;
     private CommandJoystick operatorStick;
     private CommandFactory commandFactory;
     private JoystickDriveInputSupplier hidJoystickDriveInputSupplier;
@@ -19,6 +22,7 @@ public class OperatorInterface {
     	this.shuffleboardControls = shuffleboard;
         this.commandFactory = cf;
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
+        this.operatorPanel = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_PANEL);
         this.operatorStick = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_JOYSTICK);
         this.hidJoystickDriveInputSupplier = new JoystickDriveInputSupplier(driveStick.getHID());
         setupButtons();
@@ -61,6 +65,25 @@ public class OperatorInterface {
 	    driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_RIGHT)
             .onTrue(commandFactory.nudgeYawRightCommand());    	
 
+        // *******  Operator Panel  *******
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)
+            .onTrue(commandFactory.closeGripperCommand())
+            .onFalse(commandFactory.openGripperCommand());
+        if (operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER)) {
+            CommandScheduler.getInstance().schedule(commandFactory.closeGripperCommand());
+        } else {
+            CommandScheduler.getInstance().schedule(commandFactory.openGripperCommand());
+        }
+	    operatorPanel.button(RobotConstants.OPERATOR_PANEL.PIVOT_UP)
+	        .whileTrue(commandFactory.nudgeElbowUpCommand());
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.PIVOT_DOWN)
+	        .whileTrue(commandFactory.nudgeElbowDownCommand());
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.TELESCOPE_IN)
+	        .whileTrue(commandFactory.nudgeArmBackwardCommand());
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.TELESCOPE_OUT)
+	        .whileTrue(commandFactory.nudgeArmForwardCommand());
+
+        // ******* Operator Joytick ******* 
         operatorStick.button(RobotConstants.OPERATOR_STICK.GRIPPER)
             .onTrue(commandFactory.openGripperCommand())
             .onFalse(commandFactory.closeGripperCommand());
