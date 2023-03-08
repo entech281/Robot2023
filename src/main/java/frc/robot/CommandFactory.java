@@ -100,13 +100,15 @@ public class CommandFactory {
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
-			new PositionTelescopeCommand(armSubsystem,1.4, false),
-			new PositionTelescopeCommand(armSubsystem,0.2, false),
-			new PositionTelescopeCommand(armSubsystem,0.08, false),
 			highScoringElbowPoseCommand(),
 			middleScoringElbowPoseCommand(),
 			groundScoringElbowPoseCommand(),
 			loadingElbowPoseCommand(),
+			carryElbowPoseCommand(),
+			new PositionTelescopeCommand(armSubsystem,1.4, false),
+			new PositionTelescopeCommand(armSubsystem,0.2, false),
+			new PositionTelescopeCommand(armSubsystem,0.08, false),
+
 			new PositionElbowCommand(elbowSubsystem,RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, false),
 			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
 			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
@@ -141,19 +143,21 @@ public class CommandFactory {
 
     public Command deployHighCommand() {
     	//note that the subsystems will HOME before the moves are complete!
-    	return new SequentialCommandGroup(
+    	Command s = new SequentialCommandGroup(
     			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS,true),
-    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true ),
-    			new GripperCommand( gripperSubsystem, GripperState.kOpen)
+    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true )
     	);
+    	s.setName("deployHighCommand");
+    	return s;
     }
     //this is probably also the home position
     public Command carryPosition() {
-    	return new SequentialCommandGroup(
+    	Command s = new SequentialCommandGroup(
     			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true),
-    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true ),
-    			new GripperCommand(gripperSubsystem, GripperState.kClose)
+    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true )
     	);
+    	s.setName("carryPosition");
+    	return s;
     }
 
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
@@ -303,6 +307,10 @@ public class CommandFactory {
     public Command loadingElbowPoseCommand() {
         return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true);
     }    
+
+    public Command carryElbowPoseCommand() {
+        return new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true);
+    }     
     
     public Command homeTelescopeAndElbow() {
     	SequentialCommandGroup sg =  new SequentialCommandGroup( homeTelescopeCommand(), homeElbowCommand());
