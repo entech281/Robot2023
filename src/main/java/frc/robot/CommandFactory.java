@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotConstants.ARM;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
+import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.FilteredDriveCommand;
@@ -167,7 +168,14 @@ public class CommandFactory {
     public void setDefaultDriveCommand (Command newDefaultCommand ) {
     	driveSubsystem.setDefaultCommand(newDefaultCommand);
     }
+    public void setDefaultGripperCommand ( Command newDefaultCommand) {
+    	gripperSubsystem.setDefaultCommand(newDefaultCommand);
+    }
 
+    public Command gripperPanelSyncCommand( Supplier<Boolean> panelGripperButtonSupplier ) {
+    	return new DefaultGripperCommand(gripperSubsystem, panelGripperButtonSupplier);
+    }
+    
     public Command filteredDriveCommand( Supplier<DriveInput> operatorInput, ShuffleboardDriverControls driverControls) {
     	return new FilteredDriveCommand(driveSubsystem,addYawToOperatorJoystickInput( operatorInput),driverControls);
     }

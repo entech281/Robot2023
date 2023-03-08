@@ -163,7 +163,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    oi.setDefaultDriveCommand();
+    oi.setDefaultCommands();
     
   }
 
