@@ -80,6 +80,9 @@ public class OperatorInterface {
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.TELESCOPE_OUT)
 	        .whileTrue(commandFactory.nudgeArmForwardCommand());
 
+        
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
+        .onTrue(commandFactory.carryElbowCommand());            
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
         .onTrue(commandFactory.loadingElbowCommand());

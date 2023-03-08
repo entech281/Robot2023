@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
 	setupShuffleboardInterface();
 	Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
 	c.enableDigital();
+	navx.zeroYaw();
 	
   }
   private void setupShuffleboardInterface() {

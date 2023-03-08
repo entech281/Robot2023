@@ -120,7 +120,7 @@ public class CommandFactory {
     }
     
     public Command autonomousFarCommand() {
-        double MOVE_DISTANCE_METERS = -1.0;
+        double MOVE_DISTANCE_METERS = -3.2;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         	new ZeroGyroCommand(navxSubsystem),
             new PositionElbowCommand(elbowSubsystem, 100, true)

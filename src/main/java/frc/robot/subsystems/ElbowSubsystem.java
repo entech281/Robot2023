@@ -14,7 +14,7 @@ import frc.robot.controllers.SparkMaxPositionController;
 
 public class ElbowSubsystem extends EntechSubsystem{
 
-    private static final double NUDGE_COUNT = 7.0;
+    private static final double NUDGE_COUNT = 3.0;
 	  private CANSparkMax elbowMotor;
 	  private SparkMaxPositionController positionController;
 
@@ -130,6 +130,12 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  }
 
 	  public void requestPosition(double requestedPosition) {
+		  if ( requestedPosition > this.getActualPosition()) {
+			  //this.elbowMotor.getPIDController().setFF(RobotConstants.ELBOW.TUNING.FF_GAIN_GOING_UP);
+		  }
+		  else {
+			  //this.elbowMotor.getPIDController().setFF(RobotConstants.ELBOW.TUNING.FF_GAIN_GOING_DOWN);
+		  }
 		  positionController.requestPosition(requestedPosition);
 	  }
 

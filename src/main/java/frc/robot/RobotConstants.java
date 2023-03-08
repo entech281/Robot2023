@@ -94,13 +94,15 @@ public final class RobotConstants {
     		public static final double HOMING_SPEED_PERCENT=0.1;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.16;
+    		public static final double P_GAIN=0.64;
+    		public static final double FF_GAIN_GOING_UP=0.04;
+    		public static final double FF_GAIN_GOING_DOWN=0.0;
     		public static final double I_GAIN=0.002;
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES=3.0;    		
-    		  public static double CARRY_DEGREES = 18.0;
+    		  public static double CARRY_DEGREES = 10.0;
     		  public static double SAFE_ANGLE = 15.0;  
     		  public static double SCORE_LOW_DEGREES= 23.784;
     		  public static double SCORE_MIDDLE_DEGREES = 65.22;
@@ -128,6 +130,7 @@ public final class RobotConstants {
         public static final double COUNTS_PER_MOTOR_REVOLUTION = 42;
         public static final double GEAR_BOX_RATIO = 9.92;
         public static final double METERS_PER_GEARBOX_REVOLTION = 3.14*6.0/39.37;
+        public static final double METERS_PER_ENCODER_COUNT = 21.0; 
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
