@@ -13,6 +13,7 @@ import frc.robot.RobotConstants.ARM;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DefaultGripperCommand;
+import frc.robot.commands.DriveBrakeForSeconds;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.FilteredDriveCommand;
@@ -121,6 +122,7 @@ public class CommandFactory {
     
     public Command autonomousFarCommand() {
         double MOVE_DISTANCE_METERS = -3.2;
+        double HOLD_BRAKE_TIME = 2.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         	new ZeroGyroCommand(navxSubsystem),
             new PositionElbowCommand(elbowSubsystem, 100, true)
@@ -130,6 +132,7 @@ public class CommandFactory {
             , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
             , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
             , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+            , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
         );
         sg.setName("AutonomousFarCommand");
         return sg;
