@@ -54,6 +54,7 @@
       "/Shuffleboard/Testing/PositionTelescopeCommand@0.08m": "Command",
       "/Shuffleboard/Testing/PositionTelescopeCommand@0.2m": "Command",
       "/Shuffleboard/Testing/PositionTelescopeCommand@1.4m": "Command",
+      "/Shuffleboard/Testing/SequentialCommandGroup": "Command",
       "/Shuffleboard/Testing/SetArmSpeedCommand,s=-0.1": "Command",
       "/Shuffleboard/Testing/SetArmSpeedCommand,s=0.0": "Command",
       "/Shuffleboard/Testing/SetArmSpeedCommand,s=0.1": "Command",
@@ -109,7 +110,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 338
+          "height": 0
         }
       ]
     }

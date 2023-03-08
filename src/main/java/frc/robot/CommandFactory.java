@@ -299,7 +299,7 @@ public class CommandFactory {
     }
     
     public Command homeTelescopeAndElbow() {
-        return new SequentialCommandGroup( homeTelescopeAndElbow(), homeElbowCommand());
+        return new SequentialCommandGroup( homeTelescopeCommand(), homeElbowCommand());
     }
 
     public Command homeElbowCommand() {
