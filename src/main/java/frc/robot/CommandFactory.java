@@ -73,24 +73,12 @@ public class CommandFactory {
 
     public List<Command> getAutoCommandChoices(){
     	//these commands will be available for autonomous mode on the PREMATCH tab
-        Command c3 = new SequentialCommandGroup(
-            new DriveDirectionCommand(driveSubsystem, 2,0.0, 0.5)
-            , new DriveDirectionCommand(driveSubsystem, 0.0, 2, 0.5)
-            , new DriveDirectionCommand(driveSubsystem, -2,0.0, 0.5)
-            , new DriveDirectionCommand(driveSubsystem, 0.0, -2, 0.5)
-        );
-        c3.setName("SquareDance");
-        Command c4 = driveDistanceCommand(2);
-        c4.setName("MoveForward");
+        // First option in list will be the default choice
         Command c5 = autonomousFarCommand();
         c5.setName("Autonomous Far");
-        Command c6 = middleScoringPositionCommand();
-        c6.setName("Autonomous Middle");
-        Command c7 = autonomusMiddleCommand();
-        c7.setName("Ground Scoring");
-        Command c8 = loadingPositionCommand();
-        c8.setName("Loading");
-    	return List.of(  c3 ,c4, c5, c6, c7, c8);
+        Command c6 = autonomousBalanceDeadRecCommand();
+        c6.setName("Autonomous Balance DeadRec");
+    	return List.of( c5, c6 );
 
     }
     
@@ -140,6 +128,25 @@ public class CommandFactory {
             , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
         );
         sg.setName("AutonomousFarCommand");
+        return sg;
+    }
+    
+    public Command autonomousBalanceDeadRecCommand() {
+        double MOVE_DISTANCE_METERS = -2.5;
+        double HOLD_BRAKE_TIME = 2.0;
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+        	new ZeroGyroCommand(navxSubsystem)
+            , new GripperCommand(gripperSubsystem, GripperState.kClose)
+            , new PositionElbowCommand(elbowSubsystem, 100, true)
+            , new PositionTelescopeCommand(armSubsystem, 1.38, true)
+            , new GripperCommand(gripperSubsystem, GripperState.kOpen)
+            , new WaitCommand(1)
+            , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
+            , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+            , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+        );
+        sg.setName("AutonomousBalanceDeadRecCommand");
         return sg;
     }
 

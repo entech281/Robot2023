@@ -49,8 +49,12 @@ public class ShuffleboardDriverControls implements TargetNodeSupplier {
 		fieldAbsolute.setBoolean(newValue);
 	}
 	
-	public void addAutoCommandChoice(Command newCommand) {
-		autoCommandChooser.addOption(newCommand.getName(), newCommand);
+	public void addAutoCommandChoice(Command newCommand, boolean isDefault) {
+       if (isDefault) {
+            autoCommandChooser.setDefaultOption(newCommand.getName(), newCommand);
+        } else {
+            autoCommandChooser.addOption(newCommand.getName(), newCommand);
+        }
 	}
 	public boolean isFieldAbsolute() {
 		return fieldAbsolute.getBoolean(DEFAULT_FIELD_ABSOLUTE);
