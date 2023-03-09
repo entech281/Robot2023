@@ -20,13 +20,14 @@ public class GripperSubsystem extends EntechSubsystem {
 	private boolean enabled = true;
 	private final int SOLENOID_HIT_COUNT = 20;
 	
-	public enum GripperState { kClose, kOpen }
+	public enum GripperState { kClose, kOpen, kUnknown }
 	
 	@Override
 	public void initialize() {
 		if (enabled ) {
 			leftGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.LEFT_GRIPPER_OPEN, RobotConstants.PNEUMATICS.LEFT_GRIPPER_CLOSE);
 			rightGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.RIGHT_GRIPPER_OPEN, RobotConstants.PNEUMATICS.RIGHT_GRIPPER_CLOSE);
+            gripperState = GripperState.kUnknown;
 		}
 		
 	}

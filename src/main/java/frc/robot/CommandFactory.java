@@ -119,13 +119,18 @@ public class CommandFactory {
             homeTelescopeAndElbow()
     	);
     }
+
+    public Command getAutonomousChoice() {
+        return autonomousFarCommand();
+    }
     
     public Command autonomousFarCommand() {
-        double MOVE_DISTANCE_METERS = -3.2;
+        double MOVE_DISTANCE_METERS = -4.0;
         double HOLD_BRAKE_TIME = 2.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-        	new ZeroGyroCommand(navxSubsystem),
-            new PositionElbowCommand(elbowSubsystem, 100, true)
+        	new ZeroGyroCommand(navxSubsystem)
+            , new GripperCommand(gripperSubsystem, GripperState.kClose)
+            , new PositionElbowCommand(elbowSubsystem, 100, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
             , new WaitCommand(1)
@@ -154,16 +159,7 @@ public class CommandFactory {
     	s.setName("deployHighCommand");
     	return s;
     }
-    //this is probably also the home position
-    public Command carryPosition() {
-    	Command s = new SequentialCommandGroup(
-    			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true),
-    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true )
-    	);
-    	s.setName("carryPosition");
-    	return s;
-    }
-
+ 
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
     	return new DriveInputYawMixer(robotState, operatorJoystickInput);
     }
