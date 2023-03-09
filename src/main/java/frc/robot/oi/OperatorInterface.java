@@ -96,10 +96,7 @@ public class OperatorInterface {
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.RIGHT_APRILTAG)
         .onTrue(commandFactory.groundScoringElbowCommand());        
-        
-        operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
-            .onTrue(commandFactory.carryPosition());
-
+ 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.AUTO)
             .onTrue(commandFactory.armPositionFullExtension())
             .onFalse(commandFactory.armPositionHome());

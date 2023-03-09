@@ -88,10 +88,10 @@ public class Robot extends TimedRobot {
 		shuffleboardInterface.addSubsystems(allSubsystems);
 		shuffleboardInterface.addTestCommands(commandFactory.getTestCommands());
 		shuffleboardInterface.addPreMatchCommands(commandFactory.getPrematchCommands());
-		List<Command> autoChoices = commandFactory.getAutoCommandChoices();
-		autoChoices.forEach((c)->{
-			shuffleboardControls.addAutoCommandChoice(c);
-		});	  
+		// List<Command> autoChoices = commandFactory.getAutoCommandChoices();
+		// autoChoices.forEach((c)->{
+		// 	shuffleboardControls.addAutoCommandChoice(c);
+		// });	  
   }
   private void doPeriodic() {
     // robotContext.periodic();	  
@@ -140,7 +140,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
 
     // Get selected routine 
-    autoCommand = shuffleboardControls.getSelectedAutoCommand();
+    // autoCommand = shuffleboardControls.getSelectedAutoCommand();
+    autoCommand = commandFactory.getAutonomousChoice();
     allSubsystems.getArm().clearRequestedPosition();
     allSubsystems.getElbow().clearRequestedPosition();
     // schedule the autonomous command
