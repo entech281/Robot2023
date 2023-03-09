@@ -41,6 +41,12 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
         yawHoldFilter.setEnabled(false);
     }
 
+    @Override 
+    public void initialize() {
+        yawHoldFilter.updateSetpoint(operatorInput.get().getRawYawAngleDegrees());
+        yawHoldFilter.reset();
+    }
+
     @Override
     public void execute() {
     	DriveInput di = operatorInput.get();
