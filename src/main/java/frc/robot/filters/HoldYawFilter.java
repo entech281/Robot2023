@@ -1,6 +1,7 @@
 package frc.robot.filters;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.controllers.RobotYawPIDController;
 
@@ -32,7 +33,9 @@ public class HoldYawFilter extends DriveInputFilter {
         DriveInput newDi = new DriveInput(original);        		
 
         newDi.setRotation(pid.calculate(original.getRawYawAngleDegrees(), yawSetPoint));
-        DriverStation.reportWarning("HoldYaw: " + original.getRawYawAngleDegrees() + " , " + yawSetPoint + " , " + newDi.getRotation() , false);
+        SmartDashboard.putNumber("HoldYaw meas", original.getRawYawAngleDegrees());
+        SmartDashboard.putNumber("HoldYaw setp", yawSetPoint);
+        SmartDashboard.putNumber("HoldYaw rot", newDi.getRotation());
         return newDi;
     }
 

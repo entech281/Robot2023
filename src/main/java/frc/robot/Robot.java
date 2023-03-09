@@ -7,6 +7,8 @@ package frc.robot;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -82,6 +84,9 @@ public class Robot extends TimedRobot {
 	c.enableDigital();
 	navx.zeroYaw();
 	
+    // Enable telematics of the SmartDashboard data.  Joystick data is currently true
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog(), true);
   }
   private void setupShuffleboardInterface() {
 			

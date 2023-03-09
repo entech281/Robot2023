@@ -133,6 +133,10 @@ public boolean isEnabled() {
     rearRightEncoder.setPosition(0);
   }
 
+  /**
+   * 
+   * @return average motor revolutions for the 4 motors
+   */
   public double getAveragePosition() {
     double position = 0;
     position += frontLeftEncoder.getPosition();
@@ -143,9 +147,8 @@ public boolean isEnabled() {
   }
 
   public double getAverageDistanceMeters() {
-    //double distance = ((getAveragePosition() / RobotConstants.DRIVE.COUNTS_PER_MOTOR_REVOLUTION) / RobotConstants.DRIVE.GEAR_BOX_RATIO) * RobotConstants.DRIVE.METERS_PER_GEARBOX_REVOLTION;
-    double distance = getAveragePosition() / RobotConstants.DRIVE.METERS_PER_ENCODER_COUNT;
-    //DriverStation.reportWarning("Distance: " + distance, false);
+    double distance = (getAveragePosition() / RobotConstants.DRIVE.GEAR_BOX_RATIO) * RobotConstants.DRIVE.METERS_PER_GEARBOX_REVOLTION;
+    // double distance = getAveragePosition() / RobotConstants.DRIVE.METERS_PER_ENCODER_COUNT;
     return distance;
   }
 }
