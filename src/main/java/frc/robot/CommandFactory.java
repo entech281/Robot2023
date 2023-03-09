@@ -121,7 +121,7 @@ public class CommandFactory {
     }
     
     public Command autonomousFarCommand() {
-        double MOVE_DISTANCE_METERS = -3.2;
+        double MOVE_DISTANCE_METERS = -4.0;
         double HOLD_BRAKE_TIME = 2.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         	new ZeroGyroCommand(navxSubsystem),
@@ -152,15 +152,6 @@ public class CommandFactory {
     			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true )
     	);
     	s.setName("deployHighCommand");
-    	return s;
-    }
-    //this is probably also the home position
-    public Command carryPosition() {
-    	Command s = new SequentialCommandGroup(
-    			new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true),
-    			new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true )
-    	);
-    	s.setName("carryPosition");
     	return s;
     }
 
@@ -332,18 +323,22 @@ public class CommandFactory {
     }
     
     public Command homeTelescopeAndElbow() {
-    	SequentialCommandGroup sg =  new SequentialCommandGroup( homeTelescopeCommand(), homeElbowCommand());
+    	SequentialCommandGroup sg =  new SequentialCommandGroup( 
+    			createNamedElbowPositionCommand(RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES,"minimum pos"), 
+    			armPositionHome()
+    	);
+    	
     	sg.setName("homeTelescopeAndElbow");
     	return sg;
     }
 
-    public Command homeElbowCommand() {
-        return new HomeElbowCommand(elbowSubsystem);
-    }
-
-    public Command homeTelescopeCommand() {
-        return new HomeArmCommand(armSubsystem);
-    }
+//    public Command homeElbowCommand() {
+//        return new HomeElbowCommand(elbowSubsystem);
+//    }
+//
+//    public Command homeTelescopeCommand() {
+//        return new HomeArmCommand(armSubsystem);
+//    }
 
     public Command armPositionHome() {
         return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_ARM_LENGTH_M, true);

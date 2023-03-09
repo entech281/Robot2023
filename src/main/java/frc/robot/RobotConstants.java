@@ -66,12 +66,12 @@ public final class RobotConstants {
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
-    		  public static final double MIN_METERS= 0.02;
+    		  public static final double MIN_METERS= 0.0;
     		  public static final double CARRY_METERS = 0.1;
     		  public static final double SCORE_MIDDLE_METERS = 0.3;
     		  public static final double SCORE_HIGH_METERS = 0.4;
     		  public static final double SAFE = 0.1;
-    		  public static final double MAX_METERS = 0.56; //0.52 max extension
+    		  public static final double MAX_METERS = 0.53; //0.52 max extension
               public static final double MIN_ARM_LENGTH_M = 0.87155; 
               public static final double MAX_ARM_LENGTH_M = 1.4;
     	}
@@ -94,7 +94,7 @@ public final class RobotConstants {
     		public static final double HOMING_SPEED_PERCENT=0.2;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.12;
+    		public static final double P_GAIN=0.24;
     		public static final double FF_GAIN_GOING_UP=0.00;
     		public static final double FF_GAIN_GOING_DOWN=0.0;
     		public static final double I_GAIN=0.000;
