@@ -328,8 +328,9 @@ public class CommandFactory {
     
     public Command homeTelescopeAndElbow() {
     	SequentialCommandGroup sg =  new SequentialCommandGroup( 
-    			createNamedElbowPositionCommand(RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES,"minimum pos"), 
-    			armPositionHome()
+    			armPositionHome(),
+    			createNamedElbowPositionCommand(RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES,"minimum pos")
+    			
     	);
     	
     	sg.setName("homeTelescopeAndElbow");
