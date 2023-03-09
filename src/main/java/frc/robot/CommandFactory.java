@@ -344,4 +344,13 @@ public class CommandFactory {
     public Command homeTelescopeCommand() {
         return new HomeArmCommand(armSubsystem);
     }
+
+    public Command armPositionHome() {
+        return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_ARM_LENGTH_M, true);
+     }
+
+     public Command armPositionFullExtension() {
+        return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MAX_ARM_LENGTH_M, true);
+     }
+  
 }

@@ -100,6 +100,10 @@ public class OperatorInterface {
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
             .onTrue(commandFactory.carryPosition());
 
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.AUTO)
+            .onTrue(commandFactory.armPositionFullExtension())
+            .onFalse(commandFactory.armPositionHome());
+            
         // ******* Operator Joytick ******* 
         /**
         operatorStick.button(RobotConstants.OPERATOR_STICK.GRIPPER)
