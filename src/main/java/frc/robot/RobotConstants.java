@@ -61,7 +61,7 @@ public final class RobotConstants {
     		public static final double HOMING_SPEED_PERCENT=0.35;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=12.0;
+    		public static final double P_GAIN=16.0;
     		public static final double I_GAIN=0.0;
     		public static final double D_GAIN=0.0;
     	}
@@ -86,28 +86,28 @@ public final class RobotConstants {
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = false;
     		public static final double MOVE_TOLERANCE_DEGREES= 1.0; 
-    		public static final int CURRENT_LIMIT_AMPS=8;
-    		public static final int MAX_SPIKE_CURRENT=12;
+    		public static final int CURRENT_LIMIT_AMPS=16;
+    		public static final int MAX_SPIKE_CURRENT=30;
     		public static final double COUNTS_PER_DEGREE=2.1383; 
     	} 
     	public interface HOMING{
-    		public static final double HOMING_SPEED_PERCENT=0.1;
+    		public static final double HOMING_SPEED_PERCENT=0.2;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.64;
-    		public static final double FF_GAIN_GOING_UP=0.04;
+    		public static final double P_GAIN=0.12;
+    		public static final double FF_GAIN_GOING_UP=0.00;
     		public static final double FF_GAIN_GOING_DOWN=0.0;
-    		public static final double I_GAIN=0.002;
+    		public static final double I_GAIN=0.000;
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES=3.0;    		
-    		  public static double CARRY_DEGREES = 10.0;
+    		  public static double CARRY_DEGREES = 8.0;
     		  public static double SAFE_ANGLE = 15.0;  
     		  public static double SCORE_LOW_DEGREES= 23.784;
-    		  public static double SCORE_MIDDLE_DEGREES = 65.22;
-    		  public static double LOAD_STATION_DEGREES=90.0;
-    		  public static double SCORE_HIGH_DEGREES = 100;    		  
+    		  public static double SCORE_MIDDLE_DEGREES = 80.22;
+    		  public static double LOAD_STATION_DEGREES=80.0;
+    		  public static double SCORE_HIGH_DEGREES = 102;    		  
       		  public static final double MAX_POSITION_DEGREES=115.0;    		  
     	}    	
     }
@@ -198,7 +198,7 @@ public final class RobotConstants {
     	}
 
     	public static boolean DEFAULT_YAW_LOCK = false;
-    	public static boolean DEFAULT_FIELD_ABSOLUTE = true;
+    	public static boolean DEFAULT_FIELD_ABSOLUTE = false;
     }
 
     public interface MAST{

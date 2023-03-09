@@ -21,7 +21,7 @@ import static frc.robot.RobotConstants.ARM.*;
  */
 public class ArmSubsystem extends EntechSubsystem{
 
-  private static final double NUDGE_COUNT = 0.1;
+  private static final double NUDGE_COUNT = 0.05;
   private CANSparkMax telescopeMotor;
   private SparkMaxPositionController positionController;
   private boolean enabled = true;
