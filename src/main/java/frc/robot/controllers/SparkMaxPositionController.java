@@ -130,7 +130,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   	    builder.addBooleanProperty("Homed", this::isHomed, null);
   	    builder.addBooleanProperty("UpperLimit", this::isAtUpperLimit, null);
   	    builder.addBooleanProperty("LowerLimit", this::isAtLowerLimit, null);
-
+  	    builder.addDoubleProperty("MotorOut", () -> { return spark.getAppliedOutput();}, null);
 
     }
 	
@@ -171,12 +171,15 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   		 //do nothing
   	 }
   	 else if ( axisState == HomingState.HOMED) {
-  	  	  if ( ! isPositionWithinSoftLimits(requestedPosition)) {
+  		 double tmp = requestedPosition;
+  	  	  if (  ! isPositionWithinSoftLimits(tmp)) {
   	        DriverStation.reportWarning(config.getName() + "Invalid Position:  " + requestedPosition   ,false);
-  	        requestedPosition = Math.min(requestedPosition, config.getMaxPosition());
-  	        requestedPosition = Math.max(requestedPosition, config.getMinPosition());
-  	     }
-  	  	 this.requestedPosition = Optional.of(requestedPosition);	  		 
+  	        tmp  = Math.min(tmp, config.getMaxPosition());
+  	        tmp  = Math.max(tmp, config.getMinPosition());   	  		  
+  	  		
+  	      }
+  	  	  this.requestedPosition = Optional.of(tmp); 
+  	  	  	  		 
   	 }
     }    
 
@@ -201,6 +204,9 @@ public class SparkMaxPositionController implements Sendable, PositionController 
       		 case FINDING_LIMIT:
       			 if ( isAtLowerLimit() ) {
       				arrivedHome();
+      			 }
+      			 else {
+      				setMotorSpeedInternal(-config.getHomingSpeedPercent());
       			 }
       			 break;
       		 case HOMED:

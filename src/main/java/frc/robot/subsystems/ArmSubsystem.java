@@ -6,7 +6,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
-
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.ARM;
 
@@ -106,6 +106,7 @@ public void setPosition(double position) {
   }
 
   public void requestPosition(double requestedPosition) {
+	  DriverStation.reportWarning("ARm Angle Request:" + requestedPosition, false);
 	  positionController.requestPosition(requestedPosition);
   }
 

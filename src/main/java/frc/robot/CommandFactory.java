@@ -159,7 +159,6 @@ public class CommandFactory {
     	s.setName("deployHighCommand");
     	return s;
     }
- 
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
     	return new DriveInputYawMixer(robotState, operatorJoystickInput);
     }
@@ -328,18 +327,22 @@ public class CommandFactory {
     }
     
     public Command homeTelescopeAndElbow() {
-    	SequentialCommandGroup sg =  new SequentialCommandGroup( homeTelescopeCommand(), homeElbowCommand());
+    	SequentialCommandGroup sg =  new SequentialCommandGroup( 
+    			createNamedElbowPositionCommand(RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES,"minimum pos"), 
+    			armPositionHome()
+    	);
+    	
     	sg.setName("homeTelescopeAndElbow");
     	return sg;
     }
 
-    public Command homeElbowCommand() {
-        return new HomeElbowCommand(elbowSubsystem);
-    }
-
-    public Command homeTelescopeCommand() {
-        return new HomeArmCommand(armSubsystem);
-    }
+//    public Command homeElbowCommand() {
+//        return new HomeElbowCommand(elbowSubsystem);
+//    }
+//
+//    public Command homeTelescopeCommand() {
+//        return new HomeArmCommand(armSubsystem);
+//    }
 
     public Command armPositionHome() {
         return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_ARM_LENGTH_M, true);
