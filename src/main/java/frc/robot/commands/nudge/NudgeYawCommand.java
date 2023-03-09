@@ -20,11 +20,12 @@ public class NudgeYawCommand extends EntechCommandBase {
     private Timer timer;
     private final DriveInput direction;
     private final YawAngleSupplier yawAngleSupplier;
-    private static final double NUDGE_TIME = 0.25;
+    private static final double NUDGE_TIME = 0.05;
+    private static final double NUDGE_SPEED = 0.25;
     
     public interface DIRECTION {
-        public static final DriveInput LEFT = new DriveInput(0, 0, 0.5);
-        public static final DriveInput RIGHT = new DriveInput(0, 0, -0.5);
+        public static final DriveInput LEFT = new DriveInput(0, 0, NUDGE_SPEED);
+        public static final DriveInput RIGHT = new DriveInput(0, 0, -NUDGE_SPEED);
     }
 
     /**

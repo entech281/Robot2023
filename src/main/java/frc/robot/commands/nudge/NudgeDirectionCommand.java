@@ -19,13 +19,15 @@ public class NudgeDirectionCommand extends EntechCommandBase {
     private Timer timer;
     private final DriveInput direction;
 
-    private static final double NUDGE_TIME = 0.4;
+    private static final double NUDGE_TIME = 0.25;
+    private static final double NUDGE_FWD_SPEED = 0.2;
+    private static final double NUDGE_LAT_SPEED = 0.4;
     
     public interface DIRECTION {
-        public static final DriveInput LEFT = new DriveInput(0, -0.5, 0);
-        public static final DriveInput RIGHT = new DriveInput(0, 0.5, 0);
-        public static final DriveInput FORWARD = new DriveInput(0.5, 0, 0);
-        public static final DriveInput BACKWARD = new DriveInput(-0.5, 0, 0);
+        public static final DriveInput LEFT = new DriveInput(0, -NUDGE_LAT_SPEED, 0);
+        public static final DriveInput RIGHT = new DriveInput(0, NUDGE_LAT_SPEED, 0);
+        public static final DriveInput FORWARD = new DriveInput(NUDGE_FWD_SPEED, 0, 0);
+        public static final DriveInput BACKWARD = new DriveInput(-NUDGE_FWD_SPEED, 0, 0);
     }
 
     /**

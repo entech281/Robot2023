@@ -5,7 +5,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
-
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.ELBOW;
 import frc.robot.controllers.PositionControllerConfig;
@@ -130,12 +130,7 @@ public class ElbowSubsystem extends EntechSubsystem{
 	  }
 
 	  public void requestPosition(double requestedPosition) {
-		  if ( requestedPosition > this.getActualPosition()) {
-			  //this.elbowMotor.getPIDController().setFF(RobotConstants.ELBOW.TUNING.FF_GAIN_GOING_UP);
-		  }
-		  else {
-			  //this.elbowMotor.getPIDController().setFF(RobotConstants.ELBOW.TUNING.FF_GAIN_GOING_DOWN);
-		  }
+		  DriverStation.reportWarning("Elbow Angle Request:" + requestedPosition, false);
 		  positionController.requestPosition(requestedPosition);
 	  }
 
