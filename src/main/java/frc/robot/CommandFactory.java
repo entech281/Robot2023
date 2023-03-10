@@ -16,6 +16,7 @@ import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
+import frc.robot.commands.DriveSetBrake;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
@@ -118,7 +119,7 @@ public class CommandFactory {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         	new ZeroGyroCommand(navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
-            , new PositionElbowCommand(elbowSubsystem, 100, true)
+            , new PositionElbowCommand(elbowSubsystem, 105, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
             , new WaitCommand(1)
@@ -137,10 +138,12 @@ public class CommandFactory {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         	new ZeroGyroCommand(navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
-            , new PositionElbowCommand(elbowSubsystem, 100, true)
-            , new PositionTelescopeCommand(armSubsystem, 1.38, true)
+            , new DriveSetBrake(driveSubsystem)
+            , new PositionElbowCommand(elbowSubsystem, 105, true)
+            , new PositionTelescopeCommand(armSubsystem, 1.385, true)
+            , new WaitCommand(1.0)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
-            , new WaitCommand(1)
+            , new WaitCommand(1.0)
             , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
             , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
             , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
@@ -149,7 +152,6 @@ public class CommandFactory {
         sg.setName("AutonomousBalanceDeadRecCommand");
         return sg;
     }
-
     public Command autonomusMiddleCommand() {
         return new SequentialCommandGroup(
         new PositionElbowCommand(elbowSubsystem, 80, true)

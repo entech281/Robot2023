@@ -20,6 +20,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     private TurnToggleFilter yawLockFilter;
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
+    private boolean holdYawInitialized = false;
 
 	/**
      * Creates a new ArcadeDrive. This command will drive your robot according to
@@ -43,13 +44,15 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
 
     @Override 
     public void initialize() {
-        yawHoldFilter.updateSetpoint(operatorInput.get().getRawYawAngleDegrees());
-        yawHoldFilter.reset();
+        yawHoldFilter.reset();  
     }
 
     @Override
     public void execute() {
     	DriveInput di = operatorInput.get();
+        if ( ! holdYawInitialized ) {
+            yawHoldFilter.updateSetpoint(operatorInput.get().getRawYawAngleDegrees());
+        }
         di.setRawYawAngleDegrees(di.getYawAngleDegrees());
     	DriveInput filtered = di;
     	

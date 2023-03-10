@@ -15,13 +15,13 @@ public class HoldYawFilter extends DriveInputFilter {
     private RobotYawPIDController pid;
     private static final double AUTO_SETPOINT = 9999.0;
     private static final double TOLERANCE = 0.1;
-    private static final double P_GAIN = 0.025;
+    private static final double P_GAIN = 0.01;
     private static final double I_GAIN = 0.0;
     private double yawSetPoint = AUTO_SETPOINT;
 
     public HoldYawFilter() {
         pid = new RobotYawPIDController();
-        pid.setD(P_GAIN);
+        pid.setP(P_GAIN);
         pid.setI(I_GAIN);
     }
 
