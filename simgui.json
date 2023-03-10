@@ -32,6 +32,7 @@
       "/Shuffleboard/Match/SendableChooser[0]": "String Chooser",
       "/Shuffleboard/Match/TargetNode": "String Chooser",
       "/Shuffleboard/PreMatch/AutoCommand": "String Chooser",
+      "/Shuffleboard/PreMatch/homeTelescopeAndElbow": "Command",
       "/Shuffleboard/Testing/ArmForgetHomeCommand": "Command",
       "/Shuffleboard/Testing/CloseGripper": "Command",
       "/Shuffleboard/Testing/ElbowForgetHomeCommand": "Command",
@@ -47,6 +48,7 @@
       "/Shuffleboard/Testing/PositionArmCommand@0.3m": "Command",
       "/Shuffleboard/Testing/PositionElbowCommand@100.0deg": "Command",
       "/Shuffleboard/Testing/PositionElbowCommand@25.0deg": "Command",
+      "/Shuffleboard/Testing/PositionElbowCommand@3.0deg": "Command",
       "/Shuffleboard/Testing/PositionElbowCommand@30.0m": "Command",
       "/Shuffleboard/Testing/PositionElbowCommand@4.0deg": "Command",
       "/Shuffleboard/Testing/PositionElbowCommand@60.0deg": "Command",
@@ -62,6 +64,12 @@
       "/Shuffleboard/Testing/SetElbowSpeedCommand,s=-0.1": "Command",
       "/Shuffleboard/Testing/SetElbowSpeedCommand,s=0.0": "Command",
       "/Shuffleboard/Testing/SetElbowSpeedCommand,s=0.1": "Command",
+      "/Shuffleboard/Testing/carryElbowCommand@8.0deg": "Command",
+      "/Shuffleboard/Testing/groundScoringElbowCommand@23.784deg": "Command",
+      "/Shuffleboard/Testing/highScoringElbowCommand@102.0deg": "Command",
+      "/Shuffleboard/Testing/homeTelescopeAndElbow": "Command",
+      "/Shuffleboard/Testing/loadingElbowCommand@80.0deg": "Command",
+      "/Shuffleboard/Testing/middleScoringElbowCommand@80.22deg": "Command",
       "/SmartDashboard/DriveSubsystem": "Subsystem"
     }
   },
@@ -110,9 +118,12 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 338
+          "height": 54
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }
