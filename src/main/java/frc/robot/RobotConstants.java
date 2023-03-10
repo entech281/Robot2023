@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.PositionElbowCommand;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -68,8 +65,8 @@ public final class RobotConstants {
     	public interface POSITION_PRESETS{
     		  public static final double MIN_METERS= 0.0;
     		  public static final double CARRY_METERS = 0.1;
-    		  public static final double SCORE_MIDDLE_METERS = 0.3;
-    		  public static final double SCORE_HIGH_METERS = 0.4;
+    		  public static final double SCORE_MIDDLE_METERS = 1.1;
+    		  public static final double SCORE_HIGH_METERS = 1.38;
     		  public static final double SAFE = 0.1;
     		  public static final double MAX_METERS = 0.53; //0.52 max extension
               public static final double MIN_ARM_LENGTH_M = 0.87155; 
@@ -102,12 +99,13 @@ public final class RobotConstants {
     	}
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES=3.0;    		
-    		  public static double CARRY_DEGREES = 8.0;
-    		  public static double SAFE_ANGLE = 15.0;  
-    		  public static double SCORE_LOW_DEGREES= 23.784;
-    		  public static double SCORE_MIDDLE_DEGREES = 80.22;
-    		  public static double LOAD_STATION_DEGREES=80.0;
-    		  public static double SCORE_HIGH_DEGREES = 102;    		  
+    		  public static final double CARRY_DEGREES = 8.0;
+              public static final double RETRACTED = 12.0;
+    		  public static final double SAFE_ANGLE = 15.0;  
+    		  public static final double SCORE_LOW_DEGREES= 23.784;
+    		  public static final double SCORE_MIDDLE_DEGREES = 80.22;
+    		  public static final double LOAD_STATION_DEGREES=80.0;
+    		  public static final double SCORE_HIGH_DEGREES = 102;    		  
       		  public static final double MAX_POSITION_DEGREES=115.0;    		  
     	}    	
     }
@@ -129,6 +127,11 @@ public final class RobotConstants {
     	public static final int CURRENT_LIMIT_AMPS = 30;
         public static final double GEAR_BOX_RATIO = 9.92;
         public static final double METERS_PER_GEARBOX_REVOLTION = 3.14*6.0/39.37;
+        public interface PRESET_SPEEDS {
+            public static final double AUTO_RAMP_RATE = 0.1;
+            public static final double AUTO_MIN_SPEED = 0.3;
+            public static final double AUTO_SPEED = 0.4;
+        }
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
