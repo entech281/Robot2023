@@ -121,6 +121,7 @@ public class CommandFactory {
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
             , new PositionElbowCommand(elbowSubsystem, 105, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
+            , new WaitCommand(1.0)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
             , new WaitCommand(1)
             , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
