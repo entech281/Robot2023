@@ -74,7 +74,7 @@ public class DriveSubsystem extends EntechSubsystem {
     frontRightEncoder = frontRightSparkMax.getEncoder();
     rearRightEncoder = rearRightSparkMax.getEncoder();
 
-    setCoastMode();
+    setBrakeMode();
   }
 
   @Override
