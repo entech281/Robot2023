@@ -14,7 +14,7 @@ import frc.robot.controllers.SparkMaxPositionController;
 
 public class ElbowSubsystem extends EntechSubsystem{
 
-    private static final double NUDGE_COUNT = 3.0;
+    private static final double NUDGE_COUNT = 1.5;
 	  private CANSparkMax elbowMotor;
 	  private SparkMaxPositionController positionController;
 
