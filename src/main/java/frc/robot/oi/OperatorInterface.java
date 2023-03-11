@@ -82,17 +82,17 @@ public class OperatorInterface {
 
         
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
-        .onTrue(commandFactory.carryElbowCommand());            
+        .onTrue(commandFactory.dialCarryPosition());            
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
         .onTrue(commandFactory.loadingElbowCommand());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LEFT_APRILTAG)
-        .onTrue(commandFactory.highScoringElbowCommand());
+        .onTrue(commandFactory.dialHighPosition());
         
         
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.MIDDLE_APRILTAG)
-        .onTrue(commandFactory.middleScoringElbowCommand());
+        .onTrue(commandFactory.dialMiddlePosition());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.RIGHT_APRILTAG)
         .onTrue(commandFactory.groundScoringElbowCommand());        
