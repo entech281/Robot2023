@@ -382,8 +382,7 @@ public class CommandFactory {
      public Command dialMiddlePosition() {
         return new SequentialCommandGroup(
             middleScoringElbowCommand(),
-            new PositionTelescopeCommand(armSubsystem, 0.9, true)
+            new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, true)
         );
-     }
-  
+     } 
 }
