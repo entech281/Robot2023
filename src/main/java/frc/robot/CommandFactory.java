@@ -119,6 +119,7 @@ public class CommandFactory {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         	new ZeroGyroCommand(navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
+            , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)             
             , new PositionElbowCommand(elbowSubsystem, 105, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
             , new WaitCommand(1.0)
@@ -140,6 +141,7 @@ public class CommandFactory {
         	new ZeroGyroCommand(navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
             , new DriveSetBrake(driveSubsystem)
+            , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)            
             , new PositionElbowCommand(elbowSubsystem, 105, true)
             , new PositionTelescopeCommand(armSubsystem, 1.385, true)
             , new WaitCommand(1.0)
