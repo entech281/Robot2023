@@ -68,9 +68,10 @@ public final class RobotConstants {
     	public interface POSITION_PRESETS{
     		  public static final double MIN_METERS= 0.0;
     		  public static final double CARRY_METERS = 0.1;
-    		  public static final double SCORE_MIDDLE_METERS = 0.3;
+    		  public static final double SCORE_MIDDLE_METERS = 0.9;
     		  public static final double SCORE_HIGH_METERS = 0.4;
     		  public static final double SAFE = 0.1;
+              public static final double LOAD = 0.87155;
     		  public static final double MAX_METERS = 0.53; //0.52 max extension
               public static final double MIN_ARM_LENGTH_M = 0.87155; 
               public static final double MAX_ARM_LENGTH_M = 1.4;

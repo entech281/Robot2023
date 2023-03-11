@@ -364,5 +364,25 @@ public class CommandFactory {
      public Command armPositionFullExtension() {
         return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MAX_ARM_LENGTH_M, true);
      }
-  
+
+     public Command dialCarryPosition() {
+        return new SequentialCommandGroup(
+            armPositionHome(),
+            carryElbowCommand()
+        );
+     }
+
+     public Command dialHighPosition() {
+        return new SequentialCommandGroup(
+            highScoringElbowCommand(),
+            armPositionFullExtension()
+        );
+     }
+
+     public Command dialMiddlePosition() {
+        return new SequentialCommandGroup(
+            middleScoringElbowCommand(),
+            new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, true)
+        );
+     } 
 }
