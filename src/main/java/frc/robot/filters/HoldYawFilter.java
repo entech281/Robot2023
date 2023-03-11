@@ -1,8 +1,6 @@
 package frc.robot.filters;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotConstants;
 import frc.robot.controllers.RobotYawPIDController;
 
 /**
@@ -13,34 +11,35 @@ import frc.robot.controllers.RobotYawPIDController;
 public class HoldYawFilter extends DriveInputFilter {
 
     private RobotYawPIDController pid;
-    private static final double AUTO_SETPOINT = 9999.0;
-    private static final double TOLERANCE = 0.1;
+    private static final double INVALID_ROT = 99.0;
     private static final double P_GAIN = 0.01;
     private static final double I_GAIN = 0.0;
-    private double yawSetPoint = AUTO_SETPOINT;
+    private static final double D_GAIN = 0.0;
+    private double yawSetPoint = 9999.0;
+    private boolean setPointValid;
 
     public HoldYawFilter() {
-        pid = new RobotYawPIDController();
-        pid.setP(P_GAIN);
-        pid.setI(I_GAIN);
+        pid = new RobotYawPIDController(P_GAIN, I_GAIN, D_GAIN);
+        setPointValid = false;
     }
 
     public DriveInput doFilter(DriveInput original) {
 
-        if (Math.abs(yawSetPoint - AUTO_SETPOINT) < TOLERANCE) {
-            yawSetPoint = original.getRawYawAngleDegrees();
-        }
         DriveInput newDi = new DriveInput(original);        		
-
-        newDi.setRotation(pid.calculate(original.getRawYawAngleDegrees(), yawSetPoint));
+        double rot = INVALID_ROT;
+        if (setPointValid) {
+            rot = pid.calculate(original.getRawYawAngleDegrees(), yawSetPoint);
+            // newDi.setRotation(pid.calculate(rot);
+        }
         SmartDashboard.putNumber("HoldYaw meas", original.getRawYawAngleDegrees());
         SmartDashboard.putNumber("HoldYaw setp", yawSetPoint);
-        SmartDashboard.putNumber("HoldYaw rot", newDi.getRotation());
+        SmartDashboard.putNumber("HoldYaw rot", rot);
         return newDi;
     }
 
     public void updateSetpoint( double yaw ) {
         yawSetPoint = yaw;
+        setPointValid = true;
     }
 
     public void reset() {
