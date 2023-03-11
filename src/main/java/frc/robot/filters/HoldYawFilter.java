@@ -46,4 +46,7 @@ public class HoldYawFilter extends DriveInputFilter {
         pid.reset();
     }
 
+    public boolean isInitialized() {
+        return setPointValid;
+    }
 }
