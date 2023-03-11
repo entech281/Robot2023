@@ -109,7 +109,7 @@ public final class RobotConstants {
     		  public static double SCORE_MIDDLE_DEGREES = 91.0;
     		  public static double LOAD_STATION_DEGREES= 86.0;
     		  public static double SCORE_HIGH_DEGREES = 109;    		  
-      		  public static final double MAX_POSITION_DEGREES=115.0;    		  
+      		  public static final double MAX_POSITION_DEGREES=119.0;    		  
     	}    	
     }
     
