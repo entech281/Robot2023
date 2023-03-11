@@ -68,7 +68,7 @@ public class DriveDistanceCommand extends EntechCommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.stop();
-    drive.setDriveMode(DriveMode.COAST);
+    drive.setDriveMode(DriveMode.BRAKE);
   }
 
   // Returns true when the command should end.

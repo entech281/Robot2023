@@ -30,6 +30,7 @@ public class DriveBrakeForSeconds extends EntechCommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_drive.stop();
     m_drive.setDriveMode(DriveMode.BRAKE);
     timer.stop();
     timer.reset();
@@ -44,7 +45,6 @@ public class DriveBrakeForSeconds extends EntechCommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.setDriveMode(DriveMode.COAST);
   }
 
   // Returns true when the command should end.
