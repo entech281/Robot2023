@@ -130,6 +130,7 @@ public final class RobotConstants {
     	public static final int CURRENT_LIMIT_AMPS = 30;
         public static final double GEAR_BOX_RATIO = 9.92;
         public static final double METERS_PER_GEARBOX_REVOLTION = 3.14*6.0/39.37;
+        public static final double PERCISION_DRIVE_FACTOR = 0.4;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
@@ -199,6 +200,7 @@ public final class RobotConstants {
 
     	public static boolean DEFAULT_YAW_LOCK = false;
     	public static boolean DEFAULT_FIELD_ABSOLUTE = false;
+        public static boolean DEFAULT_PRECISION_DRIVE = false;
     }
 
     public interface MAST{

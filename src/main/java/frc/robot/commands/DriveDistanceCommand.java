@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveDistanceCommand extends EntechCommandBase {
@@ -42,7 +43,7 @@ public class DriveDistanceCommand extends EntechCommandBase {
   @Override
     public void initialize() {
       drive.resetEncoders();
-      drive.setBrakeMode();
+      drive.setDriveMode(DriveMode.BRAKE);
     }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -67,7 +68,7 @@ public class DriveDistanceCommand extends EntechCommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.stop();
-    drive.setCoastMode();
+    drive.setDriveMode(DriveMode.COAST);
   }
 
   // Returns true when the command should end.

@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotConstants.ARM;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
-import frc.robot.commands.BrakeCommand;
 import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
 import frc.robot.commands.DriveDirectionCommand;
@@ -392,9 +391,5 @@ public class CommandFactory {
             armPositionHome(),
             loadingElbowCommand()
         );
-     }
-
-     public Command brakeCommand() {
-        return new BrakeCommand(driveSubsystem);
      }
 }

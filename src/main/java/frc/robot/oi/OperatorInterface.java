@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
 import frc.robot.adapter.JoystickDriveInputSupplier;
+import frc.robot.commands.TogglePrecisionDriveCommand;
 
 public class OperatorInterface {
 
@@ -68,7 +69,8 @@ public class OperatorInterface {
             .onTrue(commandFactory.nudgeYawRightCommand());
 
         driveStick.button(RobotConstants.DRIVER_STICK.BRAKE)
-            .whileTrue(commandFactory.brakeCommand());
+            .onTrue(new TogglePrecisionDriveCommand(shuffleboardControls))
+            .onFalse(new TogglePrecisionDriveCommand(shuffleboardControls));
 
         // *******  Operator Panel  *******
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)
