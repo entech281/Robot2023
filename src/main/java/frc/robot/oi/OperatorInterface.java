@@ -3,10 +3,12 @@ package frc.robot.oi;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
 import frc.robot.adapter.JoystickDriveInputSupplier;
+import frc.robot.commands.TogglePrecisionDriveCommand;
 
 public class OperatorInterface {
 
@@ -64,7 +66,11 @@ public class OperatorInterface {
 	        .onTrue(commandFactory.nudgeYawLeftCommand());
 	
 	    driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_RIGHT)
-            .onTrue(commandFactory.nudgeYawRightCommand());    	
+            .onTrue(commandFactory.nudgeYawRightCommand());
+
+        driveStick.button(RobotConstants.DRIVER_STICK.BRAKE)
+            .onTrue(new TogglePrecisionDriveCommand(shuffleboardControls))
+            .onFalse(new TogglePrecisionDriveCommand(shuffleboardControls));
 
         // *******  Operator Panel  *******
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)

@@ -38,6 +38,8 @@ public class DriveSubsystem extends EntechSubsystem {
   private CANSparkMax frontRightSparkMax;
   private CANSparkMax rearRightSparkMax;
   private MecanumDrive robotDrive;
+
+  private DriveMode currentMode = DriveMode.COAST;
   
   public DriveSubsystem() {
   }
@@ -71,6 +73,8 @@ public class DriveSubsystem extends EntechSubsystem {
     rearLeftEncoder = rearLeftSparkMax.getEncoder();
     frontRightEncoder = frontRightSparkMax.getEncoder();
     rearRightEncoder = rearRightSparkMax.getEncoder();
+
+    setCoastMode();
   }
 
   @Override
@@ -97,14 +101,30 @@ public class DriveSubsystem extends EntechSubsystem {
     robotDrive.stopMotor();
   }
 
-  public void setCoastMode() {
+  public enum DriveMode {
+    BRAKE,
+    COAST
+  }
+
+  public void setDriveMode(DriveMode mode) {
+    if (mode != currentMode) {
+      switch (mode) {
+        case BRAKE:
+          setBrakeMode();
+        case COAST:
+          setCoastMode();
+      }
+    }
+  }
+
+  private void setCoastMode() {
     frontLeftSparkMax.setIdleMode(IdleMode.kCoast);
     frontRightSparkMax.setIdleMode(IdleMode.kCoast);
     rearLeftSparkMax.setIdleMode(IdleMode.kCoast);
     rearRightSparkMax.setIdleMode(IdleMode.kCoast);
   }
 
-  public void setBrakeMode() {
+  private void setBrakeMode() {
     frontLeftSparkMax.setIdleMode(IdleMode.kBrake);
     frontRightSparkMax.setIdleMode(IdleMode.kBrake);
     rearLeftSparkMax.setIdleMode(IdleMode.kBrake);

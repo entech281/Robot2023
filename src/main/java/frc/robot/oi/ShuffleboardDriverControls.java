@@ -1,6 +1,7 @@
 package frc.robot.oi;
 
 import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_FIELD_ABSOLUTE;
+import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_PRECISION_DRIVE;
 import static frc.robot.RobotConstants.SHUFFLEBOARD.DEFAULT_YAW_LOCK;
 import static frc.robot.RobotConstants.SHUFFLEBOARD.TABS.MATCH;
 
@@ -23,6 +24,7 @@ public class ShuffleboardDriverControls implements TargetNodeSupplier {
 	private SendableChooser<TargetNode> nodeChooser = new SendableChooser<>();
 	private SendableChooser<Command> autoCommandChooser = new SendableChooser<>();
 	private GenericEntry fieldAbsolute;
+	private GenericEntry precisionDrive;
 	private GenericEntry driverYawEnabled;
 	
 	public ShuffleboardDriverControls() {
@@ -40,8 +42,10 @@ public class ShuffleboardDriverControls implements TargetNodeSupplier {
     	operatorTab.add("TargetNode",nodeChooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withSize(3, 1).withPosition(1, 3);	
     	prematchTab.add("AutoCommand",autoCommandChooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withSize(7, 1).withPosition(0, 3);
     	fieldAbsolute = prematchTab.add("FieldAbsolute",DEFAULT_FIELD_ABSOLUTE).withWidget(BuiltInWidgets.kToggleButton).withPosition(0, 1).getEntry();
+		precisionDrive = operatorTab.add("PrecisionDrive",DEFAULT_PRECISION_DRIVE).withWidget(BuiltInWidgets.kToggleButton).withPosition(0, 5).getEntry();
     	driverYawEnabled = operatorTab.add("YawEnabled",DEFAULT_YAW_LOCK).withWidget(BuiltInWidgets.kToggleButton).withPosition(0,3).getEntry();
     	fieldAbsolute.setBoolean(DEFAULT_FIELD_ABSOLUTE);
+		precisionDrive.setBoolean(DEFAULT_PRECISION_DRIVE);
     	driverYawEnabled.setBoolean(DEFAULT_YAW_LOCK);
 	}
 	
@@ -61,10 +65,22 @@ public class ShuffleboardDriverControls implements TargetNodeSupplier {
 	}
 	public boolean isFieldRelative() {
 		return ! fieldAbsolute.getBoolean(DEFAULT_FIELD_ABSOLUTE);
-	}	
+	}
 	
 	public void toggleFieldAbsolute() {
 		setFieldAbsolute( ! isFieldAbsolute() );
+	}
+
+	public boolean isPrecisionDrive() {
+		return precisionDrive.getBoolean(DEFAULT_PRECISION_DRIVE);
+	}
+
+	public void setPrecisionDrive(boolean newValue) {
+		precisionDrive.setBoolean(newValue);
+	}
+
+	public void togglePrecisionDrive() {
+		setPrecisionDrive(!(isPrecisionDrive()));
 	}
 
 	public boolean isYawEnabled() {

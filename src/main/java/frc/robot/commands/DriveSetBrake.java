@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveSetBrake extends EntechCommandBase {
@@ -24,7 +25,7 @@ public class DriveSetBrake extends EntechCommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.setBrakeMode();
+    m_subsystem.setDriveMode(DriveMode.BRAKE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
