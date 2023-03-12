@@ -111,9 +111,12 @@ public class DriveSubsystem extends EntechSubsystem {
       switch (mode) {
         case BRAKE:
           setBrakeMode();
+          break;
         case COAST:
           setCoastMode();
+          break;
       }
+      currentMode = mode;
     }
   }
 
