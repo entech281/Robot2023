@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveBrakeForSeconds extends EntechCommandBase {
@@ -29,7 +30,8 @@ public class DriveBrakeForSeconds extends EntechCommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.setBrakeMode();
+    m_drive.stop();
+    m_drive.setDriveMode(DriveMode.BRAKE);
     timer.stop();
     timer.reset();
     timer.start();
@@ -43,7 +45,6 @@ public class DriveBrakeForSeconds extends EntechCommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.setCoastMode();
   }
 
   // Returns true when the command should end.

@@ -7,9 +7,11 @@ import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
 import frc.robot.filters.FieldRelativeDriveInputFilter;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
+import frc.robot.filters.PrecisionDriveFilter;
 import frc.robot.filters.TurnToggleFilter;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveMode;
 
 public class FilteredDriveCommand extends SimpleDriveCommand {
     private ShuffleboardDriverControls driverControls;
@@ -20,6 +22,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     private TurnToggleFilter yawLockFilter;
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
+    private PrecisionDriveFilter precisionDriveFilter;
 
 	/**
      * Creates a new ArcadeDrive. This command will drive your robot according to
@@ -38,6 +41,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
         this.yawLockFilter = new TurnToggleFilter();
         this.yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
         this.yawHoldFilter = new HoldYawFilter();
+        this.precisionDriveFilter = new PrecisionDriveFilter();
         yawHoldFilter.setEnabled(true);
     }
 
@@ -68,12 +72,18 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     	if (driverControls.isYawLocked()) {
             if (yawHoldFilter.getEnabled()) {
                 filtered = yawHoldFilter.filter(filtered);
-            } else {
-    		    filtered = yawLockFilter.filter(filtered);
             }
+            filtered = yawLockFilter.filter(filtered);
     	} else {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             yawHoldFilter.updateSetpoint(filtered.getRawYawAngleDegrees());
+        }
+
+        if (driverControls.isPrecisionDrive()) {
+            drive.setDriveMode(DriveMode.BRAKE);
+            filtered = precisionDriveFilter.filter(filtered);
+        } else {
+            drive.setDriveMode(DriveMode.COAST);
         }
     	
     	drive.drive(filtered);
