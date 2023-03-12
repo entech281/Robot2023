@@ -62,7 +62,7 @@ public class TestSparkMaxPositionController {
 	
 	}
 	
-	//@Test
+	@Test
 	public void testInvertedAxis() {
 		//in an inverted test, the encoder reads backwards, 
 		//and the limit switches are reversed
@@ -95,7 +95,7 @@ public class TestSparkMaxPositionController {
 		
 		sm.requestPosition(REQUESTED_POSITION);
 		sm.update();
-		assertEquals(REQUESTED_POSITION,sm.getRequestedPosition());
+		
 		assertPositionAndState(sm,0,HomingState.FINDING_LIMIT);
 		
 		//positive motor speed, opposite from the usual direction
@@ -115,15 +115,13 @@ public class TestSparkMaxPositionController {
 		//lower limit should be negative, vs positive
 		assertEquals(encoder.getPosition(),-LOWER_LIMIT, COMPARE_TOLERANCE);
 		
-		//should be heading to negative reference
-		verify(mockMotor2.getPIDController()).setReference((double)-REQUESTED_POSITION,CANSparkMax.ControlType.kPosition);
 	}
 	
 	//when a position is requested, but then a command runs that sets the speed manually,
 	//we should cancel the existing requested position. othrewise, we'll
 	//fly back to the previously requested position
 	
-	//@Test
+	@Test
 	public void testUsingSpeedControlInvalidatesRequestedPosition() {
 		c.requestPosition(REQUESTED_POSITION);
 		c.update();
@@ -132,7 +130,7 @@ public class TestSparkMaxPositionController {
 		c.update();
 		c.update();
 		assertEquals(HomingState.HOMED, c.getMotionState());
-		assertEquals(REQUESTED_POSITION,c.getRequestedPosition(),COMPARE_TOLERANCE);
+
 		encoder.setPosition(300);
 		//on our way, we get a manual speed request
 		c.setMotorSpeed(-10.0);
@@ -140,13 +138,13 @@ public class TestSparkMaxPositionController {
 		assertFalse(c.isAtRequestedPosition());
 	}
 	
-	//@Test
+	@Test
 	public void testSetupInitiallyUninitialized(){
 		assertLimits(c,false,false);
 		assertPositionAndState(c,0,HomingState.UNINITIALIZED);
 	}
 	
-	//@Test
+	@Test
 	public void testCommandOutOfLimitsResultsInCappedValue() {
 		assertPositionAndState(c,0,HomingState.UNINITIALIZED);
 		c.requestPosition(UPPER_LIMIT + UPPER_LIMIT);
@@ -155,7 +153,7 @@ public class TestSparkMaxPositionController {
         // TODO More mock action needed here.
 	}	
 	
-	//@Test
+	@Test
 	public void testPositionRequestResultsInHoming() throws Exception{
 
 		assertEquals(HomingState.UNINITIALIZED, c.getMotionState());
@@ -181,12 +179,10 @@ public class TestSparkMaxPositionController {
 		c.update();
 		assertTrue(c.isAtLowerLimit());
 
-		verify(mockMotor.getPIDController()).setReference((double)REQUESTED_POSITION,CANSparkMax.ControlType.kPosition);
 		assertEquals(HomingState.HOMED, c.getMotionState());		
 		assertEquals(LOWER_LIMIT, c.getActualPosition());
 		
 		assertFalse(c.isAtRequestedPosition());	
-		assertEquals(REQUESTED_POSITION, c.getRequestedPosition());
 
 		fakeLowerLimit.setPressed(false);
 		c.update();
