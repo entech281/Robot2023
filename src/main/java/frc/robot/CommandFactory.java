@@ -135,7 +135,7 @@ public class CommandFactory {
     }
     
     public Command autonomousBalanceDeadRecCommand() {
-        double MOVE_DISTANCE_METERS = -2.5;
+        double MOVE_DISTANCE_METERS = -2.6;
         double HOLD_BRAKE_TIME = 2.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         	new ZeroGyroCommand(navxSubsystem)

@@ -95,10 +95,10 @@ public final class RobotConstants {
     		public static final double HOMING_SPEED_PERCENT=0.2;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.24;
+    		public static final double P_GAIN=0.48;
     		public static final double FF_GAIN_GOING_UP=0.00;
     		public static final double FF_GAIN_GOING_DOWN=0.0;
-    		public static final double I_GAIN=0.000;
+    		public static final double I_GAIN=0.08;
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
@@ -106,9 +106,9 @@ public final class RobotConstants {
     		  public static double CARRY_DEGREES = 8.0;
     		  public static double SAFE_ANGLE = 15.0;  
     		  public static double SCORE_LOW_DEGREES= 43.0;
-    		  public static double SCORE_MIDDLE_DEGREES = 91.0;
-    		  public static double LOAD_STATION_DEGREES= 86.0;
-    		  public static double SCORE_HIGH_DEGREES = 109;    		  
+    		  public static double SCORE_MIDDLE_DEGREES = 94.0;
+    		  public static double LOAD_STATION_DEGREES= 90.0;
+    		  public static double SCORE_HIGH_DEGREES = 113;    		  
       		  public static final double MAX_POSITION_DEGREES=119.0;    		  
     	}    	
     }
