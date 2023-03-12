@@ -74,7 +74,7 @@ public final class RobotConstants {
               public static final double LOAD = 0.87155;
     		  public static final double MAX_METERS = 0.53; //0.52 max extension
               public static final double MIN_ARM_LENGTH_M = 0.87155; 
-              public static final double MAX_ARM_LENGTH_M = 1.4;
+              public static final double MAX_ARM_LENGTH_M = 1.45;
     	}
         
         public static final double MIN_EXTENSION_METERS = 0.9906; //39 inches from center of robot to center of claw
@@ -109,7 +109,7 @@ public final class RobotConstants {
     		  public static double SCORE_MIDDLE_DEGREES = 91.0;
     		  public static double LOAD_STATION_DEGREES= 86.0;
     		  public static double SCORE_HIGH_DEGREES = 109;    		  
-      		  public static final double MAX_POSITION_DEGREES=115.0;    		  
+      		  public static final double MAX_POSITION_DEGREES=119.0;    		  
     	}    	
     }
     
