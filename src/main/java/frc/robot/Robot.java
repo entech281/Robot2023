@@ -21,6 +21,7 @@ import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveMode;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
@@ -171,7 +172,7 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
     oi.setDefaultCommands();
-    
+    allSubsystems.getDrive().setDriveMode(DriveMode.COAST);
   }
 
   /** This function is called periodically during operator control. */
