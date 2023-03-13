@@ -2,8 +2,6 @@ package frc.robot.oi;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;

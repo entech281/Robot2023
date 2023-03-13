@@ -31,7 +31,6 @@ public class Pose2dSendable implements Sendable{
 	
 	@Override
 	public void initSendable(SendableBuilder builder) {
-		// TODO Auto-generated method stub
 		builder.addStringProperty("name", this::getName,null);
 		builder.addDoubleProperty("X",this::getX, null);
 		builder.addDoubleProperty("Y",this::getY, null);

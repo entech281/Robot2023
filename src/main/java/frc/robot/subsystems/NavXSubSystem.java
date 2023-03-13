@@ -155,7 +155,6 @@ public class NavXSubSystem extends EntechSubsystem  {
 
 	@Override
 	public void simulationPeriodic() {
-		// TODO Auto-generated method stub
 		super.simulationPeriodic();
 	}
 

@@ -8,7 +8,6 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.util.EntechUtils;
 
 /**
  * Captures Exceptions,and logs a copy of each unique one to the shuffleboard testing tab
