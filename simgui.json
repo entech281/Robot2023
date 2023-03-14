@@ -66,10 +66,14 @@
       "/Shuffleboard/Testing/SetElbowSpeedCommand,s=0.1": "Command",
       "/Shuffleboard/Testing/carryElbowCommand@8.0deg": "Command",
       "/Shuffleboard/Testing/groundScoringElbowCommand@23.784deg": "Command",
+      "/Shuffleboard/Testing/groundScoringElbowCommand@43.0deg": "Command",
       "/Shuffleboard/Testing/highScoringElbowCommand@102.0deg": "Command",
+      "/Shuffleboard/Testing/highScoringElbowCommand@122.0deg": "Command",
       "/Shuffleboard/Testing/homeTelescopeAndElbow": "Command",
       "/Shuffleboard/Testing/loadingElbowCommand@80.0deg": "Command",
+      "/Shuffleboard/Testing/loadingElbowCommand@92.0deg": "Command",
       "/Shuffleboard/Testing/middleScoringElbowCommand@80.22deg": "Command",
+      "/Shuffleboard/Testing/middleScoringElbowCommand@94.0deg": "Command",
       "/SmartDashboard/DriveSubsystem": "Subsystem"
     }
   },
