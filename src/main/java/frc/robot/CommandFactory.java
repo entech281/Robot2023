@@ -21,7 +21,7 @@ import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
-import frc.robot.commands.SetDriverYawEnableCommand;
+import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
@@ -192,7 +192,7 @@ public class CommandFactory {
 	}
 
 	public Command setDriverRotationEnableCommand(boolean newValue) {
-		return new SetDriverYawEnableCommand(driveSubsystem,newValue);
+		return new DriveSetRotationEnableCommand(driveSubsystem,newValue);
 	}
 
     public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {

@@ -120,6 +120,8 @@ public class DriveSubsystem extends EntechSubsystem {
   	    builder.addDoubleProperty("FrontRight", () -> { return frontRightEncoder.getPosition();} , null);
   	    builder.addDoubleProperty("RearLeft", () -> { return rearLeftEncoder.getPosition();} , null);  	    
   	    builder.addDoubleProperty("RearRight", () -> { return rearRightEncoder.getPosition();} , null);
+        builder.addBooleanProperty("Field Absolute", this::isFieldAbsolute, null);
+        builder.addBooleanProperty("Rotation Allowed", this::isRotationEnabled, null);
     }  
   
     @Override
