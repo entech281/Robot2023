@@ -19,6 +19,7 @@ import frc.robot.commands.DriveSetBrake;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
+import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
@@ -33,6 +34,7 @@ import frc.robot.commands.nudge.NudgeTelescopeBackwardsCommand;
 import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.commands.supplier.TargetNodeSupplier;
+import frc.robot.commands.supplier.TargetOffsetSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.subsystems.ArmSubsystem;
@@ -199,6 +201,10 @@ public class CommandFactory {
 		return new SetDriverYawEnableCommand(shuffleboardControls,newValue);
 	}
 
+    public Command alignHorizontalToTag( Supplier<DriveInput> operatorInput) {
+  		return new HorizontalAlignWithTagCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState );
+    }	
+	
     public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {
   		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState, robotState  );
     }

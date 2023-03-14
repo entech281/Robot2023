@@ -35,8 +35,9 @@ public class OperatorInterface {
         .onTrue(commandFactory.setDriverYawEnableCommand(shuffleboardControls,true))
         .onFalse(commandFactory.setDriverYawEnableCommand(shuffleboardControls,false));
 
-	    // driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
-	    //     .onTrue(commandFactory.alignToScoringLocation(shuffleboardControls ,hidJoystickDriveInputSupplier))
+	     driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
+	         .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
+	     
 	    //     .onFalse(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
 	    
 	    // driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)

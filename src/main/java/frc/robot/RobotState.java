@@ -2,12 +2,14 @@ package frc.robot;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.commands.supplier.TargetNodeSupplier;
+import frc.robot.commands.supplier.TargetOffsetSupplier;
 import frc.robot.commands.supplier.TargetYawSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.pose.AprilTagLocation.AprilTagIDLocation;
@@ -15,7 +17,8 @@ import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.pose.TargetNode;
 import frc.robot.util.SendableUtil;
-public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSupplier,ScoringLocationSupplier , TargetNodeSupplier, TargetYawSupplier{
+public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSupplier,ScoringLocationSupplier , TargetNodeSupplier, TargetYawSupplier,
+TargetOffsetSupplier{
 
 	public static final double DISTANCE_UNKNOWN = -1;
 	public static final double CLOSE_ENOUGH_TO_DEPLOY_METERS = 1.2192 + 0.4064; //arm is 1.2192 meters in front of robot
@@ -129,5 +132,15 @@ public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSup
 	@Override
 	public Optional<Double> getTargetYawAngle() {		
 		return targetYawAngle;
+	}
+
+	@Override
+	public Optional<Transform3d> getTargetOffset() {
+		if ( getBestAprilTagTarget().isPresent()) {
+			return Optional.ofNullable(getBestAprilTagTarget().get().getCameraToTargetTransform());
+		}
+		else {
+			return Optional.empty();
+		}
 	}
 }
