@@ -95,10 +95,9 @@ public class CommandFactory {
 			groundScoringElbowCommand(),
 			loadingElbowCommand(),
 			carryElbowCommand(),
-			new PositionTelescopeCommand(armSubsystem,1.4, false),
-			new PositionTelescopeCommand(armSubsystem,0.2, false),
-			new PositionTelescopeCommand(armSubsystem,0.08, false),
-
+			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.MAX_METERS, false),
+			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, false),
+			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, false),
 			new PositionElbowCommand(elbowSubsystem,RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, false),
 			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
 			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
@@ -142,7 +141,7 @@ public class CommandFactory {
             , new DriveSetBrake(driveSubsystem)
             , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)            
             , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
-            , new PositionTelescopeCommand(armSubsystem, 1.385, true)
+            , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
             , new WaitCommand(1.0)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
             , new WaitCommand(1.0)
@@ -156,8 +155,8 @@ public class CommandFactory {
     }
     public Command autonomusMiddleCommand() {
         return new SequentialCommandGroup(
-        new PositionElbowCommand(elbowSubsystem, 80, true)
-        , new PositionTelescopeCommand(armSubsystem, 1.1, true)
+        new PositionElbowCommand(elbowSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, true)
+        , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, true)
         );
     }
 
@@ -278,7 +277,7 @@ public class CommandFactory {
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
                 new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true),
-                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MAX_ARM_LENGTH_M, true)
+                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
             )
         );
     }
@@ -288,7 +287,7 @@ public class CommandFactory {
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
                 new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_MIDDLE_DEGREES, true),
-                new PositionTelescopeCommand(armSubsystem, 1.1, true)
+                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, true)
             )
         );
     }
@@ -307,7 +306,7 @@ public class CommandFactory {
             new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
             new ParallelCommandGroup(
                 new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true),
-                new PositionTelescopeCommand(armSubsystem, 1.4, true)
+                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.LOAD, true)
             )
         );
     }
