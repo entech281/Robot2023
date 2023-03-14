@@ -37,6 +37,7 @@ public class VisionSubsystem extends EntechSubsystem {
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
   private PhotonPoseEstimator photonPoseEstimator;
   private boolean enabled=false;
+  private PhotonTrackedTarget photonTrackedTarget;
 
   public static final double NO_GOOD_ANGLE=-299;
 
@@ -67,7 +68,8 @@ public class VisionSubsystem extends EntechSubsystem {
 	     sb.addBooleanProperty("HasPhotonPose", this::hasPhotonPose, null);
 	     sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
 	     sb.addStringProperty("Target", this::getBestTagName, null);
-	     sb.addDoubleProperty("PhotonYaw", () -> { return lastPhotonYawAngle;} , null);		 
+	     sb.addDoubleProperty("PhotonYaw", () -> { return lastPhotonYawAngle;} , null);
+		 sb.addDoubleProperty("RobotLateralOffset", this::getLateralOffset , null);		 
 	 }
 	 else {
 		 sb.addBooleanProperty("Enabled", () -> { return false;} , null);
@@ -84,15 +86,23 @@ public class VisionSubsystem extends EntechSubsystem {
   private boolean hasTargets() {
 	  return currentStatus.hasTargets();
   }
+
   private double getLatency() {
 	  return currentStatus.getLatency();
   }
+
   private boolean hasPhotonPose() {
 	  return currentStatus.getPhotonEstimatedPose().isPresent();
   }
+
   private boolean hasBestTarget() {
 	  return currentStatus.getBestAprilTagTarget().isPresent();
   }
+
+  private double getLateralOffset() {
+	  return photonTrackedTarget.getBestCameraToTarget().getY();
+  }
+
   private String getBestTagName() {
 	  if ( currentStatus.getBestAprilTagTarget().isPresent()) {
           if (currentStatus.getBestAprilTagTarget().get().getTagLocation() != null) {
@@ -113,11 +123,11 @@ public class VisionSubsystem extends EntechSubsystem {
 	        	newStatus.addRecognizedTarget(createRecognizedTarget(t));
 	        }	   	    
 
-		    PhotonTrackedTarget  bestTarget = result.getBestTarget();
+		    PhotonTrackedTarget bestTarget = result.getBestTarget();
 		    if ( bestTarget != null ) {
 		    	newStatus.setBestTarget(createRecognizedTarget(bestTarget));
 		    	lastPhotonYawAngle = bestTarget.getYaw();
-		    }	    	    	
+		    }
 	    }
  
 		Optional<EstimatedRobotPose> updatedPose = photonPoseEstimator.update();
