@@ -101,15 +101,15 @@ public class VisionSubsystem extends EntechSubsystem {
 
   private double getLateralOffset() {
 	  if (currentStatus.hasTargets()) {
-		return currentStatus.getBestAprilTagTarget().get().getTagLocation().getXMeters();
+		return currentStatus.getBestAprilTagTarget().get().getCameraToTargetTransform().getY();
 	  } else {
 		return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
 	  }
   }
 
   private double getCameraDistance() {
-	if (currentStatus.hasTargets()) {
-		return currentStatus.getBestAprilTagTarget().get().getTagLocation().getYMeters();
+	if (currentStatus.getBestAprilTagTarget().isPresent()) {
+		return currentStatus.getBestAprilTagTarget().get().getCameraToTargetTransform().getY();
 	  } else {
 		return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
 	  }
