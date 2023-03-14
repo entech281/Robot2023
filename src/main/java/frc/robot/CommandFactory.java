@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.RobotConstants.ARM;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DefaultGripperCommand;
@@ -20,10 +19,8 @@ import frc.robot.commands.DriveSetBrake;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
-import frc.robot.commands.HomeElbowCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
-import frc.robot.commands.SetArmSpeedCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
@@ -46,7 +43,6 @@ import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.RobotConstants;
 /**
  *
  * @author dcowden
@@ -183,20 +179,20 @@ public class CommandFactory {
     	return new DefaultGripperCommand(gripperSubsystem, panelGripperButtonSupplier);
     }
     
-    public Command filteredDriveCommand( Supplier<DriveInput> operatorInput, ShuffleboardDriverControls driverControls) {
-    	return new FilteredDriveCommand(driveSubsystem,addYawToOperatorJoystickInput( operatorInput),driverControls);
+    public Command filteredDriveCommand( Supplier<DriveInput> operatorInput) {
+    	return new FilteredDriveCommand(driveSubsystem,addYawToOperatorJoystickInput( operatorInput));
     }
 
     public Command driveCommand(Supplier<DriveInput> operatorInput) {
         return new SimpleDriveCommand(driveSubsystem, addYawToOperatorJoystickInput(operatorInput));
     }
 
-	public Command toggleFieldAbsoluteCommand( ShuffleboardDriverControls shuffleboardControls ) {
-		return new ToggleFieldAbsoluteCommand(shuffleboardControls);
+	public Command toggleFieldAbsoluteCommand() {
+		return new ToggleFieldAbsoluteCommand(driveSubsystem);
 	}
 
-	public Command setDriverYawEnableCommand(ShuffleboardDriverControls shuffleboardControls , boolean newValue) {
-		return new SetDriverYawEnableCommand(shuffleboardControls,newValue);
+	public Command setDriverRotationEnableCommand(boolean newValue) {
+		return new SetDriverYawEnableCommand(driveSubsystem,newValue);
 	}
 
     public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {

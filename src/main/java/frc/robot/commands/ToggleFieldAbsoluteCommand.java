@@ -4,25 +4,38 @@
 
 package frc.robot.commands;
 
-import frc.robot.oi.ShuffleboardDriverControls;
+import frc.robot.subsystems.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class ToggleFieldAbsoluteCommand extends  BaseShuffleboardControlsUpdateCommand {
+public class ToggleFieldAbsoluteCommand extends  EntechCommandBase {
+    private DriveSubsystem drive;
 
   /**
    * Creates a new ToggleFieldAbsoluteCommand.
    *
    * @param drive The subsystem used by this command.
    */
-  public ToggleFieldAbsoluteCommand(ShuffleboardDriverControls  prefs) {
-    super(prefs);
-
+  public ToggleFieldAbsoluteCommand(DriveSubsystem drive) {
+    super(drive);
+    this.drive = drive;
   }
 
+  @Override
+  public void initialize() {
+    drive.toggleFieldAbsolute();
+  }
 
   @Override
   public void execute() {
-	  driverControls.toggleFieldAbsolute();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+  }
+
+  @Override
+  public boolean isFinished() {
+    return true;
   }
 
   @Override

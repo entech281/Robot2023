@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.PositionElbowCommand;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -129,6 +127,7 @@ public final class RobotConstants {
     	public static final int CURRENT_LIMIT_AMPS = 30;
         public static final double GEAR_BOX_RATIO = 9.92;
         public static final double METERS_PER_GEARBOX_REVOLTION = 3.14*6.0/39.37;
+    	public static final boolean DEFAULT_FIELD_ABSOLUTE = false;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
@@ -195,8 +194,6 @@ public final class RobotConstants {
         	public static final String DEBUG="Testing";    		
     	}
 
-    	public static boolean DEFAULT_YAW_LOCK = false;
-    	public static boolean DEFAULT_FIELD_ABSOLUTE = false;
     }
 
     public interface MAST{

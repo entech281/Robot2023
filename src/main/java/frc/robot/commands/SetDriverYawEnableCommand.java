@@ -1,19 +1,29 @@
 package frc.robot.commands;
 
-import frc.robot.oi.ShuffleboardDriverControls;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class SetDriverYawEnableCommand extends BaseShuffleboardControlsUpdateCommand{
+public class SetDriverYawEnableCommand extends EntechCommandBase {
 
+    DriveSubsystem drive;
 	boolean newValue;
-	public SetDriverYawEnableCommand(ShuffleboardDriverControls preferencesToAlter, boolean newValue) {
-		super(preferencesToAlter);
-		this.newValue=newValue;
+	public SetDriverYawEnableCommand(DriveSubsystem drive, boolean newValue) {
+		super(drive);
+        this.drive = drive;
+		this.newValue = newValue;
 	}
 
 	@Override
-	public void execute() {
-		driverControls.setYawLock(newValue);
+	public void initialize() {
+		drive.setRotationAllowed(newValue);
 	}
 	
-
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+    
+    @Override
+    public boolean runsWhenDisabled() {
+        return true;
+    }
 }

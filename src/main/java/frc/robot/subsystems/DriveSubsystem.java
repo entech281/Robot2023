@@ -72,6 +72,9 @@ public class DriveSubsystem extends EntechSubsystem {
         rearLeftEncoder = rearLeftSparkMax.getEncoder();
         frontRightEncoder = frontRightSparkMax.getEncoder();
         rearRightEncoder = rearRightSparkMax.getEncoder();
+
+        fieldAbsolute = RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE;
+        rotationAllowed = false;
     }
 
     @Override
@@ -81,6 +84,8 @@ public class DriveSubsystem extends EntechSubsystem {
         SmartDashboard.putNumber("Back Left SparkMax", rearLeftSparkMax.get());
         SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.get());
         SmartDashboard.putNumber("Average Position", getAveragePosition());
+        SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
+        SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
 
         robotDrive.feed();
         robotDrive.feedWatchdog();

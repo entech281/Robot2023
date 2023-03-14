@@ -32,15 +32,15 @@ public class OperatorInterface {
     
     private void setupButtons() {
         driveStick.button(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
-        .onTrue(commandFactory.setDriverYawEnableCommand(shuffleboardControls,true))
-        .onFalse(commandFactory.setDriverYawEnableCommand(shuffleboardControls,false));
+        .onTrue(commandFactory.setDriverRotationEnableCommand(true))
+        .onFalse(commandFactory.setDriverRotationEnableCommand(false));
 
 	    // driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
 	    //     .onTrue(commandFactory.alignToScoringLocation(shuffleboardControls ,hidJoystickDriveInputSupplier))
 	    //     .onFalse(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
 	    
 	    // driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
-	    //     .onTrue(commandFactory.toggleFieldAbsoluteCommand(this.shuffleboardControls));
+	    //     .onTrue(commandFactory.toggleFieldAbsoluteCommand());
 	    
 	    driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
 	        .onTrue(commandFactory.getZeroGyro());
@@ -128,7 +128,7 @@ public class OperatorInterface {
     }
     
     public void setDefaultCommands() {    	
-    	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
+    	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier));
     	commandFactory.setDefaultGripperCommand(commandFactory.gripperPanelSyncCommand(gripperStateSupplier));
     }
     
