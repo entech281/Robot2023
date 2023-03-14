@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.util.EntechUtils;
 
 /**
- *
+ * Changes yawAngle insider DriveInput
  * 
  * @author aheitkamp
  */

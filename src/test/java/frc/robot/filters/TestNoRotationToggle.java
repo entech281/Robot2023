@@ -4,12 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class TestTurnToggle {
+public class TestNoRotationToggle {
     private static final double SMALLDIFFERENCE = 0.01;
     
     @Test
-    public void testTurnToggleOn() {
-        TurnToggleFilter filter = new TurnToggleFilter();
+    public void testNoRotationOn() {
+        NoRotationFilter filter = new NoRotationFilter();
         DriveInput di = new DriveInput (0.5, 0.75, 0.6);
 
         filter.setEnabled(true);
@@ -22,8 +22,8 @@ public class TestTurnToggle {
     }
 
     @Test
-    public void testTurnToggleOff() {
-        TurnToggleFilter filter = new TurnToggleFilter();
+    public void testNoRotationOff() {
+        NoRotationFilter filter = new NoRotationFilter();
         DriveInput di = new DriveInput (0.5, 0.75, 0.6);
 
         filter.setEnabled(false);
