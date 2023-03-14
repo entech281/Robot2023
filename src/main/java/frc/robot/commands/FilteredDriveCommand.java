@@ -7,7 +7,7 @@ import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
 import frc.robot.filters.FieldRelativeDriveInputFilter;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
-import frc.robot.filters.TurnToggleFilter;
+import frc.robot.filters.NoRotationFilter;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -17,10 +17,9 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     // DriveFilters used
     private JoystickDeadbandFilter jsDeadbandFilter;
     private FieldRelativeDriveInputFilter fieldRelativeFilter;
-    private TurnToggleFilter yawLockFilter;
+    private NoRotationFilter yawLockFilter;
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
-    private boolean holdYawInitialized = false;
 
 	/**
      * Creates a new ArcadeDrive. This command will drive your robot according to
@@ -36,7 +35,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
 
         this.jsDeadbandFilter = new JoystickDeadbandFilter();
         this.fieldRelativeFilter = new FieldRelativeDriveInputFilter();
-        this.yawLockFilter = new TurnToggleFilter();
+        this.yawLockFilter = new NoRotationFilter();
         this.yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
         this.yawHoldFilter = new HoldYawFilter();
         yawHoldFilter.setEnabled(true);
@@ -50,15 +49,30 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     @Override
     public void execute() {
     	DriveInput di = operatorInput.get();
-        if ( ! holdYawInitialized ) {
-            yawHoldFilter.updateSetpoint(operatorInput.get().getRawYawAngleDegrees());
+
+        // Special case: set the setpoint for the HoldYawFilter if nothing has until now
+        if ( ! yawHoldFilter.isSetpointValid() ) {
+            yawHoldFilter.updateSetpoint(operatorInput.get().getYawAngleDegrees());
         }
-        di.setRawYawAngleDegrees(di.getYawAngleDegrees());
+
     	DriveInput filtered = di;
-    	
         if (jsDeadbandFilter.getEnabled()) {
             filtered = jsDeadbandFilter.filter(filtered);
         }
+    	
+    	if (driverControls.isYawEnabled()) {
+            // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
+            yawHoldFilter.updateSetpoint(filtered.getYawAngleDegrees());
+        } else {
+            if (yawHoldFilter.getEnabled()) {
+                filtered = yawHoldFilter.filter(filtered);
+                if ( ! yawHoldFilter.isActive() ) {
+    		        filtered = yawLockFilter.filter(filtered);
+                }
+            } else {
+    		    filtered = yawLockFilter.filter(filtered);
+            }
+    	}
         
     	if (driverControls.isFieldAbsolute()) {
             filtered = yawAngleCorrectionFilter.filter(filtered);
@@ -66,18 +80,6 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     		filtered = fieldRelativeFilter.filter(filtered);
     	}
     	
-    	if (driverControls.isYawLocked()) {
-            if (yawHoldFilter.getEnabled()) {
-                filtered = yawHoldFilter.filter(filtered);
-            } else {
-    		    filtered = yawLockFilter.filter(filtered);
-            }
-    	} else {
-            // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
-            yawHoldFilter.updateSetpoint(filtered.getRawYawAngleDegrees());
-        }
-    	
     	drive.drive(filtered);
     }
-
 }

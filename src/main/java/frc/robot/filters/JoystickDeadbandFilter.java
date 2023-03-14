@@ -1,5 +1,8 @@
 package frc.robot.filters;
 
+/**
+ * Changes forward, right, and rotation in DriveInput
+ */
 public class JoystickDeadbandFilter extends DriveInputFilter {
 
     private double minMagnitude;

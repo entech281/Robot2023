@@ -2,12 +2,13 @@ package frc.robot.filters;
 
 /**
  *
+ * Sets the rotation of DriveInput
  * 
  * @author aheitkamp
  */
-public class TurnToggleFilter extends DriveInputFilter {
+public class NoRotationFilter extends DriveInputFilter {
 
-    public TurnToggleFilter() {
+    public NoRotationFilter() {
     }
 
     @Override

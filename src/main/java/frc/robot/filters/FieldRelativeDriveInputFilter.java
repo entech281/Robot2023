@@ -1,5 +1,8 @@
 package frc.robot.filters;
 
+/**
+ * Changes the yawAngle inside DriveInput
+ */
 public class FieldRelativeDriveInputFilter extends DriveInputFilter{
 
 	@Override
