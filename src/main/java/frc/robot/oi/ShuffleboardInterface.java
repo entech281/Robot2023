@@ -63,10 +63,10 @@ public class ShuffleboardInterface {
 
 
 		if ( arm.isEnabled()) {
-			MATCH_TAB.add("ArmController",arm.getPositionController()).withSize(2, 2).withPosition(8, 0);		
+			MATCH_TAB.add("ArmController",arm.getPositionController()).withSize(2, 3).withPosition(0, 0);		
 		}
 		if ( elbow.isEnabled()) {
-			MATCH_TAB.add("ElbowController",elbow.getPositionController()).withSize(2, 2).withPosition(8, 2);		
+			MATCH_TAB.add("ElbowController",elbow.getPositionController()).withSize(2, 3).withPosition(2, 0);		
 		}		
 	}
 	

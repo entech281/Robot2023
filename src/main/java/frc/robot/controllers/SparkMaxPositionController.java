@@ -127,10 +127,10 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   	    builder.addDoubleProperty("RequestedPos", this::getRequestedPosition, null);
   	    builder.addDoubleProperty("ActualPos", this::getActualPosition, null);
   	    builder.addBooleanProperty("InPosition", this::isAtRequestedPosition, null);  	    
-  	    builder.addBooleanProperty("Homed", this::isHomed, null);
   	    builder.addBooleanProperty("UpperLimit", this::isAtUpperLimit, null);
   	    builder.addBooleanProperty("LowerLimit", this::isAtLowerLimit, null);
   	    builder.addDoubleProperty("MotorOut", () -> { return spark.getAppliedOutput();}, null);
+  	    builder.addDoubleProperty("MotorCurrent", () -> { return spark.getOutputCurrent();}, null);
 
     }
 	
@@ -212,6 +212,9 @@ public class SparkMaxPositionController implements Sendable, PositionController 
       		 case HOMED:
       			 updateRequestedPosition();
   	    }
+      	 if ( isAtUpperLimit() ) {
+      		setEncoder(config.getMaxPosition()); //still not sure if this will be better or not	
+      	 }
   	}
   	
     private void arrivedHome() {
@@ -249,7 +252,6 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     private void updateRequestedPosition() {
     	if ( requestedPosition.isPresent()) {
         	spark.getPIDController().setReference(correctDirection(requestedPosition.get()), CANSparkMax.ControlType.kPosition);
-        	spark.getPIDController().setIAccum(0);    		
     	}
     }
   
