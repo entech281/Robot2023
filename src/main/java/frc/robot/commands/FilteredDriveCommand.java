@@ -43,7 +43,9 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
 
     @Override 
     public void initialize() {
-        yawHoldFilter.reset();  
+        yawHoldFilter.reset();
+        drive.setFieldAbsolute(driverControls.isFieldAbsolute());
+        drive.setRotationAllowed(driverControls.isYawEnabled());
     }
 
     @Override
@@ -60,7 +62,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
             filtered = jsDeadbandFilter.filter(filtered);
         }
     	
-    	if (driverControls.isYawEnabled()) {
+    	if (drive.isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             yawHoldFilter.updateSetpoint(filtered.getYawAngleDegrees());
         } else {
@@ -74,7 +76,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
             }
     	}
         
-    	if (driverControls.isFieldAbsolute()) {
+    	if (drive.isFieldAbsolute()) {
             filtered = yawAngleCorrectionFilter.filter(filtered);
         } else {
     		filtered = fieldRelativeFilter.filter(filtered);
