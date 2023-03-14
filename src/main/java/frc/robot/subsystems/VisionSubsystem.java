@@ -37,7 +37,6 @@ public class VisionSubsystem extends EntechSubsystem {
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
   private PhotonPoseEstimator photonPoseEstimator;
   private boolean enabled=false;
-  private PhotonTrackedTarget photonTrackedTarget;
 
   public static final double NO_GOOD_ANGLE=-299;
 
@@ -101,11 +100,19 @@ public class VisionSubsystem extends EntechSubsystem {
   }
 
   private double getLateralOffset() {
-	  return photonTrackedTarget.getBestCameraToTarget().getY();
+	  if (currentStatus.hasTargets()) {
+		return currentStatus.getBestAprilTagTarget().get().getTagLocation().getXMeters();
+	  } else {
+		return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
+	  }
   }
 
   private double getCameraDistance() {
-	return photonTrackedTarget.getBestCameraToTarget().getX();
+	if (currentStatus.hasTargets()) {
+		return currentStatus.getBestAprilTagTarget().get().getTagLocation().getYMeters();
+	  } else {
+		return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
+	  }
   }
 
   private String getBestTagName() {
