@@ -69,7 +69,8 @@ public class VisionSubsystem extends EntechSubsystem {
 	     sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
 	     sb.addStringProperty("Target", this::getBestTagName, null);
 	     sb.addDoubleProperty("PhotonYaw", () -> { return lastPhotonYawAngle;} , null);
-		 sb.addDoubleProperty("RobotLateralOffset", this::getLateralOffset , null);		 
+		 sb.addDoubleProperty("RobotLateralOffset", this::getLateralOffset , null);
+		 sb.addDoubleProperty("CameraDistance", this::getCameraDistance , null);		 
 	 }
 	 else {
 		 sb.addBooleanProperty("Enabled", () -> { return false;} , null);
@@ -101,6 +102,10 @@ public class VisionSubsystem extends EntechSubsystem {
 
   private double getLateralOffset() {
 	  return photonTrackedTarget.getBestCameraToTarget().getY();
+  }
+
+  private double getCameraDistance() {
+	return photonTrackedTarget.getBestCameraToTarget().getX();
   }
 
   private String getBestTagName() {
