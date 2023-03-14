@@ -45,9 +45,6 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
         double calcValue = pid.calculate(-yawAngleDegrees); 
         DriveInput di = new DriveInput(0, 0, calcValue);
         
-        //TODO: should we pass yawAngleDegrees into the drive input, to support different behavior
-        //in field absolute vs not?
-        
         drive.drive(di);
     }
 

@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import static frc.robot.RobotConstants.ARM.*;
-
 /**
  *
  * @author dcowden

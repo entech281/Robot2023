@@ -49,12 +49,10 @@ public class NudgeYawCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-    	
-    	//TODO: does this need to honor field absolute driving?
-    	//i'm assuming NO, since it was not coded that way initially
     	DriveInput di = new DriveInput(direction);
     	di.setYawAngleDegrees(yawAngleSupplier.getYawAngleDegrees());
-        drive.drive(di );
+        
+        drive.drive(di);
     }
     
     @Override

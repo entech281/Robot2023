@@ -13,7 +13,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,6 +37,8 @@ public class DriveSubsystem extends EntechSubsystem {
   private CANSparkMax frontRightSparkMax;
   private CANSparkMax rearRightSparkMax;
   private MecanumDrive robotDrive;
+
+  private DriveMode currentMode = DriveMode.COAST;
   
   public DriveSubsystem() {
   }
@@ -71,6 +72,8 @@ public class DriveSubsystem extends EntechSubsystem {
     rearLeftEncoder = rearLeftSparkMax.getEncoder();
     frontRightEncoder = frontRightSparkMax.getEncoder();
     rearRightEncoder = rearRightSparkMax.getEncoder();
+
+    setBrakeMode();
   }
 
   @Override
@@ -97,14 +100,33 @@ public class DriveSubsystem extends EntechSubsystem {
     robotDrive.stopMotor();
   }
 
-  public void setCoastMode() {
+  public enum DriveMode {
+    BRAKE,
+    COAST
+  }
+
+  public void setDriveMode(DriveMode mode) {
+    if (mode != currentMode) {
+      switch (mode) {
+        case BRAKE:
+          setBrakeMode();
+          break;
+        case COAST:
+          setCoastMode();
+          break;
+      }
+      currentMode = mode;
+    }
+  }
+
+  private void setCoastMode() {
     frontLeftSparkMax.setIdleMode(IdleMode.kCoast);
     frontRightSparkMax.setIdleMode(IdleMode.kCoast);
     rearLeftSparkMax.setIdleMode(IdleMode.kCoast);
     rearRightSparkMax.setIdleMode(IdleMode.kCoast);
   }
 
-  public void setBrakeMode() {
+  private void setBrakeMode() {
     frontLeftSparkMax.setIdleMode(IdleMode.kBrake);
     frontRightSparkMax.setIdleMode(IdleMode.kBrake);
     rearLeftSparkMax.setIdleMode(IdleMode.kBrake);

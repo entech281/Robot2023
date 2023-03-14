@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.RobotConstants.ARM;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.DefaultGripperCommand;
@@ -20,10 +19,8 @@ import frc.robot.commands.DriveSetBrake;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
-import frc.robot.commands.HomeElbowCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
-import frc.robot.commands.SetArmSpeedCommand;
 import frc.robot.commands.SetDriverYawEnableCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
@@ -46,7 +43,7 @@ import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.RobotConstants;
+
 /**
  *
  * @author dcowden
@@ -119,8 +116,10 @@ public class CommandFactory {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         	new ZeroGyroCommand(navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
-            , new PositionElbowCommand(elbowSubsystem, 105, true)
+            , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)             
+            , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
             , new PositionTelescopeCommand(armSubsystem, 1.38, true)
+            , new WaitCommand(1.0)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
             , new WaitCommand(1)
             , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
@@ -133,13 +132,14 @@ public class CommandFactory {
     }
     
     public Command autonomousBalanceDeadRecCommand() {
-        double MOVE_DISTANCE_METERS = -2.5;
+        double MOVE_DISTANCE_METERS = -2.6;
         double HOLD_BRAKE_TIME = 2.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         	new ZeroGyroCommand(navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
             , new DriveSetBrake(driveSubsystem)
-            , new PositionElbowCommand(elbowSubsystem, 105, true)
+            , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)            
+            , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
             , new PositionTelescopeCommand(armSubsystem, 1.385, true)
             , new WaitCommand(1.0)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
@@ -361,5 +361,32 @@ public class CommandFactory {
      public Command armPositionFullExtension() {
         return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MAX_ARM_LENGTH_M, true);
      }
-  
+
+     public Command dialCarryPosition() {
+        return new SequentialCommandGroup(
+            armPositionHome(),
+            carryElbowCommand()
+        );
+     }
+
+     public Command dialHighPosition() {
+        return new SequentialCommandGroup(
+            highScoringElbowCommand(),
+            armPositionFullExtension()
+        );
+     }
+
+     public Command dialMiddlePosition() {
+        return new SequentialCommandGroup(
+            middleScoringElbowCommand(),
+            new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, true)
+        );
+     }
+
+     public Command dialLoadPosition() {
+        return new SequentialCommandGroup(
+            armPositionHome(),
+            loadingElbowCommand()
+        );
+     }
 }
