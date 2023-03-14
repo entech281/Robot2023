@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -66,12 +65,13 @@ public final class RobotConstants {
     	public interface POSITION_PRESETS{
     		  public static final double MIN_METERS= 0.0;
     		  public static final double CARRY_METERS = 0.1;
-    		  public static final double SCORE_MIDDLE_METERS = 0.3;
+    		  public static final double SCORE_MIDDLE_METERS = 1.1;
     		  public static final double SCORE_HIGH_METERS = 0.4;
     		  public static final double SAFE = 0.1;
+              public static final double LOAD = 0.87155;
     		  public static final double MAX_METERS = 0.53; //0.52 max extension
               public static final double MIN_ARM_LENGTH_M = 0.87155; 
-              public static final double MAX_ARM_LENGTH_M = 1.4;
+              public static final double MAX_ARM_LENGTH_M = 1.45;
     	}
         
         public static final double MIN_EXTENSION_METERS = 0.9906; //39 inches from center of robot to center of claw
@@ -92,21 +92,21 @@ public final class RobotConstants {
     		public static final double HOMING_SPEED_PERCENT=0.2;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.24;
+    		public static final double P_GAIN=0.48;
     		public static final double FF_GAIN_GOING_UP=0.00;
     		public static final double FF_GAIN_GOING_DOWN=0.0;
-    		public static final double I_GAIN=0.000;
+    		public static final double I_GAIN=0.002;
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES=3.0;    		
     		  public static double CARRY_DEGREES = 8.0;
     		  public static double SAFE_ANGLE = 15.0;  
-    		  public static double SCORE_LOW_DEGREES= 39.0;
-    		  public static double SCORE_MIDDLE_DEGREES = 89.0;
-    		  public static double LOAD_STATION_DEGREES=81.5;
-    		  public static double SCORE_HIGH_DEGREES = 102;    		  
-      		  public static final double MAX_POSITION_DEGREES=115.0;    		  
+    		  public static double SCORE_LOW_DEGREES= 43.0;
+    		  public static double SCORE_MIDDLE_DEGREES = 94.0;
+    		  public static double LOAD_STATION_DEGREES= 92.0;
+    		  public static double SCORE_HIGH_DEGREES = 122;    		  
+      		  public static final double MAX_POSITION_DEGREES=122.0;    		  
     	}    	
     }
     
@@ -128,12 +128,15 @@ public final class RobotConstants {
         public static final double GEAR_BOX_RATIO = 9.92;
         public static final double METERS_PER_GEARBOX_REVOLTION = 3.14*6.0/39.37;
     	public static final boolean DEFAULT_FIELD_ABSOLUTE = false;
+        public static final double PRECISION_DRIVE_FACTOR = 0.4;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
         public static final int AUTO_ALIGN_DRIVE = 2;
         public static final int NUDGE_YAW_LEFT = 3;
         public static final int NUDGE_YAW_RIGHT = 4;
+        public static final int PRECISION_DRIVE = 7;
+        public static final int BRAKE_COAST = 8;
         public static final int ZERO_GYRO_ANGLE = 9;
         public static final int ZERO_ROBOT_ANGLE = 10;
         public static final int AUTO_YAW_TOGGLE = 11;

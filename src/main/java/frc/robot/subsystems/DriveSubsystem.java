@@ -26,6 +26,11 @@ import frc.robot.filters.DriveInput;
  */
 public class DriveSubsystem extends EntechSubsystem {
 
+    public enum DriveMode {
+        BRAKE,
+        COAST
+      }
+    
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder rearLeftEncoder;
     private RelativeEncoder frontRightEncoder;
@@ -37,8 +42,10 @@ public class DriveSubsystem extends EntechSubsystem {
     private CANSparkMax rearRightSparkMax;
     private MecanumDrive robotDrive;
 
+    private DriveMode currentMode;
     private boolean fieldAbsolute;
     private boolean rotationAllowed;
+    private boolean precisionDrive;
   
     public DriveSubsystem() {
     }
@@ -73,8 +80,12 @@ public class DriveSubsystem extends EntechSubsystem {
         frontRightEncoder = frontRightSparkMax.getEncoder();
         rearRightEncoder = rearRightSparkMax.getEncoder();
 
+        currentMode = DriveMode.BRAKE;
+        setBrakeMode();
+
         fieldAbsolute = RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE;
         rotationAllowed = false;
+        precisionDrive = false;
     }
 
     @Override
@@ -99,19 +110,33 @@ public class DriveSubsystem extends EntechSubsystem {
         robotDrive.stopMotor();
     }
 
-    public void setCoastMode() {
-        frontLeftSparkMax.setIdleMode(IdleMode.kCoast);
-        frontRightSparkMax.setIdleMode(IdleMode.kCoast);
-        rearLeftSparkMax.setIdleMode(IdleMode.kCoast);
-        rearRightSparkMax.setIdleMode(IdleMode.kCoast);
+  public void setDriveMode(DriveMode mode) {
+    if (mode != currentMode) {
+      switch (mode) {
+        case BRAKE:
+          setBrakeMode();
+          break;
+        case COAST:
+          setCoastMode();
+          break;
+      }
+      currentMode = mode;
     }
+  }
 
-    public void setBrakeMode() {
-        frontLeftSparkMax.setIdleMode(IdleMode.kBrake);
-        frontRightSparkMax.setIdleMode(IdleMode.kBrake);
-        rearLeftSparkMax.setIdleMode(IdleMode.kBrake);
-        rearRightSparkMax.setIdleMode(IdleMode.kBrake);
-    }
+  private void setCoastMode() {
+    frontLeftSparkMax.setIdleMode(IdleMode.kCoast);
+    frontRightSparkMax.setIdleMode(IdleMode.kCoast);
+    rearLeftSparkMax.setIdleMode(IdleMode.kCoast);
+    rearRightSparkMax.setIdleMode(IdleMode.kCoast);
+  }
+
+  private void setBrakeMode() {
+    frontLeftSparkMax.setIdleMode(IdleMode.kBrake);
+    frontRightSparkMax.setIdleMode(IdleMode.kBrake);
+    rearLeftSparkMax.setIdleMode(IdleMode.kBrake);
+    rearRightSparkMax.setIdleMode(IdleMode.kBrake);
+  }
 
 	@Override
     public void initSendable(SendableBuilder builder) {
@@ -175,6 +200,16 @@ public class DriveSubsystem extends EntechSubsystem {
 	}	
 	public boolean isRotationLocked() {
 		return ! isRotationEnabled();
+	}
+
+	public boolean isPrecisionDrive() {
+		return precisionDrive;
+	}
+	public void setPrecisionDrive(boolean newValue) {
+		precisionDrive = newValue;
+	}
+	public void togglePrecisionDrive() {
+		setPrecisionDrive(!(isPrecisionDrive()));
 	}
 
 }

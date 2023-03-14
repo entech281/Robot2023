@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveMode;
 import frc.robot.filters.DriveInput;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -33,7 +34,7 @@ public class DriveDirectionCommand extends EntechCommandBase {
 
   @Override
     public void initialize() {
-        drive.setBrakeMode();
+        drive.setDriveMode(DriveMode.BRAKE);
         driveTimer.stop();
         driveTimer.reset();
         driveTimer.start();
@@ -56,7 +57,7 @@ public class DriveDirectionCommand extends EntechCommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.stop();
-    drive.setCoastMode();
+    drive.setDriveMode(DriveMode.COAST);
   }
 
   // Returns true when the command should end.
