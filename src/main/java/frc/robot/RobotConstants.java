@@ -95,7 +95,7 @@ public final class RobotConstants {
     		public static final double P_GAIN=0.48;
     		public static final double FF_GAIN_GOING_UP=0.00;
     		public static final double FF_GAIN_GOING_DOWN=0.0;
-    		public static final double I_GAIN=0.08;
+    		public static final double I_GAIN=0.002;
     		public static final double D_GAIN=0.0;
     	}
     	public interface POSITION_PRESETS{
