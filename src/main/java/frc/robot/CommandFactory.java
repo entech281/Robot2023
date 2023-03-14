@@ -22,6 +22,7 @@ import frc.robot.commands.HomeArmCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.DriveSetRotationEnableCommand;
+import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
@@ -188,6 +189,10 @@ public class CommandFactory {
 
     public Command driveCommand(Supplier<DriveInput> operatorInput) {
         return new SimpleDriveCommand(driveSubsystem, addYawToOperatorJoystickInput(operatorInput));
+    }
+
+    public Command toggleBrakeModeCommand() {
+        return new DriveToggleBrakeMode(driveSubsystem);
     }
 
     public Command togglePrecisionDriveCommand() {

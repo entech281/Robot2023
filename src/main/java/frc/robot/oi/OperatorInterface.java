@@ -41,6 +41,9 @@ public class OperatorInterface {
 
         driveStick.button(RobotConstants.DRIVER_STICK.PRECISION_DRIVE)
             .onTrue(commandFactory.togglePrecisionDriveCommand());
+
+        driveStick.button(RobotConstants.DRIVER_STICK.BRAKE_COAST)
+            .onTrue(commandFactory.toggleBrakeModeCommand());
 	    
 	    driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
 	        .onTrue(commandFactory.toggleFieldAbsoluteCommand());

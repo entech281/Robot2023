@@ -29,7 +29,7 @@ public class DriveSubsystem extends EntechSubsystem {
     public enum DriveMode {
         BRAKE,
         COAST
-      }
+    }
     
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder rearLeftEncoder;
@@ -97,6 +97,8 @@ public class DriveSubsystem extends EntechSubsystem {
         SmartDashboard.putNumber("Average Position", getAveragePosition());
         SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
         SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
+        SmartDashboard.putBoolean("Precision Drive", isPrecisionDrive());
+        SmartDashboard.putBoolean("Brake Mode", isBrakeMode());
 
         robotDrive.feed();
         robotDrive.feedWatchdog();
@@ -108,6 +110,19 @@ public class DriveSubsystem extends EntechSubsystem {
 
     public void stop() {
         robotDrive.stopMotor();
+    }
+
+    public void toggleBrakeCoastMode() {
+        switch (currentMode) {
+        case BRAKE:
+            setCoastMode();
+            currentMode = DriveMode.COAST;
+            break;
+        case COAST:
+            setBrakeMode();
+            currentMode = DriveMode.BRAKE;
+            break;
+        }
     }
 
   public void setDriveMode(DriveMode mode) {
@@ -147,7 +162,9 @@ public class DriveSubsystem extends EntechSubsystem {
   	    builder.addDoubleProperty("RearRight", () -> { return rearRightEncoder.getPosition();} , null);
         builder.addBooleanProperty("Field Absolute", this::isFieldAbsolute, null);
         builder.addBooleanProperty("Rotation Allowed", this::isRotationEnabled, null);
-    }  
+        builder.addBooleanProperty("Precision Drive", this::isPrecisionDrive, null);
+        builder.addBooleanProperty("Brake Mode", this::isBrakeMode, null);
+    }
   
     @Override
     public boolean isEnabled() {
@@ -191,6 +208,10 @@ public class DriveSubsystem extends EntechSubsystem {
 	public void toggleFieldAbsolute() {
 		setFieldAbsolute( ! isFieldAbsolute() );
 	}
+
+    public boolean isBrakeMode() {
+        return currentMode == DriveMode.BRAKE;
+    }
 
 	public void setRotationAllowed(boolean newValue) {
 		rotationAllowed = newValue;
