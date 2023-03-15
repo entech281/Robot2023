@@ -12,7 +12,7 @@ public class TestNoRotationToggle {
         NoRotationFilter filter = new NoRotationFilter();
         DriveInput di = new DriveInput (0.5, 0.75, 0.6);
 
-        filter.setEnabled(true);
+        filter.enable(true);
 
         DriveInput r = filter.filter(di);
 
@@ -26,7 +26,7 @@ public class TestNoRotationToggle {
         NoRotationFilter filter = new NoRotationFilter();
         DriveInput di = new DriveInput (0.5, 0.75, 0.6);
 
-        filter.setEnabled(false);
+        filter.enable(false);
 
         DriveInput r = filter.filter(di);
 

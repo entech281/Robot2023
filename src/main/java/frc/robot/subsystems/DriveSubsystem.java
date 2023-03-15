@@ -74,8 +74,6 @@ public class DriveSubsystem extends EntechSubsystem {
         rearRightSparkMax  = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
         robotDrive         = new MecanumDrive(frontLeftSparkMax, rearLeftSparkMax, frontRightSparkMax, rearRightSparkMax);
 
-        robotDrive.setDeadband(0.1);
-
         frontLeftSparkMax.setInverted(false);
         rearLeftSparkMax.setInverted(false);
         frontRightSparkMax.setInverted(true);
@@ -97,13 +95,23 @@ public class DriveSubsystem extends EntechSubsystem {
 
         fieldAbsolute = RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE;
 
-        robotRelativeFilter = new RobotRelativeDriveFilter();
-        noRotationFilter = new NoRotationFilter();
-        yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
-        yawHoldFilter = new HoldYawFilter();
         jsDeadbandFilter = new JoystickDeadbandFilter();
+        jsDeadbandFilter.enable(true);
+        jsDeadbandFilter.setDeadband(0.1);
+
+        robotRelativeFilter = new RobotRelativeDriveFilter();
+        robotRelativeFilter.enable(!fieldAbsolute);
+        yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
+        yawAngleCorrectionFilter.enable(fieldAbsolute);
+
+        noRotationFilter = new NoRotationFilter();
+        noRotationFilter.enable(true);
+
         precisionDriveFilter = new PrecisionDriveFilter();
-        yawHoldFilter.setEnabled(true);
+        precisionDriveFilter.enable(false);
+
+        yawHoldFilter = new HoldYawFilter();
+        yawHoldFilter.enable(true);
 
         lastDriveInput = new DriveInput(0.,0.,0.,0.);
         SmartDashboard.putData("lastDriveInput", lastDriveInput);
@@ -137,12 +145,8 @@ public class DriveSubsystem extends EntechSubsystem {
         }
 
     	DriveInput filtered = di;
-        if (jsDeadbandFilter.getEnabled()) {
-            filtered = jsDeadbandFilter.filter(filtered);
-        }
-        if (isPrecisionDrive()) {
-            filtered = precisionDriveFilter.filter(filtered);
-        }
+        filtered = jsDeadbandFilter.filter(filtered);
+        filtered = precisionDriveFilter.filter(filtered);
     	
     	if (isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
@@ -150,7 +154,7 @@ public class DriveSubsystem extends EntechSubsystem {
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
             DriveInput temp = yawHoldFilter.filter(filtered);
         } else {
-            if (yawHoldFilter.getEnabled()) {
+            if (yawHoldFilter.isEnabled()) {
                 filtered = yawHoldFilter.filter(filtered);
                 if ( ! yawHoldFilter.isActive() ) {
     		        filtered = noRotationFilter.filter(filtered);
@@ -280,20 +284,20 @@ public class DriveSubsystem extends EntechSubsystem {
     }
 
 	public void setRotationAllowed(boolean newValue) {
-		noRotationFilter.setEnabled(! newValue);
+		noRotationFilter.enable(! newValue);
 	}
 	public boolean isRotationEnabled() {
 		return ! isRotationLocked();
 	}	
 	public boolean isRotationLocked() {
-		return noRotationFilter.getEnabled();
+		return noRotationFilter.isEnabled();
 	}
 
 	public boolean isPrecisionDrive() {
-		return precisionDriveFilter.getEnabled();
+		return precisionDriveFilter.isEnabled();
 	}
 	public void setPrecisionDrive(boolean newValue) {
-		precisionDriveFilter.setEnabled(newValue);
+		precisionDriveFilter.enable(newValue);
 	}
 	public void togglePrecisionDrive() {
 		setPrecisionDrive(!(isPrecisionDrive()));

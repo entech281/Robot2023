@@ -24,20 +24,23 @@ public class HoldYawFilter extends DriveInputFilter {
         setPointValid = false;
     }
 
-    public DriveInput doFilter(DriveInput original) {
+    public DriveInput doFilter(DriveInput inputDI) {
 
-        DriveInput newDi = new DriveInput(original);        		
+        if (!isEnabled()) {
+            return inputDI;
+        }
+        DriveInput outDI = new DriveInput(inputDI);
         double rot = INVALID_ROT;
         if (setPointValid) {
-            rot = pid.calculate(original.getYawAngleDegrees(), yawSetPoint);
+            rot = pid.calculate(inputDI.getYawAngleDegrees(), yawSetPoint);
             if (active) {
-                newDi.setRotation(pid.calculate(rot));
+                outDI.setRotation(pid.calculate(rot));
             }
         }
-        SmartDashboard.putNumber("HoldYaw meas", original.getYawAngleDegrees());
+        SmartDashboard.putNumber("HoldYaw meas", inputDI.getYawAngleDegrees());
         SmartDashboard.putNumber("HoldYaw setp", yawSetPoint);
         SmartDashboard.putNumber("HoldYaw rot", rot);
-        return newDi;
+        return outDI;
     }
 
     public void updateSetpoint( double yaw ) {
