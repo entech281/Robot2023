@@ -112,7 +112,7 @@ public class TestSparkMaxPositionController {
 		assertEquals(HomingState.HOMED, sm.getMotionState());
 		
 		//lower limit should be negative, vs positive
-		assertEquals(-UPPER_LIMIT,encoder.getPosition(), COMPARE_TOLERANCE);
+		assertEquals(-LOWER_LIMIT,encoder.getPosition(), COMPARE_TOLERANCE);
 		
 	}
 	
