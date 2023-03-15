@@ -140,6 +140,9 @@ public class DriveSubsystem extends EntechSubsystem {
         if (jsDeadbandFilter.getEnabled()) {
             filtered = jsDeadbandFilter.filter(filtered);
         }
+        if (isPrecisionDrive()) {
+            filtered = precisionDriveFilter.filter(filtered);
+        }
     	
     	if (isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
@@ -162,12 +165,9 @@ public class DriveSubsystem extends EntechSubsystem {
         } else {
     		filtered = robotRelativeFilter.filter(filtered);
     	}
-
-        if (isPrecisionDrive()) {
-            filtered = precisionDriveFilter.filter(filtered);
-        }
     	
         robotDrive.driveCartesian(filtered.getForward(), filtered.getRight(), filtered.getRotation(), Rotation2d.fromDegrees(filtered.getYawAngleDegrees()));
+
         lastDriveInput.setForward(filtered.getForward());
         lastDriveInput.setRight(filtered.getRight());
         lastDriveInput.setRotation(filtered.getRotation());
