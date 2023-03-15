@@ -32,15 +32,21 @@ public class OperatorInterface {
     
     private void setupButtons() {
         driveStick.button(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
-        .onTrue(commandFactory.setDriverYawEnableCommand(shuffleboardControls,true))
-        .onFalse(commandFactory.setDriverYawEnableCommand(shuffleboardControls,false));
+        .onTrue(commandFactory.setDriverRotationEnableCommand(true))
+        .onFalse(commandFactory.setDriverRotationEnableCommand(false));
 
 	    // driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
 	    //     .onTrue(commandFactory.alignToScoringLocation(shuffleboardControls ,hidJoystickDriveInputSupplier))
 	    //     .onFalse(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
+
+        driveStick.button(RobotConstants.DRIVER_STICK.PRECISION_DRIVE)
+            .onTrue(commandFactory.togglePrecisionDriveCommand());
+
+        driveStick.button(RobotConstants.DRIVER_STICK.BRAKE_COAST)
+            .onTrue(commandFactory.toggleBrakeModeCommand());
 	    
-	    // driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
-	    //     .onTrue(commandFactory.toggleFieldAbsoluteCommand(this.shuffleboardControls));
+	    driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
+	        .onTrue(commandFactory.toggleFieldAbsoluteCommand());
 	    
 	    driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
 	        .onTrue(commandFactory.getZeroGyro());
@@ -65,10 +71,6 @@ public class OperatorInterface {
 	
 	    driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_RIGHT)
             .onTrue(commandFactory.nudgeYawRightCommand());
-
-        driveStick.button(RobotConstants.DRIVER_STICK.BRAKE)
-            .onTrue(new TogglePrecisionDriveCommand(shuffleboardControls))
-            .onFalse(new TogglePrecisionDriveCommand(shuffleboardControls));
 
         // *******  Operator Panel  *******
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)
@@ -131,8 +133,8 @@ public class OperatorInterface {
 	        */
     }
     
-    public void setDefaultCommands() {    	
-    	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
+    public void setDefaultCommands() {
+    	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier));
     	commandFactory.setDefaultGripperCommand(commandFactory.gripperPanelSyncCommand(gripperStateSupplier));
     }
     

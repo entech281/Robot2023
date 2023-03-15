@@ -127,14 +127,16 @@ public final class RobotConstants {
     	public static final int CURRENT_LIMIT_AMPS = 30;
         public static final double GEAR_BOX_RATIO = 9.92;
         public static final double METERS_PER_GEARBOX_REVOLTION = 3.14*6.0/39.37;
-        public static final double PERCISION_DRIVE_FACTOR = 0.4;
+    	public static final boolean DEFAULT_FIELD_ABSOLUTE = false;
+        public static final double PRECISION_DRIVE_FACTOR = 0.4;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
         public static final int AUTO_ALIGN_DRIVE = 2;
         public static final int NUDGE_YAW_LEFT = 3;
         public static final int NUDGE_YAW_RIGHT = 4;
-        public static final int BRAKE = 7;
+        public static final int PRECISION_DRIVE = 7;
+        public static final int BRAKE_COAST = 8;
         public static final int ZERO_GYRO_ANGLE = 9;
         public static final int ZERO_ROBOT_ANGLE = 10;
         public static final int AUTO_YAW_TOGGLE = 11;
@@ -195,9 +197,6 @@ public final class RobotConstants {
         	public static final String DEBUG="Testing";    		
     	}
 
-    	public static boolean DEFAULT_YAW_LOCK = false;
-    	public static boolean DEFAULT_FIELD_ABSOLUTE = false;
-        public static boolean DEFAULT_PRECISION_DRIVE = false;
     }
 
     public interface MAST{

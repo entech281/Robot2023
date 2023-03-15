@@ -25,85 +25,105 @@ import frc.robot.filters.DriveInput;
  * @author aheitkamp
  */
 public class DriveSubsystem extends EntechSubsystem {
-  // private static final int AMP_CURRENT_LIMIT = 25;
 
-  private RelativeEncoder frontLeftEncoder;
-  private RelativeEncoder rearLeftEncoder;
-  private RelativeEncoder frontRightEncoder;
-  private RelativeEncoder rearRightEncoder;
-
-  private CANSparkMax frontLeftSparkMax;
-  private CANSparkMax rearLeftSparkMax;
-  private CANSparkMax frontRightSparkMax;
-  private CANSparkMax rearRightSparkMax;
-  private MecanumDrive robotDrive;
-
-  private DriveMode currentMode = DriveMode.COAST;
-  
-  public DriveSubsystem() {
-  }
-
-  public DriveStatus getStatus(){
-      return new DriveStatus();
-  }
-
-  @Override
-  public void initialize() {
-    frontLeftSparkMax  = new CANSparkMax(RobotConstants.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
-    rearLeftSparkMax   = new CANSparkMax(RobotConstants.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
-    frontRightSparkMax = new CANSparkMax(RobotConstants.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
-    rearRightSparkMax  = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
-    robotDrive         = new MecanumDrive(frontLeftSparkMax, rearLeftSparkMax, frontRightSparkMax, rearRightSparkMax);
-
-    robotDrive.setDeadband(0.1);
-
-    frontLeftSparkMax.setInverted(false);
-    rearLeftSparkMax.setInverted(false);
-    frontRightSparkMax.setInverted(true);
-    rearRightSparkMax.setInverted(true);
+    public enum DriveMode {
+        BRAKE,
+        COAST
+    }
     
-    frontLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
-    rearLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
-    frontRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
-    rearRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);    
+    private RelativeEncoder frontLeftEncoder;
+    private RelativeEncoder rearLeftEncoder;
+    private RelativeEncoder frontRightEncoder;
+    private RelativeEncoder rearRightEncoder;
 
+    private CANSparkMax frontLeftSparkMax;
+    private CANSparkMax rearLeftSparkMax;
+    private CANSparkMax frontRightSparkMax;
+    private CANSparkMax rearRightSparkMax;
+    private MecanumDrive robotDrive;
 
-    frontLeftEncoder = frontLeftSparkMax.getEncoder();
-    rearLeftEncoder = rearLeftSparkMax.getEncoder();
-    frontRightEncoder = frontRightSparkMax.getEncoder();
-    rearRightEncoder = rearRightSparkMax.getEncoder();
-
-    setBrakeMode();
-  }
-
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Front Left SparkMax", frontLeftSparkMax.get());
-    SmartDashboard.putNumber("Front Right SparkMax", frontRightSparkMax.get());
-    SmartDashboard.putNumber("Back Left SparkMax", rearLeftSparkMax.get());
-    SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.get());
-    SmartDashboard.putNumber("Average Position", getAveragePosition());
-
-    robotDrive.feed();
-    robotDrive.feedWatchdog();
-  }
-
-  public void driveFieldAbsolute( DriveInput di, double yawAngleDegrees) {
-      	  
-  }
+    private DriveMode currentMode;
+    private boolean fieldAbsolute;
+    private boolean rotationAllowed;
+    private boolean precisionDrive;
   
-  public void drive(DriveInput di) {
-    robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
-  }
+    public DriveSubsystem() {
+    }
 
-  public void stop() {
-    robotDrive.stopMotor();
-  }
+    public DriveStatus getStatus(){
+        return new DriveStatus();
+    }
 
-  public enum DriveMode {
-    BRAKE,
-    COAST
-  }
+    @Override
+    public void initialize() {
+        frontLeftSparkMax  = new CANSparkMax(RobotConstants.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
+        rearLeftSparkMax   = new CANSparkMax(RobotConstants.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
+        frontRightSparkMax = new CANSparkMax(RobotConstants.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+        rearRightSparkMax  = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
+        robotDrive         = new MecanumDrive(frontLeftSparkMax, rearLeftSparkMax, frontRightSparkMax, rearRightSparkMax);
+
+        robotDrive.setDeadband(0.1);
+
+        frontLeftSparkMax.setInverted(false);
+        rearLeftSparkMax.setInverted(false);
+        frontRightSparkMax.setInverted(true);
+        rearRightSparkMax.setInverted(true);
+    
+        frontLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
+        rearLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
+        frontRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
+        rearRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);    
+
+
+        frontLeftEncoder = frontLeftSparkMax.getEncoder();
+        rearLeftEncoder = rearLeftSparkMax.getEncoder();
+        frontRightEncoder = frontRightSparkMax.getEncoder();
+        rearRightEncoder = rearRightSparkMax.getEncoder();
+
+        currentMode = DriveMode.BRAKE;
+        setBrakeMode();
+
+        fieldAbsolute = RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE;
+        rotationAllowed = false;
+        precisionDrive = false;
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Front Left SparkMax", frontLeftSparkMax.get());
+        SmartDashboard.putNumber("Front Right SparkMax", frontRightSparkMax.get());
+        SmartDashboard.putNumber("Back Left SparkMax", rearLeftSparkMax.get());
+        SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.get());
+        SmartDashboard.putNumber("Average Position", getAveragePosition());
+        SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
+        SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
+        SmartDashboard.putBoolean("Precision Drive", isPrecisionDrive());
+        SmartDashboard.putBoolean("Brake Mode", isBrakeMode());
+
+        robotDrive.feed();
+        robotDrive.feedWatchdog();
+    }
+  
+    public void drive(DriveInput di) {
+        robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
+    }
+
+    public void stop() {
+        robotDrive.stopMotor();
+    }
+
+    public void toggleBrakeCoastMode() {
+        switch (currentMode) {
+        case BRAKE:
+            setCoastMode();
+            currentMode = DriveMode.COAST;
+            break;
+        case COAST:
+            setBrakeMode();
+            currentMode = DriveMode.BRAKE;
+            break;
+        }
+    }
 
   public void setDriveMode(DriveMode mode) {
     if (mode != currentMode) {
@@ -140,37 +160,77 @@ public class DriveSubsystem extends EntechSubsystem {
   	    builder.addDoubleProperty("FrontRight", () -> { return frontRightEncoder.getPosition();} , null);
   	    builder.addDoubleProperty("RearLeft", () -> { return rearLeftEncoder.getPosition();} , null);  	    
   	    builder.addDoubleProperty("RearRight", () -> { return rearRightEncoder.getPosition();} , null);
-
-
-    }  
+        builder.addBooleanProperty("Field Absolute", this::isFieldAbsolute, null);
+        builder.addBooleanProperty("Rotation Allowed", this::isRotationEnabled, null);
+        builder.addBooleanProperty("Precision Drive", this::isPrecisionDrive, null);
+        builder.addBooleanProperty("Brake Mode", this::isBrakeMode, null);
+    }
   
-@Override
-public boolean isEnabled() {
-	return true;
-}
-  public void resetEncoders() {
-    frontLeftEncoder.setPosition(0);
-    rearLeftEncoder.setPosition(0);
-    frontRightEncoder.setPosition(0);
-    rearRightEncoder.setPosition(0);
-  }
+    @Override
+    public boolean isEnabled() {
+	    return true;
+    }
+    public void resetEncoders() {
+        frontLeftEncoder.setPosition(0);
+        rearLeftEncoder.setPosition(0);
+        frontRightEncoder.setPosition(0);
+        rearRightEncoder.setPosition(0);
+    }
 
-  /**
-   * 
-   * @return average motor revolutions for the 4 motors
-   */
-  public double getAveragePosition() {
-    double position = 0;
-    position += frontLeftEncoder.getPosition();
-    position += rearLeftEncoder.getPosition();
-    position += frontRightEncoder.getPosition();
-    position += rearRightEncoder.getPosition();
-    return position / 4;
-  }
+    /**
+     * 
+     * @return average motor revolutions for the 4 motors
+     */
+    public double getAveragePosition() {
+        double position = 0;
+        position += frontLeftEncoder.getPosition();
+        position += rearLeftEncoder.getPosition();
+        position += frontRightEncoder.getPosition();
+        position += rearRightEncoder.getPosition();
+        return position / 4;
+    }
 
-  public double getAverageDistanceMeters() {
-    double distance = (getAveragePosition() / RobotConstants.DRIVE.GEAR_BOX_RATIO) * RobotConstants.DRIVE.METERS_PER_GEARBOX_REVOLTION;
-    // double distance = getAveragePosition() / RobotConstants.DRIVE.METERS_PER_ENCODER_COUNT;
-    return distance;
-  }
+    public double getAverageDistanceMeters() {
+        double distance = (getAveragePosition() / RobotConstants.DRIVE.GEAR_BOX_RATIO) * RobotConstants.DRIVE.METERS_PER_GEARBOX_REVOLTION;
+        return distance;
+    }
+
+    // Store drive state in the DriveSubsysten rather than the Shuffleboard
+    public void setFieldAbsolute(boolean newValue) {
+		fieldAbsolute = newValue;
+	}
+	public boolean isFieldAbsolute() {
+		return fieldAbsolute;
+	}
+	public boolean isFieldRelative() {
+		return ! fieldAbsolute;
+	}	
+	public void toggleFieldAbsolute() {
+		setFieldAbsolute( ! isFieldAbsolute() );
+	}
+
+    public boolean isBrakeMode() {
+        return currentMode == DriveMode.BRAKE;
+    }
+
+	public void setRotationAllowed(boolean newValue) {
+		rotationAllowed = newValue;
+	}
+	public boolean isRotationEnabled() {
+		return rotationAllowed;
+	}	
+	public boolean isRotationLocked() {
+		return ! isRotationEnabled();
+	}
+
+	public boolean isPrecisionDrive() {
+		return precisionDrive;
+	}
+	public void setPrecisionDrive(boolean newValue) {
+		precisionDrive = newValue;
+	}
+	public void togglePrecisionDrive() {
+		setPrecisionDrive(!(isPrecisionDrive()));
+	}
+
 }

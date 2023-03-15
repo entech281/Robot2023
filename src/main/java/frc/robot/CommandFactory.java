@@ -21,10 +21,12 @@ import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HomeArmCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
-import frc.robot.commands.SetDriverYawEnableCommand;
+import frc.robot.commands.DriveSetRotationEnableCommand;
+import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
+import frc.robot.commands.TogglePrecisionDriveCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeElbowDownCommand;
@@ -34,7 +36,6 @@ import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.commands.supplier.TargetNodeSupplier;
 import frc.robot.filters.DriveInput;
-import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
@@ -43,7 +44,6 @@ import frc.robot.subsystems.GripperSubsystem.GripperState;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
-
 /**
  *
  * @author dcowden
@@ -183,20 +183,28 @@ public class CommandFactory {
     	return new DefaultGripperCommand(gripperSubsystem, panelGripperButtonSupplier);
     }
     
-    public Command filteredDriveCommand( Supplier<DriveInput> operatorInput, ShuffleboardDriverControls driverControls) {
-    	return new FilteredDriveCommand(driveSubsystem,addYawToOperatorJoystickInput( operatorInput),driverControls);
+    public Command filteredDriveCommand( Supplier<DriveInput> operatorInput) {
+    	return new FilteredDriveCommand(driveSubsystem,addYawToOperatorJoystickInput( operatorInput));
     }
 
     public Command driveCommand(Supplier<DriveInput> operatorInput) {
         return new SimpleDriveCommand(driveSubsystem, addYawToOperatorJoystickInput(operatorInput));
     }
 
-	public Command toggleFieldAbsoluteCommand( ShuffleboardDriverControls shuffleboardControls ) {
-		return new ToggleFieldAbsoluteCommand(shuffleboardControls);
+    public Command toggleBrakeModeCommand() {
+        return new DriveToggleBrakeMode(driveSubsystem);
+    }
+
+    public Command togglePrecisionDriveCommand() {
+        return new TogglePrecisionDriveCommand(driveSubsystem);
+    }
+
+	public Command toggleFieldAbsoluteCommand() {
+		return new ToggleFieldAbsoluteCommand(driveSubsystem);
 	}
 
-	public Command setDriverYawEnableCommand(ShuffleboardDriverControls shuffleboardControls , boolean newValue) {
-		return new SetDriverYawEnableCommand(shuffleboardControls,newValue);
+	public Command setDriverRotationEnableCommand(boolean newValue) {
+		return new DriveSetRotationEnableCommand(driveSubsystem,newValue);
 	}
 
     public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {
