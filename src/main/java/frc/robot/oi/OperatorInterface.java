@@ -133,7 +133,7 @@ public class OperatorInterface {
 	        */
     }
     
-    public void setDefaultCommands() {    	
+    public void setDefaultCommands() {
     	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier));
     	commandFactory.setDefaultGripperCommand(commandFactory.gripperPanelSyncCommand(gripperStateSupplier));
     }

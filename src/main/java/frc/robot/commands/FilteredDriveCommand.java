@@ -49,10 +49,11 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     @Override
     public void execute() {
     	DriveInput di = operatorInput.get();
+        double currentYaw = di.getYawAngleDegrees();
 
         // Special case: set the setpoint for the HoldYawFilter if nothing has until now
         if ( ! yawHoldFilter.isSetpointValid() ) {
-            yawHoldFilter.updateSetpoint(operatorInput.get().getYawAngleDegrees());
+            yawHoldFilter.updateSetpoint(currentYaw);
         }
 
     	DriveInput filtered = di;
@@ -62,7 +63,7 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     	
     	if (drive.isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
-            yawHoldFilter.updateSetpoint(filtered.getYawAngleDegrees());
+            yawHoldFilter.updateSetpoint(currentYaw);
         } else {
             if (yawHoldFilter.getEnabled()) {
                 filtered = yawHoldFilter.filter(filtered);
@@ -81,5 +82,10 @@ public class FilteredDriveCommand extends SimpleDriveCommand {
     	}
     	
     	drive.drive(filtered);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 }
