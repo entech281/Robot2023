@@ -9,24 +9,24 @@ public class RobotLateralPIDController extends PIDController {
 	private static final double P_GAIN = 2.0;
 	private static final double I_GAIN = 0.001;
     private static final double D_GAIN = 0.00;
-    private static final double ANGLE_TOLERANCE = 1;
+    private static final double TOLERANCE_METERS = 0.05;
     private static final double SPEED_LIMIT = 0.75;
     private static final int STOP_COUNT = 4;
     private StoppingCounter counter;
     
     public RobotLateralPIDController() {
         super(P_GAIN, I_GAIN, D_GAIN);
-        counter = new StoppingCounter("RobotYawPID", STOP_COUNT);
+        counter = new StoppingCounter("RobotLateralPIDController", STOP_COUNT);
         setParameters();
     }
     public RobotLateralPIDController(double p, double i, double d) {
         super(p, i, d);
-        counter = new StoppingCounter("RobotYawPID", STOP_COUNT);
+        counter = new StoppingCounter("RobotLateralPIDController", STOP_COUNT);
         setParameters();
     }
     public RobotLateralPIDController(double p, double i, double d, double period) {
         super(p, i, d, period);
-        counter = new StoppingCounter("RobotYawPID", STOP_COUNT);
+        counter = new StoppingCounter("RobotLateralPIDController", STOP_COUNT);
         setParameters();
     }
 
@@ -44,7 +44,6 @@ public class RobotLateralPIDController extends PIDController {
     }
 
     private void setParameters() {
-        enableContinuousInput(-180.0, 180.0);
-        setTolerance(ANGLE_TOLERANCE);
+        setTolerance(TOLERANCE_METERS);
     }
 }

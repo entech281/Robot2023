@@ -10,6 +10,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
+import frc.robot.util.EntechUtils;
 
 /**
  * Overview:
@@ -163,7 +164,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   	@Override
 	public void requestPosition(double requestedPosition) {
   	 
-  	   this.requestedPosition = Optional.of(clampwithinLimits(requestedPosition, config.getMinPosition(), config.getMaxPosition()));	
+  	   this.requestedPosition = Optional.of(EntechUtils.capDoubleValue(requestedPosition, config.getMinPosition(), config.getMaxPosition()));	
 	   if (axisState == HomingState.UNINITIALIZED) {
 			startHoming();
 	   }
@@ -173,14 +174,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     	clearRequestedPosition();
     	setMotorSpeedInternal(input);
     }
-
-  	private double clampwithinLimits( double value, double min, double max) {
-		double tmp = value;
-	    DriverStation.reportWarning(config.getName() + "Invalid Position:  " + value   ,false);
-	    tmp  = Math.min(tmp, min);
-	    tmp  = Math.max(tmp, max);  
-	    return tmp;
-  	}    
+  
     
     public void setMotorSpeedInternal(double input) {
     	spark.set(correctDirection(input));
