@@ -96,7 +96,6 @@ public class CommandFactory {
 			loadingElbowCommand(),
 			carryElbowCommand(),
 			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.MAX_METERS, false),
-			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, false),
 			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, false),
 			new PositionElbowCommand(elbowSubsystem,RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, false),
 			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
@@ -360,11 +359,11 @@ public class CommandFactory {
 //    }
 
     public Command armPositionHome() {
-        return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_ARM_LENGTH_M, true);
+        return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true);
      }
 
      public Command armPositionFullExtension() {
-        return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MAX_ARM_LENGTH_M, true);
+        return new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MAX_METERS, true);
      }
 
      public Command dialCarryPosition() {

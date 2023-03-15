@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.supplier.TargetOffsetSupplier;
 import frc.robot.commands.supplier.TargetYawSupplier;
@@ -48,6 +49,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         if ( targetOffsetSupplier.getTargetOffset().isPresent()) {
         	double lateralOffset = targetOffsetSupplier.getTargetOffset().get().getY();
         	SmartDashboard.putNumber("LateralOffsetFromHorizontalAlign", lateralOffset);
+        	SmartDashboard.putData("HorizontalAlignPID",pid);
         	
         	double calcValue = pid.calculate(lateralOffset);
         	newDi.setRight(calcValue);

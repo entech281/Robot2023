@@ -109,7 +109,7 @@ public class VisionSubsystem extends EntechSubsystem {
 
   private double getCameraDistance() {
 	if (currentStatus.getBestAprilTagTarget().isPresent()) {
-		return currentStatus.getBestAprilTagTarget().get().getCameraToTargetTransform().getY();
+		return currentStatus.getBestAprilTagTarget().get().getCameraToTargetTransform().getX();
 	  } else {
 		return RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN;
 	  }
@@ -118,7 +118,7 @@ public class VisionSubsystem extends EntechSubsystem {
   private String getBestTagName() {
 	  if ( currentStatus.getBestAprilTagTarget().isPresent()) {
           if (currentStatus.getBestAprilTagTarget().get().getTagLocation() != null) {
-		  return currentStatus.getBestAprilTagTarget().get().getTagLocation().getLocation().toString();
+        	  return currentStatus.getBestAprilTagTarget().get().getTagLocation().getLocation().toString();
           }
 	  }
 		  return "NONE";
