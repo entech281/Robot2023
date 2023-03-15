@@ -162,6 +162,10 @@ public class DriveSubsystem extends EntechSubsystem {
         } else {
     		filtered = robotRelativeFilter.filter(filtered);
     	}
+
+        if (isPrecisionDrive()) {
+            filtered = precisionDriveFilter.filter(filtered);
+        }
     	
         robotDrive.driveCartesian(filtered.getForward(), filtered.getRight(), filtered.getRotation(), Rotation2d.fromDegrees(filtered.getYawAngleDegrees()));
         lastDriveInput.setForward(filtered.getForward());
