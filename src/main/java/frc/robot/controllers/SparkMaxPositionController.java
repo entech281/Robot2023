@@ -212,9 +212,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
       		 case HOMED:
       			 updateRequestedPosition();
   	    }
-      	 if ( isAtUpperLimit() ) {
-      		setEncoder(config.getMaxPosition()); //still not sure if this will be better or not	
-      	 }
+
   	}
   	
     private void arrivedHome() {
