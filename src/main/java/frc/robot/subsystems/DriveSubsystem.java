@@ -44,7 +44,6 @@ public class DriveSubsystem extends EntechSubsystem {
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
     private PrecisionDriveFilter precisionDriveFilter;
-    private DriveInput lastDriveInput;
     
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder rearLeftEncoder;
@@ -114,8 +113,6 @@ public class DriveSubsystem extends EntechSubsystem {
         yawHoldFilter = new HoldYawFilter();
         yawHoldFilter.enable(true);
 
-        lastDriveInput = new DriveInput(0.,0.,0.,0.);
-        SmartDashboard.putData("lastDriveInput", lastDriveInput);
     }
 
     @Override
@@ -149,7 +146,7 @@ public class DriveSubsystem extends EntechSubsystem {
     	DriveInput filtered = di;
         filtered = jsDeadbandFilter.filter(filtered);
         filtered = precisionDriveFilter.filter(filtered);
-        printDI("DI(1):",filtered);
+        // printDI("DI(1):",filtered);
     	
     	if (isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
@@ -160,7 +157,7 @@ public class DriveSubsystem extends EntechSubsystem {
         } else {
             if (yawHoldFilter.isEnabled()) {
                 filtered = yawHoldFilter.filter(filtered);
-                printDI("DI(2)",filtered);
+                // printDI("DI(2)",filtered);
                 if ( ! yawHoldFilter.isActive() ) {
     		        filtered = noRotationFilter.filter(filtered);
                 }
@@ -176,11 +173,6 @@ public class DriveSubsystem extends EntechSubsystem {
     	}
     	
         robotDrive.driveCartesian(filtered.getForward(), filtered.getRight(), filtered.getRotation(), Rotation2d.fromDegrees(filtered.getYawAngleDegrees()));
-
-        lastDriveInput.setForward(filtered.getForward());
-        lastDriveInput.setRight(filtered.getRight());
-        lastDriveInput.setRotation(filtered.getRotation());
-        lastDriveInput.setYawAngleDegrees(filtered.getYawAngleDegrees());
     }
 
     private void printDI(String id,DriveInput di) {
