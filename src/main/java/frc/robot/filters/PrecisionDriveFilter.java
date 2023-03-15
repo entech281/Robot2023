@@ -9,11 +9,14 @@ import frc.robot.RobotConstants;
  */
 public class PrecisionDriveFilter extends DriveInputFilter {
     @Override
-    protected DriveInput doFilter(DriveInput di) {
-        DriveInput newDI = new DriveInput(di);
-        newDI.setForward(di.getForward() * RobotConstants.DRIVE.PRECISION_DRIVE_FACTOR);
-        newDI.setRight(di.getRight() * RobotConstants.DRIVE.PRECISION_DRIVE_FACTOR);
-        newDI.setRotation(di.getRotation() * RobotConstants.DRIVE.PRECISION_DRIVE_FACTOR);
-        return newDI;
+    protected DriveInput doFilter(DriveInput inputDI) {
+        if (!isEnabled()) {
+            return inputDI;
+        }
+        DriveInput outDI = new DriveInput(inputDI);
+        outDI.setForward(inputDI.getForward() * RobotConstants.DRIVE.PRECISION_DRIVE_FACTOR);
+        outDI.setRight(inputDI.getRight() * RobotConstants.DRIVE.PRECISION_DRIVE_FACTOR);
+        outDI.setRotation(inputDI.getRotation() * RobotConstants.DRIVE.PRECISION_DRIVE_FACTOR);
+        return outDI;
     }
 }

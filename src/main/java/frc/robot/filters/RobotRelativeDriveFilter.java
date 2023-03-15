@@ -1,15 +1,18 @@
 package frc.robot.filters;
 
 /**
- * Changes the yawAngle inside DriveInput
+ * Changes the yawAngle
  */
 public class RobotRelativeDriveFilter extends DriveInputFilter{
 
 	@Override
-	protected DriveInput doFilter(DriveInput input) {
-		DriveInput robotRelative = new DriveInput(input);
-		robotRelative.setYawAngleDegrees(0.0);
-		return robotRelative;
+	protected DriveInput doFilter(DriveInput inputDI) {
+        if (!isEnabled()) {
+            return inputDI;
+        }
+		DriveInput outDI = new DriveInput(inputDI);
+		outDI.setYawAngleDegrees(0.0);
+		return outDI;
 	}
 
 }

@@ -29,7 +29,9 @@ public class AutoYawFilter extends DriveInputFilter {
         if (Math.abs(original.getForward()) < 0.1 && Math.abs(original.getRight()) < 0.1) {
             return original;
         }
-
+        if (!isEnabled()) {
+            return original;
+        }
 
         double setPoint = computeSetPoint(original);
 

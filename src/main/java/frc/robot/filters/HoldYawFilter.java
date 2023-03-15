@@ -12,32 +12,36 @@ public class HoldYawFilter extends DriveInputFilter {
 
     private RobotYawPIDController pid;
     private static final double INVALID_ROT = 99.0;
-    private static final double P_GAIN = 0.005;
+    private static final double P_GAIN = 0.01;
     private static final double I_GAIN = 0.0;
     private static final double D_GAIN = 0.0;
     private static double yawSetPoint = 0.0;
     private static boolean setPointValid;
-    private final boolean active = false;
+    private final boolean active = true;
 
     public HoldYawFilter() {
         pid = new RobotYawPIDController(P_GAIN, I_GAIN, D_GAIN);
         setPointValid = false;
     }
 
-    public DriveInput doFilter(DriveInput original) {
+    public DriveInput doFilter(DriveInput inputDI) {
 
-        DriveInput newDi = new DriveInput(original);        		
+        if (!isEnabled()) {
+            return inputDI;
+        }
+        DriveInput outDI = new DriveInput(inputDI);
         double rot = INVALID_ROT;
         if (setPointValid) {
-            rot = pid.calculate(original.getYawAngleDegrees(), yawSetPoint);
+            rot = P_GAIN*(inputDI.getYawAngleDegrees() - yawSetPoint);
+            // rot = pid.calculate(inputDI.getYawAngleDegrees(), yawSetPoint);
             if (active) {
-                newDi.setRotation(pid.calculate(rot));
+                outDI.setRotation(pid.calculate(rot));
             }
         }
-        SmartDashboard.putNumber("HoldYaw meas", original.getYawAngleDegrees());
+        SmartDashboard.putNumber("HoldYaw meas", inputDI.getYawAngleDegrees());
         SmartDashboard.putNumber("HoldYaw setp", yawSetPoint);
         SmartDashboard.putNumber("HoldYaw rot", rot);
-        return newDi;
+        return outDI;
     }
 
     public void updateSetpoint( double yaw ) {
