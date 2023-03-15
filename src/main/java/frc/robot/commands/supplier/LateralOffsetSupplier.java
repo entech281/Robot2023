@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Transform3d;
 
-public interface TargetOffsetSupplier {
+public interface LateralOffsetSupplier {
 
-	public Optional<Transform3d> getTargetOffset();
+	public Optional<Double> getLateralOffset();
 }

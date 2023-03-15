@@ -21,6 +21,7 @@ import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
+import frc.robot.commands.SetElbowSpeedCommand;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.SimpleDriveCommand;
@@ -113,18 +114,15 @@ public class CommandFactory {
                 , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
                 , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
                 , new WaitCommand(1.0)
-                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS - DOWN_MOVE_DEGREES, true)
-                , new GripperCommand(gripperSubsystem, GripperState.kOpen)
-                , new WaitCommand(1.0)
-                , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
-                , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
-                , new DriveDistanceCommand(driveSubsystem, distanceMeters, 0.4, 0.3, .1)
-                , new DriveBrakeForSeconds(driveSubsystem, brakeHoldSeconds)
+ 
             );
             sg.setName("AutonomousBalanceDeadRecCommand");
             return sg;    	
     }
 
+    public Command elbowSlowlyDown() {
+    	return new SetElbowSpeedCommand(elbowSubsystem, RobotConstants.ELBOW.SETTINGS.ELBOW_SLOWDOWN_SPEED);
+    }
     public Command getAutonomousChoice() {
         return autonomousFarCommand();
     }

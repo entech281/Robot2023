@@ -9,7 +9,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.ScoringLocationSupplier;
 import frc.robot.commands.supplier.TargetNodeSupplier;
-import frc.robot.commands.supplier.TargetOffsetSupplier;
+import frc.robot.commands.supplier.LateralOffsetSupplier;
 import frc.robot.commands.supplier.TargetYawSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.pose.AprilTagLocation.AprilTagIDLocation;
@@ -18,7 +18,7 @@ import frc.robot.pose.ScoringLocation;
 import frc.robot.pose.TargetNode;
 import frc.robot.util.SendableUtil;
 public class RobotState implements Sendable, EstimatedPoseSupplier , YawAngleSupplier,ScoringLocationSupplier , TargetNodeSupplier, TargetYawSupplier,
-TargetOffsetSupplier{
+LateralOffsetSupplier{
 
 	public static final double DISTANCE_UNKNOWN = -1;
 	public static final double CLOSE_ENOUGH_TO_DEPLOY_METERS = 1.2192 + 0.4064; //arm is 1.2192 meters in front of robot
@@ -135,12 +135,14 @@ TargetOffsetSupplier{
 	}
 
 	@Override
-	public Optional<Transform3d> getTargetOffset() {
-		if ( getBestAprilTagTarget().isPresent()) {
-			return Optional.ofNullable(getBestAprilTagTarget().get().getCameraToTargetTransform());
+	public Optional<Double> getLateralOffset(){
+		if ( getBestAprilTagTarget().isPresent() && estimatedPose.isPresent()) {
+			RecognizedAprilTagTarget t = getBestAprilTagTarget().get();
+			double targetY  = t.getTagLocation().getYMeters();
+			double robotY = estimatedPose.get().getTranslation().getY();
+			return Optional.of(targetY - robotY);
 		}
-		else {
-			return Optional.empty();
-		}
+
+		return Optional.empty();	
 	}
 }

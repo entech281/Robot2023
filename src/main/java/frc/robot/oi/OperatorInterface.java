@@ -105,8 +105,9 @@ public class OperatorInterface {
         .onTrue(commandFactory.groundScoringElbowCommand());        
  
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.AUTO)
-            .onTrue(commandFactory.armPositionFullExtension())
-            .onFalse(commandFactory.armPositionHome());
+        	.whileTrue(commandFactory.elbowSlowlyDown());
+            //.onTrue(commandFactory.armPositionFullExtension())
+            //.onFalse(commandFactory.armPositionHome());
             
         // ******* Operator Joytick ******* 
         /**
