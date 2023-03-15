@@ -30,9 +30,9 @@ public class TestLateralAlignCalculator {
 		
 		double TAG_8_X_IN = Units.inchesToMeters(40.45);
 		double TAG_8_Y_IN = Units.inchesToMeters(42.19);
-		Pose2d bottmLeftCornerFacingBack = new Pose2d(TAG_8_X_IN,TAG_8_Y_IN, Rotation2d.fromDegrees(180));
+		Pose2d directlyInFrontOfTag8 = new Pose2d(TAG_8_X_IN,TAG_8_Y_IN, Rotation2d.fromDegrees(180));
 		
-		LateralOffset lo = lac.findOffsetToNearestTarget(bottmLeftCornerFacingBack);
+		LateralOffset lo = lac.findOffsetToNearestTarget(directlyInFrontOfTag8);
 		ScoringLocation selectedLoc = lo.getNearestLocation();
 		assertEquals(8, selectedLoc.getSelectedTag().getId());
 		assertEquals(TargetNode.A2, selectedLoc.getSelectedNode().getNodeID());
