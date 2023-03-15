@@ -57,7 +57,6 @@ public class DriveSubsystem extends EntechSubsystem {
     private MecanumDrive robotDrive;
 
     private DriveMode currentDriveMode;
-    private boolean fieldAbsolute;
   
     public DriveSubsystem() {
     }
@@ -93,16 +92,13 @@ public class DriveSubsystem extends EntechSubsystem {
         currentDriveMode = DriveMode.BRAKE;
         setBrakeMode();
 
-        fieldAbsolute = RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE;
-
         jsDeadbandFilter = new JoystickDeadbandFilter();
         jsDeadbandFilter.enable(true);
-        jsDeadbandFilter.setDeadband(0.2);
+        jsDeadbandFilter.setDeadband(0.15);
 
         robotRelativeFilter = new RobotRelativeDriveFilter();
-        robotRelativeFilter.enable(!fieldAbsolute);
         yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
-        yawAngleCorrectionFilter.enable(fieldAbsolute);
+        setFieldAbsolute(RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE);
 
         noRotationFilter = new NoRotationFilter();
         noRotationFilter.enable(true);
@@ -153,7 +149,6 @@ public class DriveSubsystem extends EntechSubsystem {
             // We run the holdyaw filter just to get the dashboard updated.
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
             yawHoldFilter.reset();
-            DriveInput temp = yawHoldFilter.filter(filtered);
         } else {
             if (yawHoldFilter.isEnabled()) {
                 filtered = yawHoldFilter.filter(filtered);
@@ -172,7 +167,8 @@ public class DriveSubsystem extends EntechSubsystem {
     		filtered = robotRelativeFilter.filter(filtered);
     	}
     	
-        robotDrive.driveCartesian(filtered.getForward(), filtered.getRight(), filtered.getRotation(), Rotation2d.fromDegrees(filtered.getYawAngleDegrees()));
+        // printDI("DI(3)",filtered);
+        drive(filtered);
     }
 
     private void printDI(String id,DriveInput di) {
@@ -224,6 +220,10 @@ public class DriveSubsystem extends EntechSubsystem {
     rearRightSparkMax.setIdleMode(IdleMode.kBrake);
   }
 
+  public boolean isBrakeMode() {
+    return currentDriveMode == DriveMode.BRAKE;
+  }
+
 	@Override
     public void initSendable(SendableBuilder builder) {
   	    builder.setSmartDashboardType(getName());
@@ -268,21 +268,23 @@ public class DriveSubsystem extends EntechSubsystem {
 
     // Store drive state in the DriveSubsysten rather than the Shuffleboard
     public void setFieldAbsolute(boolean newValue) {
-		fieldAbsolute = newValue;
+        if (newValue) {
+            robotRelativeFilter.enable(false);
+            yawAngleCorrectionFilter.enable(true);
+        } else {
+            robotRelativeFilter.enable(true);
+            yawAngleCorrectionFilter.enable(false);
+        }
 	}
 	public boolean isFieldAbsolute() {
-		return fieldAbsolute;
+		return ! isFieldRelative();
 	}
 	public boolean isFieldRelative() {
-		return ! fieldAbsolute;
+		return robotRelativeFilter.isEnabled();
 	}	
 	public void toggleFieldAbsolute() {
 		setFieldAbsolute( ! isFieldAbsolute() );
 	}
-
-    public boolean isBrakeMode() {
-        return currentDriveMode == DriveMode.BRAKE;
-    }
 
 	public void setRotationAllowed(boolean newValue) {
 		noRotationFilter.enable(! newValue);

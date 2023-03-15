@@ -172,7 +172,7 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
     oi.setDefaultCommands();
-    allSubsystems.getDrive().setDriveMode(DriveMode.COAST);
+    allSubsystems.getDrive().setDriveMode(DriveMode.BRAKE);
   }
 
   /** This function is called periodically during operator control. */
