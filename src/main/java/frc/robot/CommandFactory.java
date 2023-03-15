@@ -102,6 +102,28 @@ public class CommandFactory {
 
     	);
     }
+    
+    public Command testDownwardSoftConePlacement() {
+    	double DOWN_MOVE_DEGREES = 3.0;
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+            	new ZeroGyroCommand(navxSubsystem)
+                , new GripperCommand(gripperSubsystem, GripperState.kClose)
+                , new DriveSetBrake(driveSubsystem)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)            
+                , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
+                , new WaitCommand(1.0)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS - DOWN_MOVE_DEGREES, true)
+                , new GripperCommand(gripperSubsystem, GripperState.kOpen)
+                , new WaitCommand(1.0)
+                , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
+                , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
+                , new DriveDistanceCommand(driveSubsystem, distanceMeters, 0.4, 0.3, .1)
+                , new DriveBrakeForSeconds(driveSubsystem, brakeHoldSeconds)
+            );
+            sg.setName("AutonomousBalanceDeadRecCommand");
+            return sg;    	
+    }
 
     public Command getAutonomousChoice() {
         return autonomousFarCommand();

@@ -92,7 +92,7 @@ public class OperatorInterface {
         .onTrue(commandFactory.dialCarryPosition());            
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
-        .onTrue(commandFactory.loadingElbowCommand());
+        .onTrue(commandFactory.dialLoadPosition());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LEFT_APRILTAG)
         .onTrue(commandFactory.dialHighPosition());
