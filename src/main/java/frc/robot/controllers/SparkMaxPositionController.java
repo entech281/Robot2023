@@ -142,12 +142,12 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 
     @Override
 	public boolean isAtRequestedPosition() {
-  		if ( requestedPosition.isPresent()) {
-  	    	if ( isHomed() ) {
-  	    		return Math.abs(getActualPosition() - requestedPosition.get()) < config.getPositionTolerance();
-  	    	}			
-  		}
-  		return false;
+    	if ( isHomed( )) {
+      		if ( requestedPosition.isPresent()) {
+      	    	return Math.abs(getActualPosition() - requestedPosition.get()) < config.getPositionTolerance();			
+      		}    		
+    	}
+    	return false;
 	}
     
     @Override
@@ -159,34 +159,28 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 	public boolean isHomed() {
   	  return axisState == HomingState.HOMED;
     }    
-    
+  	
   	@Override
 	public void requestPosition(double requestedPosition) {
   	 
-	  
-  	 if (axisState == HomingState.UNINITIALIZED) {
-  		startHoming();
-     }
-  	 else if ( axisState == HomingState.FINDING_LIMIT) {
-  		 //do nothing
-  	 }
-  	 else if ( axisState == HomingState.HOMED) {
-  		 double tmp = requestedPosition;
-  	  	  if (  ! isPositionWithinSoftLimits(tmp)) {
-  	        DriverStation.reportWarning(config.getName() + "Invalid Position:  " + requestedPosition   ,false);
-  	        tmp  = Math.min(tmp, config.getMaxPosition());
-  	        tmp  = Math.max(tmp, config.getMinPosition());   	  		  
-  	  		
-  	      }
-  	  	  this.requestedPosition = Optional.of(tmp); 
-  	  	  	  		 
-  	 }
+  	   this.requestedPosition = Optional.of(clampwithinLimits(requestedPosition, config.getMinPosition(), config.getMaxPosition()));	
+	   if (axisState == HomingState.UNINITIALIZED) {
+			startHoming();
+	   }
     }    
 
     public void setMotorSpeed(double input) {    	
     	clearRequestedPosition();
     	setMotorSpeedInternal(input);
     }
+
+  	private double clampwithinLimits( double value, double min, double max) {
+		double tmp = value;
+	    DriverStation.reportWarning(config.getName() + "Invalid Position:  " + value   ,false);
+	    tmp  = Math.min(tmp, min);
+	    tmp  = Math.max(tmp, max);  
+	    return tmp;
+  	}    
     
     public void setMotorSpeedInternal(double input) {
     	spark.set(correctDirection(input));
@@ -233,10 +227,6 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     private double getEncoderValue() {
     	return correctDirection(encoder.getPosition());
     }
-
-    private boolean isPositionWithinSoftLimits(double position) {
-	  	return position >= config.getMinPosition() && position <= config.getMaxPosition() ;
- 	}
     
     private void setEncoder( double value ) {
     	encoder.setPosition(correctDirection(value));
