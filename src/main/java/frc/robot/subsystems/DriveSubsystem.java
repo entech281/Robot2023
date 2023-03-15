@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
@@ -97,7 +98,7 @@ public class DriveSubsystem extends EntechSubsystem {
 
         jsDeadbandFilter = new JoystickDeadbandFilter();
         jsDeadbandFilter.enable(true);
-        jsDeadbandFilter.setDeadband(0.1);
+        jsDeadbandFilter.setDeadband(0.2);
 
         robotRelativeFilter = new RobotRelativeDriveFilter();
         robotRelativeFilter.enable(!fieldAbsolute);
@@ -142,20 +143,24 @@ public class DriveSubsystem extends EntechSubsystem {
         // Special case: set the setpoint for the HoldYawFilter if nothing has until now
         if ( ! yawHoldFilter.isSetpointValid() ) {
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            yawHoldFilter.reset();
         }
 
     	DriveInput filtered = di;
         filtered = jsDeadbandFilter.filter(filtered);
         filtered = precisionDriveFilter.filter(filtered);
+        printDI("DI(1):",filtered);
     	
     	if (isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             // We run the holdyaw filter just to get the dashboard updated.
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            yawHoldFilter.reset();
             DriveInput temp = yawHoldFilter.filter(filtered);
         } else {
             if (yawHoldFilter.isEnabled()) {
                 filtered = yawHoldFilter.filter(filtered);
+                printDI("DI(2)",filtered);
                 if ( ! yawHoldFilter.isActive() ) {
     		        filtered = noRotationFilter.filter(filtered);
                 }
@@ -176,6 +181,10 @@ public class DriveSubsystem extends EntechSubsystem {
         lastDriveInput.setRight(filtered.getRight());
         lastDriveInput.setRotation(filtered.getRotation());
         lastDriveInput.setYawAngleDegrees(filtered.getYawAngleDegrees());
+    }
+
+    private void printDI(String id,DriveInput di) {
+        DriverStation.reportWarning(id+di.getForward()+","+di.getRight()+","+di.getRotation(), false);
     }
 
     public void stop() {

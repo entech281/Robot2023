@@ -12,12 +12,12 @@ public class HoldYawFilter extends DriveInputFilter {
 
     private RobotYawPIDController pid;
     private static final double INVALID_ROT = 99.0;
-    private static final double P_GAIN = 0.005;
+    private static final double P_GAIN = 0.01;
     private static final double I_GAIN = 0.0;
     private static final double D_GAIN = 0.0;
     private static double yawSetPoint = 0.0;
     private static boolean setPointValid;
-    private final boolean active = false;
+    private final boolean active = true;
 
     public HoldYawFilter() {
         pid = new RobotYawPIDController(P_GAIN, I_GAIN, D_GAIN);
@@ -32,7 +32,8 @@ public class HoldYawFilter extends DriveInputFilter {
         DriveInput outDI = new DriveInput(inputDI);
         double rot = INVALID_ROT;
         if (setPointValid) {
-            rot = pid.calculate(inputDI.getYawAngleDegrees(), yawSetPoint);
+            rot = P_GAIN*(inputDI.getYawAngleDegrees() - yawSetPoint);
+            // rot = pid.calculate(inputDI.getYawAngleDegrees(), yawSetPoint);
             if (active) {
                 outDI.setRotation(pid.calculate(rot));
             }
