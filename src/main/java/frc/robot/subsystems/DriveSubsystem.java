@@ -23,6 +23,7 @@ import frc.robot.filters.RobotRelativeDriveFilter;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.NoRotationFilter;
+import frc.robot.filters.PrecisionDriveFilter;
 
 /**
  *
@@ -41,6 +42,7 @@ public class DriveSubsystem extends EntechSubsystem {
     private NoRotationFilter noRotationFilter;
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
+    private PrecisionDriveFilter precisionDriveFilter;
     private DriveInput lastDriveInput;
     
     private RelativeEncoder frontLeftEncoder;
@@ -56,8 +58,6 @@ public class DriveSubsystem extends EntechSubsystem {
 
     private DriveMode currentDriveMode;
     private boolean fieldAbsolute;
-    private boolean rotationAllowed;
-    private boolean precisionDrive;
   
     public DriveSubsystem() {
     }
@@ -96,14 +96,13 @@ public class DriveSubsystem extends EntechSubsystem {
         setBrakeMode();
 
         fieldAbsolute = RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE;
-        rotationAllowed = false;
-        precisionDrive = false;
 
         robotRelativeFilter = new RobotRelativeDriveFilter();
         noRotationFilter = new NoRotationFilter();
         yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
         yawHoldFilter = new HoldYawFilter();
         jsDeadbandFilter = new JoystickDeadbandFilter();
+        precisionDriveFilter = new PrecisionDriveFilter();
         yawHoldFilter.setEnabled(true);
 
         lastDriveInput = new DriveInput(0.,0.,0.,0.);
@@ -277,20 +276,20 @@ public class DriveSubsystem extends EntechSubsystem {
     }
 
 	public void setRotationAllowed(boolean newValue) {
-		rotationAllowed = newValue;
+		noRotationFilter.setEnabled(! newValue);
 	}
 	public boolean isRotationEnabled() {
-		return rotationAllowed;
+		return ! isRotationLocked();
 	}	
 	public boolean isRotationLocked() {
-		return ! isRotationEnabled();
+		return noRotationFilter.getEnabled();
 	}
 
 	public boolean isPrecisionDrive() {
-		return precisionDrive;
+		return precisionDriveFilter.getEnabled();
 	}
 	public void setPrecisionDrive(boolean newValue) {
-		precisionDrive = newValue;
+		precisionDriveFilter.setEnabled(newValue);
 	}
 	public void togglePrecisionDrive() {
 		setPrecisionDrive(!(isPrecisionDrive()));
