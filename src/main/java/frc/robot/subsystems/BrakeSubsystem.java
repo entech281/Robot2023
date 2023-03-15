@@ -5,31 +5,29 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.RobotConstants;
 
-public class GripperSubsystem extends EntechSubsystem {
+public class BrakeSubsystem extends EntechSubsystem {
 
 	private DoubleSolenoid leftGripperSolenoid;	
 	private DoubleSolenoid rightGripperSolenoid;
 	
 	private int gripperSolenoidCounter;
-	private GripperState gripperState;
+	private BrakeState brakeStatus;
 	
-	public GripperState getGripperState() {
-		return gripperState;
+	public BrakeState getBrakeStatus() {
+		return brakeStatus;
 	}
 
 	private boolean enabled = true;
 	private final int SOLENOID_HIT_COUNT = 20;
 	
-	public enum GripperState { kClose, kOpen, kUnknown }
+	public enum BrakeState { kIn, kOut, kUnknown }
 	
 	@Override
 	public void initialize() {
 		if (enabled ) {
-			leftGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.LEFT_GRIPPER_OPEN, RobotConstants.PNEUMATICS.LEFT_GRIPPER_CLOSE);
-			rightGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.RIGHT_GRIPPER_OPEN, RobotConstants.PNEUMATICS.RIGHT_GRIPPER_CLOSE);
-            gripperState = GripperState.kUnknown;
+			rightGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.BRAKE_SOLENOID_IN, RobotConstants.PNEUMATICS.BRAKE_SOLENOID_OUT);
+            brakeStatus = BrakeState.kUnknown;
 		}
-		
 	}
 	
 	@Override
@@ -48,16 +46,16 @@ public class GripperSubsystem extends EntechSubsystem {
     public void initSendable(SendableBuilder builder) {
   	  if ( enabled ) {
   	      builder.setSmartDashboardType(getName());		  
-  	      builder.addBooleanProperty("BripperOpen", this::isOpen, this::setOpen);
+  	      builder.addBooleanProperty("BrakeOpen", this::isOpen, this::setOpen);
   	  }
     }	
 	
 	private void handleSolenoid() {
 	      if (gripperSolenoidCounter < SOLENOID_HIT_COUNT) {
 	          gripperSolenoidCounter += 1;
-	          if (gripperState == GripperState.kOpen) {
+	          if (brakeStatus == BrakeState.kOut) {
 	        	  setSolenoids(DoubleSolenoid.Value.kForward);
-	          } else if (gripperState == GripperState.kClose) {
+	          } else if (brakeStatus == BrakeState.kIn) {
 	        	  setSolenoids(DoubleSolenoid.Value.kReverse);	        	  
 	          } else {
 	        	  setSolenoids(DoubleSolenoid.Value.kOff);	
@@ -66,37 +64,37 @@ public class GripperSubsystem extends EntechSubsystem {
 	    	  setSolenoids(DoubleSolenoid.Value.kOff);
           }		
 	}
-    public void setGripperState(GripperState state) {
+
+    public void setBrakeStatus(BrakeState state) {
     	//this guards against shorting a solenoid by holding it too long/often
-	    if (state != gripperState) {
+	    if (state != brakeStatus) {
 	      gripperSolenoidCounter = 0;
-	      gripperState = state;
+	      brakeStatus = state;
 	    }
 	}
+
     public boolean isOpen() {
-    	return gripperState == GripperState.kOpen;
+    	return brakeStatus == BrakeState.kOut;
     }
+	
 	public void setOpen(boolean open) {
 		//VERY IMPORTANT to use setGripperState here,
 		//so we only trigger solendoids on a changed value
 		if (open) {
-			setGripperState(GripperState.kClose);
+			setBrakeStatus(BrakeState.kIn);
 		}
 		else {
-			setGripperState(GripperState.kOpen);
+			setBrakeStatus(BrakeState.kOut);
 		}
 	}
 	
 	@Override
-	public GripperStatus getStatus() {
-		return new GripperStatus(gripperState);
+	public BrakeStatus getStatus() {
+		return new BrakeStatus(brakeStatus);
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return enabled;
 	}
-
-	
-	
 }

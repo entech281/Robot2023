@@ -18,8 +18,8 @@ public final class RobotConstants {
         public static final int PWM_1 = 1;
     }
     public interface INDICATOR_VALUES{
-    	public static final double POSITION_UNKNOWN=-1.0;
-    	public static final double POSITION_NOT_SET=-1.1;
+    	public static final double POSITION_UNKNOWN = -1.0;
+    	public static final double POSITION_NOT_SET = -1.1;
     }
     public interface VISION {
         //public static final double CAMERA_TO_BUMPER = 17.785; //don't need?
@@ -49,21 +49,21 @@ public final class RobotConstants {
     public interface ARM{
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = true;
-    		public static final double MOVE_TOLERANCE_METERS=0.012; 
-    		public static final int CURRENT_LIMIT_AMPS=8;
-    		public static final int MAX_SPIKE_CURRENT=12;
-    		public static final double COUNTS_PER_METER=0.004826; 
+    		public static final double MOVE_TOLERANCE_METERS = 0.012; 
+    		public static final int CURRENT_LIMIT_AMPS = 8;
+    		public static final int MAX_SPIKE_CURRENT = 12;
+    		public static final double COUNTS_PER_METER = 0.004826; 
     	} 
     	public interface HOMING{
-    		public static final double HOMING_SPEED_PERCENT=0.35;
+    		public static final double HOMING_SPEED_PERCENT = 0.35;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=16.0;
-    		public static final double I_GAIN=0.0;
-    		public static final double D_GAIN=0.0;
+    		public static final double P_GAIN = 16.0;
+    		public static final double I_GAIN = 0.0;
+    		public static final double D_GAIN = 0.0;
     	}
     	public interface POSITION_PRESETS{
-    		  public static final double MIN_METERS= 0.0;
+    		  public static final double MIN_METERS = 0.0;
     		  public static final double CARRY_METERS = 0.1;
     		  public static final double SCORE_MIDDLE_METERS = 0.3;
     		  public static final double SCORE_HIGH_METERS = 0.55;
@@ -83,40 +83,39 @@ public final class RobotConstants {
         public static final double MAX_ANGLE_DEGREES = 107.0; //17 degrees above horizontal (90)
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = false;
-    		public static final double MOVE_TOLERANCE_DEGREES= 1.0; 
-    		public static final int CURRENT_LIMIT_AMPS=30;
-    		public static final int MAX_SPIKE_CURRENT=50;
-    		public static final double COUNTS_PER_DEGREE=2.1383; 
+    		public static final double MOVE_TOLERANCE_DEGREES = 1.0; 
+    		public static final int CURRENT_LIMIT_AMPS = 30;
+    		public static final int MAX_SPIKE_CURRENT = 50;
+    		public static final double COUNTS_PER_DEGREE = 2.1383; 
     	} 
     	public interface HOMING{
-    		public static final double HOMING_SPEED_PERCENT=0.2;
+    		public static final double HOMING_SPEED_PERCENT = 0.2;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN=0.48;
-    		public static final double FF_GAIN_GOING_UP=0.00;
-    		public static final double FF_GAIN_GOING_DOWN=0.0;
-    		public static final double I_GAIN=0.002;
-    		public static final double D_GAIN=0.0;
+    		public static final double P_GAIN = 0.48;
+    		public static final double FF_GAIN_GOING_UP = 0.00;
+    		public static final double FF_GAIN_GOING_DOWN = 0.0;
+    		public static final double I_GAIN = 0.002;
+    		public static final double D_GAIN = 0.0;
     	}
     	public interface POSITION_PRESETS{
-    		  public static final double MIN_POSITION_DEGREES=3.0;    		
+    		  public static final double MIN_POSITION_DEGREES = 3.0;    		
     		  public static double CARRY_DEGREES = 8.0;
     		  public static double SAFE_ANGLE = 15.0;  
-    		  public static double SCORE_LOW_DEGREES= 43.0;
+    		  public static double SCORE_LOW_DEGREES = 43.0;
     		  public static double SCORE_MIDDLE_DEGREES = 94.0;
-    		  public static double LOAD_STATION_DEGREES= 92.0;
+    		  public static double LOAD_STATION_DEGREES = 92.0;
     		  public static double SCORE_HIGH_DEGREES = 122;    		  
-      		  public static final double MAX_POSITION_DEGREES=122.0;    		  
+      		  public static final double MAX_POSITION_DEGREES = 122.0;    		  
     	}    	
     }
-    
     
     public interface GRIPPER{
     	public static final boolean INIT_CLAW_STATE = false;
     }
     public interface ALIGNMENT{
-        public static final double ANGLE_TOLERANCE_DEGREES=2.0;
-        public static final double DISTANCE_TOLERANCE_METERS=0.0508;
+        public static final double ANGLE_TOLERANCE_DEGREES = 2.0;
+        public static final double DISTANCE_TOLERANCE_METERS = 0.0508;
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
@@ -188,13 +187,16 @@ public final class RobotConstants {
         public static final int LEFT_GRIPPER_OPEN = 3;
         public static final int LEFT_GRIPPER_CLOSE = 2;
         public static final int RIGHT_GRIPPER_OPEN = 4;
-        public static final int RIGHT_GRIPPER_CLOSE = 5;        
+        public static final int RIGHT_GRIPPER_CLOSE = 5;  
+        public static final int BRAKE_SOLENOID_OUT = 6;
+        public static final int BRAKE_SOLENOID_IN = 7;    
+
     }    
     public interface SHUFFLEBOARD {
     	public interface TABS{
-        	public static final String PREMATCH="PreMatch";
-        	public static final String MATCH="Match";
-        	public static final String DEBUG="Testing";    		
+        	public static final String PREMATCH = "PreMatch";
+        	public static final String MATCH = "Match";
+        	public static final String DEBUG = "Testing";    		
     	}
 
     }
