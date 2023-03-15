@@ -27,7 +27,6 @@ public class SimpleDriveCommand extends EntechCommandBase {
         this.operatorInput = operatorInput;
     }
 
-
     @Override
     public void execute() {
         drive.drive(operatorInput.get() );
