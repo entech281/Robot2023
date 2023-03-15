@@ -2,12 +2,15 @@ package frc.robot.filters;
 
 import java.util.Objects;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+
 /**
  *
  * 
  * @author aheitkamp
  */
-public class DriveInput {
+public class DriveInput implements Sendable {
     private double forward;
     private double right;
     private double rotation;
@@ -105,6 +108,15 @@ public class DriveInput {
     @Override
     public int hashCode() {
         return Objects.hash(forward, right, rotation,yawAngleDegrees);
+    }
+
+	@Override
+    public void initSendable(SendableBuilder builder) {
+  	    builder.setSmartDashboardType("DriveInput");
+  	    builder.addDoubleProperty("Forward", this::getForward , null);
+  	    builder.addDoubleProperty("Right", this::getRight , null);
+  	    builder.addDoubleProperty("Rotation", this::getRotation , null);  	    
+  	    builder.addDoubleProperty("Yaw", this::getYawAngleDegrees , null);
     }
 
 }

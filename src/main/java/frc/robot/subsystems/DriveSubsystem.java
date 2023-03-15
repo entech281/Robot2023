@@ -18,6 +18,11 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
+import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
+import frc.robot.filters.FieldRelativeDriveInputFilter;
+import frc.robot.filters.HoldYawFilter;
+import frc.robot.filters.JoystickDeadbandFilter;
+import frc.robot.filters.NoRotationFilter;
 
 /**
  *
@@ -30,6 +35,13 @@ public class DriveSubsystem extends EntechSubsystem {
         BRAKE,
         COAST
     }
+    // DriveFilters used
+    private JoystickDeadbandFilter jsDeadbandFilter;
+    private FieldRelativeDriveInputFilter fieldRelativeFilter;
+    private NoRotationFilter yawLockFilter;
+    private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
+    private HoldYawFilter yawHoldFilter;
+    private DriveInput lastDriveInput;
     
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder rearLeftEncoder;
@@ -86,6 +98,16 @@ public class DriveSubsystem extends EntechSubsystem {
         fieldAbsolute = RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE;
         rotationAllowed = false;
         precisionDrive = false;
+
+        fieldRelativeFilter = new FieldRelativeDriveInputFilter();
+        yawLockFilter = new NoRotationFilter();
+        yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
+        yawHoldFilter = new HoldYawFilter();
+        jsDeadbandFilter = new JoystickDeadbandFilter();
+        yawHoldFilter.setEnabled(true);
+
+        lastDriveInput = new DriveInput(0.,0.,0.,0.);
+        SmartDashboard.putData("lastDriveInput", lastDriveInput);
     }
 
     @Override
@@ -106,6 +128,45 @@ public class DriveSubsystem extends EntechSubsystem {
   
     public void drive(DriveInput di) {
         robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
+    }
+  
+    public void filteredDrive(DriveInput di) {
+
+        // Special case: set the setpoint for the HoldYawFilter if nothing has until now
+        if ( ! yawHoldFilter.isSetpointValid() ) {
+            yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+        }
+
+    	DriveInput filtered = di;
+        if (jsDeadbandFilter.getEnabled()) {
+            filtered = jsDeadbandFilter.filter(filtered);
+        }
+    	
+    	if (isRotationEnabled()) {
+            // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
+            yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+        } else {
+            if (yawHoldFilter.getEnabled()) {
+                filtered = yawHoldFilter.filter(filtered);
+                if ( ! yawHoldFilter.isActive() ) {
+    		        filtered = yawLockFilter.filter(filtered);
+                }
+            } else {
+    		    filtered = yawLockFilter.filter(filtered);
+            }
+    	}
+        
+    	if (isFieldAbsolute()) {
+            filtered = yawAngleCorrectionFilter.filter(filtered);
+        } else {
+    		filtered = fieldRelativeFilter.filter(filtered);
+    	}
+    	
+        robotDrive.driveCartesian(filtered.getForward(), filtered.getRight(), filtered.getRotation(), Rotation2d.fromDegrees(filtered.getYawAngleDegrees()));
+        lastDriveInput.setForward(filtered.getForward());
+        lastDriveInput.setRight(filtered.getRight());
+        lastDriveInput.setRotation(filtered.getRotation());
+        lastDriveInput.setYawAngleDegrees(filtered.getYawAngleDegrees());
     }
 
     public void stop() {
