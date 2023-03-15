@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
-import frc.robot.filters.FieldRelativeDriveInputFilter;
+import frc.robot.filters.RobotRelativeDriveFilter;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.NoRotationFilter;
@@ -37,8 +37,8 @@ public class DriveSubsystem extends EntechSubsystem {
     }
     // DriveFilters used
     private JoystickDeadbandFilter jsDeadbandFilter;
-    private FieldRelativeDriveInputFilter fieldRelativeFilter;
-    private NoRotationFilter yawLockFilter;
+    private RobotRelativeDriveFilter robotRelativeFilter;
+    private NoRotationFilter noRotationFilter;
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
     private DriveInput lastDriveInput;
@@ -54,7 +54,7 @@ public class DriveSubsystem extends EntechSubsystem {
     private CANSparkMax rearRightSparkMax;
     private MecanumDrive robotDrive;
 
-    private DriveMode currentMode;
+    private DriveMode currentDriveMode;
     private boolean fieldAbsolute;
     private boolean rotationAllowed;
     private boolean precisionDrive;
@@ -92,15 +92,15 @@ public class DriveSubsystem extends EntechSubsystem {
         frontRightEncoder = frontRightSparkMax.getEncoder();
         rearRightEncoder = rearRightSparkMax.getEncoder();
 
-        currentMode = DriveMode.BRAKE;
+        currentDriveMode = DriveMode.BRAKE;
         setBrakeMode();
 
         fieldAbsolute = RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE;
         rotationAllowed = false;
         precisionDrive = false;
 
-        fieldRelativeFilter = new FieldRelativeDriveInputFilter();
-        yawLockFilter = new NoRotationFilter();
+        robotRelativeFilter = new RobotRelativeDriveFilter();
+        noRotationFilter = new NoRotationFilter();
         yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
         yawHoldFilter = new HoldYawFilter();
         jsDeadbandFilter = new JoystickDeadbandFilter();
@@ -144,22 +144,24 @@ public class DriveSubsystem extends EntechSubsystem {
     	
     	if (isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
+            // We run the holdyaw filter just to get the dashboard updated.
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            DriveInput temp = yawHoldFilter.filter(filtered);
         } else {
             if (yawHoldFilter.getEnabled()) {
                 filtered = yawHoldFilter.filter(filtered);
                 if ( ! yawHoldFilter.isActive() ) {
-    		        filtered = yawLockFilter.filter(filtered);
+    		        filtered = noRotationFilter.filter(filtered);
                 }
             } else {
-    		    filtered = yawLockFilter.filter(filtered);
+    		    filtered = noRotationFilter.filter(filtered);
             }
     	}
         
     	if (isFieldAbsolute()) {
             filtered = yawAngleCorrectionFilter.filter(filtered);
         } else {
-    		filtered = fieldRelativeFilter.filter(filtered);
+    		filtered = robotRelativeFilter.filter(filtered);
     	}
     	
         robotDrive.driveCartesian(filtered.getForward(), filtered.getRight(), filtered.getRotation(), Rotation2d.fromDegrees(filtered.getYawAngleDegrees()));
@@ -174,20 +176,20 @@ public class DriveSubsystem extends EntechSubsystem {
     }
 
     public void toggleBrakeCoastMode() {
-        switch (currentMode) {
+        switch (currentDriveMode) {
         case BRAKE:
             setCoastMode();
-            currentMode = DriveMode.COAST;
+            currentDriveMode = DriveMode.COAST;
             break;
         case COAST:
             setBrakeMode();
-            currentMode = DriveMode.BRAKE;
+            currentDriveMode = DriveMode.BRAKE;
             break;
         }
     }
 
   public void setDriveMode(DriveMode mode) {
-    if (mode != currentMode) {
+    if (mode != currentDriveMode) {
       switch (mode) {
         case BRAKE:
           setBrakeMode();
@@ -196,7 +198,7 @@ public class DriveSubsystem extends EntechSubsystem {
           setCoastMode();
           break;
       }
-      currentMode = mode;
+      currentDriveMode = mode;
     }
   }
 
@@ -271,7 +273,7 @@ public class DriveSubsystem extends EntechSubsystem {
 	}
 
     public boolean isBrakeMode() {
-        return currentMode == DriveMode.BRAKE;
+        return currentDriveMode == DriveMode.BRAKE;
     }
 
 	public void setRotationAllowed(boolean newValue) {
