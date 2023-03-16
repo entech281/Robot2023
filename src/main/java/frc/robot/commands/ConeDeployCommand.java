@@ -50,10 +50,13 @@ public class ConeDeployCommand extends EntechCommandBase {
 	  elbowSubsystem.stop();
 	  
 	  if (reachedTargetHeight) {
-		  gripperSubsystem.setOpen(true);		  		  
+		  gripperSubsystem.setOpen(true);
+		  elbowSubsystem.setPosition(elbowSubsystem.getActualPosition());
 	  }
-
-	  elbowSubsystem.setPosition(elbowSubsystem.getActualPosition());
+	  else {
+		  elbowSubsystem.restorePosition();
+	  }
+	  
   }
 
   // Returns true when the command should end.
