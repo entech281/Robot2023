@@ -63,25 +63,18 @@ public class VisionFirstNavxAsBackupPoseEstimator implements PoseEstimator{
         	Transform3d cameraToTarget =  target.getCameraToTargetTransform();
         	
         	AprilTagLocation tagLocation = target.getTagLocation();
-        	
-        	Pose3d tagLocationPose = tagLocation.asPose3d();
-        	Pose3d tagLocationMeters = new Pose3d (
-        			tagLocationPose.getTranslation(),
-        			tagLocationPose.getRotation()
-        	);
-
-        	//watch out for meters to inches, (use PoseUtil if needed to convert)
-        	//HINT:: something like this should work:
-        	
-        	//robotPose -> robotToCamera -> cameraToTag = tagLocation
-        	//thus tagLocation -> tagToCamera -> cameraToRobot = robotPose        	
-        	Pose3d  estimatedPose = tagLocationMeters.transformBy(cameraToTarget.inverse()).transformBy(ROBOT_TO_CAM.inverse());    	        	
-        	return Optional.of(estimatedPose.toPose2d());    		
+        	if ( tagLocation != null ) {
+               	Pose3d tagLocationPose = tagLocation.asPose3d();
+            	Pose3d tagLocationMeters = new Pose3d (
+            			tagLocationPose.getTranslation(),
+            			tagLocationPose.getRotation()
+            	);
+	
+            	Pose3d  estimatedPose = tagLocationMeters.transformBy(cameraToTarget.inverse()).transformBy(ROBOT_TO_CAM.inverse());    	        	
+            	return Optional.of(estimatedPose.toPose2d());        		
+        	}
     	}
-    	else {
-    		return Optional.empty();
-    	}
-
+    	return Optional.empty();
     }
 
 }

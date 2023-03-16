@@ -6,8 +6,8 @@ import frc.robot.util.StoppingCounter;
 
 public class RobotLateralPIDController extends PIDController {
 	
-	private static final double P_GAIN = 2.0;
-	private static final double I_GAIN = 0.001;
+	private static final double P_GAIN = 0.7;
+	private static final double I_GAIN = 0.01;
     private static final double D_GAIN = 0.00;
     private static final double TOLERANCE_METERS = 0.05;
     private static final double SPEED_LIMIT = 0.75;
