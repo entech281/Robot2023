@@ -15,6 +15,7 @@ import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
+import frc.robot.commands.DriveForwardToBalanceCommand;
 import frc.robot.commands.DriveSetBrake;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
@@ -77,7 +78,9 @@ public class CommandFactory {
         c5.setName("Autonomous Far");
         Command c6 = autonomousBalanceDeadRecCommand();
         c6.setName("Autonomous Balance DeadRec");
-    	return List.of( c5, c6 );
+        Command c7 = new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem);
+        c7.setName("Autonomous Forward Balance Only");
+    	return List.of( c5, c6, c7 );
 
     }
     
