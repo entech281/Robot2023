@@ -47,7 +47,7 @@ public class SetElbowSpeedCommand extends EntechCommandBase {
   @Override
   public void end(boolean interrupted) {
 	  elbowSubsystem.stop();
-	  elbowSubsystem.setPositionMode();
+	  elbowSubsystem.restorePosition();
   }
 
   // Returns true when the command should end.

@@ -25,7 +25,7 @@ public class ElbowPositionModeCommand extends EntechCommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-	    elbowSubsystem.setPositionMode();
+	    elbowSubsystem.restorePosition();
   }
  
   
