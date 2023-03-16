@@ -134,6 +134,10 @@ public class ElbowSubsystem extends EntechSubsystem{
 		  positionController.requestPosition(requestedPosition);
 	  }
 
+	  public void setPositionMode() {
+		  positionController.setPositionMode();
+	  }
+	  
 	  public void stop() {
 		  positionController.stop();
 	  }

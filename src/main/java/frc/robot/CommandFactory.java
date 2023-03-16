@@ -24,6 +24,7 @@ import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.SetElbowSpeedCommand;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
+import frc.robot.commands.ElbowPositionModeCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
@@ -271,6 +272,15 @@ public class CommandFactory {
         return new GripperCommand(gripperSubsystem, GripperState.kClose);
     }
 
+    public Command releaseObjectCommand() {
+    	//this will cancel the speed command on the elbow, and make it return to previous position
+    	ParallelCommandGroup pg = new ParallelCommandGroup(
+    		new ElbowPositionModeCommand(elbowSubsystem),	
+    		closeGripperCommand()
+    	);
+    	pg.setName("releaseobjectcommand");
+    	return pg;
+    }
     public Command groundScoringPosition() {
         return new ParallelCommandGroup(
             new ConditionalCommand(new InstantCommand(), 

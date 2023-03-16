@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.CommandFactory;
 import frc.robot.RobotConstants;
 import frc.robot.adapter.JoystickDriveInputSupplier;
-import frc.robot.commands.TogglePrecisionDriveCommand;
+
 
 public class OperatorInterface {
 
@@ -23,7 +23,6 @@ public class OperatorInterface {
         this.commandFactory = cf;
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
         this.operatorPanel = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_PANEL);
-        //this.operatorStick = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_JOYSTICK);
         this.hidJoystickDriveInputSupplier = new JoystickDriveInputSupplier(driveStick.getHID());
         this.gripperStateSupplier = () -> {  return operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER); }; 
         setupButtons();
@@ -37,8 +36,6 @@ public class OperatorInterface {
 
 	     driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
 	         .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
-	     
-	    //     .onFalse(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier,shuffleboardControls));
 
         driveStick.button(RobotConstants.DRIVER_STICK.PRECISION_DRIVE)
             .onTrue(commandFactory.togglePrecisionDriveCommand());
@@ -76,7 +73,8 @@ public class OperatorInterface {
         // *******  Operator Panel  *******
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)
             .onTrue(commandFactory.closeGripperCommand())
-            .onFalse(commandFactory.openGripperCommand());
+            //.onFalse(commandFactory.openGripperCommand());
+            .onFalse(commandFactory.releaseObjectCommand());
         
 	    operatorPanel.button(RobotConstants.OPERATOR_PANEL.PIVOT_UP)
 	        .whileTrue(commandFactory.nudgeElbowUpCommand());
@@ -105,7 +103,7 @@ public class OperatorInterface {
         .onTrue(commandFactory.groundScoringElbowCommand());        
  
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.AUTO)
-        	.whileTrue(commandFactory.elbowSlowlyDown());
+        	.onTrue(commandFactory.elbowSlowlyDown());
             //.onTrue(commandFactory.armPositionFullExtension())
             //.onFalse(commandFactory.armPositionHome());
             
