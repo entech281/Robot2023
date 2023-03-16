@@ -82,13 +82,25 @@ public class RobotContext {
     	ElbowStatus es = elbowSubsystem.getStatus();
     	GripperStatus gs = gripperSubsystem.getStatus();
     	
-    	//estimate pose
+    	//our estimate for the pose
     	Optional<Pose2d> estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
-        robotState.setEstimatedPose(estimatedRobotPose);
+        
         if ( estimatedRobotPose.isPresent() ) {
         	SmartDashboard.putString("our pose",estimatedRobotPose.get().toString());
         	fieldDisplay.setRobotPose(estimatedRobotPose.get());
+        	robotState.setEstimatedPose(estimatedRobotPose);
         }
+        
+        
+    	//photon visions' estimate of the pose
+        //TEMPORARY: we're overriding ours with the photon one here!!!
+    	if ( vs.getPhotonEstimatedPose2d().isPresent()) {
+    		Pose2d p2d = vs.getPhotonEstimatedPose2d().get();
+        	fieldDisplay.setRobotPose(p2d);
+        	robotState.setEstimatedPose(vs.getPhotonEstimatedPose2d());    		
+    	}
+    	
+
 
         
         //get selected target and scoring location

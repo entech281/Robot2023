@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.pose.RecognizedAprilTagTarget;
 
@@ -19,6 +20,18 @@ public class VisionStatus implements SubsystemStatus{
 		return Optional.ofNullable(photonEstimatedPose);
 	}
 
+    public Optional<Pose2d> getPhotonEstimatedPose2d() {
+    	Optional<Pose3d> p3d = getPhotonEstimatedPose();
+    	if ( p3d.isPresent()) {
+    		Pose2d p2d = p3d.get().toPose2d();
+    		return Optional.of(p2d);    		
+    	}
+    	else {
+    		return Optional.empty();
+    	}
+	}
+    
+    
 	public void setPhotonEstimatedPose(Pose3d photonEstimatedPose) {
 		this.photonEstimatedPose = photonEstimatedPose;
 	}
