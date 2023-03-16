@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotConstants.ARM;
 import frc.robot.RobotConstants.ELBOW;
+import frc.robot.RobotConstants.SHUFFLEBOARD;
 import frc.robot.commands.ArmEmergencyStopCommand;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.oi.ShuffleboardInterface;
@@ -87,8 +88,10 @@ public class RobotContext {
         
         if ( estimatedRobotPose.isPresent() ) {
         	SmartDashboard.putString("our pose",estimatedRobotPose.get().toString());
-        	fieldDisplay.setRobotPose(estimatedRobotPose.get());
+        	Pose2d p2d = estimatedRobotPose.get();
+        	fieldDisplay.setRobotPose(p2d);
         	robotState.setEstimatedPose(estimatedRobotPose);
+        	SmartDashboard.putNumber("OurPoseY", p2d.getY());
         }
         
         
@@ -97,7 +100,8 @@ public class RobotContext {
     	if ( vs.getPhotonEstimatedPose2d().isPresent()) {
     		Pose2d p2d = vs.getPhotonEstimatedPose2d().get();
         	fieldDisplay.setRobotPose(p2d);
-        	robotState.setEstimatedPose(vs.getPhotonEstimatedPose2d());    		
+        	robotState.setEstimatedPose(vs.getPhotonEstimatedPose2d());
+        	SmartDashboard.putNumber("PhotonPoseY", p2d.getY());
     	}
     	
 
