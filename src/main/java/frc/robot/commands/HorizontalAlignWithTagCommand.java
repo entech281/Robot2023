@@ -48,13 +48,17 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         DriveInput newDi = new DriveInput(di);
         if ( lateralOffsetSupplier.getLateralOffset().isPresent()) {
         	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();
-        	SmartDashboard.putNumber("LateralOffsetFromHorizontalAlign", lateralOffset);
+        	
         	SmartDashboard.putData("HorizontalAlignPID",pid);
         	
         	double calcValue = pid.calculate(lateralOffset);
+        	DriverStation.reportWarning("LateralOffsetFromHorizontalAlign=" + lateralOffset + ", output=" + calcValue,false);        	
         	newDi.setRight(calcValue);
         }
-        drive.drive(newDi);
+        else {
+        	DriverStation.reportWarning("LateralOffsetFromHorizontalAlign: no offset available",false);
+        }
+        drive.filteredDrive(newDi);
     }
 
     @Override

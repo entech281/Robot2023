@@ -86,6 +86,7 @@ LateralOffsetSupplier{
 		sb.addStringProperty("Estimated Pose", () -> { return estimatedPose + ""; }, null);
 		sb.addDoubleProperty("TargetYaw", () -> { return SendableUtil.doubleForOptional(getTargetYawAngle()); },null );
 		sb.addDoubleProperty("PhotonYaw", () -> { return SendableUtil.doubleForOptional(getPhotonYawAngle()) ;},null );
+		sb.addDoubleProperty("LateralOffset", () -> { return SendableUtil.doubleForOptional(this.getLateralOffset()) ;},null );
 	}
 
 	public double getTargetDistance() {

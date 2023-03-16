@@ -121,7 +121,7 @@ public class CommandFactory {
     }
 
     public Command elbowSlowlyDown() {
-    	return new SetElbowSpeedCommand(elbowSubsystem, RobotConstants.ELBOW.SETTINGS.ELBOW_SLOWDOWN_SPEED);
+    	return new SetElbowSpeedCommand(elbowSubsystem, -RobotConstants.ELBOW.SETTINGS.ELBOW_SLOWDOWN_SPEED);
     }
     public Command getAutonomousChoice() {
         return autonomousFarCommand();

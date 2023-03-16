@@ -12,7 +12,7 @@ public class HoldYawFilter extends DriveInputFilter {
 
     private RobotYawPIDController pid;
     private static final double INVALID_ROT = 99.0;
-    private static final double P_GAIN = 0.04;
+    private static final double P_GAIN = 0.02;
     private static final double I_GAIN = 0.0;
     private static final double D_GAIN = 0.0;
     private static double yawSetPoint = 0.0;
