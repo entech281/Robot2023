@@ -17,7 +17,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   private int pitch_stable_count;
   private static final int    ROBOT_STABLE_COUNT = 50;
   private static final double DRIVE_SPEED = 0.3;
-  private static final double PITCH_THRESHOLD = 10.0;
+  private static final double PITCH_THRESHOLD = 12.0;
 
   /**
    * Creates a new DriveForwardToBalanceCommand.
