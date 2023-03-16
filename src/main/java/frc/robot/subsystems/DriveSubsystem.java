@@ -136,38 +136,38 @@ public class DriveSubsystem extends EntechSubsystem {
         // Special case: set the setpoint for the HoldYawFilter if nothing has until now
         if ( ! yawHoldFilter.isSetpointValid() ) {
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
-            yawHoldFilter.reset();
         }
 
+        // printDI("DI(0):",di);
     	DriveInput filtered = di;
         filtered = jsDeadbandFilter.filter(filtered);
-        filtered = precisionDriveFilter.filter(filtered);
         // printDI("DI(1):",filtered);
+        filtered = precisionDriveFilter.filter(filtered);
+        // printDI("DI(2):",filtered);
     	
     	if (isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             // We run the holdyaw filter just to get the dashboard updated.
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
-            yawHoldFilter.reset();
         } else {
             if (yawHoldFilter.isEnabled()) {
                 filtered = yawHoldFilter.filter(filtered);
-                // printDI("DI(2)",filtered);
-                if ( ! yawHoldFilter.isActive() ) {
-    		        filtered = noRotationFilter.filter(filtered);
-                }
+                // printDI("DI(3)",filtered);
             } else {
     		    filtered = noRotationFilter.filter(filtered);
+                // printDI("DI(4)",filtered);
             }
     	}
         
     	if (isFieldAbsolute()) {
             filtered = yawAngleCorrectionFilter.filter(filtered);
-        } else {
+            // printDI("DI(5)",filtered);
+            } else {
     		filtered = robotRelativeFilter.filter(filtered);
-    	}
+            // printDI("DI(6)",filtered);
+            }
     	
-        // printDI("DI(3)",filtered);
+        // printDI("DI(7)",filtered);
         drive(filtered);
     }
 
@@ -177,6 +177,10 @@ public class DriveSubsystem extends EntechSubsystem {
 
     public void stop() {
         robotDrive.stopMotor();
+    }
+
+    public void setHoldYawAngle(double angle) {
+        yawHoldFilter.updateSetpoint(angle);
     }
 
     public void toggleBrakeCoastMode() {
