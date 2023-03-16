@@ -21,6 +21,7 @@ import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
+import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.SetElbowSpeedCommand;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
@@ -121,9 +122,7 @@ public class CommandFactory {
             return sg;    	
     }
 
-    public Command elbowSlowlyDown() {
-    	return new SetElbowSpeedCommand(elbowSubsystem, -RobotConstants.ELBOW.SETTINGS.ELBOW_SLOWDOWN_SPEED);
-    }
+
     public Command getAutonomousChoice() {
         return autonomousFarCommand();
     }
@@ -272,15 +271,14 @@ public class CommandFactory {
         return new GripperCommand(gripperSubsystem, GripperState.kClose);
     }
 
-    public Command releaseObjectCommand() {
-    	//this will cancel the speed command on the elbow, and make it return to previous position
-    	ParallelCommandGroup pg = new ParallelCommandGroup(
-    		new ElbowPositionModeCommand(elbowSubsystem),	
-    		closeGripperCommand()
-    	);
-    	pg.setName("releaseobjectcommand");
-    	return pg;
-    }
+    public Command scoreHighCommand() {
+        return new SequentialCommandGroup(
+        		new ConeDeployCommand(elbowSubsystem, gripperSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_RELEASE_DEGREES),
+                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true),
+                new GripperCommand(gripperSubsystem, GripperState.kClose)
+            );    	
+    }    
+    
     public Command groundScoringPosition() {
         return new ParallelCommandGroup(
             new ConditionalCommand(new InstantCommand(), 

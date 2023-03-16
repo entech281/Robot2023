@@ -73,8 +73,7 @@ public class OperatorInterface {
         // *******  Operator Panel  *******
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)
             .onTrue(commandFactory.closeGripperCommand())
-            //.onFalse(commandFactory.openGripperCommand());
-            .onFalse(commandFactory.releaseObjectCommand());
+            .onFalse(commandFactory.openGripperCommand());            
         
 	    operatorPanel.button(RobotConstants.OPERATOR_PANEL.PIVOT_UP)
 	        .whileTrue(commandFactory.nudgeElbowUpCommand());
@@ -103,7 +102,7 @@ public class OperatorInterface {
         .onTrue(commandFactory.groundScoringElbowCommand());        
  
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.AUTO)
-        	.onTrue(commandFactory.elbowSlowlyDown());
+        	.whileTrue(commandFactory.scoreHighCommand());
             //.onTrue(commandFactory.armPositionFullExtension())
             //.onFalse(commandFactory.armPositionHome());
             
