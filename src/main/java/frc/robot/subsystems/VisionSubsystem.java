@@ -99,7 +99,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	  return currentStatus.getBestAprilTagTarget().isPresent();
   }
 
-  private double getLateralOffset() {
+  public double getLateralOffset() {
 	  if (currentStatus.hasTargets()) {
 		return currentStatus.getBestAprilTagTarget().get().getCameraToTargetTransform().getY();
 	  } else {

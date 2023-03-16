@@ -117,6 +117,9 @@ public final class RobotConstants {
     public interface ALIGNMENT{
         public static final double ANGLE_TOLERANCE_DEGREES=2.0;
         public static final double DISTANCE_TOLERANCE_METERS=0.0508;
+            public interface FIELD{
+                public static final double METERS_TO_NODE_FROM_TAG = 0.5588;
+            }
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
