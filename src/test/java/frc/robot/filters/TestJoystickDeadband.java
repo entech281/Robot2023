@@ -12,7 +12,7 @@ public class TestJoystickDeadband {
         JoystickDeadbandFilter filter = new JoystickDeadbandFilter();
         DriveInput di = new DriveInput (0.5, -0.75, 0.6);
 
-        filter.setEnabled(true);
+        filter.enable(true);
 
         DriveInput r = filter.filter(di);
 
@@ -26,7 +26,7 @@ public class TestJoystickDeadband {
         JoystickDeadbandFilter filter = new JoystickDeadbandFilter();
         DriveInput di = new DriveInput (0.05, 0.75, 0.6);
 
-        filter.setEnabled(true);
+        filter.enable(true);
 
         DriveInput r = filter.filter(di);
 
@@ -40,7 +40,7 @@ public class TestJoystickDeadband {
         JoystickDeadbandFilter filter = new JoystickDeadbandFilter();
         DriveInput di = new DriveInput (0.5, -0.075, 0.6);
 
-        filter.setEnabled(true);
+        filter.enable(true);
 
         DriveInput r = filter.filter(di);
 
@@ -54,7 +54,7 @@ public class TestJoystickDeadband {
         JoystickDeadbandFilter filter = new JoystickDeadbandFilter(0.2);
         DriveInput di = new DriveInput (0.5, -0.75, 0.15);
 
-        filter.setEnabled(true);
+        filter.enable(true);
 
         DriveInput r = filter.filter(di);
 

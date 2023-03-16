@@ -171,7 +171,6 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     }    
 
     public void setMotorSpeed(double input) {    	
-    	clearRequestedPosition();
     	setMotorSpeedInternal(input);
     }
   

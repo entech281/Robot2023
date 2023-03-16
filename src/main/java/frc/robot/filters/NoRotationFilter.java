@@ -12,11 +12,13 @@ public class NoRotationFilter extends DriveInputFilter {
     }
 
     @Override
-    protected DriveInput doFilter(DriveInput di) {
-    	
-        	DriveInput locked = new DriveInput(di);
-        	locked.setRotation(0.0);
-            return locked;
+    protected DriveInput doFilter(DriveInput inputDI) {
+    	if (!isEnabled()) {
+            return inputDI;
+        }
+        DriveInput outDI = new DriveInput(inputDI);
+        outDI.setRotation(0.0);
+        return outDI;
     }
 
 }

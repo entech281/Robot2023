@@ -20,11 +20,11 @@ public abstract class DriveInputFilter {
         
     };
 
-    public void setEnabled(boolean enabled) {
+    public void enable(boolean enabled) {
     	this.enabled = enabled;
     }
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     };
 }

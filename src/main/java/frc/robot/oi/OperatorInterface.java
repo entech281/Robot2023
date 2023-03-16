@@ -92,7 +92,7 @@ public class OperatorInterface {
         .onTrue(commandFactory.dialCarryPosition());            
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
-        .onTrue(commandFactory.loadingElbowCommand());
+        .onTrue(commandFactory.dialLoadPosition());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LEFT_APRILTAG)
         .onTrue(commandFactory.dialHighPosition());
@@ -105,8 +105,9 @@ public class OperatorInterface {
         .onTrue(commandFactory.groundScoringElbowCommand());        
  
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.AUTO)
-            .onTrue(commandFactory.armPositionFullExtension())
-            .onFalse(commandFactory.armPositionHome());
+        	.whileTrue(commandFactory.elbowSlowlyDown());
+            //.onTrue(commandFactory.armPositionFullExtension())
+            //.onFalse(commandFactory.armPositionHome());
             
         // ******* Operator Joytick ******* 
         /**

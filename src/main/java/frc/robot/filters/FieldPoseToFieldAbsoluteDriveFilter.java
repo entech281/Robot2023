@@ -25,7 +25,9 @@ public class FieldPoseToFieldAbsoluteDriveFilter extends DriveInputFilter {
 
         DriveInput newDi = new DriveInput(original);
 
-        newDi.setYawAngleDegrees(EntechUtils.normalizeAngle(original.getYawAngleDegrees() + angleOffset));
+        if (isEnabled()) {
+            newDi.setYawAngleDegrees(EntechUtils.normalizeAngle(original.getYawAngleDegrees() + angleOffset));
+        }
         return newDi;
     }
 

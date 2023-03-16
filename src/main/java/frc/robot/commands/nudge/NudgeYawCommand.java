@@ -58,6 +58,7 @@ public class NudgeYawCommand extends EntechCommandBase {
     @Override
     public void end(boolean interrupted) {
         drive.stop();
+        drive.setHoldYawAngle(yawAngleSupplier.getYawAngleDegrees());
     }
 
     @Override

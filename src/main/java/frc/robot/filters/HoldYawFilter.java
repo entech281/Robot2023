@@ -1,43 +1,38 @@
 package frc.robot.filters;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.controllers.RobotYawPIDController;
 
 /**
- * sets the rotation of the DriveInput
+ * Changes the rotation
  * 
  * @author mandrews
  */
 public class HoldYawFilter extends DriveInputFilter {
 
-    private RobotYawPIDController pid;
-    private static final double INVALID_ROT = 99.0;
-    private static final double P_GAIN = 0.005;
-    private static final double I_GAIN = 0.0;
-    private static final double D_GAIN = 0.0;
+    private static final double P_GAIN = 0.02;
+    private static final double MAX_ROT = 0.2;
     private static double yawSetPoint = 0.0;
     private static boolean setPointValid;
-    private final boolean active = false;
 
     public HoldYawFilter() {
-        pid = new RobotYawPIDController(P_GAIN, I_GAIN, D_GAIN);
         setPointValid = false;
     }
 
-    public DriveInput doFilter(DriveInput original) {
+    public DriveInput doFilter(DriveInput inputDI) {
 
-        DriveInput newDi = new DriveInput(original);        		
-        double rot = INVALID_ROT;
-        if (setPointValid) {
-            rot = pid.calculate(original.getYawAngleDegrees(), yawSetPoint);
-            if (active) {
-                newDi.setRotation(pid.calculate(rot));
-            }
+        if (!isEnabled() || !setPointValid) {
+            return inputDI;
         }
-        SmartDashboard.putNumber("HoldYaw meas", original.getYawAngleDegrees());
+        DriveInput outDI = new DriveInput(inputDI);
+        double rot = P_GAIN*(inputDI.getYawAngleDegrees() - yawSetPoint);
+        if (Math.abs(rot) > MAX_ROT) {
+            rot = Math.copySign(MAX_ROT, rot);
+        }
+        outDI.setRotation(rot);
+        SmartDashboard.putNumber("HoldYaw meas", inputDI.getYawAngleDegrees());
         SmartDashboard.putNumber("HoldYaw setp", yawSetPoint);
         SmartDashboard.putNumber("HoldYaw rot", rot);
-        return newDi;
+        return outDI;
     }
 
     public void updateSetpoint( double yaw ) {
@@ -47,14 +42,6 @@ public class HoldYawFilter extends DriveInputFilter {
 
     public boolean isSetpointValid() {
         return setPointValid;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void reset() {
-        pid.reset();
     }
 
 }

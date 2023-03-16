@@ -83,20 +83,24 @@ public final class RobotConstants {
         public static final double MAX_ANGLE_DEGREES = 107.0; //17 degrees above horizontal (90)
     	public interface SETTINGS{
     		public static boolean MOTOR_REVERSED = false;
-    		public static final double MOVE_TOLERANCE_DEGREES = 1.0; 
-    		public static final int CURRENT_LIMIT_AMPS = 30;
-    		public static final int MAX_SPIKE_CURRENT = 50;
-    		public static final double COUNTS_PER_DEGREE = 2.1383; 
+
+    		public static final double MOVE_TOLERANCE_DEGREES= 1.0; 
+    		public static final int CURRENT_LIMIT_AMPS=30;
+    		public static final int MAX_SPIKE_CURRENT=50;
+    		public static final double COUNTS_PER_DEGREE=2.1383; 
+    		public static final double ELBOW_SLOWDOWN_SPEED= 0.2;
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT = 0.2;
     	}
     	public interface TUNING{
-    		public static final double P_GAIN = 0.48;
-    		public static final double FF_GAIN_GOING_UP = 0.00;
-    		public static final double FF_GAIN_GOING_DOWN = 0.0;
-    		public static final double I_GAIN = 0.002;
-    		public static final double D_GAIN = 0.0;
+
+    		public static final double P_GAIN=0.24;
+    		public static final double FF_GAIN_GOING_UP=0.00;
+    		public static final double FF_GAIN_GOING_DOWN=0.0;
+    		public static final double I_GAIN=0.001;
+    		public static final double D_GAIN=0.0;
+
     	}
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES = 3.0;    		
@@ -105,9 +109,8 @@ public final class RobotConstants {
     		  public static double SCORE_LOW_DEGREES = 43.0;
     		  public static double SCORE_MIDDLE_DEGREES = 94.0;
     		  public static double LOAD_STATION_DEGREES = 92.0;
-    		  public static double SCORE_HIGH_DEGREES = 122;    		  
-      		  public static final double MAX_POSITION_DEGREES = 122.0;    		  
-    	}    	
+    		  public static double SCORE_HIGH_DEGREES = 125;    		  
+     		  public static final double MAX_POSITION_DEGREES = 125.0;    		  
     }
     
     public interface GRIPPER{

@@ -21,6 +21,7 @@ import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
+import frc.robot.commands.SetElbowSpeedCommand;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.SimpleDriveCommand;
@@ -102,7 +103,26 @@ public class CommandFactory {
 
     	);
     }
+    
+    public Command testDownwardSoftConePlacement() {
+    	double DOWN_MOVE_DEGREES = 3.0;
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+            	new ZeroGyroCommand(navxSubsystem)
+                , new GripperCommand(gripperSubsystem, GripperState.kClose)
+                , new DriveSetBrake(driveSubsystem)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)            
+                , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
+                , new WaitCommand(1.0)
+ 
+            );
+            sg.setName("AutonomousBalanceDeadRecCommand");
+            return sg;    	
+    }
 
+    public Command elbowSlowlyDown() {
+    	return new SetElbowSpeedCommand(elbowSubsystem, -RobotConstants.ELBOW.SETTINGS.ELBOW_SLOWDOWN_SPEED);
+    }
     public Command getAutonomousChoice() {
         return autonomousFarCommand();
     }
