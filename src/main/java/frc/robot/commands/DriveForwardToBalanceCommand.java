@@ -9,7 +9,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.DriveSubsystem.DriveMode;
 
-/** An example command that uses an example subsystem. */
 public class DriveForwardToBalanceCommand extends EntechCommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem drive;
@@ -50,17 +49,15 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
             pitch_seen = true;
         }
         drive.drive(di);
-        return;
     } else {
         if (Math.abs(pitch_angle) < PITCH_THRESHOLD) {
             drive.stop();
             pitch_stable_count += 1;
-            return;
+        } else {
+            pitch_stable_count = 0;
+            di.setForward(Math.copySign(DRIVE_SPEED, pitch_angle));
+            drive.drive(di);
         }
-        pitch_stable_count = 0;
-        // TODO: verify that positive pitch means we need to move forward
-        di.setForward(Math.copySign(DRIVE_SPEED, pitch_angle));
-        drive.drive(di);
     }
   }
 
