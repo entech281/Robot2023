@@ -110,7 +110,8 @@ public final class RobotConstants {
     		  public static double SCORE_MIDDLE_DEGREES = 94.0;
     		  public static double LOAD_STATION_DEGREES = 92.0;
     		  public static double SCORE_HIGH_DEGREES = 125;    		  
-     		  public static final double MAX_POSITION_DEGREES = 125.0;    		  
+     		  public static final double MAX_POSITION_DEGREES = 125.0;  
+    	}
     }
     
     public interface GRIPPER{
