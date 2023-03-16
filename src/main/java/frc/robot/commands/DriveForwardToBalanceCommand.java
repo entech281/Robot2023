@@ -17,7 +17,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   private boolean pitch_seen;
   private int pitch_stable_count;
   private static final int    ROBOT_STABLE_COUNT = 50;
-  private static final double DRIVE_SPEED = 0.25;
+  private static final double DRIVE_SPEED = 0.3;
   private static final double PITCH_THRESHOLD = 10.0;
 
   /**
@@ -43,7 +43,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    DriveInput di=new DriveInput(DRIVE_SPEED,0.0,0.0);
+    DriveInput di=new DriveInput(DRIVE_SPEED,0.0,0.0, 0.0);
     double pitch_angle = navx.getPitch();
     if (!pitch_seen) {
         if (Math.abs(pitch_angle) > PITCH_THRESHOLD) {
