@@ -58,7 +58,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         else {
         	DriverStation.reportWarning("LateralOffsetFromHorizontalAlign: no offset available",false);
         }
-        drive.filteredDrive(newDi);
+        drive.yawLockedDrive(newDi);
     }
 
     @Override
