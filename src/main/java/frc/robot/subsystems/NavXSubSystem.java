@@ -81,12 +81,12 @@ public class NavXSubSystem extends EntechSubsystem  {
         navX.zeroYaw();
     }
 
-    public double getRoll() {
-      return navX.getPitch();
+    public double getPitch() {
+      return -navX.getPitch();
     }
 
-    public double getPitch() {
-      return -navX.getRoll();
+    public double getRoll() {
+      return navX.getRoll();
     }
 
     public double getYaw() {
