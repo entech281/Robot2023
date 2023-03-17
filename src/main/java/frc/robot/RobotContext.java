@@ -43,8 +43,6 @@ public class RobotContext {
 	    this.robotState = robotState;
 	    this.poseEstimator = poseEstimator;
 	}
-
-	
 	
     /**
      * This is called each periodic loop before commands are executed.
@@ -105,23 +103,15 @@ public class RobotContext {
     private Optional<Double> getTargetY(VisionStatus vs ){
     	if ( vs.getBestAprilTagTarget().isPresent()) {
     		RecognizedAprilTagTarget rat = vs.getBestAprilTagTarget().get();
-    		AprilTagLocation tl = rat.getTagLocation();
-    		if ( tl != null ) {
-    			double targetY = tl.getYMeters();
-    			return Optional.of(targetY);
-    		}
+    		return Optional.of(rat.getY());
     	}    	
     	return Optional.empty();
     }
-     
-    
+
     private RobotState robotState;
 	private DriveSubsystem driveSubsystem;
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
 	private PoseEstimator poseEstimator;
 
-
-	
-	
 }

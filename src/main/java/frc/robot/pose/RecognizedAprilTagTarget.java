@@ -1,6 +1,8 @@
 
 package frc.robot.pose;
 
+import java.util.Optional;
+
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Transform3d;
@@ -20,6 +22,14 @@ public class RecognizedAprilTagTarget {
 	private AprilTagLocation tagLocation;
     private Transform3d cameraToTarget; 
     private PhotonTrackedTarget photonTarget;
+    
+    public double getY() {
+		AprilTagLocation tl = getTagLocation();
+		if ( tl != null ) {
+			return tl.getYMeters();
+		}    	
+		return 0.0;
+    }
     
     public PhotonTrackedTarget getPhotonTarget() {
 		return photonTarget;
