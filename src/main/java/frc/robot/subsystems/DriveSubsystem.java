@@ -135,7 +135,7 @@ public class DriveSubsystem extends EntechSubsystem {
 
         // Special case: set the setpoint for the HoldYawFilter if nothing has until now
         if ( ! yawHoldFilter.isSetpointValid() ) {
-            yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            setHoldYawAngle(di.getYawAngleDegrees());
         }
 
         // printDI("DI(0):",di);
@@ -148,7 +148,7 @@ public class DriveSubsystem extends EntechSubsystem {
     	if (isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             // We run the holdyaw filter just to get the dashboard updated.
-            yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            setHoldYawAngle(di.getYawAngleDegrees());
         } else {
             if (yawHoldFilter.isEnabled()) {
                 filtered = yawHoldFilter.filter(filtered);
@@ -181,6 +181,7 @@ public class DriveSubsystem extends EntechSubsystem {
 
     public void setHoldYawAngle(double angle) {
         yawHoldFilter.updateSetpoint(angle);
+        yawHoldFilter.reset();
     }
 
     public void toggleBrakeCoastMode() {
