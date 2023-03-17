@@ -11,6 +11,7 @@ public class HoldYawFilter extends DriveInputFilter {
 
     private static final double P_GAIN = 0.02;
     private static final double MAX_ROT = 0.2;
+    private static final double TOLERANCE = 2.0;
     private static double yawSetPoint = 0.0;
     private static boolean setPointValid;
 
@@ -27,6 +28,9 @@ public class HoldYawFilter extends DriveInputFilter {
         double rot = P_GAIN*(inputDI.getYawAngleDegrees() - yawSetPoint);
         if (Math.abs(rot) > MAX_ROT) {
             rot = Math.copySign(MAX_ROT, rot);
+        }
+        if (Math.abs(inputDI.getYawAngleDegrees() - yawSetPoint) < TOLERANCE) {
+        	rot = 0.0;
         }
         outDI.setRotation(rot);
         SmartDashboard.putNumber("HoldYaw meas", inputDI.getYawAngleDegrees());

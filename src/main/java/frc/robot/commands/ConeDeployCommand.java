@@ -4,9 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
+import frc.robot.subsystems.GripperSubsystem.GripperState;
 
 /** An example command that uses an example subsystem. */
 public class ConeDeployCommand extends EntechCommandBase {
@@ -24,7 +26,7 @@ public class ConeDeployCommand extends EntechCommandBase {
    * NOTE: commands are interruptable by defeault
    */
   public ConeDeployCommand(ElbowSubsystem elbowSubsystem, GripperSubsystem gripperSubsystem, double releasePosition) {
-      super(elbowSubsystem);
+      super(elbowSubsystem,gripperSubsystem);
       this.elbowSubsystem = elbowSubsystem;
       this.gripperSubsystem =  gripperSubsystem;
       this.releasePosition = releasePosition;
@@ -50,7 +52,7 @@ public class ConeDeployCommand extends EntechCommandBase {
 	  elbowSubsystem.stop();
 	  
 	  if (reachedTargetHeight) {
-		  gripperSubsystem.setOpen(true);
+		  gripperSubsystem.setGripperState(GripperState.kOpen);
 		  elbowSubsystem.setPosition(elbowSubsystem.getActualPosition());
 	  }
 	  else {

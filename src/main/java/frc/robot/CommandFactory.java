@@ -22,10 +22,8 @@ import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.ConeDeployCommand;
-import frc.robot.commands.SetElbowSpeedCommand;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
-import frc.robot.commands.ElbowPositionModeCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
@@ -203,9 +201,9 @@ public class CommandFactory {
   		return new HorizontalAlignWithTagCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState );
     }	
 	
-    public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {
-  		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState, robotState  );
-    }
+//    public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {
+//  		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState, robotState  );
+//    }
 
     public Command snapYawDegreesCommand(double angle) {
         return new SnapYawDegreesCommand(driveSubsystem, angle,robotState );
@@ -279,31 +277,30 @@ public class CommandFactory {
             );    	
     }    
     
-    public Command groundScoringPosition() {
-        return new ParallelCommandGroup(
-            new ConditionalCommand(new InstantCommand(), 
-            new SequentialCommandGroup( groundRetractedPosition(), new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_LOW_DEGREES, false)),
-            elbowSubsystem::isSafeToExtendArm),
-            new PositionTelescopeCommand(armSubsystem, 0, true)
-        );
-    }
-
-    public Command loadingPositionCommand() {
-        return new SequentialCommandGroup(
-            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
-            new ParallelCommandGroup(
-                new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true),
-                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.LOAD, true)
-            )
-        );
-    }
-    
+//    public Command groundScoringPosition() {
+//        return new ParallelCommandGroup(
+//            new ConditionalCommand(new InstantCommand(), 
+//            new SequentialCommandGroup( groundRetractedPosition(), new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_LOW_DEGREES, false)),
+//            elbowSubsystem::isSafeToExtendArm),
+//            new PositionTelescopeCommand(armSubsystem, 0, true)
+//        );
+//    }
+//
+//    public Command loadingPositionCommand() {
+//        return new SequentialCommandGroup(
+//            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
+//            new ParallelCommandGroup(
+//                new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true),
+//                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.LOAD, true)
+//            )
+//        );
+//    }
+//    
     public Command homeTelescopeAndElbow() {
     	SequentialCommandGroup sg =  new SequentialCommandGroup( 
     			armPositionHome(),
     			minElbowCommand()    			
-    	);
-    	
+    	);    	
     	sg.setName("homeTelescopeAndElbow");
     	return sg;
     }

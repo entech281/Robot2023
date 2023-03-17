@@ -10,7 +10,7 @@ import frc.robot.adapter.JoystickDriveInputSupplier;
 
 public class OperatorInterface {
 
-	private ShuffleboardDriverControls shuffleboardControls;	
+
     private CommandJoystick driveStick;
     private CommandJoystick operatorPanel;
     private CommandJoystick operatorStick;
@@ -18,13 +18,12 @@ public class OperatorInterface {
     private JoystickDriveInputSupplier hidJoystickDriveInputSupplier;
     private Supplier<Boolean> gripperStateSupplier;
     
-    public OperatorInterface( final CommandFactory cf, final ShuffleboardDriverControls shuffleboard) {
-    	this.shuffleboardControls = shuffleboard;
+    public OperatorInterface( final CommandFactory cf) {
         this.commandFactory = cf;
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
         this.operatorPanel = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_PANEL);
         this.hidJoystickDriveInputSupplier = new JoystickDriveInputSupplier(driveStick.getHID());
-        this.gripperStateSupplier = () -> {  return operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER); }; 
+        this.gripperStateSupplier = () -> {  return ! operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER); }; 
         setupButtons();
 
     }

@@ -88,17 +88,17 @@ public final class RobotConstants {
     		public static final int CURRENT_LIMIT_AMPS=30;
     		public static final int MAX_SPIKE_CURRENT=50;
     		public static final double COUNTS_PER_DEGREE=2.1383; 
-    		public static final double ELBOW_SLOWDOWN_SPEED= 0.2;
+    		public static final double ELBOW_SLOWDOWN_SPEED= 0.1;
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT = 0.2;
     	}
     	public interface TUNING{
 
-    		public static final double P_GAIN=0.24;
+    		public static final double P_GAIN=0.08;
     		public static final double FF_GAIN_GOING_UP=0.00;
     		public static final double FF_GAIN_GOING_DOWN=0.0;
-    		public static final double I_GAIN=0.001;
+    		public static final double I_GAIN=0.000;
     		public static final double D_GAIN=0.0;
 
     	}
@@ -110,7 +110,7 @@ public final class RobotConstants {
     		  public static double SCORE_MIDDLE_DEGREES = 94.0;
     		  public static double LOAD_STATION_DEGREES = 92.0;
     		  public static double SCORE_HIGH_DEGREES = 125;
-    		  public static double SCORE_HIGH_RELEASE_DEGREES = 115;
+    		  public static double SCORE_HIGH_RELEASE_DEGREES = 110;
      		  public static final double MAX_POSITION_DEGREES = 125.0;  
     	}
     }

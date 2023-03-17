@@ -54,7 +54,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	}
 	if ( Robot.isReal()) {
 	    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
-	    photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.CLOSEST_TO_LAST_POSE,camera,ROBOT_TO_CAM);
+	    photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT,camera,ROBOT_TO_CAM);
 	}	
   }
 
@@ -67,7 +67,6 @@ public class VisionSubsystem extends EntechSubsystem {
 	     sb.addBooleanProperty("HasPhotonPose", this::hasPhotonPose, null);
 	     sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
 	     sb.addStringProperty("Target", this::getBestTagName, null);
-	     sb.addDoubleProperty("PhotonYaw", () -> { return lastPhotonYawAngle;} , null);
 		 sb.addDoubleProperty("RobotLateralOffset", this::getLateralOffset , null);
 		 sb.addDoubleProperty("CameraDistance", this::getCameraDistance , null);		 
 	 }
@@ -121,7 +120,7 @@ public class VisionSubsystem extends EntechSubsystem {
         	  return currentStatus.getBestAprilTagTarget().get().getTagLocation().getLocation().toString();
           }
 	  }
-		  return "NONE";
+	  return "NONE";
   }
   private void updateStatus(){
 	  

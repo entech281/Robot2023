@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.commands.supplier.EstimatedPoseSupplier;
+import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.controllers.RobotYawPIDController;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
@@ -17,7 +17,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     protected final DriveSubsystem drive;
     protected final RobotYawPIDController pid;
-    private EstimatedPoseSupplier estimatedPoseSupplier;
+    private YawAngleSupplier yawAngleSupplier;
 
     /**
      * Creates a new snap yaw degrees command that will snap the robot to the specified angle
@@ -26,10 +26,10 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param angle The angle you want to snap to
      */
-    public SnapYawDegreesCommand(DriveSubsystem drive, double desiredAngle, EstimatedPoseSupplier estimatedPoseSupplier) {
+    public SnapYawDegreesCommand(DriveSubsystem drive, double desiredAngle, YawAngleSupplier yawAngleSupplier) {
         super(drive);
         this.drive = drive;
-        this.estimatedPoseSupplier = estimatedPoseSupplier;
+        this.yawAngleSupplier = yawAngleSupplier;
         
         pid = new RobotYawPIDController();
         pid.setSetpoint(desiredAngle);
@@ -41,7 +41,7 @@ public class SnapYawDegreesCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-    	double yawAngleDegrees = estimatedPoseSupplier.getEstimatedPose().get().getRotation().getDegrees();
+    	double yawAngleDegrees = yawAngleSupplier.getYawAngleDegrees();
         double calcValue = pid.calculate(-yawAngleDegrees); 
         DriveInput di = new DriveInput(0, 0, calcValue);
         

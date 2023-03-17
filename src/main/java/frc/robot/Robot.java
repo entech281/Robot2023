@@ -74,13 +74,12 @@ public class Robot extends TimedRobot {
 	shuffleboardInterface = new ShuffleboardInterface();	
 
 	RobotState robotState = new RobotState();	  
-	robotContext = new RobotContext(new AlignmentCalculator(kDefaultPeriod, kDefaultPeriod),
-			robotState, shuffleboardInterface,drive,navx,vision, arm, elbow, gripper, new VisionFirstNavxAsBackupPoseEstimator(true),
-			shuffleboardControls
+	robotContext = new RobotContext(
+			robotState,drive,navx,vision, new VisionFirstNavxAsBackupPoseEstimator(true)
 	);	
 	commandFactory = new CommandFactory(robotState,allSubsystems);
-	Shuffleboard.getTab("Tab6").add("RobotState",robotState);
-	oi = new OperatorInterface(commandFactory,shuffleboardControls);
+
+	oi = new OperatorInterface(commandFactory);
 	setupShuffleboardInterface();
 	Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
 	c.enableDigital();
