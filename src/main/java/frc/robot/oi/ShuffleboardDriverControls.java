@@ -29,7 +29,7 @@ public class ShuffleboardDriverControls {
 //    	nodeChooser.addOption("B3", TargetNode.B3);
 
     	//operatorTab.add("TargetNode",nodeChooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withSize(3, 1).withPosition(1, 3);	
-    	prematchTab.add("AutoCommand",autoCommandChooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withSize(7, 1).withPosition(0, 3);
+    	prematchTab.add("AutoCommand",autoCommandChooser).withWidget(BuiltInWidgets.kSplitButtonChooser).withSize(7, 1).withPosition(0, 2);
 	}
 		
 	public void addAutoCommandChoice(Command newCommand, boolean isDefault) {

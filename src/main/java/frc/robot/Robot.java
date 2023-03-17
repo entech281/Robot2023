@@ -73,7 +73,8 @@ public class Robot extends TimedRobot {
 	shuffleboardControls = new ShuffleboardDriverControls();	
 	shuffleboardInterface = new ShuffleboardInterface();	
 
-	RobotState robotState = new RobotState();	  
+	RobotState robotState = new RobotState();
+	shuffleboardInterface.addRobotState(robotState);
 	robotContext = new RobotContext(
 			robotState,drive,navx,vision, new VisionFirstNavxAsBackupPoseEstimator(true)
 	);	
@@ -98,6 +99,7 @@ public class Robot extends TimedRobot {
 		autoChoices.forEach((c)->{
             shuffleboardControls.addAutoCommandChoice(c,c == autoChoices.get(0));
 		});	  
+
   }
   
   private void doPeriodic() {

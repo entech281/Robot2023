@@ -3,6 +3,8 @@ package frc.robot;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.PoseEstimator;
@@ -56,7 +58,7 @@ public class RobotContext {
     	NavxStatus ns = navXSubSystem.getStatus();
     	DriveStatus ds = driveSubsystem.getStatus();
     	
-    	robotState.setYawAngleDegrees(ns.getYawAngleDegrees());
+    	robotState.yawAngleDegrees = ns.getYawAngleDegrees();
     	
     	//our estimate for the pose
     	Optional<Pose2d> estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
@@ -66,43 +68,32 @@ public class RobotContext {
     	
     	//target, if we have one
     	Optional<Double> targetY = getTargetY(vs);
-    	Optional<Double> lateralOffsetPhoton = Optional.empty();
-    	Optional<Double> lateralOffsetOurs = Optional.empty();
-    	
+
     	
     	if ( estimatedRobotPose.isPresent() ){
-    		SmartDashboard.putNumber("OurPose:Y", estimatedRobotPose.get().getY());
+    		double poseY = estimatedRobotPose.get().getY();
+    		robotState.ourPoseY = Optional.of(poseY);
     		if ( targetY.isPresent()) {
-    			lateralOffsetOurs = Optional.of(targetY.get()- estimatedRobotPose.get().getY());
-    			SmartDashboard.putNumber("OurPose:OFFSET", lateralOffsetOurs.get());
-    		}
-    		else {
-    			SmartDashboard.putNumber("OurPose:OFFSET", RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN);
+    			robotState.lateralOffsetOurs = Optional.of(targetY.get()- poseY);
     		}
     	}
 
     	if ( photonEstimatedPose.isPresent() ){
-    		SmartDashboard.putNumber("PhotonPose:Y", photonEstimatedPose.get().getY());
+    		double poseY = estimatedRobotPose.get().getY();
+    		robotState.photonPoseY = Optional.of(poseY);
     		if ( targetY.isPresent()) {
-    			lateralOffsetPhoton = Optional.of(targetY.get()- photonEstimatedPose.get().getY());
-    			SmartDashboard.putNumber("PhotonPose:OFFSET", lateralOffsetPhoton.get());
+    			robotState.lateralOffsetPhoton = Optional.of(targetY.get()- poseY);
     		}
-    		else {
-    			SmartDashboard.putNumber("PhotonPose:OFFSET", RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN);
-    		}    		
     	}
     	
-
-    	//temporary till we get code that finds the the closest target
-    	//this will just align on the tag itself
-    	robotState.setLateralOffset(lateralOffsetPhoton);
-    	//robotState.setLateralOffset(lateralOffsetOurs);
     	
     }    
     
     private Optional<Double> getTargetY(VisionStatus vs ){
     	if ( vs.getBestAprilTagTarget().isPresent()) {
     		RecognizedAprilTagTarget rat = vs.getBestAprilTagTarget().get();
+
+    		robotState.selectedTag = Optional.ofNullable(rat.getTagLocation());
     		return Optional.of(rat.getY());
     	}    	
     	return Optional.empty();
@@ -113,5 +104,6 @@ public class RobotContext {
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
 	private PoseEstimator poseEstimator;
+
 
 }

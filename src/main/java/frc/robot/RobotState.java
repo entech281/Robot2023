@@ -5,41 +5,50 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.commands.supplier.LateralOffsetSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
+import frc.robot.pose.AprilTagLocation;
+import frc.robot.pose.ScoringLocation;
 import frc.robot.util.SendableUtil;
 
 public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSupplier{
 
 
-	private Optional<Double> lateralOffset = Optional.empty();
-	private double yawAngleDegrees = 0;
+	public double yawAngleDegrees = 0;
+	public Optional<Double> ourPoseY = Optional.empty();
+	public Optional<Double> photonPoseY = Optional.empty();
+	public Optional<Double> lateralOffsetOurs = Optional.empty();
+	public Optional<Double> lateralOffsetPhoton = Optional.empty();
+	public Optional<AprilTagLocation> selectedTag = Optional.empty();
 	
-
+	@Override	
 	public Optional<Double> getLateralOffset(){
-		return lateralOffset;
+		return lateralOffsetPhoton;
 	}	
-	
-	public void setLateralOffset(double lateralOffset) {
-		this.lateralOffset = Optional.of(lateralOffset);
-	}
-	
-	public void setLateralOffset(Optional<Double> newLateralOffset) {
-		this.lateralOffset = newLateralOffset;
-	}
 	
 	@Override
 	public double getYawAngleDegrees() {
 		return yawAngleDegrees;
 	}
-
-	public void setYawAngleDegrees(double newYawAngleDegrees) {
-		this.yawAngleDegrees = newYawAngleDegrees;
+	
+	public String getTagDesc() {
+		if ( selectedTag.isPresent()) {
+			AprilTagLocation t = selectedTag.get();
+			return String.format("ID%d : %.2fm",t.getId(), t.getYMeters());
+		}
+		else{
+			return "NONE";
+		}
 	}
-	
-	
+
 	@Override
 	public void initSendable(SendableBuilder sb) {
+	    sb.addStringProperty("Tag", this::getTagDesc, null);
 	    sb.addDoubleProperty("RobotYaw", this::getYawAngleDegrees, null);
-		sb.addDoubleProperty("LateralOffset", () -> { return SendableUtil.doubleForOptional(this.getLateralOffset()) ;},null );
+	    sb.addDoubleProperty("LateralYOffset", () -> { return SendableUtil.doubleForOptional(getLateralOffset()) ;},null );
+		sb.addDoubleProperty("PhotonY", () -> { return SendableUtil.doubleForOptional(photonPoseY) ;},null );	    
+		sb.addDoubleProperty("PhotonYOffset", () -> { return SendableUtil.doubleForOptional(lateralOffsetPhoton) ;},null );
+		sb.addDoubleProperty("OurY", () -> { return SendableUtil.doubleForOptional(ourPoseY) ;},null );
+		sb.addDoubleProperty("OurYOffset", () -> { return SendableUtil.doubleForOptional(lateralOffsetOurs) ;},null );
+
 	}
 
 
