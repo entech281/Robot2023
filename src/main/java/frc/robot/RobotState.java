@@ -39,9 +39,6 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 	@Override
 	public void initSendable(SendableBuilder sb) {
 	    sb.addDoubleProperty("RobotYaw", this::getYawAngleDegrees, null);
-	    //sb.addStringProperty("Target", this::getTargetDesc, null);
-	    //sb.addDoubleProperty("Distance Meters", this::getTargetDistance, null);
-	    //sb.addBooleanProperty("CanDeploy", this::canDeploy, null);
 		sb.addDoubleProperty("LateralOffset", () -> { return SendableUtil.doubleForOptional(this.getLateralOffset()) ;},null );
 	}
 
