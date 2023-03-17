@@ -4,26 +4,22 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
-import frc.robot.commands.AlignToScoringLocationCommand;
+import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.DriveSetBrake;
+import frc.robot.commands.DriveSetRotationEnableCommand;
+import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
-import frc.robot.commands.ConeDeployCommand;
-import frc.robot.commands.DriveSetRotationEnableCommand;
-import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
@@ -35,7 +31,6 @@ import frc.robot.commands.nudge.NudgeElbowUpCommand;
 import frc.robot.commands.nudge.NudgeTelescopeBackwardsCommand;
 import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
-import frc.robot.commands.supplier.TargetNodeSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -105,7 +100,6 @@ public class CommandFactory {
     }
     
     public Command testDownwardSoftConePlacement() {
-    	double DOWN_MOVE_DEGREES = 3.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             	new ZeroGyroCommand(navxSubsystem)
                 , new GripperCommand(gripperSubsystem, GripperState.kClose)
@@ -200,10 +194,6 @@ public class CommandFactory {
     public Command alignHorizontalToTag( Supplier<DriveInput> operatorInput) {
   		return new HorizontalAlignWithTagCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState );
     }	
-	
-//    public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {
-//  		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState, robotState  );
-//    }
 
     public Command snapYawDegreesCommand(double angle) {
         return new SnapYawDegreesCommand(driveSubsystem, angle,robotState );
@@ -277,25 +267,6 @@ public class CommandFactory {
             );    	
     }    
     
-//    public Command groundScoringPosition() {
-//        return new ParallelCommandGroup(
-//            new ConditionalCommand(new InstantCommand(), 
-//            new SequentialCommandGroup( groundRetractedPosition(), new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_LOW_DEGREES, false)),
-//            elbowSubsystem::isSafeToExtendArm),
-//            new PositionTelescopeCommand(armSubsystem, 0, true)
-//        );
-//    }
-//
-//    public Command loadingPositionCommand() {
-//        return new SequentialCommandGroup(
-//            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
-//            new ParallelCommandGroup(
-//                new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true),
-//                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.LOAD, true)
-//            )
-//        );
-//    }
-//    
     public Command homeTelescopeAndElbow() {
     	SequentialCommandGroup sg =  new SequentialCommandGroup( 
     			armPositionHome(),
