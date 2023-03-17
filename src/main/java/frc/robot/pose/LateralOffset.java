@@ -12,7 +12,6 @@ public class LateralOffset {
 		this.lateralOffsetToLocationMeters = lateralOffsetToLocation;
 	}
 	
-	
 	public double getLateralOffsetToLocationMeters() {
 		return lateralOffsetToLocationMeters;
 	}
