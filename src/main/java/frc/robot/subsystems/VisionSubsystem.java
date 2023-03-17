@@ -54,7 +54,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	}
 	if ( Robot.isReal()) {
 	    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
-	    photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT,camera,ROBOT_TO_CAM);
+	    photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.LOWEST_AMBIGUITY,camera,ROBOT_TO_CAM);
 	}	
   }
 

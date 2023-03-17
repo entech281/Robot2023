@@ -78,6 +78,9 @@ public class RobotContext {
     			lateralOffsetOurs = Optional.of(targetY.get()- estimatedRobotPose.get().getY());
     			SmartDashboard.putNumber("OurPose:OFFSET", lateralOffsetOurs.get());
     		}
+    		else {
+    			SmartDashboard.putNumber("OurPose:OFFSET", RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN);
+    		}
     	}
 
     	if ( photonEstimatedPose.isPresent() ){
@@ -85,6 +88,9 @@ public class RobotContext {
     		if ( targetY.isPresent()) {
     			lateralOffsetPhoton = Optional.of(targetY.get()- photonEstimatedPose.get().getY());
     			SmartDashboard.putNumber("PhotonPose:OFFSET", lateralOffsetPhoton.get());
+    		}
+    		else {
+    			SmartDashboard.putNumber("PhotonPose:OFFSET", RobotConstants.INDICATOR_VALUES.POSITION_UNKNOWN);
     		}    		
     	}
     	

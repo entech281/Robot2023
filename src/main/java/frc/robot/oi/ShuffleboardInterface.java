@@ -25,13 +25,13 @@ public class ShuffleboardInterface {
 	private ShuffleboardTab MATCH_TAB = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.MATCH);
 	private ShuffleboardTab DEBUG_TAB = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.DEBUG);
 	
-	private Field2d fieldDisplay = new Field2d();
-	public final String SCORING_SOLUTION = "ScoringSolution";
+	//private Field2d fieldDisplay = new Field2d();
+	//public final String SCORING_SOLUTION = "ScoringSolution";
 	public final double TRAJECTORY_SPEED_DOESNT_MATTER = 10.0;
 
 	
 	public ShuffleboardInterface() {
-		MATCH_TAB.add("Estimated Location",fieldDisplay).withWidget(BuiltInWidgets.kField).withSize(4, 3).withPosition(0, 0);	
+		//MATCH_TAB.add("Estimated Location",fieldDisplay).withWidget(BuiltInWidgets.kField).withSize(4, 3).withPosition(0, 0);	
 	}
 	
 	public void addRobotState(RobotState robotState) {
@@ -70,32 +70,32 @@ public class ShuffleboardInterface {
 		}		
 	}
 	
-	public void setRobotPose(Pose2d estimatedPose) {
-		fieldDisplay.setRobotPose(estimatedPose);
-	}
+//	public void setRobotPose(Pose2d estimatedPose) {
+//		fieldDisplay.setRobotPose(estimatedPose);
+//	}
+//	
+//	public Field2d getField() {
+//		return fieldDisplay;
+//	}
 	
-	public Field2d getField() {
-		return fieldDisplay;
-	}
-	
-	public void displayScoringSolution(Pose2d start, Pose2d end) {
-		
-		//special note: the end of the trajectory is pointing towards us
-		//but for this, we need it to point away, because we're not actually
-		//going to end up in the same pose ( pointing the same way as the tag
-		Pose2d endFlipped = end.transformBy(PoseUtil.flipBy180Degrees2d());
-        Trajectory t =   TrajectoryGenerator.generateTrajectory( 
-				List.of(
-						start,
-						start.interpolate(endFlipped, 0.25),
-						start.interpolate(endFlipped, 0.5),
-						start.interpolate(endFlipped, 0.75),
-						endFlipped
-						),  
-				new TrajectoryConfig(TRAJECTORY_SPEED_DOESNT_MATTER,TRAJECTORY_SPEED_DOESNT_MATTER)
-		);     
-        fieldDisplay.getObject(SCORING_SOLUTION).setTrajectory(t);
-		
-	}	
+//	public void displayScoringSolution(Pose2d start, Pose2d end) {
+//		
+//		//special note: the end of the trajectory is pointing towards us
+//		//but for this, we need it to point away, because we're not actually
+//		//going to end up in the same pose ( pointing the same way as the tag
+//		Pose2d endFlipped = end.transformBy(PoseUtil.flipBy180Degrees2d());
+//        Trajectory t =   TrajectoryGenerator.generateTrajectory( 
+//				List.of(
+//						start,
+//						start.interpolate(endFlipped, 0.25),
+//						start.interpolate(endFlipped, 0.5),
+//						start.interpolate(endFlipped, 0.75),
+//						endFlipped
+//						),  
+//				new TrajectoryConfig(TRAJECTORY_SPEED_DOESNT_MATTER,TRAJECTORY_SPEED_DOESNT_MATTER)
+//		);     
+//        fieldDisplay.getObject(SCORING_SOLUTION).setTrajectory(t);
+//		
+//	}	
 	
 }

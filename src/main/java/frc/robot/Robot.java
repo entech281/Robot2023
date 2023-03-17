@@ -99,6 +99,7 @@ public class Robot extends TimedRobot {
             shuffleboardControls.addAutoCommandChoice(c,c == autoChoices.get(0));
 		});	  
   }
+  
   private void doPeriodic() {
     // robotContext.periodic();	  
     // CommandScheduler.getInstance().run();		  
