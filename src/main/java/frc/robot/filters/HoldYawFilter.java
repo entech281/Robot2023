@@ -44,7 +44,11 @@ public class HoldYawFilter extends DriveInputFilter {
         }
         DriveInput outDI = new DriveInput(inputDI);
         
-        double rot = P_GAIN*(inputDI.getYawAngleDegrees() - yawSetPoint);
+        double delta = inputDI.getYawAngleDegrees() - yawSetPoint;
+        if (Math.abs(delta) > Math.abs(delta+360.0)) {
+            delta += 360.0;
+        }
+        double rot = P_GAIN*delta;
         //double rot = pid.calculate(inputDI.getYawAngleDegrees());
         if (Math.abs(rot) > MAX_ROT) {
             rot = Math.copySign(MAX_ROT, rot);
