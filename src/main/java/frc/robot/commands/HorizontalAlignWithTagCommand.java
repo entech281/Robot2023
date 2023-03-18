@@ -1,14 +1,14 @@
 package frc.robot.commands;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.supplier.LateralOffsetSupplier;
-import frc.robot.commands.supplier.TargetYawSupplier;
-import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.controllers.RobotLateralPIDController;
+import frc.robot.controllers.RobotYawPIDController;
 import frc.robot.filters.DriveInput;
+import frc.robot.filters.HoldYawFilter;
 import frc.robot.subsystems.DriveSubsystem;
 
 /**
@@ -22,10 +22,20 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
+    private static final double YAW_P_GAIN = 0.02;
+    private static final double YAW_I_GAIN = 0.001;	
+
+    private static final double LATERAL_P_GAIN = 0.02;
+    private static final double LATERAL_I_GAIN = 0.001;	
+
+    
     protected final DriveSubsystem drive;
     protected final LateralOffsetSupplier lateralOffsetSupplier;
     protected final Supplier<DriveInput> operatorInput;
-    private RobotLateralPIDController pid;
+    private RobotLateralPIDController lateralPid;
+    private RobotYawPIDController yawPid;
+    
+    private double startingYawAngle = 0.0;
 
 
     /**
@@ -38,28 +48,46 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         this.drive = drive;
         this.lateralOffsetSupplier = lateralOffsetSupplier;
         this.operatorInput = operatorInput;
-        pid = new RobotLateralPIDController();
-        pid.setSetpoint(0.0);
+        
+        lateralPid = new RobotLateralPIDController();
+        lateralPid.setP(LATERAL_P_GAIN);
+        lateralPid.setI(LATERAL_I_GAIN);
+        lateralPid.setSetpoint(0);        
+        lateralPid.reset();
+        
+        yawPid = new RobotYawPIDController();
+        yawPid.setP(YAW_P_GAIN);
+        yawPid.setI(YAW_I_GAIN);
+        yawPid.reset();
+                
+    }
+    
+    @Override
+    public void initialize() {
+    	//lets hold it here
+    	startingYawAngle = operatorInput.get().getYawAngleDegrees();
     }
 
     @Override
     public void execute() {
-        DriveInput di = operatorInput.get();
+        DriveInput di = operatorInput.get();        
         DriveInput newDi = new DriveInput(di);
+        
+        double rot = yawPid.calculate(di.getYawAngleDegrees());
+        newDi.setRotation(rot);
+        
         if ( lateralOffsetSupplier.getLateralOffset().isPresent()) {
-        	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();
-        	
-        	SmartDashboard.putData("HorizontalAlignPID",pid);
-        	SmartDashboard.putNumber(getName(), lateralOffset);
-        	double calcValue = pid.calculate(lateralOffset);      	
+        	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();        	
+        	double calcValue = lateralPid.calculate(lateralOffset);      	
         	newDi.setRight(calcValue);
+        	
         }
-        drive.yawLockedDrive(newDi);
+        drive.drive(newDi);
     }
 
     @Override
     public void end(boolean interrupted) {
-        drive.stop();
+        drive.stop();     
     }
 
     @Override

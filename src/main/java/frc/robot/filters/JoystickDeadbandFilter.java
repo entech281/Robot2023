@@ -17,9 +17,6 @@ public class JoystickDeadbandFilter extends DriveInputFilter {
 
 	@Override
 	protected DriveInput doFilter(DriveInput inputDI) {
-        if (!isEnabled()) {
-            return inputDI;
-        }
         DriveInput output = new DriveInput(inputDI);
         output.setForward(applyDeadband(output.getForward(), minMagnitude));
         output.setRight(applyDeadband(output.getRight(), minMagnitude));

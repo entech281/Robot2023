@@ -19,6 +19,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -39,7 +41,7 @@ public class VisionSubsystem extends EntechSubsystem {
   private boolean enabled=true;
 
   public static final double NO_GOOD_ANGLE=-299;
-
+  public static final Pose2d REFERENCE_POSE = new Pose2d(0,0,Rotation2d.fromDegrees(0));
   
   private double lastPhotonYawAngle = 0;
   @Override
@@ -54,7 +56,9 @@ public class VisionSubsystem extends EntechSubsystem {
 	}
 	if ( Robot.isReal()) {
 	    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
-	    photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.LOWEST_AMBIGUITY,camera,ROBOT_TO_CAM);
+	    photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.AVERAGE_BEST_TARGETS,camera,ROBOT_TO_CAM);
+	    photonPoseEstimator.setLastPose(REFERENCE_POSE);
+
 	}	
   }
 
@@ -127,6 +131,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	  	VisionStatus newStatus = new VisionStatus();
 	  	lastPhotonYawAngle = NO_GOOD_ANGLE;
 	    PhotonPipelineResult result = camera.getLatestResult();
+
 	    newStatus.setLatency(camera.getLatestResult().getLatencyMillis());
 
 	    if ( result.hasTargets()) {
@@ -136,6 +141,8 @@ public class VisionSubsystem extends EntechSubsystem {
 
 		    PhotonTrackedTarget bestTarget = result.getBestTarget();
 		    if ( bestTarget != null ) {
+		    	SmartDashboard.putNumber("CAMERAY", bestTarget.getBestCameraToTarget().getY());
+		    	newStatus.setCameraY(bestTarget.getBestCameraToTarget().getY());
 		    	newStatus.setBestTarget(createRecognizedTarget(bestTarget));
 		    	lastPhotonYawAngle = bestTarget.getYaw();
 		    }
@@ -145,6 +152,7 @@ public class VisionSubsystem extends EntechSubsystem {
 		  
 		if ( updatedPose.isPresent()) {
 			newStatus.setPhotonEstimatedPose(updatedPose.get().estimatedPose);  
+			photonPoseEstimator.setLastPose(updatedPose.get().estimatedPose);
 		}		    
 
 	    

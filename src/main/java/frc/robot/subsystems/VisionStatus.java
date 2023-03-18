@@ -14,9 +14,17 @@ public class VisionStatus implements SubsystemStatus{
     private Optional<RecognizedAprilTagTarget> bestTarget = Optional.empty();
     private final List<RecognizedAprilTagTarget> targets = new ArrayList<>();
     private Pose3d photonEstimatedPose;
-    
+    private double cameraY = 0.0;
 
-    public Optional<Pose3d> getPhotonEstimatedPose() {
+    public double getCameraY() {
+		return cameraY;
+	}
+
+	public void setCameraY(double cameraY) {
+		this.cameraY = cameraY;
+	}
+
+	public Optional<Pose3d> getPhotonEstimatedPose() {
 		return Optional.ofNullable(photonEstimatedPose);
 	}
 

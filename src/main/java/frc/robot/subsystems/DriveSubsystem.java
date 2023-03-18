@@ -101,13 +101,13 @@ public class DriveSubsystem extends EntechSubsystem {
         setFieldAbsolute(RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE);
 
         noRotationFilter = new NoRotationFilter();
-        noRotationFilter.enable(true);
+        noRotationFilter.enable(false);
 
         precisionDriveFilter = new PrecisionDriveFilter();
         precisionDriveFilter.enable(false);
 
         yawHoldFilter = new HoldYawFilter();
-        yawHoldFilter.enable(true);
+        yawHoldFilter.enable(false);
 
     }
 
@@ -129,14 +129,6 @@ public class DriveSubsystem extends EntechSubsystem {
   
     public void drive(DriveInput di) {
         robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
-    }
-    
-    public void yawLockedDrive(DriveInput di) {
-    	//TODO: clean up
-    	DriveInput filtered = di;
-    	yawHoldFilter.enable(true);
-    	filtered = yawHoldFilter.filter(filtered);
-    	drive(filtered);
     }
   
     public void filteredDrive(DriveInput di) {
@@ -247,8 +239,17 @@ public class DriveSubsystem extends EntechSubsystem {
         builder.addBooleanProperty("Rotation Allowed", this::isRotationEnabled, null);
         builder.addBooleanProperty("Precision Drive", this::isPrecisionDrive, null);
         builder.addBooleanProperty("Brake Mode", this::isBrakeMode, null);
+        builder.addStringProperty("Command", this::getCurrentCommandName, null);
     }
   
+	public String getCurrentCommandName() {
+		if ( this.getCurrentCommand() != null ) {
+			return this.getCurrentCommand().getName();
+		}
+		else {
+			return "NONE";
+		}
+	}
     @Override
     public boolean isEnabled() {
 	    return true;

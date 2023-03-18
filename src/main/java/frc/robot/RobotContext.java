@@ -2,18 +2,12 @@ package frc.robot;
 
 import java.util.Optional;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.PoseEstimator;
 import frc.robot.pose.RecognizedAprilTagTarget;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElbowSubsystem;
-import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
@@ -31,7 +25,9 @@ import frc.robot.subsystems.VisionSubsystem;
  */
 public class RobotContext {
 	
-
+	public static final int NUM_SAMPLES = 5;
+	LinearFilter movingAverage = LinearFilter.movingAverage(NUM_SAMPLES);
+	
 	//inject just what we need. later we might need arm-- we can add it then
 	public RobotContext(
 			RobotState robotState, 
@@ -58,7 +54,10 @@ public class RobotContext {
     	NavxStatus ns = navXSubSystem.getStatus();
     	DriveStatus ds = driveSubsystem.getStatus();
     	
-    	robotState.yawAngleDegrees = ns.getYawAngleDegrees();
+    	robotState.yawAngleDegrees = navXSubSystem.getYaw();
+    	robotState.cameraY = vs.getCameraY();
+    	robotState.movingAverageY = movingAverage.calculate(vs.getCameraY());
+
     	
     	//our estimate for the pose
     	Optional<Pose2d> estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
@@ -85,7 +84,6 @@ public class RobotContext {
     			robotState.lateralOffsetPhoton = Optional.of(targetY.get()- poseY);
     		}
     	}
-    	
     	
     }    
     

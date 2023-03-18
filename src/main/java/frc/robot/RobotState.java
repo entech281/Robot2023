@@ -18,14 +18,18 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 	public Optional<Double> lateralOffsetOurs = Optional.empty();
 	public Optional<Double> lateralOffsetPhoton = Optional.empty();
 	public Optional<AprilTagLocation> selectedTag = Optional.empty();
+	public double cameraY = 0;
+	public double movingAverageY = 0.0;
 	
 	@Override	
 	public Optional<Double> getLateralOffset(){
-		return lateralOffsetPhoton;
+		//this is the value that will be used for horizontal align command
+		return Optional.of(cameraY);
 	}	
 	
 	@Override
 	public double getYawAngleDegrees() {
+		//this is the value that will be used for hold yaw!
 		return yawAngleDegrees;
 	}
 	
@@ -48,7 +52,8 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 		sb.addDoubleProperty("PhotonYOffset", () -> { return SendableUtil.doubleForOptional(lateralOffsetPhoton) ;},null );
 		sb.addDoubleProperty("OurY", () -> { return SendableUtil.doubleForOptional(ourPoseY) ;},null );
 		sb.addDoubleProperty("OurYOffset", () -> { return SendableUtil.doubleForOptional(lateralOffsetOurs) ;},null );
-
+		sb.addDoubleProperty("CameraY", () -> { return cameraY ;},null );
+		sb.addDoubleProperty("CameraY:MovAvg", () -> { return cameraY ;},null );
 	}
 
 

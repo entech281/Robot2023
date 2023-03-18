@@ -7,9 +7,6 @@ public class RobotRelativeDriveFilter extends DriveInputFilter{
 
 	@Override
 	protected DriveInput doFilter(DriveInput inputDI) {
-        if (!isEnabled()) {
-            return inputDI;
-        }
 		DriveInput outDI = new DriveInput(inputDI);
 		outDI.setYawAngleDegrees(0.0);
 		return outDI;
