@@ -20,11 +20,13 @@ import frc.robot.subsystems.LEDSubsystem;
  */
 public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
-    private static final double YAW_P_GAIN = 0.02;
+    private static final double YAW_P_GAIN = 0.01;
     private static final double YAW_I_GAIN = 0.001;	
+    private static final double YAW_D_GAIN = 0.0;
 
-    private static final double LATERAL_P_GAIN = 0.02;
-    private static final double LATERAL_I_GAIN = 0.001;	
+    private static final double LATERAL_P_GAIN = 0.05;
+    private static final double LATERAL_I_GAIN = 0.0075;	
+    private static final double LATERAL_D_GAIN = 0.001;
 
 
     
@@ -52,12 +54,14 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         lateralPid = new RobotLateralPIDController();
         lateralPid.setP(LATERAL_P_GAIN);
         lateralPid.setI(LATERAL_I_GAIN);
+        lateralPid.setD(LATERAL_D_GAIN);
         lateralPid.setSetpoint(0);        
         lateralPid.reset();
         
         yawPid = new RobotYawPIDController();
         yawPid.setP(YAW_P_GAIN);
         yawPid.setI(YAW_I_GAIN);
+        yawPid.setD(YAW_D_GAIN);
         yawPid.reset();
                 
     }
@@ -65,7 +69,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
     @Override
     public void initialize() {
     	//lets hold it whereever we started
-    	yawPid.setSetpoint( operatorInput.get().getYawAngleDegrees());    	
+    	yawPid.setSetpoint(operatorInput.get().getYawAngleDegrees());    	
     }
 
     @Override
@@ -76,9 +80,9 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         double rot = yawPid.calculate(di.getYawAngleDegrees());
         newDi.setRotation(rot);
         
-        if ( lateralOffsetSupplier.getLateralOffset().isPresent()) {
+        if (lateralOffsetSupplier.getLateralOffset().isPresent()) {
         	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();        	
-        	double calcValue = lateralPid.calculate(lateralOffset);      	
+        	double calcValue = lateralPid.calculate(lateralOffset);
         	newDi.setRight(calcValue);
         }
         drive.drive(newDi);

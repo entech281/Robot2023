@@ -18,6 +18,7 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 
 	public double yawAngleDegrees = 0;
 	public Optional<LateralOffset> closestScoringLocationOffset = Optional.empty();
+	public double realLateralOffset = 0; 
 	public double cameraY = 0;
 	public double movingAverageY = 0.0;
 	public Color alignState = Color.kBlack;
@@ -25,7 +26,7 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 	@Override	
 	public Optional<Double> getLateralOffset(){
 		//this is the value that will be used for horizontal align command
-		return Optional.of(cameraY);
+		return Optional.of(realLateralOffset);
 	}	
 	
 	@Override
