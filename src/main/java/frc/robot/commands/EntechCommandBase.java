@@ -12,6 +12,9 @@ public class EntechCommandBase extends CommandBase {
 
     public static final double DEFAULT_TIMEOUT_SECONDS = 60.0;
 
+    public EntechCommandBase() {
+    	
+    }
     public EntechCommandBase(EntechSubsystem subsystem) {
         this(subsystem, DEFAULT_TIMEOUT_SECONDS);
     }

@@ -59,6 +59,9 @@ public class DriveSubsystem extends EntechSubsystem {
     private MecanumDrive robotDrive;
 
     private DriveMode currentDriveMode;
+    
+    private static final int COUNTER_RESET = 6;
+    private int holdYawSetPointCounter = COUNTER_RESET;
   
     public DriveSubsystem() {
     }
@@ -107,13 +110,13 @@ public class DriveSubsystem extends EntechSubsystem {
         setFieldAbsolute(RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE);
 
         noRotationFilter = new NoRotationFilter();
-        noRotationFilter.enable(false);
+        noRotationFilter.enable(true);
 
         precisionDriveFilter = new PrecisionDriveFilter();
         precisionDriveFilter.enable(false);
 
         yawHoldFilter = new HoldYawFilter();
-        yawHoldFilter.enable(false);
+        yawHoldFilter.enable(true);
         
 
 
@@ -159,9 +162,20 @@ public class DriveSubsystem extends EntechSubsystem {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             // We run the holdyaw filter just to get the dashboard updated.
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            DriverStation.reportWarning("Setpoint Updated to " + di.getYawAngleDegrees() ,false);
+            SmartDashboard.putNumber("YawInHoldFilter", di.getYawAngleDegrees());
+            holdYawSetPointCounter = COUNTER_RESET;
         } else {
+        	if (holdYawSetPointCounter > 0) {
+        		yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+                DriverStation.reportWarning("Setpoint Updated to " + di.getYawAngleDegrees() ,false);
+                SmartDashboard.putNumber("YawInHoldFilter", di.getYawAngleDegrees());
+                holdYawSetPointCounter--;
+        	}
             if (yawHoldFilter.isEnabled()) {
+            	yawHoldFilter.setApplyCalculations(true);
                 filtered = yawHoldFilter.filter(filtered);
+                yawHoldFilter.setApplyCalculations(false);
                 // printDI("DI(3)",filtered);
             } else {
     		    filtered = noRotationFilter.filter(filtered);

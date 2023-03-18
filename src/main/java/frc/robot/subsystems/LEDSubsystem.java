@@ -14,6 +14,7 @@ public class LEDSubsystem extends EntechSubsystem{
   public LEDSubsystem() {
 	  leds = new AddressableLED(RobotConstants.PWM.LED_STRIP);
 	  buffer = new AddressableLEDBuffer(NUM_LEDS);
+	 
 	  leds.setLength(buffer.getLength());
 	  setNormal();	  
   }

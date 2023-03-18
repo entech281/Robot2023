@@ -11,7 +11,7 @@ public class RobotYawPIDController extends PIDController {
 	private static final double P_GAIN = 0.00;
 	private static final double I_GAIN = 0.00;
     private static final double D_GAIN = 0.00;
-    private static final double ANGLE_TOLERANCE = 1;
+    private static final double ANGLE_TOLERANCE = 2;
     private static final double SPEED_LIMIT = 0.5;
     private static final int STOP_COUNT = 4;
     private StoppingCounter counter;
