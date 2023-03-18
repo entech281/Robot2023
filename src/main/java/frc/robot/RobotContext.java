@@ -93,7 +93,12 @@ public class RobotContext {
     		}
     	}
     	if ( robotState.getLateralOffset().isPresent()) {
-    		ledSubsystem.setColor(getAlignColor(robotState.getLateralOffset().get()));
+    		Color c = getAlignColor(robotState.getLateralOffset().get());
+    		ledSubsystem.setColor(c);
+    		robotState.alignState = c;
+    	}
+    	else {
+    		ledSubsystem.setNormal();
     	}
     }    
     

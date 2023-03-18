@@ -1,8 +1,10 @@
 package frc.robot;
+
 import java.util.Optional;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.commands.supplier.LateralOffsetSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.pose.AprilTagLocation;
@@ -20,6 +22,7 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 	public Optional<AprilTagLocation> selectedTag = Optional.empty();
 	public double cameraY = 0;
 	public double movingAverageY = 0.0;
+	public Color alignState = Color.kBlack;
 	
 	@Override	
 	public Optional<Double> getLateralOffset(){
@@ -54,6 +57,7 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 		sb.addDoubleProperty("OurYOffset", () -> { return SendableUtil.doubleForOptional(lateralOffsetOurs) ;},null );
 		sb.addDoubleProperty("CameraY", () -> { return cameraY ;},null );
 		sb.addDoubleProperty("CameraY:MovAvg", () -> { return cameraY ;},null );
+		sb.addStringProperty("AlignColor", () -> { return alignState.toString() ;}, null);
 	}
 
 

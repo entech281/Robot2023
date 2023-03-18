@@ -11,6 +11,13 @@ import frc.robot.RobotConstants;
  */
 public class LEDSubsystem extends EntechSubsystem{
 
+  public LEDSubsystem() {
+	  leds = new AddressableLED(RobotConstants.PWM.LED_STRIP);
+	  buffer = new AddressableLEDBuffer(NUM_LEDS);
+	  leds.setLength(buffer.getLength());
+	  setNormal();	  
+  }
+  
   private AddressableLED leds;
   private AddressableLEDBuffer buffer;
   
@@ -18,10 +25,7 @@ public class LEDSubsystem extends EntechSubsystem{
   
   @Override
   public void initialize() {
-	  leds = new AddressableLED(RobotConstants.PWM.LED_STRIP);
-	  buffer = new AddressableLEDBuffer(NUM_LEDS);
-	  leds.setLength(buffer.getLength());
-	  setNormal();
+
   }
 
 
