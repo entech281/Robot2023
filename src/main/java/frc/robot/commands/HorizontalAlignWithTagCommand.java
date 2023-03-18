@@ -86,6 +86,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
     @Override
     public void end(boolean interrupted) {
+    	drive.setHoldYawAngle(yawPid.getSetpoint());
         drive.stop();     
     }
 
