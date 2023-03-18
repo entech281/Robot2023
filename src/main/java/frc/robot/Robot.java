@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
 	RobotState robotState = new RobotState();
 	shuffleboardInterface.addRobotState(robotState);
 	robotContext = new RobotContext(
-			robotState,drive,navx,vision, new VisionFirstNavxAsBackupPoseEstimator(true)
+			robotState,drive,navx,vision, led,new VisionFirstNavxAsBackupPoseEstimator(true)
 	);	
 	commandFactory = new CommandFactory(robotState,allSubsystems);
 

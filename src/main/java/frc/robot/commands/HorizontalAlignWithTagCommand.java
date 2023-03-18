@@ -26,7 +26,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
     private static final double LATERAL_P_GAIN = 0.02;
     private static final double LATERAL_I_GAIN = 0.001;	
 
-    public static final double TOLERANCE_METERS = 0.06;
+
     
     protected final DriveSubsystem drive;
     protected final LEDSubsystem led;
@@ -80,12 +80,6 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();        	
         	double calcValue = lateralPid.calculate(lateralOffset);      	
         	newDi.setRight(calcValue);
-        	if ( Math.abs(lateralOffset) < TOLERANCE_METERS) {
-        		led.setAligned();
-        	}
-        	else {
-        		led.setAligning();
-        	}
         }
         drive.drive(newDi);
     }
@@ -93,7 +87,6 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
     @Override
     public void end(boolean interrupted) {
         drive.stop();     
-        led.setNormal();
     }
 
     @Override

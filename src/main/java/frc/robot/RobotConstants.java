@@ -122,6 +122,9 @@ public final class RobotConstants {
     public interface ALIGNMENT{
         public static final double ANGLE_TOLERANCE_DEGREES = 2.0;
         public static final double DISTANCE_TOLERANCE_METERS = 0.0508;
+        public static final double ALIGN_TOLERANCE_METERS = 0.06;
+        public static final double ALIGN_CLOSE_METERS = 0.2;
+        public static final double ALIGN_KINDA_CLOSE_METERS = 0.5;        
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
