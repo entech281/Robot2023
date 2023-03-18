@@ -15,8 +15,9 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   private final NavXSubSystem navx;
   private boolean pitch_seen;
   private int pitch_stable_count;
+  private double speed = 0.0;
   private static final int    ROBOT_STABLE_COUNT = 50;
-  private static final double DRIVE_SPEED = 0.3;
+  private static final double DRIVE_SPEED = 0.15;
   private static final double PITCH_THRESHOLD = 12.0;
 
   /**
@@ -29,7 +30,22 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
       super(dsubsys,nsubsys);
       drive = dsubsys;
       navx = nsubsys;
+      speed = DRIVE_SPEED;
   }
+
+  /**
+   * Creates a new DriveForwardToBalanceCommand.
+   *
+   * @param dsubsys Drive subsystem used by this command.
+   * @param nsubsys NavX subsystem used for pitch measurement
+   * @param speed Drive speed (forward is positive, default)
+   */
+  public DriveForwardToBalanceCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, double speed) {
+    super(dsubsys,nsubsys);
+    drive = dsubsys;
+    navx = nsubsys;
+    this.speed = speed;
+}
 
   // Called when the command is initially scheduled.
   @Override
@@ -42,7 +58,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    DriveInput di=new DriveInput(DRIVE_SPEED,0.0,0.0, 0.0);
+    DriveInput di=new DriveInput(speed,0.0,0.0, 0.0);
     double pitch_angle = navx.getPitch();
     if (!pitch_seen) {
         if (Math.abs(pitch_angle) > PITCH_THRESHOLD) {
@@ -55,7 +71,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
             pitch_stable_count += 1;
         } else {
             pitch_stable_count = 0;
-            di.setForward(Math.copySign(DRIVE_SPEED, pitch_angle));
+            di.setForward(Math.copySign(speed, pitch_angle));
             drive.drive(di);
         }
     }
