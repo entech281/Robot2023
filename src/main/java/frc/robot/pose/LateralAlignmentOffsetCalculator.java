@@ -1,81 +1,51 @@
 package frc.robot.pose;
 
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 
 public class LateralAlignmentOffsetCalculator {
-    private final ScoringLocation target;
 
-    public LateralAlignmentOffsetCalculator(Pose2d robotPose) {
-        target = getNearestScoringLocaton(robotPose);
+    public LateralAlignmentOffsetCalculator() {
     }
 
-    public double getLateralOffset(Pose2d robotPose) {
-        double robotY = robotPose.getY();
-        double nodeDistanceToTarget = target.getSelectedNode().getYMeters();
-        double aprilTagYCoordinate = target.getSelectedTag().getYMeters();
-        double lateralAlignmentOffset = (aprilTagYCoordinate + nodeDistanceToTarget) + robotY;
-        return lateralAlignmentOffset;
-    }
-
-    public LateralOffset LateralOffsetToNearestScoringLocation(Pose2d robotPose) {
-        return new LateralOffset(getLateralOffset(robotPose), getNearestScoringLocaton(robotPose));
-    }
+    public LateralOffset getNearestScoringLocation(Pose2d robotPose) {
+        
+        ScoringLocation closest = null;
+		double closestSoFar = 999;
+		
+		List<AprilTagLocation> aprilTags = List.of( 
+				AprilTagLocation.BLUE_LEFT,
+				AprilTagLocation.BLUE_MIDDLE,
+				AprilTagLocation.BLUE_RIGHT,
+				AprilTagLocation.RED_LEFT,
+				AprilTagLocation.RED_MIDDLE,
+				AprilTagLocation.RED_RIGHT				
+		);
+		
+		List<TargetNode> targetNodes = List.of(
+			TargetNode.A1,
+			TargetNode.A2,
+			TargetNode.A3
+		);
+		
+		for ( AprilTagLocation at: aprilTags) {
+			for ( TargetNode tn: targetNodes) {
+				ScoringLocation s = new ScoringLocation(at,tn);
+				double dist = yDistanceBetween(robotPose, s);
+				if ( dist < closestSoFar ) {
+					closest = s;
+					closestSoFar = dist;
+				}
+			}
+		}
+		return new LateralOffset(closestSoFar, closest);
+	}
 	
-    private ScoringLocation getNearestScoringLocaton(Pose2d robotPose) {
-        double robotY = robotPose.getY();
-        double robotX = robotPose.getX();
-        if (robotX < 285.16) {
-            if (robotY < 75.19){
-                if (robotY < 37.875) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_LEFT, TargetNode.A1);
-                } else if (robotY > 48.125) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_LEFT, TargetNode.A3);
-                } else {
-                    return new ScoringLocation(AprilTagLocation.BLUE_LEFT, TargetNode.A2);
-                }
-            } else if(robotY > 141.19) {
-                if (robotY < 178.875) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_RIGHT, TargetNode.A1);
-                } else if (robotY > 189.125) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_RIGHT, TargetNode.A3);
-                } else {
-                    return new ScoringLocation(AprilTagLocation.BLUE_RIGHT, TargetNode.A2);
-                }
-            } else {
-                if (robotY < 112.875) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_MIDDLE, TargetNode.A1);
-                } else if (robotY > 123.125) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_MIDDLE, TargetNode.A3);
-                } else {
-                    return new ScoringLocation(AprilTagLocation.BLUE_MIDDLE, TargetNode.A2);
-                }
-            }
-        } else {
-            if (robotY < 75.19){
-                if (robotY < 37.875) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_RIGHT, TargetNode.A2);
-                } else if (robotY > 48.125) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_RIGHT, TargetNode.A3);
-                } else {
-                    return new ScoringLocation(AprilTagLocation.BLUE_RIGHT, TargetNode.A1);
-                }
-            } else if(robotY > 141.19) {
-                if (robotY < 178.875) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_LEFT, TargetNode.A2);
-                } else if (robotY > 189.125) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_LEFT, TargetNode.A3);
-                } else {
-                    return new ScoringLocation(AprilTagLocation.BLUE_LEFT, TargetNode.A1);
-                }
-            } else {
-                if (robotY < 112.875) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_MIDDLE, TargetNode.A2);
-                } else if (robotY > 123.125) {
-                    return new ScoringLocation(AprilTagLocation.BLUE_MIDDLE, TargetNode.A3);
-                } else {
-                    return new ScoringLocation(AprilTagLocation.BLUE_MIDDLE, TargetNode.A1);
-                }
-            }
-        }
+	    private static double yDistanceBetween ( Pose2d robotPose, ScoringLocation scoringLocation) {
+		    Pose2d scoringLocationPose = scoringLocation.computeAbsolutePose();
+		    return Math.abs(robotPose.getY() - scoringLocationPose.getY());
+		
+	    }
     }
-}
+    
