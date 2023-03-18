@@ -16,7 +16,7 @@ public final class RobotConstants {
     public interface PWM {
         public static final int PWM_0 = 0;
         public static final int PWM_1 = 1;
-        public static final int LED_STRIP = 9;
+        public static final int LED_STRIP = 8;
     }
     public interface INDICATOR_VALUES{
     	public static final double POSITION_UNKNOWN = -1.0;

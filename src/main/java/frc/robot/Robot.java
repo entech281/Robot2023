@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
     // Enable telematics of the SmartDashboard data.  Joystick data is currently true
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
-    led.setColor(Color.kWhite);
+    led.setColor(Color.kBisque);
   }
   private void setupShuffleboardInterface() {
 			

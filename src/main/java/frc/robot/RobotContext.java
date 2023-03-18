@@ -31,9 +31,9 @@ import frc.robot.subsystems.VisionSubsystem;
 public class RobotContext {
 	
 	public static final int NUM_SAMPLES = 3;
-    public static final double ALIGN_TOLERANCE_METERS = 0.06;
-    public static final double ALIGN_CLOSE_METERS = 0.2;
-    public static final double ALIGN_KINDA_CLOSE_METERS = 0.5;
+    public static final double ALIGN_TOLERANCE_METERS = 0.08;
+    public static final double ALIGN_CLOSE_METERS = 0.3;
+    public static final double ALIGN_KINDA_CLOSE_METERS = 0.8;
     
 	
 	private LateralAlignCalculator lateralAlignCalculator = new LateralAlignCalculator();
