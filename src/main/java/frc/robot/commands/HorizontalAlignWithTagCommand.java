@@ -24,9 +24,9 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
     private static final double YAW_P_GAIN = 0.02;
 
-    private static final double LATERAL_P_GAIN = 0.9;
-    private static final double LATERAL_I_GAIN = 0.02;	
-    private static final double LATERAL_D_GAIN = 0.015;
+    private static final double LATERAL_P_GAIN = 2.1;
+    private static final double LATERAL_I_GAIN = 0.1;	
+    private static final double LATERAL_D_GAIN = 0.215;
 
 
     
@@ -73,6 +73,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
     public void initialize() {
     	//lets hold it whereever we started
     	yawSetPoint	= operatorInput.get().getYawAngleDegrees();
+        lateralPid.reset();
     }
 
     @Override
