@@ -21,7 +21,7 @@ public class LEDSubsystem extends EntechSubsystem{
   private AddressableLED leds;
   private AddressableLEDBuffer buffer;
   
-  public static int NUM_LEDS = 20;
+  public static int NUM_LEDS = 10;
   
   @Override
   public void initialize() {

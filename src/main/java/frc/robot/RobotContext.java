@@ -30,7 +30,7 @@ import frc.robot.subsystems.VisionSubsystem;
  */
 public class RobotContext {
 	
-	public static final int NUM_SAMPLES = 5;
+	public static final int NUM_SAMPLES = 3;
     public static final double ALIGN_TOLERANCE_METERS = 0.06;
     public static final double ALIGN_CLOSE_METERS = 0.2;
     public static final double ALIGN_KINDA_CLOSE_METERS = 0.5;
@@ -86,10 +86,10 @@ public class RobotContext {
     		robotState.alignState = c;      		
     		
     	}
-    	else {
-    		robotState.closestScoringLocationOffset = Optional.empty();
-    		ledSubsystem.setNormal();
-    	}
+//    	else {
+//    		robotState.closestScoringLocationOffset = Optional.empty();
+//    		ledSubsystem.setNormal();
+//    	}
     	
     }    
     

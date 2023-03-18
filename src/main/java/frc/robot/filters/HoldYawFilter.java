@@ -10,7 +10,7 @@ import frc.robot.controllers.RobotYawPIDController;
  */
 public class HoldYawFilter extends DriveInputFilter {
 
-    private static final double P_GAIN = 0.02;
+    private static final double P_GAIN = 0.01;
     private static final double I_GAIN = 0.001;
     private static final double MAX_ROT = 0.2;
     private static final double TOLERANCE = 2.0;
@@ -28,7 +28,7 @@ public class HoldYawFilter extends DriveInputFilter {
 
     public DriveInput doFilter(DriveInput inputDI) {
 
-        if (!isEnabled() || !setPointValid) {
+        if ( !setPointValid) {
             return inputDI;
         }
         DriveInput outDI = new DriveInput(inputDI);

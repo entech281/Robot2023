@@ -21,7 +21,7 @@ import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
 import frc.robot.filters.RobotRelativeDriveFilter;
-import frc.robot.filters.RotationDampingFilter;
+import frc.robot.filters.SquareInputsFilter;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.NoRotationFilter;
@@ -45,7 +45,7 @@ public class DriveSubsystem extends EntechSubsystem {
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
     private PrecisionDriveFilter precisionDriveFilter;
-    private RotationDampingFilter rotationDampingFilter;
+    private SquareInputsFilter rotationDampingFilter;
     
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder rearLeftEncoder;
@@ -98,6 +98,10 @@ public class DriveSubsystem extends EntechSubsystem {
         jsDeadbandFilter.enable(true);
         jsDeadbandFilter.setDeadband(0.15);
 
+        rotationDampingFilter = new SquareInputsFilter();
+        rotationDampingFilter.setDampingFactor(RobotConstants.DRIVE.ROTATION_DAMPING_FACTOR);
+        rotationDampingFilter.enable(true);
+        
         robotRelativeFilter = new RobotRelativeDriveFilter();
         yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
         setFieldAbsolute(RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE);
@@ -111,9 +115,7 @@ public class DriveSubsystem extends EntechSubsystem {
         yawHoldFilter = new HoldYawFilter();
         yawHoldFilter.enable(false);
         
-        rotationDampingFilter = new RotationDampingFilter();
-        rotationDampingFilter.setDampingFactor(RobotConstants.DRIVE.ROTATION_DAMPING_FACTOR);
-        rotationDampingFilter.enable(true);
+
 
     }
 
@@ -147,6 +149,8 @@ public class DriveSubsystem extends EntechSubsystem {
         // printDI("DI(0):",di);
     	DriveInput filtered = di;
         filtered = jsDeadbandFilter.filter(filtered);
+        filtered = rotationDampingFilter.filter(filtered);
+        
         // printDI("DI(1):",filtered);
         filtered = precisionDriveFilter.filter(filtered);
         // printDI("DI(2):",filtered);
@@ -173,7 +177,7 @@ public class DriveSubsystem extends EntechSubsystem {
             // printDI("DI(6)",filtered);
             }
     	
-    	filtered = rotationDampingFilter.filter(filtered);
+    	
         // printDI("DI(7)",filtered);
         drive(filtered);
     }

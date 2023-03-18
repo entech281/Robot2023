@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.ExceptionHandler;
@@ -90,6 +91,7 @@ public class Robot extends TimedRobot {
     // Enable telematics of the SmartDashboard data.  Joystick data is currently true
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
+    led.setColor(Color.kBisque);
   }
   private void setupShuffleboardInterface() {
 			
