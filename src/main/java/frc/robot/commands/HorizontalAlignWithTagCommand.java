@@ -4,10 +4,12 @@ import java.util.function.Supplier;
 
 import frc.robot.commands.supplier.LateralOffsetSupplier;
 import frc.robot.controllers.RobotLateralPIDController;
-import frc.robot.controllers.RobotYawPIDController;
 import frc.robot.filters.DriveInput;
+import frc.robot.filters.JoystickDeadbandFilter;
+import frc.robot.filters.SquareInputsFilter;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.RobotConstants;
 
 /**
  * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -20,13 +22,11 @@ import frc.robot.subsystems.LEDSubsystem;
  */
 public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
-    private static final double YAW_P_GAIN = 0.01;
-    private static final double YAW_I_GAIN = 0.001;	
-    private static final double YAW_D_GAIN = 0.0;
+    private static final double YAW_P_GAIN = 0.02;
 
-    private static final double LATERAL_P_GAIN = 0.05;
-    private static final double LATERAL_I_GAIN = 0.0075;	
-    private static final double LATERAL_D_GAIN = 0.001;
+    private static final double LATERAL_P_GAIN = 0.9;
+    private static final double LATERAL_I_GAIN = 0.02;	
+    private static final double LATERAL_D_GAIN = 0.015;
 
 
     
@@ -35,7 +35,9 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
     protected final LateralOffsetSupplier lateralOffsetSupplier;
     protected final Supplier<DriveInput> operatorInput;
     private RobotLateralPIDController lateralPid;
-    private RobotYawPIDController yawPid;
+    private double yawSetPoint;
+    private JoystickDeadbandFilter jsDeadbandFilter;
+    private SquareInputsFilter squareInputsFilter;
     
 
 
@@ -57,40 +59,44 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         lateralPid.setD(LATERAL_D_GAIN);
         lateralPid.setSetpoint(0);        
         lateralPid.reset();
-        
-        yawPid = new RobotYawPIDController();
-        yawPid.setP(YAW_P_GAIN);
-        yawPid.setI(YAW_I_GAIN);
-        yawPid.setD(YAW_D_GAIN);
-        yawPid.reset();
-                
+
+        jsDeadbandFilter = new JoystickDeadbandFilter();
+        jsDeadbandFilter.enable(true);
+        jsDeadbandFilter.setDeadband(0.15);
+
+        squareInputsFilter = new SquareInputsFilter();
+        squareInputsFilter.setDampingFactor(RobotConstants.DRIVE.ROTATION_DAMPING_FACTOR);
+        squareInputsFilter.enable(true);
     }
     
     @Override
     public void initialize() {
     	//lets hold it whereever we started
-    	yawPid.setSetpoint(operatorInput.get().getYawAngleDegrees());    	
+    	yawSetPoint	= operatorInput.get().getYawAngleDegrees();
     }
 
     @Override
     public void execute() {
         DriveInput di = operatorInput.get();        
         DriveInput newDi = new DriveInput(di);
+
+        newDi = jsDeadbandFilter.filter(newDi);
+        newDi = squareInputsFilter.filter(newDi);
         
-        double rot = yawPid.calculate(di.getYawAngleDegrees());
+        double rot = YAW_P_GAIN*(di.getYawAngleDegrees() - yawSetPoint);
         newDi.setRotation(rot);
         
         if (lateralOffsetSupplier.getLateralOffset().isPresent()) {
         	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();        	
         	double calcValue = lateralPid.calculate(lateralOffset);
-        	newDi.setRight(calcValue);
+        	newDi.setRight(-calcValue);
         }
         drive.drive(newDi);
     }
 
     @Override
     public void end(boolean interrupted) {
-    	drive.setHoldYawAngle(yawPid.getSetpoint());
+    	drive.setHoldYawAngle(yawSetPoint);
         drive.stop();     
     }
 
