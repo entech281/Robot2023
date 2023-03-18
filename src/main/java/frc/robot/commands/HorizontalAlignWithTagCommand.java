@@ -58,7 +58,6 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         yawPid = new RobotYawPIDController();
         yawPid.setP(YAW_P_GAIN);
         yawPid.setI(YAW_I_GAIN);
-
         yawPid.reset();
                 
     }
@@ -88,8 +87,6 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         		led.setAligning();
         	}
         }
-        
-        
         drive.drive(newDi);
     }
 
