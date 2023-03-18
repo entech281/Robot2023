@@ -214,6 +214,14 @@ public class CommandFactory {
         return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.RIGHT);
     }
 
+    public Command oneLocationLeftCommand() {
+        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.SCORE_LEFT);
+    }
+
+    public Command oneLocationRightCommand() {
+        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.SCORE_RIGHT);
+    }
+    
     public Command nudgeForwardCommand() {
         return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.FORWARD);
     }
