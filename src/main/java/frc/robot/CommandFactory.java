@@ -37,6 +37,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.GripperSubsystem.GripperState;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
@@ -54,6 +55,7 @@ public class CommandFactory {
 	private ArmSubsystem armSubsystem;
 	private ElbowSubsystem elbowSubsystem;
 	private GripperSubsystem gripperSubsystem;
+	private LEDSubsystem ledSubsystem;
 
     public CommandFactory(RobotState robotState, SubsystemHolder allSubsystems ){
     	this.driveSubsystem = allSubsystems.getDrive();
@@ -63,6 +65,7 @@ public class CommandFactory {
         this.elbowSubsystem = allSubsystems.getElbow();
         this.gripperSubsystem = allSubsystems.getGripper();
         this.robotState = robotState;
+        this.ledSubsystem = allSubsystems.getLED();
     }
 
     public List<Command> getAutoCommandChoices(){
@@ -192,7 +195,7 @@ public class CommandFactory {
 	}
 
     public Command alignHorizontalToTag( Supplier<DriveInput> operatorInput) {
-  		return new HorizontalAlignWithTagCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState );
+  		return new HorizontalAlignWithTagCommand(driveSubsystem,ledSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState );
     }	
 
     public Command snapYawDegreesCommand(double angle) {

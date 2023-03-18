@@ -25,6 +25,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveMode;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
@@ -60,9 +61,9 @@ public class Robot extends TimedRobot {
 	VisionSubsystem vision = new VisionSubsystem();
 	NavXSubSystem navx = new NavXSubSystem();
 	DriveSubsystem drive = new DriveSubsystem();
-
+	LEDSubsystem led = new LEDSubsystem();
 	
-	allSubsystems = new SubsystemHolder(drive,navx,vision,arm,elbow,gripper);
+	allSubsystems = new SubsystemHolder(drive,navx,vision,arm,elbow,gripper,led);
 	
 	allSubsystems.asList().forEach((s)-> {
 		if ( s.isEnabled()) {

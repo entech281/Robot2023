@@ -11,14 +11,15 @@ public class SubsystemHolder {
 	private ArmSubsystem arm;
 	private ElbowSubsystem elbow;
 	private GripperSubsystem gripper;
-	
-	public SubsystemHolder(DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm, ElbowSubsystem elbow,GripperSubsystem gripper) {
+	private LEDSubsystem led;
+	public SubsystemHolder(DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm, ElbowSubsystem elbow,GripperSubsystem gripper, LEDSubsystem led) {
 		this.drive = drive;
 		this.navx = navx;
 		this.vision = vision;
 		this.arm = arm;
 		this.elbow = elbow;
 		this.gripper = gripper;
+		this.led = led;
 	}
 	
 	public List<EntechSubsystem> asList(){
@@ -47,4 +48,8 @@ public class SubsystemHolder {
 	public GripperSubsystem getGripper() {
 		return gripper;
 	}	
+	
+	public LEDSubsystem getLED() {
+		return led;
+	}
 }
