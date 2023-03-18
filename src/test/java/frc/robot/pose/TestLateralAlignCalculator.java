@@ -16,26 +16,24 @@ public class TestLateralAlignCalculator {
 	@Test
 	public void testLowerLeftCorner() {
 		
-		Pose2d bottmLeftCornerFacingBack = new Pose2d(0,0, Rotation2d.fromDegrees(180));
-		
-		LateralOffset lo = lac.findOffsetToNearestTarget(bottmLeftCornerFacingBack);
+		LateralOffset lo = lac.findOffsetToNearestTarget(0,0);
 		ScoringLocation selectedLoc = lo.getNearestLocation();
 		assertEquals(8, selectedLoc.getSelectedTag().getId());
-		assertEquals(TargetNode.A1, selectedLoc.getSelectedNode().getNodeID());
-		assertEquals(0.276, lo.getLateralOffsetToLocationMeters(),TOLERANCE);		
+		assertEquals(TargetNode.A1.getNodeID(), selectedLoc.getSelectedNode().getNodeID());
+		assertEquals(0.512, lo.getNearestLocation().computeAbsolutePose().getY(),TOLERANCE);
+		assertEquals(0.512, lo.getLateralOffsetToLocationMeters(),TOLERANCE);		
 	}
 	
 	@Test
 	public void testRightInFrontOfTag8GivesCenterLocation() {
 		
 		double TAG_8_X_IN = Units.inchesToMeters(40.45);
-		double TAG_8_Y_IN = Units.inchesToMeters(42.19);
-		Pose2d directlyInFrontOfTag8 = new Pose2d(TAG_8_X_IN,TAG_8_Y_IN, Rotation2d.fromDegrees(180));
+		double TAG_8_Y_IN = Units.inchesToMeters(42.19);		
 		
-		LateralOffset lo = lac.findOffsetToNearestTarget(directlyInFrontOfTag8);
+		LateralOffset lo = lac.findOffsetToNearestTarget(TAG_8_X_IN,TAG_8_Y_IN);
 		ScoringLocation selectedLoc = lo.getNearestLocation();
 		assertEquals(8, selectedLoc.getSelectedTag().getId());
-		assertEquals(TargetNode.A2, selectedLoc.getSelectedNode().getNodeID());
+		assertEquals(TargetNode.A2.getNodeID(), selectedLoc.getSelectedNode().getNodeID());
 		assertEquals(0.0, lo.getLateralOffsetToLocationMeters(),TOLERANCE);		
 	}	
 	

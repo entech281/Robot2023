@@ -5,6 +5,9 @@ import java.util.Optional;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.pose.LateralAlignCalculator;
+import frc.robot.pose.LateralOffset;
+import frc.robot.pose.MovingAveragePose;
 import frc.robot.pose.PoseEstimator;
 import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.subsystems.DriveStatus;
@@ -32,7 +35,10 @@ public class RobotContext {
     public static final double ALIGN_CLOSE_METERS = 0.2;
     public static final double ALIGN_KINDA_CLOSE_METERS = 0.5;
     
-	LinearFilter movingAverage = LinearFilter.movingAverage(NUM_SAMPLES);
+	
+	private LateralAlignCalculator lateralAlignCalculator = new LateralAlignCalculator();
+	private MovingAveragePose movingAveragePose = new MovingAveragePose(NUM_SAMPLES);
+	private LinearFilter movingAverageY = LinearFilter.movingAverage(NUM_SAMPLES);
 	
 	//inject just what we need. later we might need arm-- we can add it then
 	public RobotContext(
@@ -64,42 +70,27 @@ public class RobotContext {
     	
     	robotState.yawAngleDegrees = navXSubSystem.getYaw();
     	robotState.cameraY = vs.getCameraY();
-    	robotState.movingAverageY = movingAverage.calculate(vs.getCameraY());
-
-    	
-    	//our estimate for the pose
-    	Optional<Pose2d> estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
+    	robotState.movingAverageY = movingAverageY.calculate(vs.getCameraY());
         
     	//photonvision pose estimate
     	Optional<Pose2d> photonEstimatedPose = vs.getPhotonEstimatedPose2d();
-    	
-    	//target, if we have one
-    	Optional<Double> targetY = getTargetY(vs);
-
-    	
-    	if ( estimatedRobotPose.isPresent() ){
-    		double poseY = estimatedRobotPose.get().getY();
-    		robotState.ourPoseY = Optional.of(poseY);
-    		if ( targetY.isPresent()) {
-    			robotState.lateralOffsetOurs = Optional.of(targetY.get()- poseY);
-    		}
-    	}
 
     	if ( photonEstimatedPose.isPresent() ){
-    		double poseY = estimatedRobotPose.get().getY();
-    		robotState.photonPoseY = Optional.of(poseY);
-    		if ( targetY.isPresent()) {
-    			robotState.lateralOffsetPhoton = Optional.of(targetY.get()- poseY);
-    		}
-    	}
-    	if ( robotState.getLateralOffset().isPresent()) {
-    		Color c = getAlignColor(robotState.getLateralOffset().get());
+    		Pose2d pep = photonEstimatedPose.get();
+    		movingAveragePose.update(pep);
+    		LateralOffset lateralOffset = lateralAlignCalculator.findOffsetToNearestTarget(movingAveragePose.getX(), movingAveragePose.getY());
+    		robotState.closestScoringLocationOffset = Optional.of(lateralOffset);
+
+    		Color c = getAlignColor(lateralOffset.getLateralOffsetToLocationMeters());
     		ledSubsystem.setColor(c);
-    		robotState.alignState = c;
+    		robotState.alignState = c;      		
+    		
     	}
     	else {
+    		robotState.closestScoringLocationOffset = Optional.empty();
     		ledSubsystem.setNormal();
     	}
+    	
     }    
     
     private Color getAlignColor(double difference) {
@@ -117,15 +108,7 @@ public class RobotContext {
     		return Color.kBlueViolet;
     	}
     }
-    private Optional<Double> getTargetY(VisionStatus vs ){
-    	if ( vs.getBestAprilTagTarget().isPresent()) {
-    		RecognizedAprilTagTarget rat = vs.getBestAprilTagTarget().get();
 
-    		robotState.selectedTag = Optional.ofNullable(rat.getTagLocation());
-    		return Optional.of(rat.getY());
-    	}    	
-    	return Optional.empty();
-    }
 
     private RobotState robotState;
 	private DriveSubsystem driveSubsystem;

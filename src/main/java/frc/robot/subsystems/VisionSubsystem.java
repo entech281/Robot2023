@@ -20,6 +20,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -171,7 +172,13 @@ public class VisionSubsystem extends EntechSubsystem {
 	  Transform3d T = PoseUtil.cameraToTarget(Units.inchesToMeters(48),Units.inchesToMeters(3),180);
 	  newStatus.setLatency(20);
 	  newStatus.addRecognizedTarget(new RecognizedAprilTagTarget(T, AprilTagLocation.BLUE_MIDDLE,null));
-	    
+  	  newStatus.setCameraY(T.getY());
+  	  
+  	  
+  	  newStatus.setPhotonEstimatedPose(
+  			  new Pose3d(new Pose2d(
+  					  3.0,2.0,Rotation2d.fromDegrees(0)
+  	  )));
 	  currentStatus = newStatus;
 	  debugStatus();
 }  
