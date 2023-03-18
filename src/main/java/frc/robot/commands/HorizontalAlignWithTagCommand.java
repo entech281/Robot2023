@@ -34,8 +34,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
     protected final Supplier<DriveInput> operatorInput;
     private RobotLateralPIDController lateralPid;
     private RobotYawPIDController yawPid;
-    
-    private double startingYawAngle = 0.0;
+
 
 
     /**
@@ -58,14 +57,16 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         yawPid = new RobotYawPIDController();
         yawPid.setP(YAW_P_GAIN);
         yawPid.setI(YAW_I_GAIN);
+
         yawPid.reset();
                 
     }
     
     @Override
     public void initialize() {
-    	//lets hold it here
-    	startingYawAngle = operatorInput.get().getYawAngleDegrees();
+    	//lets hold it whereever we started
+    	yawPid.setSetpoint( operatorInput.get().getYawAngleDegrees());;
+    	
     }
 
     @Override
