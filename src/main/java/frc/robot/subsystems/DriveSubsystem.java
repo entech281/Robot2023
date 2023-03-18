@@ -21,6 +21,7 @@ import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
 import frc.robot.filters.RobotRelativeDriveFilter;
+import frc.robot.filters.RotationDampingFilter;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.NoRotationFilter;
@@ -44,6 +45,7 @@ public class DriveSubsystem extends EntechSubsystem {
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
     private PrecisionDriveFilter precisionDriveFilter;
+    private RotationDampingFilter rotationDampingFilter;
     
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder rearLeftEncoder;
@@ -108,6 +110,10 @@ public class DriveSubsystem extends EntechSubsystem {
 
         yawHoldFilter = new HoldYawFilter();
         yawHoldFilter.enable(false);
+        
+        rotationDampingFilter = new RotationDampingFilter();
+        rotationDampingFilter.setDampingFactor(RobotConstants.DRIVE.ROTATION_DAMPING_FACTOR);
+        rotationDampingFilter.enable(true);
 
     }
 
@@ -167,6 +173,7 @@ public class DriveSubsystem extends EntechSubsystem {
             // printDI("DI(6)",filtered);
             }
     	
+    	filtered = rotationDampingFilter.filter(filtered);
         // printDI("DI(7)",filtered);
         drive(filtered);
     }

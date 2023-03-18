@@ -134,6 +134,7 @@ public final class RobotConstants {
         public static final double METERS_PER_GEARBOX_REVOLTION = 3.14*6.0/39.37;
     	public static final boolean DEFAULT_FIELD_ABSOLUTE = false;
         public static final double PRECISION_DRIVE_FACTOR = 0.4;
+        public static final double ROTATION_DAMPING_FACTOR = 0.5;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
