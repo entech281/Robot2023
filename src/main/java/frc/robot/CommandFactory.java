@@ -150,7 +150,7 @@ public class CommandFactory {
             	new ZeroGyroCommand(navxSubsystem)
                 , new GripperCommand(gripperSubsystem, GripperState.kClose)
                 , new DriveSetBrake(driveSubsystem)
-                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)            
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
                 , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
                 , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
                 , new WaitCommand(1.0)
@@ -228,7 +228,7 @@ public class CommandFactory {
 	}
 
     public Command alignHorizontalToTag( Supplier<DriveInput> operatorInput) {
-  		return new HorizontalAlignWithTagCommand(driveSubsystem,ledSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState );
+  		return new HorizontalAlignWithTagCommand(driveSubsystem, ledSubsystem, addYawToOperatorJoystickInput(operatorInput), robotState);
     }	
 
     public Command snapYawDegreesCommand(double angle) {
