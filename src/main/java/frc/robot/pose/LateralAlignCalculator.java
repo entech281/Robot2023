@@ -46,7 +46,8 @@ public class LateralAlignCalculator {
 			for ( TargetNode tn: targetNodes) {
 				ScoringLocation s = new ScoringLocation(at,tn);
 				double dist = yDistanceBetween(y, s);
-				if ( dist < closestSoFar ) {
+				
+				if ( Math.abs(dist) < Math.abs(closestSoFar )) {
 					closest = s;
 					closestSoFar = dist;
 				}
@@ -58,7 +59,7 @@ public class LateralAlignCalculator {
 	
 	private static double yDistanceBetween (double  y, ScoringLocation scoringLocation) {
 		Pose2d scoringLocationPose = scoringLocation.computeAbsolutePose();
-		return Math.abs(y - scoringLocationPose.getY());
+		return scoringLocationPose.getY() - y;
 		
 	}	
 }
