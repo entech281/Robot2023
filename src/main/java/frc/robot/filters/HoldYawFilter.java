@@ -1,7 +1,6 @@
 package frc.robot.filters;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.controllers.RobotYawPIDController;
 
 /**
  * Changes the rotation
@@ -11,30 +10,13 @@ import frc.robot.controllers.RobotYawPIDController;
 public class HoldYawFilter extends DriveInputFilter {
 
     private static final double P_GAIN = 0.05;
-    private static final double I_GAIN = 0.00075;
-    private static final double D_GAIN = 0.001;
     private static final double MAX_ROT = 0.2;
     private static final double TOLERANCE = 2.0;
     private static double yawSetPoint = 0.0;
     private static boolean setPointValid;
-    private RobotYawPIDController pid;
-    private boolean applyCalculations = false;
-    
-    public boolean isApplyCalculations() {
-		return applyCalculations;
-	}
-
-	public void setApplyCalculations(boolean applyCalculations) {
-		this.applyCalculations = applyCalculations;
-	}
 
 	public HoldYawFilter() {
         setPointValid = false;
-        pid = new RobotYawPIDController();
-        pid.setP(P_GAIN);
-        pid.setI(I_GAIN);
-        pid.setD(D_GAIN);
-        pid.reset();
     }
 
     public DriveInput doFilter(DriveInput inputDI) {
@@ -59,9 +41,8 @@ public class HoldYawFilter extends DriveInputFilter {
         if (Math.abs(delta) < TOLERANCE) {
         	rot = 0.0;
         }
-        if ( isApplyCalculations() ) {
-            outDI.setRotation(rot);        	
-        }
+        outDI.setRotation(rot);        	
+
 
         SmartDashboard.putNumber("HoldYaw meas", inputDI.getYawAngleDegrees());
         SmartDashboard.putNumber("HoldYaw setp", yawSetPoint);
@@ -72,7 +53,6 @@ public class HoldYawFilter extends DriveInputFilter {
     public void updateSetpoint( double yaw ) {
         yawSetPoint = yaw;
         setPointValid = true;
-        pid.setSetpoint(yawSetPoint);
     }
 
     public boolean isSetpointValid() {

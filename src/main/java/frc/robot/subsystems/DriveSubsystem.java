@@ -162,20 +162,14 @@ public class DriveSubsystem extends EntechSubsystem {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             // We run the holdyaw filter just to get the dashboard updated.
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
-            DriverStation.reportWarning("Setpoint Updated to " + di.getYawAngleDegrees() ,false);
-            SmartDashboard.putNumber("YawInHoldFilter", di.getYawAngleDegrees());
             holdYawSetPointCounter = COUNTER_RESET;
         } else {
         	if (holdYawSetPointCounter > 0) {
         		yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
-                DriverStation.reportWarning("Setpoint Updated to " + di.getYawAngleDegrees() ,false);
-                SmartDashboard.putNumber("YawInHoldFilter", di.getYawAngleDegrees());
                 holdYawSetPointCounter--;
         	}
             if (yawHoldFilter.isEnabled()) {
-            	yawHoldFilter.setApplyCalculations(true);
                 filtered = yawHoldFilter.filter(filtered);
-                yawHoldFilter.setApplyCalculations(false);
                 // printDI("DI(3)",filtered);
             } else {
     		    filtered = noRotationFilter.filter(filtered);

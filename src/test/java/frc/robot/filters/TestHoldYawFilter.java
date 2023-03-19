@@ -14,7 +14,6 @@ public class TestHoldYawFilter {
         DriveInput di = new DriveInput (0.5, -0.75, 0.0, 175.0);
 
         filter.enable(true);
-        filter.setApplyCalculations(true);
         filter.updateSetpoint(179.0);
         DriveInput r = filter.filter(di);
         assertTrue(r.getRotation() < 0.0);
@@ -31,7 +30,6 @@ public class TestHoldYawFilter {
         DriveInput di = new DriveInput (0.5, -0.75, 0.0, 175.0);
 
         filter.enable(true);
-        filter.setApplyCalculations(true);
         filter.updateSetpoint(179.0);
         DriveInput ref = filter.filter(di);
 
