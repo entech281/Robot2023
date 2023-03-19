@@ -54,7 +54,7 @@ public class NudgeDirectionCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        drive.drive(direction );
+        drive.driveFilterYawOnly(direction );
     }
 
     @Override
@@ -64,7 +64,8 @@ public class NudgeDirectionCommand extends EntechCommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.get() > NUDGE_TIME;
+        //return timer.get() > NUDGE_TIME;
+    	return false;
     }
 
     @Override
