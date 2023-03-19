@@ -72,13 +72,18 @@ public class CommandFactory {
     public List<Command> getAutoCommandChoices(){
     	//these commands will be available for autonomous mode on the PREMATCH tab
         // First option in list will be the default choice
-        Command c5 = autonomousFarCommand();
-        c5.setName("Autonomous Far");
-        Command c6 = autonomousBalanceDeadRecCommand();
-        c6.setName("Autonomous Balance DeadRec");
-        Command c7 = autonomousAutoBalanceCommand();
-        c7.setName("Autonomous AutoBalance");
-    	return List.of( c5, c6, c7 );
+
+    	
+    	//"RIGHT" means from the driver perspective looking towards the field
+    	//ALSO: the robot is facing opposite that way
+    	//both authonomous right and autonomous left should move the robout slightly OUTwards
+    	return List.of( 
+    			autonomousAutoBalanceCommand(),    			
+    			autonomousBalanceDeadRecCommand(),
+    			autonomousRightCommand(),
+    			autonomousLeftCommand()
+
+    	);
 
     }
     
@@ -122,30 +127,23 @@ public class CommandFactory {
 
 
     public Command getAutonomousChoice() {
-        return autonomousFarCommand();
+        return autonomousAutoBalanceCommand();
     }
     
-    public Command autonomousFarCommand() {
+//    public Command autonomousFarCommand() {
+//        double MOVE_DISTANCE_METERS = -4.0;
+//        double HOLD_BRAKE_TIME = 2.0;
+//        Command c =  createScoreAndDriveDistance(MOVE_DISTANCE_METERS,HOLD_BRAKE_TIME);
+//        c.setName("autonomousFar");
+//        return c;
+//    }
+    
+    public Command autonomousRightCommand() {
         double MOVE_DISTANCE_METERS = -4.0;
+        double MOVE_SECS  = 0.2;    
+        double JOG_FORWARD_SPEED = -0.1;
+        double JOG_RIGHT_SPEED = -0.1;
         double HOLD_BRAKE_TIME = 2.0;
-        return createScoreAndDriveDistance(MOVE_DISTANCE_METERS,HOLD_BRAKE_TIME);
-    }
-    
-    public Command autonomousBalanceDeadRecCommand() {
-        double MOVE_DISTANCE_METERS = -2.6;
-        double HOLD_BRAKE_TIME = 2.0;
-        return createScoreAndDriveDistance(MOVE_DISTANCE_METERS,HOLD_BRAKE_TIME);
-    }
-    
-    public Command autonomousAutoBalanceCommand() {
-        double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
-        double MOVE_SPEED = 0.2;              // Speed when clearing the community zone
-        double HOLD_BRAKE_TIME = 1.0;         // Time to hold brake when changing direction
-        double BALANCE_SPEED = 0.13;          // Speed when trying to balance
-        return createScoreMoveAndBalance(MOVE_DISTANCE_METERS, HOLD_BRAKE_TIME, MOVE_SPEED, BALANCE_SPEED);
-    }
-    
-    private Command createScoreAndDriveDistance(double distanceMeters, double brakeHoldSeconds) {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             	new ZeroGyroCommand(navxSubsystem)
                 , new GripperCommand(gripperSubsystem, GripperState.kClose)
@@ -158,15 +156,68 @@ public class CommandFactory {
                 , new WaitCommand(0.5)
                 , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)
                 , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
-                , new DriveDistanceCommand(driveSubsystem, distanceMeters, 0.4, 0.3, .1)
-                , new DriveBrakeForSeconds(driveSubsystem, brakeHoldSeconds)
+                , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,HOLD_BRAKE_TIME)
+                , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+                , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
             );
-            sg.setName("AutonomousBalanceDeadRecCommand");
-            return sg;
-    	
+            sg.setName("autonomousRight");
+            return sg;    	
     }
     
-    private Command createScoreMoveAndBalance(double distanceMeters, double brakeHoldSeconds, double moveSpeed, double balanceSpeed) {
+    public Command autonomousLeftCommand() {
+    	//TODO: refactor. high duplicatoin betwene center auto, and with Right ( this is a mirror of Right)
+        double MOVE_DISTANCE_METERS = -4.0;
+        double MOVE_SECS  = 0.2;    
+        double JOG_FORWARD_SPEED = -0.1;
+        double JOG_RIGHT_SPEED = 0.1;
+        double HOLD_BRAKE_TIME = 2.0;
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+            	new ZeroGyroCommand(navxSubsystem)
+                , new GripperCommand(gripperSubsystem, GripperState.kClose)
+                , new DriveSetBrake(driveSubsystem)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
+                , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
+                , new WaitCommand(1.0)
+                , new GripperCommand(gripperSubsystem, GripperState.kOpen)
+                , new WaitCommand(0.5)
+                , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)
+                , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
+                , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,HOLD_BRAKE_TIME)
+                , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+                , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+            );
+            sg.setName("autonomousLe");
+            return sg;    	
+    }
+    
+    public Command autonomousBalanceDeadRecCommand() {
+        double MOVE_DISTANCE_METERS = -2.6;
+        double HOLD_BRAKE_TIME = 2.0;
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+            	new ZeroGyroCommand(navxSubsystem)
+                , new GripperCommand(gripperSubsystem, GripperState.kClose)
+                , new DriveSetBrake(driveSubsystem)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
+                , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
+                , new WaitCommand(1.0)
+                , new GripperCommand(gripperSubsystem, GripperState.kOpen)
+                , new WaitCommand(0.5)
+                , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)
+                , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
+                , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+                , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+            );
+            sg.setName("AutonomousBalanceDeadRecCommand");
+        return sg;
+    }
+    
+    public Command autonomousAutoBalanceCommand() {
+        double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
+        double MOVE_SPEED = 0.2;              // Speed when clearing the community zone
+        double HOLD_BRAKE_TIME = 1.0;         // Time to hold brake when changing direction
+        double BALANCE_SPEED = 0.13;          // Speed when trying to balance
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             	new ZeroGyroCommand(navxSubsystem)
                 , new GripperCommand(gripperSubsystem, GripperState.kClose)
@@ -179,14 +230,14 @@ public class CommandFactory {
                 , new WaitCommand(0.5)
                 , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)
                 , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
-                , new DriveDistanceCommand(driveSubsystem, distanceMeters, moveSpeed, 0.3, .1)
-                , new DriveBrakeForSeconds(driveSubsystem, brakeHoldSeconds)
-                , new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, balanceSpeed)
+                , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, MOVE_SPEED, 0.3, .1)
+                , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+                , new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, BALANCE_SPEED)
             );
-            sg.setName("AutonomousBalanceDeadRecCommand");
-            return sg;
-    	
+        sg.setName("centerAutoBalance");
+        return sg;
     }
+    
     
     private Supplier<DriveInput> addYawToOperatorJoystickInput(Supplier<DriveInput> operatorJoystickInput){
     	return new DriveInputYawMixer(robotState, operatorJoystickInput);
