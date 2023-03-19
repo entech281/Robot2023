@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -32,7 +33,7 @@ import frc.robot.util.EntechUtils;
  *         |  +---+  |
  *       //+---------+\\
  */
-public class NavXSubSystem extends EntechSubsystem  {
+public class NavXSubSystem extends EntechSubsystem  implements Sendable{
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
     private double initialYawAngleForFieldDrive = 0.0;
@@ -42,6 +43,7 @@ public class NavXSubSystem extends EntechSubsystem  {
     private double knownUpMeters = 0.0;
 
     public NavXSubSystem() {
+    	
     }
 
     @Override
@@ -54,6 +56,7 @@ public class NavXSubSystem extends EntechSubsystem  {
         zeroYaw();
         zeroPosition();
         assignAlliance();
+        SmartDashboard.putData(this);
     }
 
     public void assignAlliance() {
@@ -81,12 +84,12 @@ public class NavXSubSystem extends EntechSubsystem  {
         navX.zeroYaw();
     }
 
-    public double getRoll() {
-      return navX.getPitch();
-    }
-
     public double getPitch() {
       return -navX.getRoll();
+    }
+
+    public double getRoll() {
+      return -navX.getPitch();
     }
 
     public double getYaw() {

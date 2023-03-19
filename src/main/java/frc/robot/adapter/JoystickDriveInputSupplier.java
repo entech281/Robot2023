@@ -9,8 +9,10 @@ import frc.robot.subsystems.NavXSubSystem;
 public class JoystickDriveInputSupplier implements Supplier<DriveInput>{
 	
 	private Joystick joystick;
+
 	public JoystickDriveInputSupplier(Joystick joystick) {
 			this.joystick = joystick;
+
 	}
 
 	@Override

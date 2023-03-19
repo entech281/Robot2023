@@ -83,6 +83,7 @@ public class Robot extends TimedRobot {
 	commandFactory = new CommandFactory(robotState,allSubsystems);
 
 	oi = new OperatorInterface(commandFactory);
+
 	setupShuffleboardInterface();
 	Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
 	c.enableDigital();
