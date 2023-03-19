@@ -25,7 +25,6 @@ import frc.robot.filters.SquareInputsFilter;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.NoRotationFilter;
-import frc.robot.filters.PrecisionDriveFilter;
 
 /**
  *
@@ -44,7 +43,6 @@ public class DriveSubsystem extends EntechSubsystem {
     private NoRotationFilter noRotationFilter;
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
-    private PrecisionDriveFilter precisionDriveFilter;
     private SquareInputsFilter rotationDampingFilter;
     
     private RelativeEncoder frontLeftEncoder;
@@ -112,14 +110,9 @@ public class DriveSubsystem extends EntechSubsystem {
         noRotationFilter = new NoRotationFilter();
         noRotationFilter.enable(true);
 
-        precisionDriveFilter = new PrecisionDriveFilter();
-        precisionDriveFilter.enable(false);
-
         yawHoldFilter = new HoldYawFilter();
         yawHoldFilter.enable(true);
         
-
-
     }
 
     @Override
@@ -131,7 +124,6 @@ public class DriveSubsystem extends EntechSubsystem {
         SmartDashboard.putNumber("Average Position", getAveragePosition());
         SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
         SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
-        SmartDashboard.putBoolean("Precision Drive", isPrecisionDrive());
         SmartDashboard.putBoolean("Brake Mode", isBrakeMode());
 
         robotDrive.feed();
@@ -152,10 +144,8 @@ public class DriveSubsystem extends EntechSubsystem {
         // printDI("DI(0):",di);
     	DriveInput filtered = di;
         filtered = jsDeadbandFilter.filter(filtered);
-        filtered = rotationDampingFilter.filter(filtered);
-        
         // printDI("DI(1):",filtered);
-        filtered = precisionDriveFilter.filter(filtered);
+        filtered = rotationDampingFilter.filter(filtered);
         // printDI("DI(2):",filtered);
     	
     	if (isRotationEnabled()) {
@@ -256,7 +246,6 @@ public class DriveSubsystem extends EntechSubsystem {
   	    builder.addDoubleProperty("RearRight", () -> { return rearRightEncoder.getPosition();} , null);
         builder.addBooleanProperty("Field Absolute", this::isFieldAbsolute, null);
         builder.addBooleanProperty("Rotation Allowed", this::isRotationEnabled, null);
-        builder.addBooleanProperty("Precision Drive", this::isPrecisionDrive, null);
         builder.addBooleanProperty("Brake Mode", this::isBrakeMode, null);
         builder.addStringProperty("Command", this::getCurrentCommandName, null);
     }
@@ -326,16 +315,6 @@ public class DriveSubsystem extends EntechSubsystem {
 	}	
 	public boolean isRotationLocked() {
 		return noRotationFilter.isEnabled();
-	}
-
-	public boolean isPrecisionDrive() {
-		return precisionDriveFilter.isEnabled();
-	}
-	public void setPrecisionDrive(boolean newValue) {
-		precisionDriveFilter.enable(newValue);
-	}
-	public void togglePrecisionDrive() {
-		setPrecisionDrive(!(isPrecisionDrive()));
 	}
 
 }

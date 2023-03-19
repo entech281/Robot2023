@@ -37,9 +37,6 @@ public class OperatorInterface {
 	     driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
 	         .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
 
-        driveStick.button(RobotConstants.DRIVER_STICK.PRECISION_DRIVE)
-            .onTrue(commandFactory.togglePrecisionDriveCommand());
-
         driveStick.button(RobotConstants.DRIVER_STICK.BRAKE_COAST)
             .onTrue(commandFactory.toggleBrakeModeCommand());
 
