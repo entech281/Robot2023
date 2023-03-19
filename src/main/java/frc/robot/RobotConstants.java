@@ -90,6 +90,7 @@ public final class RobotConstants {
     		public static final int MAX_SPIKE_CURRENT=50;
     		public static final double COUNTS_PER_DEGREE=2.1383; 
     		public static final double ELBOW_SLOWDOWN_SPEED= 0.1;
+    		public static final double MIDDLE_HIGH_CONE_DEPLOY_THRESHOLD = 105.0;
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT = 0.2;
@@ -112,7 +113,8 @@ public final class RobotConstants {
     		  public static double LOAD_STATION_DEGREES = 92.0;
     		  public static double SCORE_HIGH_DEGREES = 127;
     		  public static double SCORE_HIGH_RELEASE_DEGREES = 110;
-     		  public static final double MAX_POSITION_DEGREES = 127.0;  
+    		  public static double SCORE_MID_RELEASE_DEGREES = 80;
+     		  public static final double MAX_POSITION_DEGREES = 127.0; 
     	}
     }
     
