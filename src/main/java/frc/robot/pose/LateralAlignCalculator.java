@@ -17,9 +17,7 @@ public class LateralAlignCalculator {
 	 */
 	public LateralOffset findOffsetToNearestTarget(double x, double y ) {
 		ScoringLocation closest = null;
-		double closestSoFar = 999;
-		
-		
+		double closestSoFar = 999;	
 		
 		double FIELD_MIDPOINT_X_METERS = 8.26;
 		List<AprilTagLocation> aprilTags = new ArrayList<>();

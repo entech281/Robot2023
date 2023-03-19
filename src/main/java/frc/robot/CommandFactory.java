@@ -356,7 +356,7 @@ public class CommandFactory {
 
     public Command scoreHighCommand() {
         return new SequentialCommandGroup(
-        		new ConeDeployCommand(elbowSubsystem, gripperSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_RELEASE_DEGREES),
+        		new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
                 new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true),
                 new GripperCommand(gripperSubsystem, GripperState.kClose)
             );    	

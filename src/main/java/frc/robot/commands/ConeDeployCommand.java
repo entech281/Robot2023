@@ -25,14 +25,23 @@ public class ConeDeployCommand extends EntechCommandBase {
    * 
    * NOTE: commands are interruptable by defeault
    */
-  public ConeDeployCommand(ElbowSubsystem elbowSubsystem, GripperSubsystem gripperSubsystem, double releasePosition) {
+  public ConeDeployCommand(ElbowSubsystem elbowSubsystem, GripperSubsystem gripperSubsystem) {
       super(elbowSubsystem,gripperSubsystem);
       this.elbowSubsystem = elbowSubsystem;
       this.gripperSubsystem =  gripperSubsystem;
-      this.releasePosition = releasePosition;
-
+      calculateReleasePosition();
   }
-
+  
+  private void calculateReleasePosition() {
+	  double currentElbowPosition = elbowSubsystem.getActualPosition();
+	  if ( currentElbowPosition < RobotConstants.ELBOW.SETTINGS.MIDDLE_HIGH_CONE_DEPLOY_THRESHOLD) {
+		  releasePosition = RobotConstants.ELBOW.POSITION_PRESETS.SCORE_MID_RELEASE_DEGREES;
+	  }
+	  else {
+		  releasePosition = RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_RELEASE_DEGREES;
+	  }
+  }
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
