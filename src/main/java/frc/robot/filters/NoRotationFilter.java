@@ -13,9 +13,6 @@ public class NoRotationFilter extends DriveInputFilter {
 
     @Override
     protected DriveInput doFilter(DriveInput inputDI) {
-    	if (!isEnabled()) {
-            return inputDI;
-        }
         DriveInput outDI = new DriveInput(inputDI);
         outDI.setRotation(0.0);
         return outDI;

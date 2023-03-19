@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.logging.ExceptionHandler;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveMode;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
@@ -60,9 +62,9 @@ public class Robot extends TimedRobot {
 	VisionSubsystem vision = new VisionSubsystem();
 	NavXSubSystem navx = new NavXSubSystem();
 	DriveSubsystem drive = new DriveSubsystem();
-
+	LEDSubsystem led = new LEDSubsystem();
 	
-	allSubsystems = new SubsystemHolder(drive,navx,vision,arm,elbow,gripper);
+	allSubsystems = new SubsystemHolder(drive,navx,vision,arm,elbow,gripper,led);
 	
 	allSubsystems.asList().forEach((s)-> {
 		if ( s.isEnabled()) {
@@ -73,14 +75,15 @@ public class Robot extends TimedRobot {
 	shuffleboardControls = new ShuffleboardDriverControls();	
 	shuffleboardInterface = new ShuffleboardInterface();	
 
-	RobotState robotState = new RobotState();	  
-	robotContext = new RobotContext(new AlignmentCalculator(kDefaultPeriod, kDefaultPeriod),
-			robotState, shuffleboardInterface,drive,navx,vision, arm, elbow, gripper, new VisionFirstNavxAsBackupPoseEstimator(true),
-			shuffleboardControls
+	RobotState robotState = new RobotState();
+	shuffleboardInterface.addRobotState(robotState);
+	robotContext = new RobotContext(
+			robotState,drive,navx,vision, led,new VisionFirstNavxAsBackupPoseEstimator(true)
 	);	
 	commandFactory = new CommandFactory(robotState,allSubsystems);
-	Shuffleboard.getTab("Tab6").add("RobotState",robotState);
-	oi = new OperatorInterface(commandFactory,shuffleboardControls);
+
+	oi = new OperatorInterface(commandFactory);
+
 	setupShuffleboardInterface();
 	Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
 	c.enableDigital();
@@ -89,6 +92,7 @@ public class Robot extends TimedRobot {
     // Enable telematics of the SmartDashboard data.  Joystick data is currently true
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog(), true);
+    led.setColor(Color.kBisque);
   }
   private void setupShuffleboardInterface() {
 			
@@ -99,7 +103,9 @@ public class Robot extends TimedRobot {
 		autoChoices.forEach((c)->{
             shuffleboardControls.addAutoCommandChoice(c,c == autoChoices.get(0));
 		});	  
+
   }
+  
   private void doPeriodic() {
     // robotContext.periodic();	  
     // CommandScheduler.getInstance().run();		  

@@ -2,14 +2,12 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.supplier.LateralOffsetSupplier;
-import frc.robot.commands.supplier.TargetYawSupplier;
-import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.controllers.RobotLateralPIDController;
+import frc.robot.controllers.RobotYawPIDController;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 
 /**
  * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -22,10 +20,21 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
+    private static final double YAW_P_GAIN = 0.02;
+    private static final double YAW_I_GAIN = 0.001;	
+
+    private static final double LATERAL_P_GAIN = 0.02;
+    private static final double LATERAL_I_GAIN = 0.001;	
+
+
+    
     protected final DriveSubsystem drive;
+    protected final LEDSubsystem led;
     protected final LateralOffsetSupplier lateralOffsetSupplier;
     protected final Supplier<DriveInput> operatorInput;
-    private RobotLateralPIDController pid;
+    private RobotLateralPIDController lateralPid;
+    private RobotYawPIDController yawPid;
+    
 
 
     /**
@@ -33,37 +42,52 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
      * (Operator can still drive in the meantime)
      * @param joystick the joystick you controll the robot with
      */
-    public HorizontalAlignWithTagCommand(DriveSubsystem drive, Supplier<DriveInput> operatorInput, LateralOffsetSupplier lateralOffsetSupplier ) {
-        super(drive);
+    public HorizontalAlignWithTagCommand(DriveSubsystem drive, LEDSubsystem led, Supplier<DriveInput> operatorInput, LateralOffsetSupplier lateralOffsetSupplier ) {
+        super(drive,led);
         this.drive = drive;
+        this.led = led;
         this.lateralOffsetSupplier = lateralOffsetSupplier;
         this.operatorInput = operatorInput;
-        pid = new RobotLateralPIDController();
-        pid.setSetpoint(0.0);
+        
+        lateralPid = new RobotLateralPIDController();
+        lateralPid.setP(LATERAL_P_GAIN);
+        lateralPid.setI(LATERAL_I_GAIN);
+        lateralPid.setSetpoint(0);        
+        lateralPid.reset();
+        
+        yawPid = new RobotYawPIDController();
+        yawPid.setP(YAW_P_GAIN);
+        yawPid.setI(YAW_I_GAIN);
+        yawPid.reset();
+                
+    }
+    
+    @Override
+    public void initialize() {
+    	//lets hold it whereever we started
+    	yawPid.setSetpoint( operatorInput.get().getYawAngleDegrees());    	
     }
 
     @Override
     public void execute() {
-        DriveInput di = operatorInput.get();
+        DriveInput di = operatorInput.get();        
         DriveInput newDi = new DriveInput(di);
+        
+        double rot = yawPid.calculate(di.getYawAngleDegrees());
+        newDi.setRotation(rot);
+        
         if ( lateralOffsetSupplier.getLateralOffset().isPresent()) {
-        	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();
-        	
-        	SmartDashboard.putData("HorizontalAlignPID",pid);
-        	
-        	double calcValue = pid.calculate(lateralOffset);
-        	DriverStation.reportWarning("LateralOffsetFromHorizontalAlign=" + lateralOffset + ", output=" + calcValue,false);        	
+        	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();        	
+        	double calcValue = lateralPid.calculate(lateralOffset);      	
         	newDi.setRight(calcValue);
         }
-        else {
-        	DriverStation.reportWarning("LateralOffsetFromHorizontalAlign: no offset available",false);
-        }
-        drive.filteredDrive(newDi);
+        drive.drive(newDi);
     }
 
     @Override
     public void end(boolean interrupted) {
-        drive.stop();
+    	drive.setHoldYawAngle(yawPid.getSetpoint());
+        drive.stop();     
     }
 
     @Override

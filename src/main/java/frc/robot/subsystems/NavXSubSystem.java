@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -32,16 +33,17 @@ import frc.robot.util.EntechUtils;
  *         |  +---+  |
  *       //+---------+\\
  */
-public class NavXSubSystem extends EntechSubsystem  {
+public class NavXSubSystem extends EntechSubsystem  implements Sendable{
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
-    private double initialYawAngleForFieldDrive = 180.0;
+    private double initialYawAngleForFieldDrive = 0.0;
     private double initialYawAngleForFieldPose = 0.0;
     private double knownForwardMeters = 0.0;
     private double knownRightMeters = 0.0;
     private double knownUpMeters = 0.0;
 
     public NavXSubSystem() {
+    	
     }
 
     @Override
@@ -54,6 +56,7 @@ public class NavXSubSystem extends EntechSubsystem  {
         zeroYaw();
         zeroPosition();
         assignAlliance();
+        SmartDashboard.putData(this);
     }
 
     public void assignAlliance() {
@@ -67,10 +70,10 @@ public class NavXSubSystem extends EntechSubsystem  {
 
     }
 
-    public NavxStatus getFieldAbsoluteDriveStatus() {
-    	return new NavxStatus(getForward(), getRight(), getYawForFieldAbsoluteDrive(), getPitch());
-
-    }
+//    public NavxStatus getFieldAbsoluteDriveStatus() {
+//    	return new NavxStatus(getForward(), getRight(), getYawForFieldAbsoluteDrive(), getPitch());
+//
+//    }
     
     public NavxStatus getFieldPoseStatus() {
     	return new NavxStatus(getForward(), getRight(), getYawForFieldPose(), getPitch());
@@ -81,21 +84,21 @@ public class NavXSubSystem extends EntechSubsystem  {
         navX.zeroYaw();
     }
 
-    public double getRoll() {
-      return navX.getPitch();
-    }
-
     public double getPitch() {
       return -navX.getRoll();
+    }
+
+    public double getRoll() {
+      return -navX.getPitch();
     }
 
     public double getYaw() {
       return getYawForFieldPose();
     }
 
-    public double getYawForFieldAbsoluteDrive() {
-        return EntechUtils.normalizeAngle(-navX.getYaw() + initialYawAngleForFieldDrive);
-    }
+//    public double getYawForFieldAbsoluteDrive() {
+//        return EntechUtils.normalizeAngle(-navX.getYaw() + initialYawAngleForFieldDrive);
+//    }
 
     public double getYawForFieldPose() {
         return EntechUtils.normalizeAngle(-navX.getYaw() + initialYawAngleForFieldPose);
@@ -125,7 +128,7 @@ public class NavXSubSystem extends EntechSubsystem  {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("NavX", getYaw());
+        SmartDashboard.putData("NavX",navX);
     }
 
     public static double findNearestQuadrant(double angle){
@@ -151,6 +154,7 @@ public class NavXSubSystem extends EntechSubsystem  {
         builder.addDoubleProperty("NavX Forward", this::getForward, null);
         builder.addDoubleProperty("NavX Right", this::getRight, null);
         builder.addDoubleProperty("NavX Height", this::getUp, null);
+
     }
 
 	@Override

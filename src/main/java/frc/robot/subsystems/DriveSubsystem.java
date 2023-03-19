@@ -21,6 +21,7 @@ import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
 import frc.robot.filters.RobotRelativeDriveFilter;
+import frc.robot.filters.SquareInputsFilter;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.NoRotationFilter;
@@ -44,6 +45,7 @@ public class DriveSubsystem extends EntechSubsystem {
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
     private PrecisionDriveFilter precisionDriveFilter;
+    private SquareInputsFilter rotationDampingFilter;
     
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder rearLeftEncoder;
@@ -57,6 +59,9 @@ public class DriveSubsystem extends EntechSubsystem {
     private MecanumDrive robotDrive;
 
     private DriveMode currentDriveMode;
+    
+    private static final int COUNTER_RESET = 6;
+    private int holdYawSetPointCounter = COUNTER_RESET;
   
     public DriveSubsystem() {
     }
@@ -96,6 +101,10 @@ public class DriveSubsystem extends EntechSubsystem {
         jsDeadbandFilter.enable(true);
         jsDeadbandFilter.setDeadband(0.15);
 
+        rotationDampingFilter = new SquareInputsFilter();
+        rotationDampingFilter.setDampingFactor(RobotConstants.DRIVE.ROTATION_DAMPING_FACTOR);
+        rotationDampingFilter.enable(true);
+        
         robotRelativeFilter = new RobotRelativeDriveFilter();
         yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
         setFieldAbsolute(RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE);
@@ -108,6 +117,8 @@ public class DriveSubsystem extends EntechSubsystem {
 
         yawHoldFilter = new HoldYawFilter();
         yawHoldFilter.enable(true);
+        
+
 
     }
 
@@ -141,6 +152,8 @@ public class DriveSubsystem extends EntechSubsystem {
         // printDI("DI(0):",di);
     	DriveInput filtered = di;
         filtered = jsDeadbandFilter.filter(filtered);
+        filtered = rotationDampingFilter.filter(filtered);
+        
         // printDI("DI(1):",filtered);
         filtered = precisionDriveFilter.filter(filtered);
         // printDI("DI(2):",filtered);
@@ -149,9 +162,20 @@ public class DriveSubsystem extends EntechSubsystem {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             // We run the holdyaw filter just to get the dashboard updated.
             yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            DriverStation.reportWarning("Setpoint Updated to " + di.getYawAngleDegrees() ,false);
+            SmartDashboard.putNumber("YawInHoldFilter", di.getYawAngleDegrees());
+            holdYawSetPointCounter = COUNTER_RESET;
         } else {
+        	if (holdYawSetPointCounter > 0) {
+        		yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+                DriverStation.reportWarning("Setpoint Updated to " + di.getYawAngleDegrees() ,false);
+                SmartDashboard.putNumber("YawInHoldFilter", di.getYawAngleDegrees());
+                holdYawSetPointCounter--;
+        	}
             if (yawHoldFilter.isEnabled()) {
+            	yawHoldFilter.setApplyCalculations(true);
                 filtered = yawHoldFilter.filter(filtered);
+                yawHoldFilter.setApplyCalculations(false);
                 // printDI("DI(3)",filtered);
             } else {
     		    filtered = noRotationFilter.filter(filtered);
@@ -166,6 +190,7 @@ public class DriveSubsystem extends EntechSubsystem {
     		filtered = robotRelativeFilter.filter(filtered);
             // printDI("DI(6)",filtered);
             }
+    	
     	
         // printDI("DI(7)",filtered);
         drive(filtered);
@@ -239,8 +264,17 @@ public class DriveSubsystem extends EntechSubsystem {
         builder.addBooleanProperty("Rotation Allowed", this::isRotationEnabled, null);
         builder.addBooleanProperty("Precision Drive", this::isPrecisionDrive, null);
         builder.addBooleanProperty("Brake Mode", this::isBrakeMode, null);
+        builder.addStringProperty("Command", this::getCurrentCommandName, null);
     }
   
+	public String getCurrentCommandName() {
+		if ( this.getCurrentCommand() != null ) {
+			return this.getCurrentCommand().getName();
+		}
+		else {
+			return "NONE";
+		}
+	}
     @Override
     public boolean isEnabled() {
 	    return true;

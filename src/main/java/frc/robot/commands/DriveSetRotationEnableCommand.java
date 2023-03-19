@@ -7,7 +7,7 @@ public class DriveSetRotationEnableCommand extends EntechCommandBase {
     DriveSubsystem drive;
 	boolean newValue;
 	public DriveSetRotationEnableCommand(DriveSubsystem drive, boolean newValue) {
-		super(drive);
+		//super(drive);
         this.drive = drive;
 		this.newValue = newValue;
 	}

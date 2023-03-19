@@ -2,27 +2,17 @@ package frc.robot;
 
 import java.util.Optional;
 
-import org.photonvision.targeting.PhotonTrackedTarget;
-
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.RobotConstants.ARM;
-import frc.robot.RobotConstants.ELBOW;
-import frc.robot.commands.ArmEmergencyStopCommand;
-import frc.robot.oi.ShuffleboardDriverControls;
-import frc.robot.oi.ShuffleboardInterface;
-import frc.robot.pose.AlignmentCalculator;
+import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.pose.LateralAlignCalculator;
+import frc.robot.pose.LateralOffset;
+import frc.robot.pose.MovingAveragePose;
 import frc.robot.pose.PoseEstimator;
-import frc.robot.pose.ScoringLocation;
-import frc.robot.subsystems.ArmStatus;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElbowStatus;
-import frc.robot.subsystems.ElbowSubsystem;
-import frc.robot.subsystems.GripperStatus;
-import frc.robot.subsystems.GripperSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
@@ -40,32 +30,31 @@ import frc.robot.subsystems.VisionSubsystem;
  */
 public class RobotContext {
 	
-	public static final double ANGLE_NOT_FOUND = 999;
+	public static final int NUM_SAMPLES = 3;
+    public static final double ALIGN_TOLERANCE_METERS = 0.08;
+    public static final double ALIGN_CLOSE_METERS = 0.3;
+    public static final double ALIGN_KINDA_CLOSE_METERS = 0.8;
+    
+	
+	private LateralAlignCalculator lateralAlignCalculator = new LateralAlignCalculator();
+	private MovingAveragePose movingAveragePose = new MovingAveragePose(NUM_SAMPLES);
+	private LinearFilter movingAverageY = LinearFilter.movingAverage(NUM_SAMPLES);
+	
 	//inject just what we need. later we might need arm-- we can add it then
-	public RobotContext( AlignmentCalculator alignmentCalculator, 
+	public RobotContext(
 			RobotState robotState, 
-			ShuffleboardInterface fieldDisplay, 
-			DriveSubsystem drive, NavXSubSystem navx, 
-			VisionSubsystem vision, 
-		    ArmSubsystem armSubsystem,
-		    ElbowSubsystem elbowSubsystem,
-		    GripperSubsystem gripperSubsystem,			
-			PoseEstimator poseEstimator,
-			ShuffleboardDriverControls driverControls) {
+			DriveSubsystem drive, 
+			NavXSubSystem navx, 
+			VisionSubsystem vision,	
+			LEDSubsystem ledSubsystem,
+			PoseEstimator poseEstimator) {
+		this.ledSubsystem = ledSubsystem;
 	    driveSubsystem = drive;
 	    navXSubSystem = navx;
 	    visionSubsystem = vision;
-	    this.fieldDisplay=fieldDisplay;
 	    this.robotState = robotState;
 	    this.poseEstimator = poseEstimator;
-	    this.driverControls = driverControls;
-	    this.elbowSubsystem = elbowSubsystem;
-	    this.armSubsystem = armSubsystem;
-	    this.gripperSubsystem = gripperSubsystem;
-	    this.alignmentCalculator = alignmentCalculator;
 	}
-
-	
 	
     /**
      * This is called each periodic loop before commands are executed.
@@ -75,63 +64,58 @@ public class RobotContext {
     public void periodic() {
     	
     	//pollSubsystems
-    	DriveStatus ds = driveSubsystem.getStatus();
     	VisionStatus vs =visionSubsystem.getStatus();
     	NavxStatus ns = navXSubSystem.getStatus();
-    	ArmStatus as = armSubsystem.getStatus();
-    	ElbowStatus es = elbowSubsystem.getStatus();
-    	GripperStatus gs = gripperSubsystem.getStatus();
+    	DriveStatus ds = driveSubsystem.getStatus();
     	
-    	//estimate pose
-    	Optional<Pose2d> estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
-        robotState.setEstimatedPose(estimatedRobotPose);
-        if ( estimatedRobotPose.isPresent() ) {
-        	SmartDashboard.putString("our pose",estimatedRobotPose.get().toString());
-        	fieldDisplay.setRobotPose(estimatedRobotPose.get());
-        }
+    	robotState.yawAngleDegrees = navXSubSystem.getYaw();
+    	robotState.cameraY = vs.getCameraY();
+    	robotState.movingAverageY = movingAverageY.calculate(vs.getCameraY());
+        
+    	//photonvision pose estimate
+    	Optional<Pose2d> photonEstimatedPose = vs.getPhotonEstimatedPose2d();
 
-        
-        //get selected target and scoring location
-        robotState.setBestAprilTagTarget(vs.getBestAprilTagTarget());
-        robotState.setTargetNode(driverControls.getSelectedTarget());
-        
-        if ( vs.getBestAprilTagTarget().isPresent()) {
-        	PhotonTrackedTarget pt = vs.getBestAprilTagTarget().get().getPhotonTarget();
-        	if ( pt != null) {
-        		robotState.setPhotonYawAngle(Optional.of(pt.getYaw()));
-        	}        	
-        }
-        
-        if ( robotState.getScoringLocation().isPresent()) {
-        	ScoringLocation scoreloc = robotState.getScoringLocation().get();
-        	Pose2d absoluteScoringPose = scoreloc.computeAbsolutePose();
-        	
-        	Pose2d realRobotPose = estimatedRobotPose.get();
-            fieldDisplay.displayScoringSolution(realRobotPose,absoluteScoringPose); 
-            double targetYaw = alignmentCalculator.calculateAngleToScoringLocation(absoluteScoringPose, realRobotPose);
-            robotState.setTargetYawAngle(targetYaw);
-        }
-        //installArmSafetyWatchdog();
+    	if ( photonEstimatedPose.isPresent() ){
+    		Pose2d pep = photonEstimatedPose.get();
+    		movingAveragePose.update(pep);
+    		LateralOffset lateralOffset = lateralAlignCalculator.findOffsetToNearestTarget(movingAveragePose.getX(), movingAveragePose.getY());
+    		robotState.closestScoringLocationOffset = Optional.of(lateralOffset);
 
+    		Color c = getAlignColor(lateralOffset.getLateralOffsetToLocationMeters());
+    		ledSubsystem.setColor(c);
+    		robotState.alignState = c;      		
+    		
+    	}
+//    	else {
+//    		robotState.closestScoringLocationOffset = Optional.empty();
+//    		ledSubsystem.setNormal();
+//    	}
+    	
     }    
-
-    private void installArmSafetyWatchdog() {
-        if ( armSubsystem.getActualPosition() > ARM.POSITION_PRESETS.SAFE && elbowSubsystem.getActualPosition() < ELBOW.POSITION_PRESETS.SAFE_ANGLE) {
-        	CommandScheduler.getInstance().schedule(new ArmEmergencyStopCommand(armSubsystem,elbowSubsystem));
-        }    	
-    }
     
+    private Color getAlignColor(double difference) {
+    	double absDifference = Math.abs(difference);
+    	if ( absDifference < RobotConstants.ALIGNMENT.ALIGN_TOLERANCE_METERS) {
+    		return Color.kGreen;
+    	}
+    	else if ( absDifference < RobotConstants.ALIGNMENT.ALIGN_CLOSE_METERS) {
+    		return Color.kYellowGreen;
+    	}
+    	else if ( absDifference < RobotConstants.ALIGNMENT.ALIGN_KINDA_CLOSE_METERS) {
+    		return Color.kYellow;
+    	}
+    	else {
+    		return Color.kBlueViolet;
+    	}
+    }
+
+
     private RobotState robotState;
 	private DriveSubsystem driveSubsystem;
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
-    private ArmSubsystem armSubsystem;
-    private ElbowSubsystem elbowSubsystem;
-    private GripperSubsystem gripperSubsystem;
+    private LEDSubsystem ledSubsystem;
 	private PoseEstimator poseEstimator;
-	private AlignmentCalculator alignmentCalculator;
-	private ShuffleboardInterface fieldDisplay;
-	private ShuffleboardDriverControls driverControls;
-	
-	
+
+
 }

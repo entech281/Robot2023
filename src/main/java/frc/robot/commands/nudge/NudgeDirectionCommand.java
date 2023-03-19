@@ -22,10 +22,13 @@ public class NudgeDirectionCommand extends EntechCommandBase {
     private static final double NUDGE_TIME = 0.25;
     private static final double NUDGE_FWD_SPEED = 0.2;
     private static final double NUDGE_LAT_SPEED = 0.4;
+    private static final double NUDGE_SCORE_SKIP_SPEED = 0.6;
     
     public interface DIRECTION {
         public static final DriveInput LEFT = new DriveInput(0, -NUDGE_LAT_SPEED, 0);
         public static final DriveInput RIGHT = new DriveInput(0, NUDGE_LAT_SPEED, 0);
+        public static final DriveInput SCORE_RIGHT = new DriveInput(0, NUDGE_SCORE_SKIP_SPEED, 0);
+        public static final DriveInput SCORE_LEFT = new DriveInput(0, -NUDGE_SCORE_SKIP_SPEED, 0);
         public static final DriveInput FORWARD = new DriveInput(NUDGE_FWD_SPEED, 0, 0);
         public static final DriveInput BACKWARD = new DriveInput(-NUDGE_FWD_SPEED, 0, 0);
     }

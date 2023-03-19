@@ -46,7 +46,8 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     private SparkMaxLimitSwitch lowerLimit;
     private Optional<Double> requestedPosition = Optional.empty();
     private SparkMaxLimitSwitch upperLimit;    
-
+    private boolean speedMode = false;
+    
 	public SparkMaxPositionController (CANSparkMax spark,  PositionControllerConfig config, SparkMaxLimitSwitch lowerLimit, 
 			SparkMaxLimitSwitch upperLimit, RelativeEncoder encoder) {
 		this.spark = spark;		
@@ -164,12 +165,17 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   	@Override
 	public void requestPosition(double requestedPosition) {
   	 
-  	   this.requestedPosition = Optional.of(EntechUtils.capDoubleValue(requestedPosition, config.getMinPosition(), config.getMaxPosition()));	
+  	   this.requestedPosition = Optional.of(EntechUtils.capDoubleValue(requestedPosition, config.getMinPosition(), config.getMaxPosition()));
+  	   speedMode = false;
 	   if (axisState == HomingState.UNINITIALIZED) {
 			startHoming();
 	   }
     }    
 
+  	public void setPositionMode() {
+  		speedMode = false;
+  	}
+  	
     public void setMotorSpeed(double input) {    	
     	setMotorSpeedInternal(input);
     }
@@ -177,7 +183,9 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     
     public void setMotorSpeedInternal(double input) {
     	spark.set(correctDirection(input));
+    	speedMode = true;
     }
+    
     public void stop() {
     	spark.stopMotor();
     }
@@ -189,6 +197,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
       		 case UNINITIALIZED:
       			 break;
       		 case FINDING_LIMIT:
+      			 speedMode = true;
       			 if ( isAtLowerLimit() ) {
       				arrivedHome();
       			 }
@@ -205,7 +214,8 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     private void arrivedHome() {
 		setMotorSpeedInternal(0);
 		setEncoder(config.getMinPosition());		
-		axisState = HomingState.HOMED;    	
+		axisState = HomingState.HOMED;   
+		speedMode = false;
     }
  
     private double correctDirection(double input) {
@@ -231,9 +241,12 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     }
     
     private void updateRequestedPosition() {
-    	if ( requestedPosition.isPresent()) {
-        	spark.getPIDController().setReference(correctDirection(requestedPosition.get()), CANSparkMax.ControlType.kPosition);
+    	if ( ! speedMode ) {
+        	if ( requestedPosition.isPresent()) {
+            	spark.getPIDController().setReference(correctDirection(requestedPosition.get()), CANSparkMax.ControlType.kPosition);
+        	}    		
     	}
+
     }
   
 }

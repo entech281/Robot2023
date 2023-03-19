@@ -4,26 +4,23 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
-import frc.robot.commands.AlignToScoringLocationCommand;
+import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
+import frc.robot.commands.DriveForwardToBalanceCommand;
 import frc.robot.commands.DriveSetBrake;
+import frc.robot.commands.DriveSetRotationEnableCommand;
+import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
-import frc.robot.commands.SetElbowSpeedCommand;
-import frc.robot.commands.DriveSetRotationEnableCommand;
-import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
@@ -35,13 +32,13 @@ import frc.robot.commands.nudge.NudgeElbowUpCommand;
 import frc.robot.commands.nudge.NudgeTelescopeBackwardsCommand;
 import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
-import frc.robot.commands.supplier.TargetNodeSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.GripperSubsystem.GripperState;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
@@ -59,6 +56,7 @@ public class CommandFactory {
 	private ArmSubsystem armSubsystem;
 	private ElbowSubsystem elbowSubsystem;
 	private GripperSubsystem gripperSubsystem;
+	private LEDSubsystem ledSubsystem;
 
     public CommandFactory(RobotState robotState, SubsystemHolder allSubsystems ){
     	this.driveSubsystem = allSubsystems.getDrive();
@@ -68,6 +66,7 @@ public class CommandFactory {
         this.elbowSubsystem = allSubsystems.getElbow();
         this.gripperSubsystem = allSubsystems.getGripper();
         this.robotState = robotState;
+        this.ledSubsystem = allSubsystems.getLED();
     }
 
     public List<Command> getAutoCommandChoices(){
@@ -77,7 +76,9 @@ public class CommandFactory {
         c5.setName("Autonomous Far");
         Command c6 = autonomousBalanceDeadRecCommand();
         c6.setName("Autonomous Balance DeadRec");
-    	return List.of( c5, c6 );
+        Command c7 = autonomousAutoBalanceCommand();
+        c7.setName("Autonomous AutoBalance");
+    	return List.of( c5, c6, c7 );
 
     }
     
@@ -105,7 +106,6 @@ public class CommandFactory {
     }
     
     public Command testDownwardSoftConePlacement() {
-    	double DOWN_MOVE_DEGREES = 3.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             	new ZeroGyroCommand(navxSubsystem)
                 , new GripperCommand(gripperSubsystem, GripperState.kClose)
@@ -120,9 +120,7 @@ public class CommandFactory {
             return sg;    	
     }
 
-    public Command elbowSlowlyDown() {
-    	return new SetElbowSpeedCommand(elbowSubsystem, -RobotConstants.ELBOW.SETTINGS.ELBOW_SLOWDOWN_SPEED);
-    }
+
     public Command getAutonomousChoice() {
         return autonomousFarCommand();
     }
@@ -139,6 +137,14 @@ public class CommandFactory {
         return createScoreAndDriveDistance(MOVE_DISTANCE_METERS,HOLD_BRAKE_TIME);
     }
     
+    public Command autonomousAutoBalanceCommand() {
+        double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
+        double MOVE_SPEED = 0.2;              // Speed when clearing the community zone
+        double HOLD_BRAKE_TIME = 1.0;         // Time to hold brake when changing direction
+        double BALANCE_SPEED = 0.13;          // Speed when trying to balance
+        return createScoreMoveAndBalance(MOVE_DISTANCE_METERS, HOLD_BRAKE_TIME, MOVE_SPEED, BALANCE_SPEED);
+    }
+    
     private Command createScoreAndDriveDistance(double distanceMeters, double brakeHoldSeconds) {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             	new ZeroGyroCommand(navxSubsystem)
@@ -149,11 +155,33 @@ public class CommandFactory {
                 , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
                 , new WaitCommand(1.0)
                 , new GripperCommand(gripperSubsystem, GripperState.kOpen)
-                , new WaitCommand(1.0)
-                , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.CARRY_METERS,true)
+                , new WaitCommand(0.5)
+                , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)
                 , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
                 , new DriveDistanceCommand(driveSubsystem, distanceMeters, 0.4, 0.3, .1)
                 , new DriveBrakeForSeconds(driveSubsystem, brakeHoldSeconds)
+            );
+            sg.setName("AutonomousBalanceDeadRecCommand");
+            return sg;
+    	
+    }
+    
+    private Command createScoreMoveAndBalance(double distanceMeters, double brakeHoldSeconds, double moveSpeed, double balanceSpeed) {
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+            	new ZeroGyroCommand(navxSubsystem)
+                , new GripperCommand(gripperSubsystem, GripperState.kClose)
+                , new DriveSetBrake(driveSubsystem)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)            
+                , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
+                , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
+                , new WaitCommand(1.0)
+                , new GripperCommand(gripperSubsystem, GripperState.kOpen)
+                , new WaitCommand(0.5)
+                , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)
+                , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
+                , new DriveDistanceCommand(driveSubsystem, distanceMeters, moveSpeed, 0.3, .1)
+                , new DriveBrakeForSeconds(driveSubsystem, brakeHoldSeconds)
+                , new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, balanceSpeed)
             );
             sg.setName("AutonomousBalanceDeadRecCommand");
             return sg;
@@ -200,12 +228,8 @@ public class CommandFactory {
 	}
 
     public Command alignHorizontalToTag( Supplier<DriveInput> operatorInput) {
-  		return new HorizontalAlignWithTagCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState );
+  		return new HorizontalAlignWithTagCommand(driveSubsystem,ledSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState );
     }	
-	
-    public Command alignToScoringLocation(TargetNodeSupplier targetSupplier, Supplier<DriveInput> operatorInput) {
-  		return new AlignToScoringLocationCommand(driveSubsystem,addYawToOperatorJoystickInput(operatorInput),robotState, robotState  );
-    }
 
     public Command snapYawDegreesCommand(double angle) {
         return new SnapYawDegreesCommand(driveSubsystem, angle,robotState );
@@ -223,6 +247,14 @@ public class CommandFactory {
         return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.RIGHT);
     }
 
+    public Command oneLocationLeftCommand() {
+        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.SCORE_LEFT);
+    }
+
+    public Command oneLocationRightCommand() {
+        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.SCORE_RIGHT);
+    }
+    
     public Command nudgeForwardCommand() {
         return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.FORWARD);
     }
@@ -271,31 +303,19 @@ public class CommandFactory {
         return new GripperCommand(gripperSubsystem, GripperState.kClose);
     }
 
-    public Command groundScoringPosition() {
-        return new ParallelCommandGroup(
-            new ConditionalCommand(new InstantCommand(), 
-            new SequentialCommandGroup( groundRetractedPosition(), new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_LOW_DEGREES, false)),
-            elbowSubsystem::isSafeToExtendArm),
-            new PositionTelescopeCommand(armSubsystem, 0, true)
-        );
-    }
-
-    public Command loadingPositionCommand() {
+    public Command scoreHighCommand() {
         return new SequentialCommandGroup(
-            new ConditionalCommand(new InstantCommand(), groundRetractedPosition(), elbowSubsystem::isSafeToExtendArm),
-            new ParallelCommandGroup(
-                new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.LOAD_STATION_DEGREES, true),
-                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.LOAD, true)
-            )
-        );
-    }
+        		new ConeDeployCommand(elbowSubsystem, gripperSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_RELEASE_DEGREES),
+                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true),
+                new GripperCommand(gripperSubsystem, GripperState.kClose)
+            );    	
+    }    
     
     public Command homeTelescopeAndElbow() {
     	SequentialCommandGroup sg =  new SequentialCommandGroup( 
     			armPositionHome(),
     			minElbowCommand()    			
-    	);
-    	
+    	);    	
     	sg.setName("homeTelescopeAndElbow");
     	return sg;
     }
