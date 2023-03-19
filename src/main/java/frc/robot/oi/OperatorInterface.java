@@ -9,11 +9,8 @@ import frc.robot.adapter.JoystickDriveInputSupplier;
 
 public class OperatorInterface {
 
-
-
     private CommandJoystick driveStick;
     private CommandJoystick operatorPanel;
-    private CommandJoystick operatorStick;
     private CommandFactory commandFactory;
     private JoystickDriveInputSupplier hidJoystickDriveInputSupplier;
     private Supplier<Boolean> gripperStateSupplier;
@@ -26,7 +23,6 @@ public class OperatorInterface {
         this.gripperStateSupplier = () -> {  return ! operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER); }; 
 
         setupButtons();
-
     }
 
     private void setupButtons() {
@@ -34,11 +30,12 @@ public class OperatorInterface {
         .onTrue(commandFactory.setDriverRotationEnableCommand(true))
         .onFalse(commandFactory.setDriverRotationEnableCommand(false));
 
-	     driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
-	         .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
+	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
+	        .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
 
-        driveStick.button(RobotConstants.DRIVER_STICK.PRECISION_DRIVE)
-            .onTrue(commandFactory.togglePrecisionDriveCommand());
+        driveStick.button(RobotConstants.DRIVER_STICK.DEPLOY_BRAKE)
+            .onTrue(commandFactory.deployBrakeCommand())
+            .onFalse(commandFactory.retractBrakeCommand());
 
         driveStick.button(RobotConstants.DRIVER_STICK.BRAKE_COAST)
             .onTrue(commandFactory.toggleBrakeModeCommand());
@@ -72,34 +69,35 @@ public class OperatorInterface {
 
         // *******  Operator Panel  *******
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.GRIPPER)
-            .onTrue(commandFactory.closeGripperCommand())
-            .onFalse(commandFactory.openGripperCommand());            
+            .onTrue(commandFactory.toggleGripperCommand());           
 
 	    operatorPanel.button(RobotConstants.OPERATOR_PANEL.PIVOT_UP)
 	        .whileTrue(commandFactory.nudgeElbowUpCommand());
+
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.PIVOT_DOWN)
 	        .whileTrue(commandFactory.nudgeElbowDownCommand());
+        
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.TELESCOPE_IN)
 	        .whileTrue(commandFactory.nudgeArmBackwardCommand());
+        
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.TELESCOPE_OUT)
 	        .whileTrue(commandFactory.nudgeArmForwardCommand());
 
-
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
-        .onTrue(commandFactory.dialCarryPosition());
+            .onTrue(commandFactory.dialCarryPosition());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
-        .onTrue(commandFactory.dialLoadPosition());
+            .onTrue(commandFactory.dialLoadPosition());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.LEFT_APRILTAG)
-        .onTrue(commandFactory.dialHighPosition());
+            .onTrue(commandFactory.dialHighPosition());
 
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.MIDDLE_APRILTAG)
-        .onTrue(commandFactory.dialMiddlePosition());
+            .onTrue(commandFactory.dialMiddlePosition());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.RIGHT_APRILTAG)
-        .onTrue(commandFactory.groundScoringElbowCommand());
+            .onTrue(commandFactory.groundScoringElbowCommand());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.AUTO)
         	.whileTrue(commandFactory.scoreHighCommand());
