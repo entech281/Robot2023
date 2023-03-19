@@ -14,7 +14,7 @@ public class DriveInput implements Sendable {
     private double forward;
     private double right;
     private double rotation;
-    private double yawAngleDegrees = 0.0; //only for field abs
+    private double yawAngleDegrees = 0.0; 
     
     public double getYawAngleDegrees() {
 		return yawAngleDegrees;

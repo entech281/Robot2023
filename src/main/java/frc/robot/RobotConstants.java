@@ -16,7 +16,7 @@ public final class RobotConstants {
     public interface PWM {
         public static final int PWM_0 = 0;
         public static final int PWM_1 = 1;
-        public static final int LED_STRIP = 9;
+        public static final int LED_STRIP = 8;
     }
     public interface INDICATOR_VALUES{
     	public static final double POSITION_UNKNOWN = -1.0;
@@ -67,10 +67,10 @@ public final class RobotConstants {
     		  public static final double MIN_METERS = 0.0;
     		  public static final double CARRY_METERS = 0.1;
     		  public static final double SCORE_MIDDLE_METERS = 0.3;
-    		  public static final double SCORE_HIGH_METERS = 0.55;
+    		  public static final double SCORE_HIGH_METERS = 0.52;
     		  public static final double SAFE = 0.1;
               public static final double LOAD = 0.87155;
-    		  public static final double MAX_METERS = 0.55; //0.52 max extension
+    		  public static final double MAX_METERS = 0.53; //0.52 max extension
               public static final double MIN_ARM_LENGTH_M = 0.87155; 
               public static final double MAX_ARM_LENGTH_M = 1.45;
     	}
@@ -111,7 +111,7 @@ public final class RobotConstants {
     		  public static double SCORE_MIDDLE_DEGREES = 94.0;
     		  public static double LOAD_STATION_DEGREES = 92.0;
     		  public static double SCORE_HIGH_DEGREES = 127;
-    		  public static double SCORE_HIGH_RELEASE_DEGREES = 118;
+    		  public static double SCORE_HIGH_RELEASE_DEGREES = 110;
      		  public static final double MAX_POSITION_DEGREES = 127.0;  
     	}
     }
