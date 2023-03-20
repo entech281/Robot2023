@@ -27,7 +27,6 @@ import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.ToggleGripperCommand;
-import frc.robot.commands.TogglePrecisionDriveCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeElbowDownCommand;
@@ -293,10 +292,6 @@ public class CommandFactory {
 
     public Command toggleBrakeModeCommand() {
         return new DriveToggleBrakeMode(driveSubsystem);
-    }
-
-    public Command togglePrecisionDriveCommand() {
-        return new TogglePrecisionDriveCommand(driveSubsystem);
     }
 
 	public Command toggleFieldAbsoluteCommand() {

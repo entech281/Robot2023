@@ -33,6 +33,7 @@ public class OperatorInterface {
 	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
 	        .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
 
+
         driveStick.button(RobotConstants.DRIVER_STICK.DEPLOY_BRAKE)
             .onTrue(commandFactory.deployBrakeCommand())
             .onFalse(commandFactory.retractBrakeCommand());
