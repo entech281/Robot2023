@@ -90,7 +90,7 @@ public final class RobotConstants {
     		public static final double MOVE_TOLERANCE_DEGREES= 1.0; 
     		public static final int CURRENT_LIMIT_AMPS=30;
     		public static final int MAX_SPIKE_CURRENT=50;
-    		public static final double COUNTS_PER_DEGREE=1.9075; 
+    		public static final double COUNTS_PER_DEGREE=1.80; 
     		public static final double ELBOW_SLOWDOWN_SPEED= 0.1;
     		public static final double MIDDLE_HIGH_CONE_DEPLOY_THRESHOLD = 82.;
     	} 
@@ -188,11 +188,10 @@ public final class RobotConstants {
         public static final int AUTO = 4;
         public static final int TELESCOPE_OUT = 5;
         public static final int TELESCOPE_IN = 6;
-        public static final int OFF = 8;
-        public static final int LOAD_APRILTAG = 9;
-        public static final int LEFT_APRILTAG = 10;
-        public static final int MIDDLE_APRILTAG = 11;
-        public static final int RIGHT_APRILTAG = 12;
+        public static final int ARM_OFF = 10;
+        public static final int ARM_LOAD = 8;
+        public static final int ARM_HIGH = 9;
+        public static final int ARM_MIDDLE = 11;
     }
     public interface CAN {
     	public static final int FRONT_LEFT_MOTOR = 1;

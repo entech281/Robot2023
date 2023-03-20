@@ -84,21 +84,18 @@ public class OperatorInterface {
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.TELESCOPE_OUT)
 	        .whileTrue(commandFactory.nudgeArmForwardCommand());
 
-        operatorPanel.button(RobotConstants.OPERATOR_PANEL.OFF)
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.ARM_OFF)
             .onTrue(commandFactory.dialCarryPosition());
 
-        operatorPanel.button(RobotConstants.OPERATOR_PANEL.LOAD_APRILTAG)
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.ARM_LOAD)
             .onTrue(commandFactory.dialLoadPosition());
 
-        operatorPanel.button(RobotConstants.OPERATOR_PANEL.LEFT_APRILTAG)
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.ARM_HIGH)
             .onTrue(commandFactory.dialHighPosition());
 
 
-        operatorPanel.button(RobotConstants.OPERATOR_PANEL.MIDDLE_APRILTAG)
+        operatorPanel.button(RobotConstants.OPERATOR_PANEL.ARM_MIDDLE)
             .onTrue(commandFactory.dialMiddlePosition());
-
-        operatorPanel.button(RobotConstants.OPERATOR_PANEL.RIGHT_APRILTAG)
-            .onTrue(commandFactory.groundScoringElbowCommand());
 
         operatorPanel.button(RobotConstants.OPERATOR_PANEL.AUTO)
         	.whileTrue(commandFactory.scoreHighCommand());
@@ -133,7 +130,7 @@ public class OperatorInterface {
 
     public void setDefaultCommands() {
     	commandFactory.setDefaultDriveCommand(commandFactory.filteredDriveCommand(hidJoystickDriveInputSupplier));
-    	commandFactory.setDefaultGripperCommand(commandFactory.gripperPanelSyncCommand(gripperStateSupplier));
+    	// commandFactory.setDefaultGripperCommand(commandFactory.gripperPanelSyncCommand(gripperStateSupplier));
     }
 
 }
