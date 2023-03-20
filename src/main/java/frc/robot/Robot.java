@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
 	NavXSubSystem navx = new NavXSubSystem();
 	DriveSubsystem drive = new DriveSubsystem();
 	LEDSubsystem led = new LEDSubsystem();
-  BrakeSubsystem brake = new BrakeSubsystem();
+    BrakeSubsystem brake = new BrakeSubsystem();
 	
 	allSubsystems = new SubsystemHolder(drive, navx, vision, arm, elbow, gripper, led, brake);
 	

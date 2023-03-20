@@ -26,7 +26,7 @@ public class SubsystemHolder {
 	}
 	
 	public List<EntechSubsystem> asList(){
-		return List.of(drive,vision,navx,arm,elbow,gripper);
+		return List.of(drive,vision,navx,arm,elbow,gripper,brake);
 	}
 	public DriveSubsystem getDrive() {
 		return drive;

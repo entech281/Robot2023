@@ -80,42 +80,44 @@ public class RobotContext {
     	//photonvision pose estimate
     	Optional<Pose2d> photonEstimatedPose = vs.getPhotonEstimatedPose2d();
 
+    	
     	if (photonEstimatedPose.isPresent() ){
     		Pose2d pep = photonEstimatedPose.get();
     		movingAveragePose.update(pep);
     		LateralOffset lateralOffset = lateralAlignCalculator.findOffsetToNearestTarget(movingAveragePose.getX(), movingAveragePose.getY());
     		robotState.closestScoringLocationOffset = Optional.of(lateralOffset);
 
-    		Color c = getAlignColor(lateralOffset);
-    		ledSubsystem.setColor(c);
-    		robotState.alignState = c;      		
+    		setAlignState ( getAlignColor(lateralOffset)); 		
     		robotState.realLateralOffset = lateralOffset.getLateralOffsetToLocationMeters();
     		
-    		Pose2d tagPose = lateralOffset.getNearestLocation().computeAbsolutePose();
-    		double distanceFromTag = pep.getTranslation().getDistance(tagPose.getTranslation());
-    		double MAX_SPEED_WHEN_TAG_CLOSE = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
-    		
-    		if ( distanceFromTag < RobotConstants.ALIGNMENT.TAG_TOO_CLOSE_FOR_FULL_SPEED) {
-    			if ( elbow.getActualPosition() > RobotConstants.ALIGNMENT.TAG_TOO_CLOSE_FOR_FULL_SPEED) {
-    				driveSubsystem.setMaxSpeedPercent(RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT);
-    				DriverStation.reportWarning(
-    						String.format("Forward Speed Reduced to %.2f : tag within %.2f meters.",MAX_SPEED_WHEN_TAG_CLOSE,distanceFromTag),
-    				false);
-    			}
-    		}
+    		capSpeedIfTooCloseToTag(pep,lateralOffset);
+
     	}
     	else {
-    		Color c = Color.kRed;
-    		ledSubsystem.setColor(c);
-    		robotState.alignState = c;    
-    		
-    		driveSubsystem.clearSpeedLimit();
+    		setAlignState(Color.kRed);
+     				
     	}
-    	
-    	
-    	
     }   
 
+    private void setAlignState(Color c) {
+		ledSubsystem.setColor(c);
+		robotState.alignState = c;      	
+    }
+    private void capSpeedIfTooCloseToTag(Pose2d currentRobotPose, LateralOffset lateralOffset) {
+    	driveSubsystem.clearSpeedLimit(); //clear speed as default
+		Pose2d tagPose = lateralOffset.getNearestLocation().computeAbsolutePose();
+		double distanceFromTag = currentRobotPose.getTranslation().getDistance(tagPose.getTranslation());
+		double MAX_SPEED_WHEN_TAG_CLOSE = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
+		
+		if ( (distanceFromTag < RobotConstants.ALIGNMENT.TAG_TOO_CLOSE_FOR_FULL_SPEED) &&
+			 (elbow.getActualPosition() > RobotConstants.ALIGNMENT.TAG_TOO_CLOSE_FOR_FULL_SPEED)) {
+				driveSubsystem.setMaxSpeedPercent(RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT);
+				DriverStation.reportWarning(
+						String.format("Forward Speed Reduced to %.2f : tag within %.2f meters.",MAX_SPEED_WHEN_TAG_CLOSE,distanceFromTag),
+				false);
+		}    	
+    }
+    
     private Color getAlignColor(LateralOffset offset) {
     	double absOffset = Math.abs(offset.getLateralOffsetToLocationMeters());
     	ScoringLocation scoringLocation = offset.getNearestLocation();
