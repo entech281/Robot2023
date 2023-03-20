@@ -64,6 +64,9 @@ public class AprilTagLocation {
   public Pose3d asPose3d() {
 	  return new Pose3d(asPose2d());
   }
+  public boolean isLoading() {
+	  return this.aprilTagID == 4 || this.aprilTagID == 5;
+  }
   
   public int getId() {
 	  return this.aprilTagID;

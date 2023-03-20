@@ -19,6 +19,7 @@ public class TargetNode {
     public static double LEFT_NODE_Y_OFSET_METERS = Units.inchesToMeters(-22);
     public static double MIDDLE_NODE_Y_OFSET_METERS = 0;
     public static double RIGHT_NODE_Y_OFSET_METERS = Units.inchesToMeters(22);
+    public static double LOADING_STATION_OFFSET = Units.inchesToMeters(20);
     
     public static TargetNode A1 = new TargetNode(A_ROW_X_METERS,LEFT_NODE_Y_OFSET_METERS,NodeID.A1);
     public static TargetNode A2 = new TargetNode(A_ROW_X_METERS,MIDDLE_NODE_Y_OFSET_METERS,NodeID.A2);
@@ -26,6 +27,10 @@ public class TargetNode {
     public static TargetNode B1 = new TargetNode(B_ROW_X_METERS,LEFT_NODE_Y_OFSET_METERS,NodeID.B1);
     public static TargetNode B2 = new TargetNode(B_ROW_X_METERS,MIDDLE_NODE_Y_OFSET_METERS,NodeID.B2);
     public static TargetNode B3 = new TargetNode(B_ROW_X_METERS,RIGHT_NODE_Y_OFSET_METERS,NodeID.B3);
+    public static TargetNode LR = new TargetNode(0,-LOADING_STATION_OFFSET,NodeID.LR);
+    public static TargetNode LL = new TargetNode(0,LOADING_STATION_OFFSET,NodeID.LL);
+    
+    
     public static TargetNode NONE = new TargetNode(0,0,NodeID.NONE);
     
     public static enum NodeID {
@@ -35,6 +40,8 @@ public class TargetNode {
         B1,
         B2,
         B3,
+        LL,
+        LR,
         NONE
     }    
     
@@ -66,6 +73,15 @@ public class TargetNode {
     }
     public boolean noTargetSelected(){
         return id == NodeID.NONE;
+    }
+    public boolean isCube() {
+    	return id == NodeID.A2 || id == NodeID.B2;
+    }
+    public boolean isLoading() {
+    	return id == NodeID.LL || id == NodeID.LR;
+    }
+    public boolean isCone() {
+    	return (!isCube() && !isLoading());
     }
     @Override
     public boolean equals(Object o) {

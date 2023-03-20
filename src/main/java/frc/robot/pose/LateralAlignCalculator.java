@@ -20,35 +20,32 @@ public class LateralAlignCalculator {
 		double closestSoFar = 999;	
 		
 		double FIELD_MIDPOINT_X_METERS = 8.26;
-		List<AprilTagLocation> aprilTags = new ArrayList<>();
+		List<ScoringLocation> scoringLocationsToTry = new ArrayList<>();
+		
 		if ( x > FIELD_MIDPOINT_X_METERS) {
-			aprilTags.add(AprilTagLocation.RED_LEFT);
-			aprilTags.add(AprilTagLocation.RED_MIDDLE);
-			aprilTags.add(AprilTagLocation.RED_RIGHT);
-			aprilTags.add(AprilTagLocation.BLUE_LOADING);
+			for ( AprilTagLocation at: List.of (AprilTagLocation.RED_LEFT,AprilTagLocation.RED_MIDDLE ,AprilTagLocation.RED_RIGHT) ) {
+				for ( TargetNode tn: List.of (	TargetNode.A1,TargetNode.A2,TargetNode.A3 )) {
+					scoringLocationsToTry.add(new ScoringLocation( at, tn));
+				}
+			}
+			scoringLocationsToTry.add( new ScoringLocation(AprilTagLocation.BLUE_LOADING,TargetNode.LL ));
+			scoringLocationsToTry.add( new ScoringLocation(AprilTagLocation.BLUE_LOADING,TargetNode.LR ));
 		}
 		else {
-			aprilTags.add(AprilTagLocation.BLUE_LEFT);
-			aprilTags.add(AprilTagLocation.BLUE_MIDDLE);
-			aprilTags.add(AprilTagLocation.BLUE_RIGHT);
-			aprilTags.add(AprilTagLocation.RED_LOADING);			
+			for ( AprilTagLocation at: List.of (AprilTagLocation.BLUE_LEFT,AprilTagLocation.BLUE_MIDDLE ,AprilTagLocation.BLUE_RIGHT) ) {
+				for ( TargetNode tn: List.of (	TargetNode.A1,TargetNode.A2,TargetNode.A3 )) {
+					scoringLocationsToTry.add(new ScoringLocation( at, tn));
+				}
+			}
+			scoringLocationsToTry.add( new ScoringLocation(AprilTagLocation.RED_LOADING,TargetNode.LL ));
+			scoringLocationsToTry.add( new ScoringLocation(AprilTagLocation.RED_LOADING,TargetNode.LR ));		
 		}
 		
-		List<TargetNode> targetNodes = List.of(
-			TargetNode.A1,
-			TargetNode.A2,
-			TargetNode.A3
-		);
-		
-		for ( AprilTagLocation at: aprilTags) {
-			for ( TargetNode tn: targetNodes) {
-				ScoringLocation s = new ScoringLocation(at,tn);
-				double dist = yDistanceBetween(y, s);
-				
-				if ( Math.abs(dist) < Math.abs(closestSoFar )) {
-					closest = s;
-					closestSoFar = dist;
-				}
+		for ( ScoringLocation s: scoringLocationsToTry) {
+			double dist = yDistanceBetween(y, s);			
+			if ( Math.abs(dist) < Math.abs(closestSoFar )) {
+				closest = s;
+				closestSoFar = dist;
 			}
 		}
 		return new LateralOffset(closestSoFar, closest) ;

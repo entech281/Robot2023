@@ -21,6 +21,7 @@ import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
 import frc.robot.filters.RobotRelativeDriveFilter;
+import frc.robot.filters.ForwardSpeedLimitFilter;
 import frc.robot.filters.SquareInputsFilter;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
@@ -44,7 +45,7 @@ public class DriveSubsystem extends EntechSubsystem {
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
     private SquareInputsFilter rotationDampingFilter;
-    
+    private ForwardSpeedLimitFilter speedLimitFilter;
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder rearLeftEncoder;
     private RelativeEncoder frontRightEncoder;
@@ -113,6 +114,9 @@ public class DriveSubsystem extends EntechSubsystem {
         yawHoldFilter = new HoldYawFilter();
         yawHoldFilter.enable(true);
         
+        speedLimitFilter = new ForwardSpeedLimitFilter();
+        speedLimitFilter.enable(true);
+        
     }
 
     @Override
@@ -129,7 +133,13 @@ public class DriveSubsystem extends EntechSubsystem {
         robotDrive.feed();
         robotDrive.feedWatchdog();
     }
-  
+    public void setMaxSpeedPercent( double maxSpeed) {
+    	this.speedLimitFilter.setMaxSpeedPercent(maxSpeed);
+    }
+    public void clearSpeedLimit() {
+    	speedLimitFilter.setMaxSpeedPercent(1.0);
+    }
+    
     public void drive(DriveInput di) {
         robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
     }
@@ -181,8 +191,9 @@ public class DriveSubsystem extends EntechSubsystem {
             } else {
     		filtered = robotRelativeFilter.filter(filtered);
             // printDI("DI(6)",filtered);
-            }
+        }
     	
+    	filtered = speedLimitFilter.filter(filtered);
     	
         // printDI("DI(7)",filtered);
         drive(filtered);

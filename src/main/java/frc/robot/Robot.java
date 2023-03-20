@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
 	NavXSubSystem navx = new NavXSubSystem();
 	DriveSubsystem drive = new DriveSubsystem();
 	LEDSubsystem led = new LEDSubsystem();
-  BrakeSubsystem brake = new BrakeSubsystem();
+    BrakeSubsystem brake = new BrakeSubsystem();
 	
 	allSubsystems = new SubsystemHolder(drive, navx, vision, arm, elbow, gripper, led, brake);
 	
@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
 	RobotState robotState = new RobotState();
 	shuffleboardInterface.addRobotState(robotState);
 	robotContext = new RobotContext(
-			robotState,drive,navx,vision, led,new VisionFirstNavxAsBackupPoseEstimator(true)
+			robotState,drive,navx,vision, elbow,led,new VisionFirstNavxAsBackupPoseEstimator(true)
 	);	
 	commandFactory = new CommandFactory(robotState,allSubsystems);
 
