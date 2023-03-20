@@ -90,7 +90,7 @@ public final class RobotConstants {
     		public static final double MOVE_TOLERANCE_DEGREES= 1.0; 
     		public static final int CURRENT_LIMIT_AMPS=30;
     		public static final int MAX_SPIKE_CURRENT=50;
-    		public static final double COUNTS_PER_DEGREE=1.606; 
+    		public static final double COUNTS_PER_DEGREE=1.9075; 
     		public static final double ELBOW_SLOWDOWN_SPEED= 0.1;
     		public static final double MIDDLE_HIGH_CONE_DEPLOY_THRESHOLD = 82.;
     	} 
