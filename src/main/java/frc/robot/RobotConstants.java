@@ -135,7 +135,7 @@ public final class RobotConstants {
         public static final double CUBE_TOLERANCE_METERS = Units.inchesToMeters(4.0);
         public static final double CONE_TOLERANCE_METERS = Units.inchesToMeters(2.0);
         public static final double LOADING_TOLERANCE_METERS = Units.inchesToMeters(8.0);
-        public static final double TAG_TOO_CLOSE_FOR_FULL_SPEED = Units.inchesToMeters(36);
+        public static final double TAG_DISTANCE_TO_REDUCE_SPEED = Units.inchesToMeters(24);
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
