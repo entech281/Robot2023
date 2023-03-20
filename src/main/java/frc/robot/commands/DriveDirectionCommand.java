@@ -56,7 +56,7 @@ public class DriveDirectionCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (driveTimer.get() > Math.abs(timeSec) + 0.5){
+    if (driveTimer.get() > Math.abs(timeSec)){
         return true;
     }
     return false;
