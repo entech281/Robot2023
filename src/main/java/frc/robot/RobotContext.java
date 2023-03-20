@@ -107,7 +107,7 @@ public class RobotContext {
     private void capSpeedIfTooCloseToTag(Pose2d currentRobotPose, LateralOffset lateralOffset) {
     	driveSubsystem.clearSpeedLimit(); //clear speed as default
 		Pose2d tagPose = lateralOffset.getNearestLocation().computeAbsolutePose();
-		double distanceFromTagMeters = currentRobotPose.getTranslation().getDistance(tagPose.getTranslation());
+		double distanceFromTagMeters = Math.abs(tagPose.getX() - currentRobotPose.getX());
 		double MAX_SPEED_WHEN_TAG_CLOSE = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
 		double armProjectionMeters = RobotConstants.ARM.MAX_EXTENSION_METERS * Math.sin(Units.degreesToRadians(elbow.getActualPosition()));
 		
