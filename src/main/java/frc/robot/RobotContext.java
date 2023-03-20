@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.pose.LateralAlignCalculator;
@@ -106,14 +107,14 @@ public class RobotContext {
     private void capSpeedIfTooCloseToTag(Pose2d currentRobotPose, LateralOffset lateralOffset) {
     	driveSubsystem.clearSpeedLimit(); //clear speed as default
 		Pose2d tagPose = lateralOffset.getNearestLocation().computeAbsolutePose();
-		double distanceFromTag = currentRobotPose.getTranslation().getDistance(tagPose.getTranslation());
+		double distanceFromTagMeters = currentRobotPose.getTranslation().getDistance(tagPose.getTranslation());
 		double MAX_SPEED_WHEN_TAG_CLOSE = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
+		double armProjectionMeters = RobotConstants.ARM.MAX_EXTENSION_METERS * Math.sin(Units.degreesToRadians(elbow.getActualPosition()));
 		
-		if ( (distanceFromTag < RobotConstants.ALIGNMENT.TAG_TOO_CLOSE_FOR_FULL_SPEED) &&
-			 (elbow.getActualPosition() > RobotConstants.ALIGNMENT.TAG_TOO_CLOSE_FOR_FULL_SPEED)) {
+		if ( (distanceFromTagMeters < (RobotConstants.ALIGNMENT.TAG_DISTANCE_TO_REDUCE_SPEED) + armProjectionMeters) ) {
 				driveSubsystem.setMaxSpeedPercent(RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT);
 				DriverStation.reportWarning(
-						String.format("Forward Speed Reduced to %.2f : tag within %.2f meters.",MAX_SPEED_WHEN_TAG_CLOSE,distanceFromTag),
+						String.format("Forward Speed Reduced to %.2f : tag within %.2f meters.",MAX_SPEED_WHEN_TAG_CLOSE,distanceFromTagMeters),
 				false);
 		}    	
     }
