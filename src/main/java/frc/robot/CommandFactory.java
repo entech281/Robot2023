@@ -139,15 +139,14 @@ public class CommandFactory {
         double MOVE_DISTANCE_METERS = -4.0;
         double HOLD_BRAKE_TIME = 2.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-              new ZeroGyroCommand(navxSubsystem)
-            , new GripperCommand(gripperSubsystem, GripperState.kClose)
-            , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
-            , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
-            , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
-            , new WaitCommand(1.0)
-            , new GripperCommand(gripperSubsystem, GripperState.kOpen)
-            , new WaitCommand(0.5)
-            , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)
+    	new ZeroGyroCommand(navxSubsystem)
+	        , new GripperCommand(gripperSubsystem, GripperState.kClose)
+	        , new DriveSetBrake(driveSubsystem)
+	        , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
+	        , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
+	        , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
+    		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+            , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)	        
             , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
             , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
             , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
@@ -385,8 +384,7 @@ public class CommandFactory {
     public Command scoreHighCommand() {
         return new SequentialCommandGroup(
         		new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
-                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true),
-                new GripperCommand(gripperSubsystem, GripperState.kClose)
+                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
             );
     }
 
