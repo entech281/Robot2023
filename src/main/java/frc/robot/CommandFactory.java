@@ -384,7 +384,7 @@ public class CommandFactory {
     public Command scoreHighCommand() {
         return new SequentialCommandGroup(
         		new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
-                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
+                dialCarryPosition()
             );
     }
 
@@ -422,7 +422,7 @@ public class CommandFactory {
      public Command dialMiddlePosition() {
         return new SequentialCommandGroup(
             middleScoringElbowCommand(),
-            middleScoringElbowCommand()
+            new PositionTelescopeCommand(armSubsystem, 0.16, true)
         );
      }
 
