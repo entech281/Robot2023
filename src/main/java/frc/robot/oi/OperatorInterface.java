@@ -53,16 +53,16 @@ public class OperatorInterface {
 	        .onTrue(commandFactory.snapYawDegreesCommand(0));
 
 	    driveStick.pov(RobotConstants.DRIVER_STICK.POV.RIGHT)
-	        .onTrue(commandFactory.nudgeRightCommand());
+	        .whileTrue(commandFactory.nudgeRightCommand());
 
 	    driveStick.pov(RobotConstants.DRIVER_STICK.POV.LEFT)
-	        .onTrue(commandFactory.nudgeLeftCommand());
+	        .whileTrue(commandFactory.nudgeLeftCommand());
 
 	    driveStick.pov(RobotConstants.DRIVER_STICK.POV.FORWARD)
-	        .onTrue(commandFactory.nudgeForwardCommand());
+	        .whileTrue(commandFactory.nudgeForwardCommand());
 
 	    driveStick.pov(RobotConstants.DRIVER_STICK.POV.BACKWARD)
-	        .onTrue(commandFactory.nudgeBackwardCommand());
+	        .whileTrue(commandFactory.nudgeBackwardCommand());
 
 	    driveStick.button(RobotConstants.DRIVER_STICK.NUDGE_YAW_LEFT)
 	        .onTrue(commandFactory.nudgeYawLeftCommand());

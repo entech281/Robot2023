@@ -83,7 +83,6 @@ public class CommandFactory {
     			autonomousRightCommand(),
     			autonomousLeftCommand(),
     			autonomousConeCommand()
-
     	);
 
     }
@@ -153,10 +152,11 @@ public class CommandFactory {
     }
 
     public Command autonomousRightCommand() {
-        double MOVE_DISTANCE_METERS = -4.0;
-        double MOVE_SECS  = 0.2;
-        double JOG_FORWARD_SPEED = -0.1;
-        double JOG_RIGHT_SPEED = -0.1;
+
+        double MOVE_DISTANCE_METERS = -3.2;
+        double MOVE_SECS  = 1.5;    
+        double JOG_FORWARD_SPEED = -0.15;
+        double JOG_RIGHT_SPEED = -0.15;
         double HOLD_BRAKE_TIME = 2.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             	new ZeroGyroCommand(navxSubsystem)
@@ -170,7 +170,7 @@ public class CommandFactory {
                 , new WaitCommand(0.5)
                 , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)
                 , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
-                , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,HOLD_BRAKE_TIME)
+                , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,MOVE_SECS)
                 , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
                 , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
             );
@@ -180,10 +180,11 @@ public class CommandFactory {
 
     public Command autonomousLeftCommand() {
     	//TODO: refactor. high duplicatoin betwene center auto, and with Right ( this is a mirror of Right)
-        double MOVE_DISTANCE_METERS = -4.0;
-        double MOVE_SECS  = 0.2;
-        double JOG_FORWARD_SPEED = -0.1;
-        double JOG_RIGHT_SPEED = 0.1;
+        double MOVE_DISTANCE_METERS = -3.2;
+        double MOVE_SECS  = 1.5;    
+        double JOG_FORWARD_SPEED = -0.15;
+        double JOG_RIGHT_SPEED = 0.15;
+
         double HOLD_BRAKE_TIME = 2.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             	new ZeroGyroCommand(navxSubsystem)
@@ -196,8 +197,8 @@ public class CommandFactory {
                 , new GripperCommand(gripperSubsystem, GripperState.kOpen)
                 , new WaitCommand(0.5)
                 , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)
-                , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
-                , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,HOLD_BRAKE_TIME)
+//                , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)
+                , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,MOVE_SECS)
                 , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
                 , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
             );
@@ -229,9 +230,9 @@ public class CommandFactory {
 
     public Command autonomousAutoBalanceCommand() {
         double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
-        double MOVE_SPEED = 0.2;              // Speed when clearing the community zone
-        double HOLD_BRAKE_TIME = 1.0;         // Time to hold brake when changing direction
-        double BALANCE_SPEED = 0.13;          // Speed when trying to balance
+        double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
+        double HOLD_BRAKE_TIME = 0;         // Time to hold brake when changing direction
+        double BALANCE_SPEED = 0.16;          // Speed when trying to balance
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             	new ZeroGyroCommand(navxSubsystem)
                 , new GripperCommand(gripperSubsystem, GripperState.kClose)
