@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.Timer;
 /** An example command that uses an example subsystem. */
 public class DriveDirectionCommand extends EntechCommandBase {
   private final DriveSubsystem drive;
-  private double forwardTime;
-  private double rightTime;
-  private double speed;
+  private double forwardSpeed;
+  private double rightSpeed;
+  private double timeSec;
   private Timer driveTimer;
 
   /**
@@ -23,12 +23,12 @@ public class DriveDirectionCommand extends EntechCommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveDirectionCommand(DriveSubsystem drive, double forwardTimeSec, double rightTimeSec, double speed) {
+  public DriveDirectionCommand(DriveSubsystem drive, double forwardSpeed, double rightSpeed, double timeSec) {
       super(drive);
       this.drive = drive;
-      this.speed = speed;
-      this.forwardTime = forwardTimeSec;
-      this.rightTime = rightTimeSec;
+      this.timeSec = timeSec;
+      this.forwardSpeed = forwardSpeed;
+      this.rightSpeed = rightSpeed;
       driveTimer = new Timer();
   }
 
@@ -43,13 +43,7 @@ public class DriveDirectionCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    DriveInput di = new DriveInput(0.,0.,0.,0.);
-    if (driveTimer.get() < Math.abs(forwardTime)) {
-        di.setForward(Math.copySign(speed, forwardTime));
-    }
-    if (driveTimer.get() < Math.abs(rightTime)) {
-        di.setRight(Math.copySign(speed, rightTime));
-    }
+    DriveInput di = new DriveInput(forwardSpeed,rightSpeed,0.,0.);
     drive.drive(di);
   }
 
@@ -57,13 +51,12 @@ public class DriveDirectionCommand extends EntechCommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.stop();
-    drive.setDriveMode(DriveMode.COAST);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (driveTimer.get() > Math.max( Math.abs(forwardTime), Math.abs(rightTime)) + 0.5){
+    if (driveTimer.get() > Math.abs(timeSec)){
         return true;
     }
     return false;
