@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -88,7 +90,7 @@ public final class RobotConstants {
     		public static final double MOVE_TOLERANCE_DEGREES= 1.0; 
     		public static final int CURRENT_LIMIT_AMPS=30;
     		public static final int MAX_SPIKE_CURRENT=50;
-    		public static final double COUNTS_PER_DEGREE=1.75; 
+    		public static final double COUNTS_PER_DEGREE=1.606; 
     		public static final double ELBOW_SLOWDOWN_SPEED= 0.1;
     		public static final double MIDDLE_HIGH_CONE_DEPLOY_THRESHOLD = 82.;
     	} 
@@ -122,11 +124,18 @@ public final class RobotConstants {
     	public static final boolean INIT_CLAW_STATE = false;
     }
     public interface ALIGNMENT{
+    	
         public static final double ANGLE_TOLERANCE_DEGREES = 2.0;
         public static final double DISTANCE_TOLERANCE_METERS = 0.0508;
-        public static final double ALIGN_TOLERANCE_METERS = 0.02;
-        public static final double ALIGN_CLOSE_METERS = 0.06;
-        public static final double ALIGN_KINDA_CLOSE_METERS = 0.15;        
+        //public static final double ALIGN_TOLERANCE_METERS = 0.02;
+        public static final double ALIGN_CLOSE_WINDOW_METERS = Units.inchesToMeters(3.0); //gets added outside the tolerance window
+        //public static final double ALIGN_KINDA_CLOSE_METERS = 0.15;
+        
+        //tolerances are vs nominal, so the 'windows' is 2x this value
+        public static final double CUBE_TOLERANCE_METERS = Units.inchesToMeters(4.0);
+        public static final double CONE_TOLERANCE_METERS = Units.inchesToMeters(2.0);
+        public static final double LOADING_TOLERANCE_METERS = Units.inchesToMeters(8.0);
+        public static final double TAG_TOO_CLOSE_FOR_FULL_SPEED = Units.inchesToMeters(36);
     }
     public interface JOYSTICKS {
         public static final int DRIVER_JOYSTICK = 0;
@@ -140,6 +149,7 @@ public final class RobotConstants {
     	public static final boolean DEFAULT_FIELD_ABSOLUTE = false;
         public static final double PRECISION_DRIVE_FACTOR = 0.4;
         public static final double ROTATION_DAMPING_FACTOR = 0.5;
+        public static final double SPEED_LIMIT_WITH_ARM_OUT = 0.5;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;

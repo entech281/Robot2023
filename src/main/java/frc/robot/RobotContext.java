@@ -4,14 +4,17 @@ import java.util.Optional;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.pose.LateralAlignCalculator;
 import frc.robot.pose.LateralOffset;
 import frc.robot.pose.MovingAveragePose;
 import frc.robot.pose.PoseEstimator;
 import frc.robot.pose.RecognizedAprilTagTarget;
+import frc.robot.pose.ScoringLocation;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.NavxStatus;
@@ -46,8 +49,10 @@ public class RobotContext {
 			DriveSubsystem drive, 
 			NavXSubSystem navx, 
 			VisionSubsystem vision,	
+			ElbowSubsystem elbow,
 			LEDSubsystem ledSubsystem,
 			PoseEstimator poseEstimator) {
+		this.elbow = elbow;
 		this.ledSubsystem = ledSubsystem;
 	    driveSubsystem = drive;
 	    navXSubSystem = navx;
@@ -81,31 +86,47 @@ public class RobotContext {
     		LateralOffset lateralOffset = lateralAlignCalculator.findOffsetToNearestTarget(movingAveragePose.getX(), movingAveragePose.getY());
     		robotState.closestScoringLocationOffset = Optional.of(lateralOffset);
 
-    		Color c = getAlignColor(lateralOffset.getLateralOffsetToLocationMeters());
+    		Color c = getAlignColor(lateralOffset);
     		ledSubsystem.setColor(c);
     		robotState.alignState = c;      		
     		robotState.realLateralOffset = lateralOffset.getLateralOffsetToLocationMeters();
+    		
+    		Pose2d tagPose = lateralOffset.getNearestLocation().computeAbsolutePose();
+    		double distanceFromTag = pep.getTranslation().getDistance(tagPose.getTranslation());
+    		double MAX_SPEED_WHEN_TAG_CLOSE = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
+    		
+    		if ( distanceFromTag < RobotConstants.ALIGNMENT.TAG_TOO_CLOSE_FOR_FULL_SPEED) {
+    			if ( elbow.getActualPosition() > RobotConstants.ALIGNMENT.TAG_TOO_CLOSE_FOR_FULL_SPEED) {
+    				driveSubsystem.setMaxSpeedPercent(RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT);
+    				DriverStation.reportWarning(
+    						String.format("Forward Speed Reduced to %.2f : tag within %.2f meters.",MAX_SPEED_WHEN_TAG_CLOSE,distanceFromTag),
+    				false);
+    			}
+    		}
     	}
-//    	else {
-//    		robotState.closestScoringLocationOffset = Optional.empty();
-//    		ledSubsystem.setNormal();
-//    	}
+    	else {
+    		Color c = Color.kRed;
+    		ledSubsystem.setColor(c);
+    		robotState.alignState = c;    
+    		
+    		driveSubsystem.clearSpeedLimit();
+    	}
     	
-    }    
-    
-    private Color getAlignColor(double difference) {
-    	double absDifference = Math.abs(difference);
-    	if ( absDifference < RobotConstants.ALIGNMENT.ALIGN_TOLERANCE_METERS) {
+    	
+    	
+    }   
+
+    private Color getAlignColor(LateralOffset offset) {
+    	double absOffset = Math.abs(offset.getLateralOffsetToLocationMeters());
+    	ScoringLocation scoringLocation = offset.getNearestLocation();
+    	if ( absOffset < scoringLocation.getAlignmentToleranceMeters()) {
     		return Color.kGreen;
     	}
-    	else if ( absDifference < RobotConstants.ALIGNMENT.ALIGN_CLOSE_METERS) {
-    		return Color.kYellowGreen;
-    	}
-    	else if ( absDifference < RobotConstants.ALIGNMENT.ALIGN_KINDA_CLOSE_METERS) {
+    	else if ( absOffset < scoringLocation.getAlignmentToleranceMeters() + RobotConstants.ALIGNMENT.ALIGN_CLOSE_WINDOW_METERS) {
     		return Color.kYellow;
     	}
     	else {
-    		return Color.kBlueViolet;
+    		return Color.kOrange;
     	}
     }
 
@@ -116,6 +137,7 @@ public class RobotContext {
     private VisionSubsystem visionSubsystem;
     private LEDSubsystem ledSubsystem;
 	private PoseEstimator poseEstimator;
+	private ElbowSubsystem elbow;
 
 
 }

@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.RobotConstants;
 
 /**
  *
@@ -28,7 +29,18 @@ public class ScoringLocation {
     public boolean isThirdRow(){
         return selectedNode.isThirdRow();
     }
-    
+
+    public double getAlignmentToleranceMeters() {
+    	if ( selectedNode.isCone()) {
+    		return RobotConstants.ALIGNMENT.CONE_TOLERANCE_METERS;
+    	}
+    	else if ( selectedNode.isCube()) {
+    		return RobotConstants.ALIGNMENT.CUBE_TOLERANCE_METERS;
+    	}
+    	else {
+    		return RobotConstants.ALIGNMENT.LOADING_TOLERANCE_METERS;
+    	}
+    }
     public boolean isTargetSelected(){
         return selectedNode.isTargetSelected();
     }
