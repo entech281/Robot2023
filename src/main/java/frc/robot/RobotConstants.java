@@ -146,7 +146,7 @@ public final class RobotConstants {
         public static final int AUTO_ALIGN_DRIVE = 2;
         public static final int NUDGE_YAW_LEFT = 3;
         public static final int NUDGE_YAW_RIGHT = 4;
-        public static final int PRECISION_DRIVE = 7;
+        public static final int DEPLOY_BRAKE = 7;
         public static final int BRAKE_COAST = 8;
         public static final int ZERO_GYRO_ANGLE = 9;
         public static final int ZERO_ROBOT_ANGLE = 10;

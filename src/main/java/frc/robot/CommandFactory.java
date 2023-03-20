@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
+import frc.robot.commands.DeployBrakeCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
@@ -21,9 +22,11 @@ import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
+import frc.robot.commands.RetractBrakeCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.SnapYawDegreesCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
+import frc.robot.commands.ToggleGripperCommand;
 import frc.robot.commands.TogglePrecisionDriveCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
@@ -34,6 +37,7 @@ import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
@@ -57,6 +61,7 @@ public class CommandFactory {
 	private ElbowSubsystem elbowSubsystem;
 	private GripperSubsystem gripperSubsystem;
 	private LEDSubsystem ledSubsystem;
+    private BrakeSubsystem brakeSubsystem;
 
     public CommandFactory(RobotState robotState, SubsystemHolder allSubsystems ){
     	this.driveSubsystem = allSubsystems.getDrive();
@@ -65,6 +70,7 @@ public class CommandFactory {
     	this.armSubsystem = allSubsystems.getArm();
         this.elbowSubsystem = allSubsystems.getElbow();
         this.gripperSubsystem = allSubsystems.getGripper();
+        this.brakeSubsystem = allSubsystems.getBrake();
         this.robotState = robotState;
         this.ledSubsystem = allSubsystems.getLED();
     }
@@ -277,6 +283,14 @@ public class CommandFactory {
         return new SimpleDriveCommand(driveSubsystem, addYawToOperatorJoystickInput(operatorInput));
     }
 
+    public Command deployBrakeCommand() {
+        return new DeployBrakeCommand(brakeSubsystem);
+    }
+
+    public Command retractBrakeCommand() {
+        return new RetractBrakeCommand(brakeSubsystem);
+    }
+
     public Command toggleBrakeModeCommand() {
         return new DriveToggleBrakeMode(driveSubsystem);
     }
@@ -288,6 +302,10 @@ public class CommandFactory {
 	public Command toggleFieldAbsoluteCommand() {
 		return new ToggleFieldAbsoluteCommand(driveSubsystem);
 	}
+
+    public Command toggleGripperCommand() {
+        return new ToggleGripperCommand(gripperSubsystem);
+    }
 
 	public Command setDriverRotationEnableCommand(boolean newValue) {
 		return new DriveSetRotationEnableCommand(driveSubsystem,newValue);
