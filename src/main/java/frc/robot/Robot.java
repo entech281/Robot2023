@@ -22,6 +22,7 @@ import frc.robot.oi.ShuffleboardInterface;
 import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveMode;
 import frc.robot.subsystems.ElbowSubsystem;
@@ -63,8 +64,9 @@ public class Robot extends TimedRobot {
 	NavXSubSystem navx = new NavXSubSystem();
 	DriveSubsystem drive = new DriveSubsystem();
 	LEDSubsystem led = new LEDSubsystem();
+  BrakeSubsystem brake = new BrakeSubsystem();
 	
-	allSubsystems = new SubsystemHolder(drive,navx,vision,arm,elbow,gripper,led);
+	allSubsystems = new SubsystemHolder(drive, navx, vision, arm, elbow, gripper, led, brake);
 	
 	allSubsystems.asList().forEach((s)-> {
 		if ( s.isEnabled()) {

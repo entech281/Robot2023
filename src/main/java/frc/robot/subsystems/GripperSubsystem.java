@@ -43,6 +43,14 @@ public class GripperSubsystem extends EntechSubsystem {
         leftGripperSolenoid.set(newValue);
         rightGripperSolenoid.set(newValue);		
 	}
+
+	public void toggleGripper() {
+		if(getGripperState() == GripperState.kOpen) {
+			setGripperState(GripperState.kClose);
+		} else {
+			setGripperState(GripperState.kOpen);
+		}
+	}
 	
     @Override
     public void initSendable(SendableBuilder builder) {
@@ -50,7 +58,7 @@ public class GripperSubsystem extends EntechSubsystem {
   	      builder.setSmartDashboardType(getName());		  
   	      builder.addBooleanProperty("BripperOpen", this::isOpen, this::setOpen);
   	  }
-    }	
+    }
 	
 	private void handleSolenoid() {
 	      if (gripperSolenoidCounter < SOLENOID_HIT_COUNT) {

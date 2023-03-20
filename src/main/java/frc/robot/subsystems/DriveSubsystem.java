@@ -134,6 +134,14 @@ public class DriveSubsystem extends EntechSubsystem {
         robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
     }
   
+    public void driveFilterYawOnly(DriveInput di) {
+
+        if ( ! yawHoldFilter.isSetpointValid() ) {
+            yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+        }
+        DriveInput filtered = yawHoldFilter.filter(di);
+        drive(filtered);
+    }
     public void filteredDrive(DriveInput di) {
 
         // Special case: set the setpoint for the HoldYawFilter if nothing has until now

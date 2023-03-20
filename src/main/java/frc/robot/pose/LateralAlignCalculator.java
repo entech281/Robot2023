@@ -17,9 +17,7 @@ public class LateralAlignCalculator {
 	 */
 	public LateralOffset findOffsetToNearestTarget(double x, double y ) {
 		ScoringLocation closest = null;
-		double closestSoFar = 999;
-		
-		
+		double closestSoFar = 999;	
 		
 		double FIELD_MIDPOINT_X_METERS = 8.26;
 		List<AprilTagLocation> aprilTags = new ArrayList<>();
@@ -46,7 +44,8 @@ public class LateralAlignCalculator {
 			for ( TargetNode tn: targetNodes) {
 				ScoringLocation s = new ScoringLocation(at,tn);
 				double dist = yDistanceBetween(y, s);
-				if ( dist < closestSoFar ) {
+				
+				if ( Math.abs(dist) < Math.abs(closestSoFar )) {
 					closest = s;
 					closestSoFar = dist;
 				}
@@ -58,7 +57,7 @@ public class LateralAlignCalculator {
 	
 	private static double yDistanceBetween (double  y, ScoringLocation scoringLocation) {
 		Pose2d scoringLocationPose = scoringLocation.computeAbsolutePose();
-		return Math.abs(y - scoringLocationPose.getY());
+		return scoringLocationPose.getY() - y;
 		
 	}	
 }

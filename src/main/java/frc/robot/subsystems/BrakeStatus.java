@@ -11,10 +11,10 @@ public class BrakeStatus implements SubsystemStatus{
     }
 
     public boolean isDeployed(){
-        return state == BrakeSubsystem.BrakeState.kOut;
+        return state == BrakeSubsystem.BrakeState.kDeploy;
     }
     
     public boolean isRetracted(){
-        return state == BrakeSubsystem.BrakeState.kIn;
+        return state == BrakeSubsystem.BrakeState.kRetract;
     }	    
 }
