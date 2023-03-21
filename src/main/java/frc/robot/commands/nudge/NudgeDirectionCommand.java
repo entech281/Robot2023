@@ -54,7 +54,8 @@ public class NudgeDirectionCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        drive.driveFilterYawOnly(direction );
+        // Cannot use drive.driveFilterYawOnly since has no way of knowing the robot's yaw angle.
+        drive.drive(direction );
     }
 
     @Override
