@@ -60,7 +60,7 @@ public final class RobotConstants {
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT = 0.35;
-    		public static final double HOMING_SPEED_VELOCITY = 5.0; //i think this is degrees/sec
+    		public static final double HOMING_SPEED_VELOCITY = 5.0; //we think this is 'arm meters per minute'
     		public static final int HOMING_CURRENT_AMPS=7;
     	}
     	public interface TUNING{
@@ -99,6 +99,8 @@ public final class RobotConstants {
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT = 0.2;
+    		public static final double HOMING_SPEED_VELOCITY = 5.0; //we think this is 'elbow degrees per minute'
+    		public static final int HOMING_CURRENT_AMPS=7;    		
     	}
     	public interface TUNING{
 

@@ -5,7 +5,7 @@ import frc.robot.subsystems.ElbowSubsystem;
 
 
 /** An example command that uses an example subsystem. */
-public class ForgetArmHomeCommand extends EntechCommandBase {
+public class ArmElbowForgetHomesCommand extends EntechCommandBase {
 
   private final ElbowSubsystem elbowSubsystem;
   private final ArmSubsystem armSubsystem;
@@ -16,7 +16,7 @@ public class ForgetArmHomeCommand extends EntechCommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ForgetArmHomeCommand(ElbowSubsystem elbowSubsystem,ArmSubsystem armSubsystem) {
+  public ArmElbowForgetHomesCommand(ElbowSubsystem elbowSubsystem,ArmSubsystem armSubsystem) {
       super(elbowSubsystem,armSubsystem);
       this.elbowSubsystem = elbowSubsystem;
       this.armSubsystem = armSubsystem;
