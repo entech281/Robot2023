@@ -9,7 +9,6 @@ import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.SquareInputsFilter;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.RobotConstants;
 
 /**
  * Tries to align to the target scoring location, by rotating the robot about its axis

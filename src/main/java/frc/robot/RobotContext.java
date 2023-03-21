@@ -11,7 +11,6 @@ import frc.robot.pose.LateralAlignCalculator;
 import frc.robot.pose.LateralOffset;
 import frc.robot.pose.MovingAveragePose;
 import frc.robot.pose.PoseEstimator;
-import frc.robot.pose.RecognizedAprilTagTarget;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.DriveSubsystem;
