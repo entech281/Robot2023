@@ -207,13 +207,16 @@ public class SparkMaxPositionController implements Sendable, PositionController 
       			 break;
       		 case HOMED:
       			 updateRequestedPosition();
+				 if ( isAtLowerLimit() ) {
+				 	setEncoder(config.getMinPosition());
+				 }
   	    }
 
   	}
   	
     private void arrivedHome() {
 		setMotorSpeedInternal(0);
-		setEncoder(config.getMinPosition());		
+		setEncoder(config.getMinPosition());	
 		axisState = HomingState.HOMED;   
 		speedMode = false;
     }
@@ -246,7 +249,6 @@ public class SparkMaxPositionController implements Sendable, PositionController 
             	spark.getPIDController().setReference(correctDirection(requestedPosition.get()), CANSparkMax.ControlType.kPosition);
         	}    		
     	}
-
     }
   
 }

@@ -16,7 +16,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   private boolean pitch_seen;
   private int pitch_stable_count;
   private double speed = 0.0;
-  private static final int    ROBOT_STABLE_COUNT = 50;
+  private static final int    ROBOT_STABLE_COUNT = 500;
   private static final double DRIVE_SPEED = 0.15;
   private static final double PITCH_THRESHOLD = 12.0;
 
@@ -53,6 +53,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
     pitch_seen = false;
     pitch_stable_count = 0;
     drive.setDriveMode(DriveMode.BRAKE);
+    drive.setHoldYawAngle(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -64,7 +65,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
         if (Math.abs(pitch_angle) > PITCH_THRESHOLD) {
             pitch_seen = true;
         }
-        drive.drive(di);
+        drive.driveFilterYawOnly(di);
     } else {
         if (Math.abs(pitch_angle) < PITCH_THRESHOLD) {
             drive.stop();
@@ -72,7 +73,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
         } else {
             pitch_stable_count = 0;
             di.setForward(Math.copySign(speed, pitch_angle));
-            drive.drive(di);
+            drive.driveFilterYawOnly(di);
         }
     }
   }
