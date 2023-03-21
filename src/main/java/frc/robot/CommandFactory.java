@@ -238,13 +238,15 @@ public class CommandFactory {
         double HOLD_BRAKE_TIME = 0;         // Time to hold brake when changing direction
         double BALANCE_SPEED = 0.16;          // Speed when trying to balance
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-            	new ZeroGyroCommand(navxSubsystem)
+                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)    
+                , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, true)                
+            	, new ZeroGyroCommand(navxSubsystem)
                 , new GripperCommand(gripperSubsystem, GripperState.kClose)
                 , new DriveSetBrake(driveSubsystem)
                 , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
                 , new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.SCORE_HIGH_DEGREES, true)
                 , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.SCORE_HIGH_METERS, true)
-                , new WaitCommand(1.0)
+                , new WaitCommand(0.75)
                 , new GripperCommand(gripperSubsystem, GripperState.kOpen)
                 , new WaitCommand(0.5)
                 , new PositionTelescopeCommand ( armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS,true)

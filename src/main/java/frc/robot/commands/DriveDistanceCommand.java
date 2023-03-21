@@ -43,6 +43,7 @@ public class DriveDistanceCommand extends EntechCommandBase {
     public void initialize() {
       drive.resetEncoders();
       drive.setDriveMode(DriveMode.BRAKE);
+
     }
 
   // Called every time the scheduler runs while the command is scheduled.

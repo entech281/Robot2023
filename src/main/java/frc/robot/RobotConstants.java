@@ -69,10 +69,10 @@ public final class RobotConstants {
     		  public static final double MIN_METERS = 0.005;
     		  public static final double CARRY_METERS = 0.1;
     		  public static final double SCORE_MIDDLE_METERS = 0.17;
-    		  public static final double SCORE_HIGH_METERS = 0.5;
+    		  public static final double SCORE_HIGH_METERS = 0.49;
     		  public static final double SAFE = 0.1;
               public static final double LOAD = 0.005;
-    		  public static final double MAX_METERS = 0.505; //0.52 max extension
+    		  public static final double MAX_METERS = 0.50; //0.52 max extension
               //public static final double MIN_ARM_LENGTH_M = 0.87155; 
               //public static final double MAX_ARM_LENGTH_M = 1.45;
     	}
@@ -90,8 +90,8 @@ public final class RobotConstants {
     		public static final double MOVE_TOLERANCE_DEGREES= 1.0; 
     		public static final int CURRENT_LIMIT_AMPS=30;
     		public static final int MAX_SPIKE_CURRENT=50;
-    		public static final double COUNTS_PER_DEGREE=1.75; 
-    		public static final double ELBOW_SLOWDOWN_SPEED= 0.1;
+    		public static final double COUNTS_PER_DEGREE=2.05; 
+    		public static final double ELBOW_SLOWDOWN_SPEED= 0.2;
     		public static final double MIDDLE_HIGH_CONE_DEPLOY_THRESHOLD = 82.0;
     	} 
     	public interface HOMING{
@@ -107,15 +107,15 @@ public final class RobotConstants {
 
     	}
     	public interface POSITION_PRESETS{
-    		  public static final double MIN_POSITION_DEGREES = 15.0;    		
+    		  public static final double MIN_POSITION_DEGREES = 18.0;    		
     		  public static double CARRY_DEGREES = 20.0;
-    		  public static double SAFE_ANGLE = 15.0;  
+    		  public static double SAFE_ANGLE = 18.0;  
     		  public static double SCORE_LOW_DEGREES = 43.0;
-    		  public static double SCORE_MIDDLE_DEGREES = 78.0;
-    		  public static double LOAD_STATION_DEGREES = 75.0;
-    		  public static double SCORE_HIGH_DEGREES = 92.0;
-    		  public static double SCORE_HIGH_RELEASE_DEGREES = 84.0;
-    		  public static double SCORE_MID_RELEASE_DEGREES = 69;
+    		  public static double SCORE_MIDDLE_DEGREES = 79.0;
+    		  public static double LOAD_STATION_DEGREES = 74.0;
+    		  public static double SCORE_HIGH_DEGREES = 94.0;
+    		  public static double SCORE_HIGH_RELEASE_DEGREES = 83.0;
+    		  public static double SCORE_MID_RELEASE_DEGREES = 73;
      		  public static final double MAX_POSITION_DEGREES = 104.8; 
     	}
     }
