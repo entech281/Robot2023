@@ -150,16 +150,17 @@ public final class RobotConstants {
         public static final double PRECISION_DRIVE_FACTOR = 0.4;
         public static final double ROTATION_DAMPING_FACTOR = 0.5;
         public static final double SPEED_LIMIT_WITH_ARM_OUT = 0.5;
+        public static final double BALANCE_SPEED = 0.16;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
         public static final int AUTO_ALIGN_DRIVE = 2;
         public static final int NUDGE_YAW_LEFT = 3;
         public static final int NUDGE_YAW_RIGHT = 4;
-        public static final int DEPLOY_BRAKE = 7;
-        public static final int BRAKE_COAST = 8;
+        public static final int AUTO_BALANCE_FORWARD = 7;
+        public static final int DEPLOY_BRAKE = 8;
         public static final int ZERO_GYRO_ANGLE = 9;
-        public static final int ZERO_ROBOT_ANGLE = 10;
+        public static final int BRAKE_COAST = 10;
         public static final int AUTO_YAW_TOGGLE = 11;
         public static final int TOGGLE_FIELD_ABSOLUTE = 12;
         public interface POV {

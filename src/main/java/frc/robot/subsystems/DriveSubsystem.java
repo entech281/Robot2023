@@ -44,7 +44,7 @@ public class DriveSubsystem extends EntechSubsystem {
     private NoRotationFilter noRotationFilter;
     private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
     private HoldYawFilter yawHoldFilter;
-    private SquareInputsFilter rotationDampingFilter;
+    private SquareInputsFilter jsSquareInputsFilter;
     private ForwardSpeedLimitFilter speedLimitFilter;
     private RelativeEncoder frontLeftEncoder;
     private RelativeEncoder rearLeftEncoder;
@@ -100,9 +100,8 @@ public class DriveSubsystem extends EntechSubsystem {
         jsDeadbandFilter.enable(true);
         jsDeadbandFilter.setDeadband(0.15);
 
-        rotationDampingFilter = new SquareInputsFilter();
-        rotationDampingFilter.setDampingFactor(RobotConstants.DRIVE.ROTATION_DAMPING_FACTOR);
-        rotationDampingFilter.enable(true);
+        jsSquareInputsFilter = new SquareInputsFilter();
+        jsSquareInputsFilter.enable(true);
         
         robotRelativeFilter = new RobotRelativeDriveFilter();
         yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
@@ -163,7 +162,7 @@ public class DriveSubsystem extends EntechSubsystem {
     	DriveInput filtered = di;
         filtered = jsDeadbandFilter.filter(filtered);
         // printDI("DI(1):",filtered);
-        filtered = rotationDampingFilter.filter(filtered);
+        filtered = jsSquareInputsFilter.filter(filtered);
         // printDI("DI(2):",filtered);
     	
     	if (isRotationEnabled()) {

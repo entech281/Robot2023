@@ -65,7 +65,6 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         jsDeadbandFilter.setDeadband(0.15);
 
         squareInputsFilter = new SquareInputsFilter();
-        squareInputsFilter.setDampingFactor(RobotConstants.DRIVE.ROTATION_DAMPING_FACTOR);
         squareInputsFilter.enable(true);
     }
     
