@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.CommandFactory;
+import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.adapter.JoystickDriveInputSupplier;
 
@@ -34,7 +35,7 @@ public class OperatorInterface {
 	        .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
 
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_BALANCE_FORWARD)
-            .whileTrue(commandFactory.autoDriveBalanceOnly(0.17));
+            .whileTrue(commandFactory.autoDriveBalanceOnly(RobotConstants.DRIVE.BALANCE_SPEED));
 
         driveStick.button(RobotConstants.DRIVER_STICK.DEPLOY_BRAKE)
             .onTrue(commandFactory.deployBrakeCommand())

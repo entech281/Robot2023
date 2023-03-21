@@ -242,7 +242,6 @@ public class CommandFactory {
         double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
         double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
         double HOLD_BRAKE_TIME = 0;         // Time to hold brake when changing direction
-        double BALANCE_SPEED = 0.16;          // Speed when trying to balance
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             // MA:  Ask DC why these were here
             //  new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)    
@@ -251,8 +250,8 @@ public class CommandFactory {
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new ConditionalCommand(autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, HOLD_BRAKE_TIME, BALANCE_SPEED),
-                                     autoDriveBalanceOnly(-BALANCE_SPEED), 
+            , new ConditionalCommand(autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, HOLD_BRAKE_TIME, RobotConstants.DRIVE.BALANCE_SPEED),
+                                     autoDriveBalanceOnly(-RobotConstants.DRIVE.BALANCE_SPEED), 
                                      this::isTimeForCommunityMove)
         );
         sg.setName("Center Auto Balance");

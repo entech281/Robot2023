@@ -150,6 +150,7 @@ public final class RobotConstants {
         public static final double PRECISION_DRIVE_FACTOR = 0.4;
         public static final double ROTATION_DAMPING_FACTOR = 0.5;
         public static final double SPEED_LIMIT_WITH_ARM_OUT = 0.5;
+        public static final double BALANCE_SPEED = 0.16;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
