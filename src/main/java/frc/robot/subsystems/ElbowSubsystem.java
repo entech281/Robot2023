@@ -75,8 +75,8 @@ public class ElbowSubsystem extends EntechSubsystem{
 		    elbowMotor.getEncoder().setPositionConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);
 		    elbowMotor.getEncoder().setVelocityConversionFactor(ELBOW.SETTINGS.COUNTS_PER_DEGREE);
 			PositionControllerConfig conf =  new PositionControllerConfig.Builder("ELBOW")
-			    	//.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT  )
-			    	.withHomingVelocity(ELBOW.HOMING.HOMING_SPEED_VELOCITY)			    	
+			    	.withHomingOptions(ELBOW.HOMING.HOMING_SPEED_PERCENT  )
+			    	//.withHomingVelocity(ELBOW.HOMING.HOMING_SPEED_VELOCITY)			    	
 			    	.withPositionTolerance(ELBOW.SETTINGS.MOVE_TOLERANCE_DEGREES)
 			    	.withSoftLimits(ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, ELBOW.POSITION_PRESETS.MAX_POSITION_DEGREES)
 			    	.withHomeAtCurrentAmps( ELBOW.HOMING.HOMING_CURRENT_AMPS)			    	

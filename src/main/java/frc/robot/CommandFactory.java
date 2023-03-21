@@ -121,7 +121,7 @@ public class CommandFactory {
 
     public Command testDownwardSoftConePlacement() {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-            	new ZeroGyroCommand(navxSubsystem)
+            	new ZeroGyroCommand(navxSubsystem, driveSubsystem)
                 , new GripperCommand(gripperSubsystem, GripperState.kClose)
                 , new DriveSetBrakeMode(driveSubsystem)
                 , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
@@ -141,7 +141,7 @@ public class CommandFactory {
 
     private Command autonomousSetup() {
         return new SequentialCommandGroup(
-              new ZeroGyroCommand(navxSubsystem)
+              new ZeroGyroCommand(navxSubsystem, driveSubsystem)
 	        , new GripperCommand(gripperSubsystem, GripperState.kClose)
 	        , new DriveSetBrakeMode(driveSubsystem)
 	        , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
@@ -339,7 +339,7 @@ public class CommandFactory {
     }
 
     public Command getZeroGyro() {
-        return new ZeroGyroCommand(navxSubsystem);
+        return new ZeroGyroCommand(navxSubsystem, driveSubsystem);
     }
 
     public Command nudgeLeftCommand() {
