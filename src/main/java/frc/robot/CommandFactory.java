@@ -20,6 +20,7 @@ import frc.robot.commands.DriveSetBrakeMode;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.FilteredDriveCommand;
+import frc.robot.commands.ArmElbowForgetHomesCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
@@ -108,6 +109,7 @@ public class CommandFactory {
 			loadingElbowCommand(),
 			carryElbowCommand(),
             homeTelescopeAndElbow(),
+            new ArmElbowForgetHomesCommand(elbowSubsystem,armSubsystem),
 			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.MAX_METERS, false),
 			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, false),
 			new PositionElbowCommand(elbowSubsystem,RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, false),
@@ -119,7 +121,7 @@ public class CommandFactory {
 
     public Command testDownwardSoftConePlacement() {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-            	new ZeroGyroCommand(navxSubsystem)
+            	new ZeroGyroCommand(navxSubsystem, driveSubsystem)
                 , new GripperCommand(gripperSubsystem, GripperState.kClose)
                 , new DriveSetBrakeMode(driveSubsystem)
                 , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
@@ -139,7 +141,7 @@ public class CommandFactory {
 
     private Command autonomousSetup() {
         return new SequentialCommandGroup(
-              new ZeroGyroCommand(navxSubsystem)
+              new ZeroGyroCommand(navxSubsystem, driveSubsystem)
 	        , new GripperCommand(gripperSubsystem, GripperState.kClose)
 	        , new DriveSetBrakeMode(driveSubsystem)
 	        , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
@@ -337,7 +339,7 @@ public class CommandFactory {
     }
 
     public Command getZeroGyro() {
-        return new ZeroGyroCommand(navxSubsystem);
+        return new ZeroGyroCommand(navxSubsystem, driveSubsystem);
     }
 
     public Command nudgeLeftCommand() {

@@ -53,11 +53,6 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
     pitch_seen = false;
     pitch_stable_count = 0;
     drive.setDriveMode(DriveMode.BRAKE);
-    double yaw_setpoint = 0.0;
-    if (Math.abs(navx.getYaw()) > 90.0) {
-        yaw_setpoint = 180.0;
-    }
-    drive.setHoldYawAngle(yaw_setpoint);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

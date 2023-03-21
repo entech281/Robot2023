@@ -56,9 +56,12 @@ public final class RobotConstants {
     		public static final int CURRENT_LIMIT_AMPS = 8;
     		public static final int MAX_SPIKE_CURRENT = 12;
     		public static final double COUNTS_PER_METER = 0.004826; 
+    		
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT = 0.35;
+    		public static final double HOMING_SPEED_VELOCITY = 5.0; //we think this is 'arm meters per minute'
+    		public static final int HOMING_CURRENT_AMPS=7;
     	}
     	public interface TUNING{
     		public static final double P_GAIN = 16.0;
@@ -90,12 +93,14 @@ public final class RobotConstants {
     		public static final double MOVE_TOLERANCE_DEGREES= 1.0; 
     		public static final int CURRENT_LIMIT_AMPS=30;
     		public static final int MAX_SPIKE_CURRENT=50;
-    		public static final double COUNTS_PER_DEGREE=2.05; 
+    		public static final double COUNTS_PER_DEGREE=1.95; 
     		public static final double ELBOW_SLOWDOWN_SPEED= 0.2;
     		public static final double MIDDLE_HIGH_CONE_DEPLOY_THRESHOLD = 82.0;
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT = 0.2;
+    		public static final double HOMING_SPEED_VELOCITY = 5.0; //we think this is 'elbow degrees per minute'
+    		public static final int HOMING_CURRENT_AMPS=7;    		
     	}
     	public interface TUNING{
 

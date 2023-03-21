@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 
 /**
@@ -14,7 +15,7 @@ import frc.robot.subsystems.NavXSubSystem;
 public class ZeroGyroCommand extends EntechCommandBase {
 	
   private final NavXSubSystem navX;
-  private boolean isFinished = false;
+  private DriveSubsystem driveSubsystem;
 
   /**
    * Creates a new ZeroGyro Command that will reset the gyro value
@@ -22,21 +23,22 @@ public class ZeroGyroCommand extends EntechCommandBase {
    * 
    * @param navX The NavXSubsystem this command runs on.
    */
-  public ZeroGyroCommand(NavXSubSystem navX) {
+  public ZeroGyroCommand(NavXSubSystem navX, DriveSubsystem driveSubsystem) {
     super(navX);
     this.navX = navX;
+    this.driveSubsystem = driveSubsystem;
   }
 
   @Override
-  public void execute() {
+  public void initialize() {
     navX.zeroYaw();
-    isFinished = true;
+    driveSubsystem.setHoldYawAngle(navX.getYaw());
   }
 
 
   @Override
   public boolean isFinished() {
-    return isFinished;
+    return true;
   }
 
   @Override

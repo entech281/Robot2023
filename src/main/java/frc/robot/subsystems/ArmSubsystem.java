@@ -78,7 +78,9 @@ public void setPosition(double position) {
 	    PositionControllerConfig conf = new PositionControllerConfig.Builder("ARM")
 	    	.withSoftLimits(ARM.POSITION_PRESETS.MIN_METERS, ARM.POSITION_PRESETS.MAX_METERS)
 	    	.withHomingOptions(ARM.HOMING.HOMING_SPEED_PERCENT)
+	    	//.withHomingVelocity(ARM.HOMING.HOMING_SPEED_VELOCITY)
 	    	.withPositionTolerance(ARM.SETTINGS.MOVE_TOLERANCE_METERS)
+	    	.withHomeAtCurrentAmps( ARM.HOMING.HOMING_CURRENT_AMPS)
 	    	.withInverted(true)
 	    	.build();
 
@@ -193,4 +195,7 @@ public void setPosition(double position) {
 
   }
 
+  public void forgetHome() {
+	  positionController.forgetHome();
+  }
 }

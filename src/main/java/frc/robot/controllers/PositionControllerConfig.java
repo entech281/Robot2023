@@ -1,5 +1,6 @@
 package frc.robot.controllers;
 
+import java.util.Optional;
 
 public class PositionControllerConfig {
 
@@ -59,10 +60,36 @@ public class PositionControllerConfig {
 	}
 
 	private double positionTolerance = 5;
-	private double homingSpeedPercent = 10.0;	
+	private double homingSpeedPercent = 10.0;
+
 	private double minPosition = 0;
 	private double maxPosition = 0;
 	private boolean inverted = false;
+	private Optional<Double> homeAtCurrentAmps = Optional.empty();
+	private double homingSpeedUnitsPerSec = 0.0;
+	private boolean homeClosedLoop = false;	
+
+	
+	public double getHomingSpeedUnitsPerSec() {
+		return homingSpeedUnitsPerSec;
+	}
+
+
+	public boolean isHomeClosedLoop() {
+		return homeClosedLoop;
+	}
+
+
+	
+	public Optional<Double> getHomeAtCurrentAmps() {
+		return homeAtCurrentAmps;
+	}
+
+
+	public void setHomeAtCurrentAmps(Optional<Double> homeAtCurrentAmps) {
+		this.homeAtCurrentAmps = homeAtCurrentAmps;
+	}
+
 
 	public boolean isInverted() {
 		return inverted;
@@ -94,11 +121,20 @@ public class PositionControllerConfig {
 			c.inverted = inverted;
 			return this;
 		}
-		public Builder withHomingOptions ( double homingSpeedPercent) {
-			c.homingSpeedPercent = homingSpeedPercent;
+		public Builder withHomingVelocity ( double homingVelocity) {
+			c.homingSpeedUnitsPerSec = homingVelocity;
+			c.homeClosedLoop = true;
 			return this;
 		}
-
+		public Builder withHomingOptions ( double homingSpeedPercent) {
+			c.homingSpeedPercent = homingSpeedPercent;
+			c.homeClosedLoop = false;
+			return this;
+		}
+		public Builder withHomeAtCurrentAmps(double currentAmps) {
+			c.homeAtCurrentAmps = Optional.of(currentAmps);
+			return this;
+		}
 		public PositionControllerConfig build() {
 			return c;
 		}

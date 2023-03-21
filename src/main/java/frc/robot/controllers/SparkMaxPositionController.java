@@ -140,7 +140,12 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     	return lowerLimit.isPressed();
     }    
     
-
+    //after this call, another request to resetPosition is required to do homing again
+    public void forgetHome() {
+    	axisState = HomingState.UNINITIALIZED;
+    	this.clearRequestedPosition();
+    }
+    
     @Override
 	public boolean isAtRequestedPosition() {
     	if ( isHomed( )) {
@@ -181,7 +186,12 @@ public class SparkMaxPositionController implements Sendable, PositionController 
   
     
     public void setMotorSpeedInternal(double input) {
-    	spark.set(correctDirection(input));
+    	if ( config.isHomeClosedLoop()) {
+    		spark.getPIDController().setReference(correctDirection(input), CANSparkMax.ControlType.kVelocity);
+    	}
+    	else {
+    		spark.set(correctDirection(input));
+    	}    	
     	speedMode = true;
     }
     
@@ -203,6 +213,12 @@ public class SparkMaxPositionController implements Sendable, PositionController 
       			 else {
       				setMotorSpeedInternal(-config.getHomingSpeedPercent());
       			 }
+//      			 if ( config.getHomeAtCurrentAmps().isPresent()) {
+//      				 if ( spark.getOutputCurrent() > config.getHomeAtCurrentAmps().get()) {
+//      					 DriverStation.reportWarning("Axis " + config.getName() +" homed based on current.", false);
+//      					 arrivedHome();
+//      				 }
+//      			 }
       			 break;
       		 case HOMED:
       			 updateRequestedPosition();
