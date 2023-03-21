@@ -155,7 +155,7 @@ public class CommandFactory {
 
     private Command autonomousScoreCube() {
         return new SequentialCommandGroup(
-              new WaitCommand(1.0)
+              new WaitCommand(0.75)
             , new GripperCommand(gripperSubsystem, GripperState.kOpen)
             , new WaitCommand(0.5)
         );
@@ -244,14 +244,17 @@ public class CommandFactory {
         double HOLD_BRAKE_TIME = 0;         // Time to hold brake when changing direction
         double BALANCE_SPEED = 0.16;          // Speed when trying to balance
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-            	  autonomousSetup()
-                , autonomousArmHigh()
-                , autonomousScoreCube()
-                , autonomousArmSafe()
-                , new ConditionalCommand(autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, HOLD_BRAKE_TIME, BALANCE_SPEED),
-                                         autoDriveBalanceOnly(-BALANCE_SPEED), 
-                                         this::isTimeForCommunityMove)
-            );
+            // MA:  Ask DC why these were here
+            //  new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)    
+            //, new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, true)                
+              autonomousSetup()
+            , autonomousArmHigh()
+            , autonomousScoreCube()
+            , autonomousArmSafe()
+            , new ConditionalCommand(autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, HOLD_BRAKE_TIME, BALANCE_SPEED),
+                                     autoDriveBalanceOnly(-BALANCE_SPEED), 
+                                     this::isTimeForCommunityMove)
+        );
         sg.setName("Center Auto Balance");
         return sg;
     }
@@ -403,7 +406,7 @@ public class CommandFactory {
     public Command scoreHighCommand() {
         return new SequentialCommandGroup(
         		new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
-                new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
+                dialCarryPosition()
             );
     }
 
@@ -441,7 +444,7 @@ public class CommandFactory {
      public Command dialMiddlePosition() {
         return new SequentialCommandGroup(
             middleScoringElbowCommand(),
-            middleScoringElbowCommand()
+            new PositionTelescopeCommand(armSubsystem, 0.16, true)
         );
      }
 
