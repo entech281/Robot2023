@@ -272,7 +272,9 @@ public class CommandFactory {
     }
 
     private boolean isTimeForCommunityMove() {
-        if ( DriverStation.getMatchTime() < 8.0 ) {
+        // NOTE: getMatchTime() documentation says it returns the time REMAINING in the current game phase (auto/teleop)
+        double SECS_REQUIRED_FOR_OVER_AND_BALANCE = 8.0;
+        if ( DriverStation.getMatchTime() <  SECS_REQUIRED_FOR_OVER_AND_BALANCE) {
             DriverStation.reportWarning("AUTONOMOUS: Balance only",false);
             return false;
        }
