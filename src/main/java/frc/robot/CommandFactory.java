@@ -20,6 +20,7 @@ import frc.robot.commands.DriveSetBrakeMode;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.FilteredDriveCommand;
+import frc.robot.commands.ForgetArmHomeCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
@@ -108,6 +109,7 @@ public class CommandFactory {
 			loadingElbowCommand(),
 			carryElbowCommand(),
             homeTelescopeAndElbow(),
+            new ForgetArmHomeCommand(elbowSubsystem,armSubsystem),
 			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.MAX_METERS, false),
 			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, false),
 			new PositionElbowCommand(elbowSubsystem,RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, false),

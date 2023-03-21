@@ -195,4 +195,7 @@ public void setPosition(double position) {
 
   }
 
+  public void forgetHome() {
+	  positionController.forgetHome();
+  }
 }

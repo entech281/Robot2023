@@ -190,4 +190,8 @@ public class ElbowSubsystem extends EntechSubsystem{
 		positionController.requestPosition(getActualPosition() + NUDGE_COUNT);
 	  }
 
+	  public void forgetHome() {
+		  positionController.forgetHome();
+	  }	  
+	  
 }
