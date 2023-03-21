@@ -56,9 +56,12 @@ public final class RobotConstants {
     		public static final int CURRENT_LIMIT_AMPS = 8;
     		public static final int MAX_SPIKE_CURRENT = 12;
     		public static final double COUNTS_PER_METER = 0.004826; 
+    		
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT = 0.35;
+    		public static final double HOMING_SPEED_VELOCITY = 5.0; //i think this is degrees/sec
+    		public static final int HOMING_CURRENT_AMPS=7;
     	}
     	public interface TUNING{
     		public static final double P_GAIN = 16.0;
