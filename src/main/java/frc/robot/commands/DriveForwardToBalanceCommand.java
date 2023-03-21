@@ -16,6 +16,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   private boolean pitch_seen;
   private int pitch_stable_count;
   private double speed = 0.0;
+  private double original_speed = 0.0;
   private static final int    ROBOT_STABLE_COUNT = 500;
   private static final double DRIVE_SPEED = 0.15;
   private static final double PITCH_THRESHOLD = 12.0;
@@ -31,6 +32,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
       drive = dsubsys;
       navx = nsubsys;
       speed = DRIVE_SPEED;
+      original_speed = speed;
   }
 
   /**
@@ -45,6 +47,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
     drive = dsubsys;
     navx = nsubsys;
     this.speed = speed;
+    original_speed = speed;
 }
 
   // Called when the command is initially scheduled.
@@ -52,6 +55,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   public void initialize() {
     pitch_seen = false;
     pitch_stable_count = 0;
+    speed = original_speed;
     drive.setDriveMode(DriveMode.BRAKE);
   }
 
