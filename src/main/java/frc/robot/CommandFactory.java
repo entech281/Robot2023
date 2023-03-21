@@ -267,7 +267,7 @@ public class CommandFactory {
         );
     }
 
-    private Command autoDriveBalanceOnly(double balance_speed) {
+    public Command autoDriveBalanceOnly(double balance_speed) {
         return new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, balance_speed);
     }
 

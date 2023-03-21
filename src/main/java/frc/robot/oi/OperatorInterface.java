@@ -33,6 +33,8 @@ public class OperatorInterface {
 	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
 	        .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
 
+        driveStick.button(RobotConstants.DRIVER_STICK.AUTO_BALANCE_FORWARD)
+            .whileTrue(commandFactory.autoDriveBalanceOnly(0.17));
 
         driveStick.button(RobotConstants.DRIVER_STICK.DEPLOY_BRAKE)
             .onTrue(commandFactory.deployBrakeCommand())
@@ -46,9 +48,6 @@ public class OperatorInterface {
 
 	    driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
 	        .onTrue(commandFactory.getZeroGyro());
-
-	    driveStick.button(RobotConstants.DRIVER_STICK.ZERO_ROBOT_ANGLE)
-	        .onTrue(commandFactory.snapYawDegreesCommand(0));
 
 	    driveStick.pov(RobotConstants.DRIVER_STICK.POV.RIGHT)
 	        .whileTrue(commandFactory.nudgeRightCommand());
