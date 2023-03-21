@@ -24,9 +24,9 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
     //private static final double YAW_P_GAIN = 0.02;
 	private static final double YAW_P_GAIN = 0.00;
-    private static final double LATERAL_P_GAIN = 2.1;
-    private static final double LATERAL_I_GAIN = 0.01;	
-    private static final double LATERAL_D_GAIN = 0.0;
+    private static final double LATERAL_P_GAIN = 2.25;
+    private static final double LATERAL_I_GAIN = 0.000;	
+    private static final double LATERAL_D_GAIN = 0.00;
 
 
     
@@ -53,13 +53,6 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         this.lateralOffsetSupplier = lateralOffsetSupplier;
         this.operatorInput = operatorInput;
         
-        lateralPid = new RobotLateralPIDController();
-        lateralPid.setP(LATERAL_P_GAIN);
-        lateralPid.setI(LATERAL_I_GAIN);
-        lateralPid.setD(LATERAL_D_GAIN);
-        lateralPid.setSetpoint(0);        
-        lateralPid.reset();
-
         jsDeadbandFilter = new JoystickDeadbandFilter();
         jsDeadbandFilter.enable(true);
         jsDeadbandFilter.setDeadband(0.15);
@@ -70,9 +63,15 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
     
     @Override
     public void initialize() {
+        lateralPid = new RobotLateralPIDController();
+        lateralPid.setP(LATERAL_P_GAIN);
+        lateralPid.setI(LATERAL_I_GAIN);
+        lateralPid.setD(LATERAL_D_GAIN);
+        lateralPid.setSetpoint(0);        
+        lateralPid.reset();
+
     	//lets hold it whereever we started
     	yawSetPoint	= operatorInput.get().getYawAngleDegrees();
-        lateralPid.reset();
     }
 
     @Override
@@ -89,8 +88,9 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         if (lateralOffsetSupplier.getLateralOffset().isPresent()) {
         	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();        	
         	double calcValue = lateralPid.calculate(lateralOffset);
-        	newDi.setRight(-calcValue);
+        	newDi.setRight(calcValue);
         }
+        newDi.setYawAngleDegrees(0.0);
         drive.drive(newDi);
     }
 

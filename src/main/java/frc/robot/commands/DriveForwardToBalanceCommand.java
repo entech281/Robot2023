@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
@@ -18,7 +19,6 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   private double speed = 0.0;
   private double original_speed = 0.0;
   private static final int    ROBOT_STABLE_COUNT = 500;
-  private static final double DRIVE_SPEED = 0.15;
   private static final double PITCH_THRESHOLD = 12.0;
 
   /**
@@ -31,7 +31,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
       super(dsubsys,nsubsys);
       drive = dsubsys;
       navx = nsubsys;
-      speed = DRIVE_SPEED;
+      speed = RobotConstants.DRIVE.BALANCE_SPEED;
       original_speed = speed;
   }
 
