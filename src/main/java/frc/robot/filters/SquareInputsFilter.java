@@ -2,8 +2,6 @@ package frc.robot.filters;
 
 public class SquareInputsFilter extends DriveInputFilter {
 
-	private double dampingFactor = 0.5;
-
 	@Override
 	protected DriveInput doFilter(DriveInput di) {
 		DriveInput newDi = new DriveInput(di);
@@ -12,12 +10,5 @@ public class SquareInputsFilter extends DriveInputFilter {
 		newDi.setRotation(Math.copySign(di.getRotation()* di.getRotation(),di.getRotation()));
 		return newDi;
 	}
-	
-	public double getDampingFactor() {
-		return dampingFactor;
-	}
-	public void setDampingFactor(double dampingFactor) {
-		this.dampingFactor = dampingFactor;
-	}	
 
 }
