@@ -146,7 +146,7 @@ public class DriveSubsystem extends EntechSubsystem {
     public void driveFilterYawOnly(DriveInput di) {
 
         if ( ! yawHoldFilter.isSetpointValid() ) {
-            yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
         }
         DriveInput filtered = yawHoldFilter.filter(di);
         drive(filtered);
@@ -155,7 +155,7 @@ public class DriveSubsystem extends EntechSubsystem {
 
         // Special case: set the setpoint for the HoldYawFilter if nothing has until now
         if ( ! yawHoldFilter.isSetpointValid() ) {
-            yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
         }
 
         // printDI("DI(0):",di);
@@ -168,11 +168,11 @@ public class DriveSubsystem extends EntechSubsystem {
     	if (isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             // We run the holdyaw filter just to get the dashboard updated.
-            yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+            yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
             holdYawSetPointCounter = COUNTER_RESET;
         } else {
         	if (holdYawSetPointCounter > 0) {
-        		yawHoldFilter.updateSetpoint(di.getYawAngleDegrees());
+        		yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
                 holdYawSetPointCounter--;
         	}
             if (yawHoldFilter.isEnabled()) {
@@ -207,7 +207,19 @@ public class DriveSubsystem extends EntechSubsystem {
     }
 
     public void setHoldYawAngle(double angle) {
-        yawHoldFilter.updateSetpoint(angle);
+        yawHoldFilter.setSetpoint(angle);
+    }
+
+    public void nudgeYawLeft() {
+        if ( yawHoldFilter.isSetpointValid() ) {
+            yawHoldFilter.setSetpoint(yawHoldFilter.getSetpoint() + RobotConstants.DRIVE.YAW_NUDGE_DEGREES);
+        }
+    }
+
+    public void nudgeYawRight() {
+        if ( yawHoldFilter.isSetpointValid() ) {
+            yawHoldFilter.setSetpoint(yawHoldFilter.getSetpoint() - RobotConstants.DRIVE.YAW_NUDGE_DEGREES);
+        }
     }
 
     public void toggleBrakeCoastMode() {

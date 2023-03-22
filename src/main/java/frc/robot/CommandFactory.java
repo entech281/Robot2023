@@ -367,11 +367,11 @@ public class CommandFactory {
     }
 
     public Command nudgeYawLeftCommand() {
-        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.LEFT,navxSubsystem);
+        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.LEFT);
     }
 
     public Command nudgeYawRightCommand() {
-        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.RIGHT,navxSubsystem);
+        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.RIGHT);
     }
 
     public Command driveDistanceCommand(double distanceMeters) {
