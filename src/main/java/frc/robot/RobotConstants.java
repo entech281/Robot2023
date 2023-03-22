@@ -133,7 +133,7 @@ public final class RobotConstants {
         public static final double ANGLE_TOLERANCE_DEGREES = 2.0;
         public static final double DISTANCE_TOLERANCE_METERS = 0.0508;
         //public static final double ALIGN_TOLERANCE_METERS = 0.02;
-        public static final double ALIGN_CLOSE_WINDOW_METERS = Units.inchesToMeters(3.0); //gets added outside the tolerance window
+        public static final double ALIGN_CLOSE_WINDOW_METERS = Units.inchesToMeters(5.0); //gets added outside the tolerance window
         //public static final double ALIGN_KINDA_CLOSE_METERS = 0.15;
         
         //tolerances are vs nominal, so the 'windows' is 2x this value

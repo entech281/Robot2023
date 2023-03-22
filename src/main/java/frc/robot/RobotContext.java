@@ -126,7 +126,7 @@ public class RobotContext {
     		return Color.kGreen;
     	}
     	else if ( absOffset < scoringLocation.getAlignmentToleranceMeters() + RobotConstants.ALIGNMENT.ALIGN_CLOSE_WINDOW_METERS) {
-    		return Color.kYellow;
+    		return Color.kBlue;
     	}
     	else {
     		return Color.kOrange;
