@@ -235,6 +235,7 @@ public class CommandFactory {
             , autonomousArmSafe()
             , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
             , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+            , new DeployBrakeCommand(brakeSubsystem)
         );
         sg.setName("Center DeadRec Balance");
         return sg;
@@ -255,6 +256,7 @@ public class CommandFactory {
             , new ConditionalCommand(autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, HOLD_BRAKE_TIME, RobotConstants.DRIVE.BALANCE_SPEED),
                                      autoDriveBalanceOnly(-RobotConstants.DRIVE.BALANCE_SPEED), 
                                      this::isTimeForCommunityMove)
+            ,deployBrakeCommand()
         );
         sg.setName("Center Auto Balance");
         return sg;

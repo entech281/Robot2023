@@ -161,6 +161,7 @@ public class Robot extends TimedRobot {
     allSubsystems.getElbow().clearRequestedPosition();
     // schedule the autonomous command
     if (autoCommand != null) {
+      commandFactory.retractBrakeCommand().schedule();
       autoCommand.schedule();
     }
   }
@@ -181,7 +182,7 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
     oi.setDefaultCommands();
-
+    commandFactory.retractBrakeCommand().schedule();
     allSubsystems.getDrive().setDriveMode(DriveMode.BRAKE);
 
   }
