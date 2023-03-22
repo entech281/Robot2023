@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class HoldYawFilter extends DriveInputFilter {
 
     private static final double P_GAIN = 0.05;
-    private static final double MAX_ROT = 0.2;
+    private static final double MAX_ROT = 0.25;
     private static final double TOLERANCE = 2.0;
     private static double yawSetPoint = 0.0;
     private static boolean setPointValid;
@@ -50,9 +50,13 @@ public class HoldYawFilter extends DriveInputFilter {
         return outDI;
     }
 
-    public void updateSetpoint( double yaw ) {
+    public void setSetpoint( double yaw ) {
         yawSetPoint = yaw;
         setPointValid = true;
+    }
+
+    public double getSetpoint() {
+        return yawSetPoint;
     }
 
     public boolean isSetpointValid() {
