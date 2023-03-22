@@ -5,57 +5,50 @@
 package frc.robot.commands;
 
 import frc.robot.commands.supplier.YawAngleSupplier;
-import frc.robot.controllers.RobotYawPIDController;
-import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 /**
  *
  * 
  * @author aheitkamp
  */
-public class SnapYawDegreesCommand extends EntechCommandBase {
+public class DriveYawToNearestPerpendicular extends EntechCommandBase {
 
     protected final DriveSubsystem drive;
-    protected final RobotYawPIDController pid;
-    private YawAngleSupplier yawAngleSupplier;
+    private YawAngleSupplier yawSupplier;
 
     /**
      * Creates a new snap yaw degrees command that will snap the robot to the specified angle
      * 
      *
      * @param drive The drive subsystem on which this command will run
-     * @param angle The angle you want to snap to
+     * @param current_angle The current yaw angle
      */
-    public SnapYawDegreesCommand(DriveSubsystem drive, double desiredAngle, YawAngleSupplier yawAngleSupplier) {
+    public DriveYawToNearestPerpendicular(DriveSubsystem drive, YawAngleSupplier yawSupplier) {
         super(drive);
         this.drive = drive;
-        this.yawAngleSupplier = yawAngleSupplier;
-        
-        pid = new RobotYawPIDController();
-        pid.setSetpoint(desiredAngle);
+        this.yawSupplier = yawSupplier;
     }
 
     @Override
     public void initialize() {
+        if (Math.abs(yawSupplier.getYawAngleDegrees()) < 90.0) {
+            drive.setHoldYawAngle(0.0);
+        } else {
+            drive.setHoldYawAngle(180.0);
+        }
     }
 
     @Override
     public void execute() {
-    	double yawAngleDegrees = yawAngleSupplier.getYawAngleDegrees();
-        double calcValue = pid.calculate(-yawAngleDegrees); 
-        DriveInput di = new DriveInput(0, 0, calcValue);
-        
-        drive.drive(di);
     }
 
     @Override
     public void end(boolean interrupted) {
-        drive.stop();
     }
 
     @Override
     public boolean isFinished() {
-    	return pid.isStable();    	
+        return true;
     }
 
     @Override

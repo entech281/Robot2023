@@ -14,6 +14,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.util.EntechUtils;
 /**
  *
@@ -33,7 +34,7 @@ import frc.robot.util.EntechUtils;
  *         |  +---+  |
  *       //+---------+\\
  */
-public class NavXSubSystem extends EntechSubsystem  implements Sendable{
+public class NavXSubSystem extends EntechSubsystem  implements Sendable, YawAngleSupplier{
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
     private double initialYawAngleForFieldDrive = 0.0;
@@ -78,6 +79,10 @@ public class NavXSubSystem extends EntechSubsystem  implements Sendable{
     public NavxStatus getFieldPoseStatus() {
     	return new NavxStatus(getForward(), getRight(), getYawForFieldPose(), getPitch());
 
+    }
+
+    public double getYawAngleDegrees() {
+        return getYaw();
     }
 
     public void zeroYaw() {

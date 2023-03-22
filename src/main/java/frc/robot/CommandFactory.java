@@ -27,7 +27,7 @@ import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.RetractBrakeCommand;
 import frc.robot.commands.SimpleDriveCommand;
-import frc.robot.commands.SnapYawDegreesCommand;
+import frc.robot.commands.DriveYawToNearestPerpendicular;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.ToggleGripperCommand;
 import frc.robot.commands.ZeroGyroCommand;
@@ -334,8 +334,8 @@ public class CommandFactory {
   		return new HorizontalAlignWithTagCommand(driveSubsystem, ledSubsystem, addYawToOperatorJoystickInput(operatorInput), robotState);
     }
 
-    public Command snapYawDegreesCommand(double angle) {
-        return new SnapYawDegreesCommand(driveSubsystem, angle,robotState );
+    public Command getYawToNearestPerpendicular() {
+        return new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem );
     }
 
     public Command getZeroGyro() {
@@ -367,11 +367,11 @@ public class CommandFactory {
     }
 
     public Command nudgeYawLeftCommand() {
-        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.LEFT,robotState);
+        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.LEFT,navxSubsystem);
     }
 
     public Command nudgeYawRightCommand() {
-        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.RIGHT,robotState);
+        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.RIGHT,navxSubsystem);
     }
 
     public Command driveDistanceCommand(double distanceMeters) {

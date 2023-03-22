@@ -44,6 +44,7 @@ public class NudgeYawCommand extends EntechCommandBase {
     @Override
     public void initialize() {
         timer = new Timer();
+        timer.reset();
         timer.start();
     }
 
@@ -53,6 +54,7 @@ public class NudgeYawCommand extends EntechCommandBase {
     	di.setYawAngleDegrees(yawAngleSupplier.getYawAngleDegrees());
         
         drive.drive(di);
+        drive.setHoldYawAngle(yawAngleSupplier.getYawAngleDegrees());
     }
     
     @Override

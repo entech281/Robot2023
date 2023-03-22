@@ -1,10 +1,7 @@
 package frc.robot.oi;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.CommandFactory;
-import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.adapter.JoystickDriveInputSupplier;
 
@@ -14,14 +11,12 @@ public class OperatorInterface {
     private CommandJoystick operatorPanel;
     private CommandFactory commandFactory;
     private JoystickDriveInputSupplier hidJoystickDriveInputSupplier;
-    private Supplier<Boolean> gripperStateSupplier;
 
     public OperatorInterface( final CommandFactory cf) {
         this.commandFactory = cf;
         this.driveStick = new CommandJoystick(RobotConstants.JOYSTICKS.DRIVER_JOYSTICK);
         this.operatorPanel = new CommandJoystick(RobotConstants.JOYSTICKS.OPERATOR_PANEL);
         this.hidJoystickDriveInputSupplier = new JoystickDriveInputSupplier(driveStick.getHID());
-        this.gripperStateSupplier = () -> {  return ! operatorPanel.getHID().getRawButton(RobotConstants.OPERATOR_PANEL.GRIPPER); }; 
 
         setupButtons();
     }
@@ -33,6 +28,9 @@ public class OperatorInterface {
 
 	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
 	        .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
+
+        driveStick.button(RobotConstants.DRIVER_STICK.SNAP_YAW)
+            .onTrue(commandFactory.getYawToNearestPerpendicular());
 
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_BALANCE_FORWARD)
             .whileTrue(commandFactory.autoDriveBalanceOnly(RobotConstants.DRIVE.BALANCE_SPEED));

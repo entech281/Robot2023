@@ -9,7 +9,6 @@ import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.SquareInputsFilter;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.RobotConstants;
 
 /**
  * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -22,8 +21,6 @@ import frc.robot.RobotConstants;
  */
 public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
-    //private static final double YAW_P_GAIN = 0.02;
-	private static final double YAW_P_GAIN = 0.00;
     private static final double LATERAL_P_GAIN = 2.25;
     private static final double LATERAL_I_GAIN = 0.000;	
     private static final double LATERAL_D_GAIN = 0.00;
@@ -71,7 +68,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         lateralPid.reset();
 
     	//lets hold it whereever we started
-    	yawSetPoint	= operatorInput.get().getYawAngleDegrees();
+        drive.setHoldYawAngle(operatorInput.get().getYawAngleDegrees());
     }
 
     @Override
@@ -82,21 +79,16 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         newDi = jsDeadbandFilter.filter(newDi);
         newDi = squareInputsFilter.filter(newDi);
         
-        double rot = YAW_P_GAIN*(di.getYawAngleDegrees() - yawSetPoint);
-        newDi.setRotation(rot);
-        
         if (lateralOffsetSupplier.getLateralOffset().isPresent()) {
         	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();        	
         	double calcValue = lateralPid.calculate(lateralOffset);
         	newDi.setRight(calcValue);
         }
-        newDi.setYawAngleDegrees(0.0);
-        drive.drive(newDi);
+        drive.driveFilterYawOnly(newDi);
     }
 
     @Override
     public void end(boolean interrupted) {
-    	drive.setHoldYawAngle(yawSetPoint);
         drive.stop();     
     }
 
