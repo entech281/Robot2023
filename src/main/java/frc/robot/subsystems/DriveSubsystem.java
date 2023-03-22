@@ -211,11 +211,15 @@ public class DriveSubsystem extends EntechSubsystem {
     }
 
     public void nudgeYawLeft() {
-        yawHoldFilter.setSetpoint(yawHoldFilter.getSetpoint() + RobotConstants.DRIVE.YAW_NUDGE_DEGREES);
+        if ( yawHoldFilter.isSetpointValid() ) {
+            yawHoldFilter.setSetpoint(yawHoldFilter.getSetpoint() + RobotConstants.DRIVE.YAW_NUDGE_DEGREES);
+        }
     }
 
     public void nudgeYawRight() {
-        yawHoldFilter.setSetpoint(yawHoldFilter.getSetpoint() - RobotConstants.DRIVE.YAW_NUDGE_DEGREES);
+        if ( yawHoldFilter.isSetpointValid() ) {
+            yawHoldFilter.setSetpoint(yawHoldFilter.getSetpoint() - RobotConstants.DRIVE.YAW_NUDGE_DEGREES);
+        }
     }
 
     public void toggleBrakeCoastMode() {
