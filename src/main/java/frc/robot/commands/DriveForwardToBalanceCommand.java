@@ -31,7 +31,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
    * @param nsubsys NavX subsystem used for pitch measurement
    */
   public DriveForwardToBalanceCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem) {
-      super(dsubsys,nsubsys);
+	  super(dsubsys,nsubsys,brakeSubsystem);
       drive = dsubsys;
       navx = nsubsys;
       brake = brakeSubsystem;
