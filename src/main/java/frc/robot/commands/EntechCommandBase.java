@@ -22,7 +22,10 @@ public class EntechCommandBase extends CommandBase {
     public EntechCommandBase(EntechSubsystem subsystem1, EntechSubsystem subsystem2) {
         addRequirements(subsystem1, subsystem2);
     }
-    
+  
+    public EntechCommandBase(EntechSubsystem subsystem1, EntechSubsystem subsystem2, EntechSubsystem subsystem3) {
+        addRequirements(subsystem1, subsystem2,subsystem3);
+    }    
     
     public EntechCommandBase(EntechSubsystem subsystem, double timeout) {
         addRequirements(subsystem);
