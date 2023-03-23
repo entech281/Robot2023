@@ -22,7 +22,7 @@ public class LEDSubsystem extends EntechSubsystem{
   private AddressableLED leds;
   private AddressableLEDBuffer buffer;
   
-  public static int NUM_LEDS = 20;
+  public static int NUM_LEDS = 42;
   
   @Override
   public void initialize() {
@@ -31,7 +31,7 @@ public class LEDSubsystem extends EntechSubsystem{
 
 
   public void setNormal() {
-	  setColor(Color.kWhite);
+	  setColor(Color.kViolet);
   }
   
   public void setAligning() {
