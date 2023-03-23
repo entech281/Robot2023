@@ -30,8 +30,11 @@ public class TestPhotonCamera {
 //        CameraServerJNI.Helper.setExtractOnStaticLoad(false);
 //        CombinedRuntimeLoader.loadLibraries(TestPhotonCamera.class, "wpiutiljni", "wpimathjni", "ntcorejni",
 //                "cscorejnicvstatic");		
-        NetworkTableInstance inst = NetworkTableInstance.getDefault();
-		camera = new PhotonCamera(inst,"OV5647");
+        NetworkTableInstance nt = NetworkTableInstance.create();
+        nt.setServer("10.2.81.99");
+        nt.startClient4("CAMERATEST");
+
+		camera = new PhotonCamera(nt,"OV5647");
 		
 		while ( true) {
 			PhotonPipelineResult r = camera.getLatestResult();
@@ -39,7 +42,7 @@ public class TestPhotonCamera {
 				PhotonTrackedTarget ptt = r.getBestTarget();
 				if ( ptt != null ) {
 
-					System.out.println(ptt.getBestCameraToTarget().getX());
+					System.out.println(ptt.getBestCameraToTarget().getY());
 				}
 				else {
 					System.out.println("No Target");
