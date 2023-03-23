@@ -46,7 +46,8 @@ public class BrakeSubsystem extends EntechSubsystem {
 	private void handleSolenoid() {
           if (brakeStatus == BrakeState.kDeploy) {
         	  brakeSolenoid.set(true);
-          } else if (brakeStatus == BrakeState.kRetract) {
+          } else 
+          {
         	  brakeSolenoid.set(false);       	  
           } 
 	}

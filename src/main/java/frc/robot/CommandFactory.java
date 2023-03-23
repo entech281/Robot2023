@@ -235,7 +235,7 @@ public class CommandFactory {
             , autonomousArmSafe()
             , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
             , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
-            , new DeployBrakeCommand(brakeSubsystem)
+            ,deployBrakeCommand()
         );
         sg.setName("Center DeadRec Balance");
         return sg;
