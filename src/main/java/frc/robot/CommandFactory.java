@@ -142,6 +142,7 @@ public class CommandFactory {
     private Command autonomousSetup() {
         return new SequentialCommandGroup(
               new ZeroGyroCommand(navxSubsystem, driveSubsystem)
+            , new RetractBrakeCommand(brakeSubsystem)
 	        , new GripperCommand(gripperSubsystem, GripperState.kClose)
 	        , new DriveSetBrakeMode(driveSubsystem)
 	        , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
@@ -226,15 +227,13 @@ public class CommandFactory {
     }
 
     public Command autonomousBalanceDeadRecCommand() {
-        double MOVE_DISTANCE_METERS = -2.6;
-        double HOLD_BRAKE_TIME = 2.0;
+        double MOVE_DISTANCE_METERS = -2.5;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
             , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
-            , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
             ,deployBrakeCommand()
         );
         sg.setName("Center DeadRec Balance");

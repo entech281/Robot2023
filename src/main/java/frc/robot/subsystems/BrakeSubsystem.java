@@ -39,7 +39,8 @@ public class BrakeSubsystem extends EntechSubsystem {
     @Override
     public void initSendable(SendableBuilder builder) {
   	  if ( enabled ) {
-  	      builder.setSmartDashboardType(getName());		 
+  	      builder.setSmartDashboardType(getName());
+  	      builder.addBooleanProperty("Brake deployed",this::isBrakeDeployed, null);
   	  }
     }	
 	

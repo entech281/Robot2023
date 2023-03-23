@@ -161,7 +161,6 @@ public class Robot extends TimedRobot {
     allSubsystems.getElbow().clearRequestedPosition();
     // schedule the autonomous command
     if (autoCommand != null) {
-      commandFactory.retractBrakeCommand().schedule();
       autoCommand.schedule();
     }
   }
