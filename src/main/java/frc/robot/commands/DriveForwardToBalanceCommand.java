@@ -90,7 +90,18 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
+  public void end(boolean interrupted) { 
+	/** NOTE:
+	 * this command is used in two contexts: in auto, and activated by driver in 
+	 * endgame.
+	 * In auto, the balance time (ROBOT_STABLE_COUNT) is long enough that the 
+	 * command will not end before autonomous ends. it will continually try to seek balance and stop
+	 * 
+	 * In endgame, we want the operator to have control, but to use the balancing code to mount.
+	 * the operator runs this command, and then when happy holds down the brake button.
+	 * The brake button will cancel this command.  We free the the brakes so that the operator
+	 * can move if they choose to do so
+	**/
   	brake.setBrakeState(BrakeState.kRetract);
   	drive.stop();	  
   }
