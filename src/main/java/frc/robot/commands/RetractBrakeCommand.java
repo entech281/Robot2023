@@ -47,6 +47,6 @@ public class RetractBrakeCommand extends EntechCommandBase {
   // Returns true if this command should run when robot is disabled.
   @Override
   public boolean runsWhenDisabled() {
-      return false;
+      return true;
   }
 }
