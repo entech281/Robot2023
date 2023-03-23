@@ -265,12 +265,12 @@ public class CommandFactory {
         return new SequentialCommandGroup(
               new DriveDistanceCommand(driveSubsystem, over_distance, over_speed, 0.3, .1)
             , new DriveBrakeForSeconds(driveSubsystem, brake_time)
-            , new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, balance_speed)
+            , new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, balance_speed)
         );
     }
 
     public Command autoDriveBalanceOnly(double balance_speed) {
-        return new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, balance_speed);
+        return new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, balance_speed);
     }
 
     private boolean isTimeForCommunityMove() {
