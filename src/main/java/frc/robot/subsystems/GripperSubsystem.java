@@ -25,8 +25,12 @@ public class GripperSubsystem extends EntechSubsystem {
 	@Override
 	public void initialize() {
 		if (enabled ) {
-			leftGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.LEFT_GRIPPER_OPEN, RobotConstants.PNEUMATICS.LEFT_GRIPPER_CLOSE);
-			rightGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotConstants.PNEUMATICS.RIGHT_GRIPPER_OPEN, RobotConstants.PNEUMATICS.RIGHT_GRIPPER_CLOSE);
+			leftGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
+					RobotConstants.PNEUMATICS.LEFT_GRIPPER_OPEN, 
+					RobotConstants.PNEUMATICS.LEFT_GRIPPER_CLOSE);
+			rightGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
+					RobotConstants.PNEUMATICS.RIGHT_GRIPPER_OPEN, 
+					RobotConstants.PNEUMATICS.RIGHT_GRIPPER_CLOSE);
             gripperState = GripperState.kUnknown;
 		}
 		

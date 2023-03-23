@@ -9,7 +9,7 @@ import frc.robot.subsystems.BrakeSubsystem.BrakeState;
 
 /** An example command that uses an example subsystem. */
 public class DeployBrakeCommand extends EntechCommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+
   private final BrakeSubsystem brakeSubsystem;
 
   /**

@@ -217,8 +217,7 @@ public final class RobotConstants {
         public static final int LEFT_GRIPPER_CLOSE = 2;
         public static final int RIGHT_GRIPPER_OPEN = 4;
         public static final int RIGHT_GRIPPER_CLOSE = 5;  
-        public static final int BRAKE_SOLENOID_OUT = 6;
-        public static final int BRAKE_SOLENOID_IN = 7;    
+        public static final int BRAKE_SOLENOID = 7;    
 
     }    
     public interface SHUFFLEBOARD {
