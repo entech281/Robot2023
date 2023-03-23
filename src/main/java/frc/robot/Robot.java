@@ -181,7 +181,7 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
     oi.setDefaultCommands();
-
+    commandFactory.retractBrakeCommand().schedule();
     allSubsystems.getDrive().setDriveMode(DriveMode.BRAKE);
 
   }

@@ -133,7 +133,7 @@ public final class RobotConstants {
         public static final double ANGLE_TOLERANCE_DEGREES = 2.0;
         public static final double DISTANCE_TOLERANCE_METERS = 0.0508;
         //public static final double ALIGN_TOLERANCE_METERS = 0.02;
-        public static final double ALIGN_CLOSE_WINDOW_METERS = Units.inchesToMeters(3.0); //gets added outside the tolerance window
+        public static final double ALIGN_CLOSE_WINDOW_METERS = Units.inchesToMeters(5.0); //gets added outside the tolerance window
         //public static final double ALIGN_KINDA_CLOSE_METERS = 0.15;
         
         //tolerances are vs nominal, so the 'windows' is 2x this value
@@ -156,7 +156,7 @@ public final class RobotConstants {
         public static final double ROTATION_DAMPING_FACTOR = 0.5;
         public static final double SPEED_LIMIT_WITH_ARM_OUT = 0.5;
         public static final double BALANCE_SPEED = 0.16;
-        public static final double YAW_NUDGE_DEGREES = 2.5;
+        public static final double YAW_NUDGE_DEGREES = 3.5;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;
@@ -217,8 +217,7 @@ public final class RobotConstants {
         public static final int LEFT_GRIPPER_CLOSE = 2;
         public static final int RIGHT_GRIPPER_OPEN = 4;
         public static final int RIGHT_GRIPPER_CLOSE = 5;  
-        public static final int BRAKE_SOLENOID_OUT = 6;
-        public static final int BRAKE_SOLENOID_IN = 7;    
+        public static final int BRAKE_SOLENOID = 7;    
 
     }    
     public interface SHUFFLEBOARD {

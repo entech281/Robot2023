@@ -9,7 +9,7 @@ import frc.robot.subsystems.BrakeSubsystem.BrakeState;
 
 /** An example command that uses an example subsystem. */
 public class RetractBrakeCommand extends EntechCommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+
   private final BrakeSubsystem brakeSubsystem;
 
   /**
@@ -47,6 +47,6 @@ public class RetractBrakeCommand extends EntechCommandBase {
   // Returns true if this command should run when robot is disabled.
   @Override
   public boolean runsWhenDisabled() {
-      return false;
+      return true;
   }
 }
