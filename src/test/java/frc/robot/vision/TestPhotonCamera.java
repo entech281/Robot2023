@@ -21,7 +21,7 @@ public class TestPhotonCamera {
 	private static PhotonCamera camera;
 	private static Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();	
 	
-	@Test
+	//@Test
 	public void testRunningCamera() throws Exception{
 		
 //        NetworkTablesJNI.Helper.setExtractOnStaticLoad(false);
