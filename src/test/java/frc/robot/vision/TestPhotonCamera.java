@@ -6,7 +6,13 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.cscore.CameraServerJNI;
+import edu.wpi.first.math.WPIMathJNI;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTablesJNI;
+import edu.wpi.first.util.CombinedRuntimeLoader;
+import edu.wpi.first.util.WPIUtilJNI;
 import frc.robot.RobotConstants;
 import frc.robot.util.PoseUtil;
 
@@ -16,18 +22,33 @@ public class TestPhotonCamera {
 	private static Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();	
 	
 	@Test
-	public void testRunningCamera() {
-		camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
+	public void testRunningCamera() throws Exception{
+		
+//        NetworkTablesJNI.Helper.setExtractOnStaticLoad(false);
+//        WPIUtilJNI.Helper.setExtractOnStaticLoad(false);
+//        WPIMathJNI.Helper.setExtractOnStaticLoad(false);
+//        CameraServerJNI.Helper.setExtractOnStaticLoad(false);
+//        CombinedRuntimeLoader.loadLibraries(TestPhotonCamera.class, "wpiutiljni", "wpimathjni", "ntcorejni",
+//                "cscorejnicvstatic");		
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+		camera = new PhotonCamera(inst,"OV5647");
+		
 		while ( true) {
 			PhotonPipelineResult r = camera.getLatestResult();
-			PhotonTrackedTarget ptt = r.getBestTarget();
-			if ( ptt != null ) {
+			if ( r.hasTargets()) {
+				PhotonTrackedTarget ptt = r.getBestTarget();
+				if ( ptt != null ) {
 
-				System.out.println(ptt.getBestCameraToTarget().getX());
+					System.out.println(ptt.getBestCameraToTarget().getX());
+				}
+				else {
+					System.out.println("No Target");
+				}								
 			}
 			else {
-				System.out.println("No Target");
+				System.out.println("No Targets");
 			}
+
 			Thread.sleep(1000);
 		}		
 	}
