@@ -37,7 +37,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
       drive = dsubsys;
       navx = nsubsys;
       brake = brakeSubsystem;
-      speed = RobotConstants.DRIVE.BALANCE_SPEED;
+      speed = RobotConstants.DRIVE.BALANCE_APPROACH_SPEED;
       original_speed = speed;
       this.useBrakes = useBrakes;
   }

@@ -262,8 +262,8 @@ public class CommandFactory {
             , autonomousArmSafe()
             , new ConditionalCommand(autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, 
             		HOLD_BRAKE_TIME, 
-            		RobotConstants.DRIVE.BALANCE_SPEED,useBrakes),
-                                     autoDriveBalanceOnly(-RobotConstants.DRIVE.BALANCE_SPEED,useBrakes), 
+            		RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,useBrakes),
+                                     autoDriveBalanceOnly(-RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,useBrakes), 
                                      this::isTimeForCommunityMove)
         );
         if ( useBrakes) {

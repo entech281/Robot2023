@@ -33,14 +33,15 @@ public class OperatorInterface {
             .onTrue(commandFactory.getYawToNearestPerpendicular());
 
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_BALANCE_FORWARD)
-            .whileTrue(commandFactory.autoDriveBalanceOnly(RobotConstants.DRIVE.BALANCE_SPEED,false));
+            .whileTrue(commandFactory.autoDriveBalanceOnly(RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,false));
 
         driveStick.button(RobotConstants.DRIVER_STICK.DEPLOY_BRAKE)
             .onTrue(commandFactory.deployBrakeCommand())
             .onFalse(commandFactory.retractBrakeCommand());
 
-        driveStick.button(RobotConstants.DRIVER_STICK.BRAKE_COAST)
-            .onTrue(commandFactory.toggleBrakeModeCommand());
+//     removed at drive team request
+//        driveStick.button(RobotConstants.DRIVER_STICK.BRAKE_COAST)
+//            .onTrue(commandFactory.toggleBrakeModeCommand());
 
 	    driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
 	        .onTrue(commandFactory.toggleFieldAbsoluteCommand());
