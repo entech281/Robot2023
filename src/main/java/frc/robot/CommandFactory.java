@@ -13,6 +13,7 @@ import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DeployBrakeCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
+import frc.robot.commands.DriveCrosshairBalence;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.DriveForwardToBalanceCommand;
@@ -273,6 +274,20 @@ public class CommandFactory {
         	sg.setName("Center Auto Balance  no brakes"); 
         }
 
+        return sg;
+    }
+
+    public Command autonomousBalanceCrosshairCommand(boolean useBrakes) {
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+              autonomousSetup()
+            , autonomousArmHigh()
+            , autonomousScoreCube()
+            , autonomousArmSafe()
+            , new DriveCrosshairBalence(driveSubsystem, navxSubsystem, brakeSubsystem)
+            , deployBrakeCommand()
+
+        );
+        sg.setName("Crosshair Balence Auto");
         return sg;
     }
 
