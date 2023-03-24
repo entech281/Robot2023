@@ -87,6 +87,7 @@ public class CommandFactory {
     	//ALSO: the robot is facing opposite that way
     	//both autonomous right and autonomous left should move the robout slightly OUTwards
     	return List.of(
+                autonomousBalanceCrosshairCommand(),
     			autonomousAutoBalanceCommand(true),
     			autonomousAutoBalanceCommand(false),    			
     			autonomousBalanceDeadRecCommand(true),
@@ -277,7 +278,7 @@ public class CommandFactory {
         return sg;
     }
 
-    public Command autonomousBalanceCrosshairCommand(boolean useBrakes) {
+    public Command autonomousBalanceCrosshairCommand() {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
             , autonomousArmHigh()
