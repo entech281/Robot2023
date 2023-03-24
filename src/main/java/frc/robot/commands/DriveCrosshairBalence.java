@@ -18,7 +18,7 @@ public class DriveCrosshairBalence extends EntechCommandBase {
   private final NavXSubSystem navx;
   private final BrakeSubsystem brake;
   private CrosshairController chc;
-  private static final double FIRST_STAGE_DISTANCE = 2.5;
+  private static final double FIRST_STAGE_DISTANCE = 2.4;
   private static final double DEGREES_TOLERANCE = 10;
 
   /**
@@ -39,10 +39,11 @@ public class DriveCrosshairBalence extends EntechCommandBase {
   @Override
   public void initialize() {
     chc = new CrosshairController();
-    chc.setP(0.35);
+    chc.setP(0.4);
     chc.setMinSpeed(0.15);
-    chc.setMaxSpeed(0.8);
+    chc.setMaxSpeed(0.4);
     chc.setRammingPrecent(0.75);
+    chc.setThreshold(0.05);
     chc.setStartingError(FIRST_STAGE_DISTANCE);
     chc.addCondition((() -> {return Math.abs(navx.getPitch()) <= DEGREES_TOLERANCE; }));
     drive.setDriveMode(DriveMode.BRAKE);
