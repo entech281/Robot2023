@@ -229,13 +229,13 @@ public class CommandFactory {
     }
 
     public Command autonomousBalanceDeadRecCommand(boolean useBrakes) {
-        double MOVE_DISTANCE_METERS = -2.5;
+        double MOVE_DISTANCE_METERS = -2.51;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.3, 0.3, .1)
 
         );
         if ( useBrakes) {
