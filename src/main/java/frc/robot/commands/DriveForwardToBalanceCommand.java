@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.BrakeSubsystem;
@@ -24,7 +25,10 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   private static final int    ROBOT_STABLE_COUNT = 500;
   private static final double PITCH_THRESHOLD = 14.0;
   private static final double SPEED_AFTER_PITCH = 0.15;
+  private static final double BACK_NUDGE_TIME = 0.0;   // Set to zero (or negative) to turn off the back nudge
+  private static final double BACK_NUDGE_SPEED = 0.15;
   private boolean useBrakes = false;
+  private Timer backNudgeTimer;
 
   /**
    * Creates a new DriveForwardToBalanceCommand.
@@ -40,6 +44,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
       speed = RobotConstants.DRIVE.BALANCE_APPROACH_SPEED;
       original_speed = speed;
       this.useBrakes = useBrakes;
+      this.backNudgeTimer = new Timer();
   }
 
   /**
@@ -57,7 +62,8 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
     this.speed = speed;
     original_speed = speed;
     this.useBrakes = useBrakes;
-}
+    this.backNudgeTimer = new Timer();
+  }
 
   // Called when the command is initially scheduled.
   @Override
@@ -66,6 +72,8 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
     pitch_stable_count = 0;
     speed = original_speed;
     drive.setDriveMode(DriveMode.BRAKE);
+    backNudgeTimer.stop();
+    backNudgeTimer.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -82,9 +90,19 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
         drive.driveFilterYawOnly(di);
     } else {
         if (Math.abs(pitch_angle) < PITCH_THRESHOLD) {
-            drive.stop();
-            if ( useBrakes ) {
-            	brake.setBrakeState(BrakeState.kDeploy);
+            if (pitch_stable_count == 0) {
+                backNudgeTimer.start();
+            }
+            if (backNudgeTimer.get() < BACK_NUDGE_TIME) {
+               di.setForward(Math.copySign(BACK_NUDGE_SPEED,-speed));
+               di.setRight(0.0);
+               di.setRotation(0.0);
+               drive.drive(di);
+            } else {
+               drive.stop();
+               if ( useBrakes ) {
+            	   brake.setBrakeState(BrakeState.kDeploy);
+               }
             }
             pitch_stable_count += 1;
         } else {
@@ -92,8 +110,10 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
             	brake.setBrakeState(BrakeState.kRetract);
             }
             pitch_stable_count = 0;
+            backNudgeTimer.stop();
+            backNudgeTimer.reset();
             di.setForward(Math.copySign(this.speed, pitch_angle));
-            drive.driveFilterYawOnly(di);
+            drive.drive(di);
         }
     }
   }
