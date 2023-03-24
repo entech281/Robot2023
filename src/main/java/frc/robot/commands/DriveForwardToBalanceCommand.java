@@ -22,7 +22,9 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   private double speed = 0.0;
   private double original_speed = 0.0;
   private static final int    ROBOT_STABLE_COUNT = 500;
-  private static final double PITCH_THRESHOLD = 12.0;
+  private static final double PITCH_THRESHOLD = 14.0;
+  private static final double SPEED_AFTER_PITCH = 0.15;
+  private boolean useBrakes = false;
 
   /**
    * Creates a new DriveForwardToBalanceCommand.
@@ -30,13 +32,14 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
    * @param dsubsys Drive subsystem used by this command.
    * @param nsubsys NavX subsystem used for pitch measurement
    */
-  public DriveForwardToBalanceCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem) {
+  public DriveForwardToBalanceCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem, boolean useBrakes) {
 	  super(dsubsys,nsubsys,brakeSubsystem);
       drive = dsubsys;
       navx = nsubsys;
       brake = brakeSubsystem;
       speed = RobotConstants.DRIVE.BALANCE_SPEED;
       original_speed = speed;
+      this.useBrakes = useBrakes;
   }
 
   /**
@@ -46,13 +49,14 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
    * @param nsubsys NavX subsystem used for pitch measurement
    * @param speed Drive speed (forward is positive, default)
    */
-  public DriveForwardToBalanceCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem, double speed) {
+  public DriveForwardToBalanceCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem, double speed,boolean useBrakes) {
     super(dsubsys,nsubsys,brakeSubsystem);
     drive = dsubsys;
     navx = nsubsys;
     brake = brakeSubsystem;
     this.speed = speed;
     original_speed = speed;
+    this.useBrakes = useBrakes;
 }
 
   // Called when the command is initially scheduled.
@@ -67,22 +71,28 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     DriveInput di=new DriveInput(speed,0.0,0.0, navx.getYaw());
     double pitch_angle = navx.getPitch();
     if (!pitch_seen) {
         if (Math.abs(pitch_angle) > PITCH_THRESHOLD) {
             pitch_seen = true;
+            this.speed = SPEED_AFTER_PITCH;
         }
         drive.driveFilterYawOnly(di);
     } else {
         if (Math.abs(pitch_angle) < PITCH_THRESHOLD) {
             drive.stop();
-            brake.setBrakeState(BrakeState.kDeploy);
+            if ( useBrakes ) {
+            	brake.setBrakeState(BrakeState.kDeploy);
+            }
             pitch_stable_count += 1;
         } else {
-        	brake.setBrakeState(BrakeState.kRetract);
+            if ( useBrakes ) {        	
+            	brake.setBrakeState(BrakeState.kRetract);
+            }
             pitch_stable_count = 0;
-            di.setForward(Math.copySign(speed, pitch_angle));
+            di.setForward(Math.copySign(this.speed, pitch_angle));
             drive.driveFilterYawOnly(di);
         }
     }
@@ -102,7 +112,9 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
 	 * The brake button will cancel this command.  We free the the brakes so that the operator
 	 * can move if they choose to do so
 	**/
-  	brake.setBrakeState(BrakeState.kRetract);
+      if ( useBrakes ) {
+      	brake.setBrakeState(BrakeState.kRetract);
+      }
   	drive.stop();	  
   }
 
