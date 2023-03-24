@@ -12,6 +12,8 @@ public class CrosshairController {
    protected double startingError = 0;
    protected double prevError = 0;
 
+   public CrosshairController() {}
+
    public CrosshairController(double pGain) {
       p = pGain;
    }
@@ -142,5 +144,9 @@ public class CrosshairController {
          }
          newArray[conditions.length] = condition;
       }
+   }
+
+   public boolean isFinnished() {
+      return isConditionsMet() && hasTraveled();
    }
 }
