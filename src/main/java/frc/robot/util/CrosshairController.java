@@ -6,9 +6,11 @@ public class CrosshairController {
    Supplier<Boolean>[] conditions;
    protected double p = 0;
    protected double rammingPrecent = 0.7;
+   protected double threshold = 0.01;
    protected double maxSpeed = 1;
    protected double minSpeed = 0;
    protected double startingError = 0;
+   protected double prevError = 0;
 
    public CrosshairController(double pGain) {
       p = pGain;
@@ -40,12 +42,37 @@ public class CrosshairController {
       this.startingError = startingError;
    }
 
+   public boolean hasTraveled() {
+      return prevError <= threshold;
+   }
+
    public double calculate(double error) {
-      double calculated = maxSpeed;
-      if (isPastRammingPrecent(error)) {
-         calculated = Math.max(error * p, minSpeed);
+      if (!hasTraveled()) {
+         double calculated = maxSpeed;
+         if (isPastRammingPrecent(error)) {
+            calculated = Math.max(error * p, minSpeed);
+         }
+         return calculated;
+      } else {
+         if (isConditionsMet()) {
+            return 0.0;
+         }
+         return minSpeed;
       }
-      return calculated;
+   }
+
+   protected boolean isConditionsMet() {
+      if (conditions == null) {
+         return true;
+      }
+      for (Supplier<Boolean> condition: conditions) {
+         if (condition.get()) {
+            continue;
+         } else {
+            return false;
+         }
+      }
+      return true;
    }
 
    protected boolean isPastRammingPrecent(double error) {
@@ -54,6 +81,7 @@ public class CrosshairController {
 
    public void reset() {
       startingError = 0;
+      prevError = 0;
    }
 
    public double getRammingPrecent() {
@@ -96,4 +124,23 @@ public class CrosshairController {
       this.startingError = startingError;
    }
 
+   public double getThreshold() {
+      return this.threshold;
+   }
+
+   public void setThreshold(double threshold) {
+      this.threshold = threshold;
+   }
+
+   public void addCondition(Supplier<Boolean> condition) {
+      if (conditions == null) {
+         conditions = (Supplier<Boolean>[]) new Supplier[] { () -> condition };
+      } else {
+         Supplier<Boolean>[] newArray = (Supplier<Boolean>[]) new Supplier[conditions.length + 1];
+         for (int i = 0; i < conditions.length; i++) {
+            newArray[i] = conditions[i];
+         }
+         newArray[conditions.length] = condition;
+      }
+   }
 }
