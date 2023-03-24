@@ -90,7 +90,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
             pitch_seen = true;
             this.speed = SPEED_AFTER_PITCH;
             this.start_slowdown = drive.getAverageDistanceMeters();
-            this.speed = calculateSpeed(Math.abs(drive.getAverageDistanceMeters()-start_slowdown), 0.5*CHARGESTATION_DEPTH, original_speed, SPEED_AFTER_PITCH);
+            this.speed = calculateSpeed(Math.abs(drive.getAverageDistanceMeters()-start_slowdown), 0.25*CHARGESTATION_DEPTH, original_speed, SPEED_AFTER_PITCH);
         }
         drive.driveFilterYawOnly(di);
     } else {
@@ -117,7 +117,7 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
             pitch_stable_count = 0;
             backNudgeTimer.stop();
             backNudgeTimer.reset();
-            this.speed = calculateSpeed(Math.abs(drive.getAverageDistanceMeters()-start_slowdown), 0.5*CHARGESTATION_DEPTH, original_speed, SPEED_AFTER_PITCH);
+            this.speed = calculateSpeed(Math.abs(drive.getAverageDistanceMeters()-start_slowdown), 0.25*CHARGESTATION_DEPTH, original_speed, SPEED_AFTER_PITCH);
             di.setForward(Math.copySign(this.speed, pitch_angle));
             drive.drive(di);
         }
