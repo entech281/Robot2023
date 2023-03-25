@@ -25,13 +25,13 @@ public class DriveCrosshairBalence extends EntechCommandBase {
   private final NavXSubSystem navx;
   private final BrakeSubsystem brake;
   private CrosshairController chc;
-  private static final double FIRST_STAGE_DISTANCE = 2.4;
+  private static final double FIRST_STAGE_DISTANCE = 2.425;
   private static final double DEGREES_TOLERANCE = 10;
-  private static final double P_GAIN = 0.4;
+  private static final double P_GAIN = 0.175;
   private static final double MIN_SPEED = 0.15;
-  private static final double MAX_SPEED = 0.4;
-  private static final double RAMMING_PRECENT = 0.75;
-  private static final double THRESHOLD = 0.05;
+  private static final double MAX_SPEED = 0.375;
+  private static final double RAMMING_PRECENT = 0.8;
+  private static final double THRESHOLD = 0.03;
 
   /**
    * Creates a new DriveCrosshairBalence.
@@ -66,7 +66,7 @@ public class DriveCrosshairBalence extends EntechCommandBase {
   @Override
   public void execute() {
     DriveInput di = new DriveInput(0.0, 0.0, 0.0, navx.getYaw());
-    di.setForward(-chc.calculate(FIRST_STAGE_DISTANCE - Math.abs(drive.getAverageDistanceMeters())));
+    di.setForward(chc.calculate(FIRST_STAGE_DISTANCE - Math.abs(drive.getAverageDistanceMeters())));
     drive.drive(di);
     SmartDashboard.putNumber("Crosshair dist", drive.getAverageDistanceMeters());
   }

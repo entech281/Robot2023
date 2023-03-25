@@ -9,8 +9,9 @@ import java.util.function.BooleanSupplier;
  * Stage 1 ("Ramming"): run at maxSpeed until error is rammingPrecent less than startingError.
  * Stage 2 ("Porportinal"): run at pGain * error (or minSpeed to prevent the output from being under powered) until threshold is reached.
  * Stage 3 ("Conditional"): run at minSpeed until all added conditionals have been met.
+ * It is important to note that Stage 1 & 2 should under shoot the desired position.
  * 
- * @version 1.0
+ * @version 1.1
  * @author aheitkamp
  */
 public class CrosshairController {
@@ -106,15 +107,21 @@ public class CrosshairController {
     * @return has the error passed the threshold to move to stage 3
     */
    protected boolean hasTraveled() {
-      return error <= threshold;
+      return Math.abs(error) <= Math.abs(threshold);
    }
 
    public double calculate(double error) {
       this.error = error;
       if (!hasTraveled()) {
-         double calculated = maxSpeed;
+         double calculated = (-Math.abs(maxSpeed)) * error / Math.abs(error);
          if (isPastRammingPrecent()) {
-            calculated = Math.max(error * pGain, minSpeed);
+            calculated = error * -pGain;
+            if (Math.abs(calculated) >= Math.abs(maxSpeed)) {
+               calculated = (-Math.abs(maxSpeed)) * error / Math.abs(error);
+            }
+            if (Math.abs(calculated) <= Math.abs(minSpeed)) {
+               calculated = (-Math.abs(minSpeed)) * error / Math.abs(error);
+            }
          }
          return calculated;
       } else {
@@ -150,7 +157,7 @@ public class CrosshairController {
     * @return has the error been lowered enough to enter stage 2
     */
    protected boolean isPastRammingPrecent() {
-      return error <= (startingError - (startingError * rammingPrecent));
+      return Math.abs(error) <= (Math.abs(startingError) - (Math.abs(startingError) * Math.abs(rammingPrecent)));
    }
 
    /**
