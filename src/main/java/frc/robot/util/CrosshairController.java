@@ -5,11 +5,11 @@ import java.util.function.BooleanSupplier;
 /**
  * 
  * 
- * The Crosshair controller is a three stage movement controller for high precision no over shoot moves.
- * Stage 1 ("Ramming"): run at maxSpeed until error is rammingPrecent less than startingError.
- * Stage 2 ("Porportinal"): run at pGain * error (or minSpeed to prevent the output from being under powered) until threshold is reached.
- * Stage 3 ("Conditional"): run at minSpeed until all added conditionals have been met.
- * Ensure minSpeed has the correct signage to move towards the target conditions in stage 3.
+ * The Crosshair controller is a three stage movement controller for high precision no over shoot moves.<br>
+ * Stage 1 ("Ramming"): run at maxSpeed until error is rammingPrecent less than startingError.<br>
+ * Stage 2 ("Porportinal"): run at pGain * error (or minSpeed to prevent the output from being under powered) until threshold is reached.<br>
+ * Stage 3 ("Conditional"): run at minSpeed until all added conditionals have been met.<br>
+ * Ensure minSpeed has the correct signage to move towards the target conditions in stage 3.<br>
  * Also ensure that stage 1 & 2 unshoot the target position with the conditionals.
  * 
  * @apiNote It is important to note that Stage 1 & 2 should under shoot the desired position and the conditions should confirm that it has reached its final destination. 
