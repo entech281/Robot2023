@@ -6,15 +6,16 @@ import java.util.function.BooleanSupplier;
  * 
  * 
  * The Crosshair controller is a three stage movement controller for high precision no over shoot moves.
- * Stage 1 ("Ramming"): run at {@value maxSpeed} until error is {@value rammingPrecent} less than {@value startingError}.
- * Stage 2 ("Porportinal"): run at {@value p} * error (or {@value minSpeed} to prevent the output from being under powered) until {@value threshold} is reached.
- * Stage 3 ("Conditional"): run at {@value minSpeed} until all added conditionals have been met.
+ * Stage 1 ("Ramming"): run at maxSpeed until error is rammingPrecent less than startingError.
+ * Stage 2 ("Porportinal"): run at pGain * error (or minSpeed to prevent the output from being under powered) until threshold is reached.
+ * Stage 3 ("Conditional"): run at minSpeed until all added conditionals have been met.
  * 
+ * @version 1.0
  * @author aheitkamp
  */
 public class CrosshairController {
    BooleanSupplier[] conditions;
-   protected double p = 0;
+   protected double pGain = 0;
    protected double rammingPrecent = 0.7;
    protected double threshold = 0.01;
    protected double maxSpeed = 1;
@@ -36,7 +37,7 @@ public class CrosshairController {
     * @param pGain the porportinal gain for stage 2
     */
    public CrosshairController(double pGain) {
-      p = pGain;
+      this.pGain = pGain;
    }
 
    /**
@@ -48,7 +49,7 @@ public class CrosshairController {
     * @param maxSpeed the maximum moving speed
     */
    public CrosshairController(double pGain, double minSpeed, double maxSpeed) {
-      p = pGain;
+      this.pGain = pGain;
       this.minSpeed = minSpeed;
       this.maxSpeed = maxSpeed;
    }
@@ -61,7 +62,7 @@ public class CrosshairController {
     * @param rammingPrecent the precent of error corrected by the ramming phase
     */
    public CrosshairController(double pGain, double rammingPrecent) {
-      p = pGain;
+      this.pGain = pGain;
       this.rammingPrecent = rammingPrecent;
    }
 
@@ -75,7 +76,7 @@ public class CrosshairController {
     * @param rammingPrecent the precent of error corrected by the ramming phase
     */
    public CrosshairController(double pGain, double minSpeed, double maxSpeed, double rammingPrecent) {
-      p = pGain;
+      this.pGain = pGain;
       this.minSpeed = minSpeed;
       this.maxSpeed = maxSpeed;
       this.rammingPrecent = rammingPrecent;
@@ -92,7 +93,7 @@ public class CrosshairController {
     * @param startingError the amount of error to the target when starting
     */
    public CrosshairController(double pGain, double minSpeed, double maxSpeed, double rammingPrecent, double startingError) {
-      p = pGain;
+      this.pGain = pGain;
       this.minSpeed = minSpeed;
       this.maxSpeed = maxSpeed;
       this.rammingPrecent = rammingPrecent;
@@ -113,7 +114,7 @@ public class CrosshairController {
       if (!hasTraveled()) {
          double calculated = maxSpeed;
          if (isPastRammingPrecent()) {
-            calculated = Math.max(error * p, minSpeed);
+            calculated = Math.max(error * pGain, minSpeed);
          }
          return calculated;
       } else {
@@ -187,11 +188,11 @@ public class CrosshairController {
    }
 
    public double getPGain() {
-      return p;
+      return pGain;
    }
 
-   public void setPGain(double p) {
-      this.p = p;
+   public void setPGain(double pGain) {
+      this.pGain = pGain;
    }
 
    public double getStartingError() {
