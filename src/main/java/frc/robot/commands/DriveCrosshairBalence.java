@@ -28,7 +28,7 @@ public class DriveCrosshairBalence extends EntechCommandBase {
   private static final double FIRST_STAGE_DISTANCE = 2.425;
   private static final double DEGREES_TOLERANCE = 10;
   private static final double P_GAIN = 0.175;
-  private static final double MIN_SPEED = 0.15;
+  private static final double MIN_SPEED = -0.15;
   private static final double MAX_SPEED = 0.375;
   private static final double RAMMING_PRECENT = 0.8;
   private static final double THRESHOLD = 0.03;
