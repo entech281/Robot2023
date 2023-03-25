@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.BrakeSubsystem.BrakeState;
@@ -29,10 +30,9 @@ public class DriveCrosshairBalence extends EntechCommandBase {
    */
   public DriveCrosshairBalence(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem) {
 	  super(dsubsys,nsubsys,brakeSubsystem);
-      drive = dsubsys;
-      navx = nsubsys;
-      brake = brakeSubsystem;
-
+    drive = dsubsys;
+    navx = nsubsys;
+    brake = brakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -47,14 +47,16 @@ public class DriveCrosshairBalence extends EntechCommandBase {
     chc.setStartingError(FIRST_STAGE_DISTANCE);
     chc.addCondition((() -> {return Math.abs(navx.getPitch()) <= DEGREES_TOLERANCE; }));
     drive.setDriveMode(DriveMode.BRAKE);
+    drive.resetEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     DriveInput di = new DriveInput(0.0, 0.0, 0.0, navx.getYaw());
-    di.setForward(-chc.calculate(FIRST_STAGE_DISTANCE - drive.getAverageDistanceMeters()));
+    di.setForward(-chc.calculate(FIRST_STAGE_DISTANCE - Math.abs(drive.getAverageDistanceMeters())));
     drive.drive(di);
+    SmartDashboard.putNumber("Crosshair dist", drive.getAverageDistanceMeters());
   }
 
   // Called once the command ends or is interrupted.

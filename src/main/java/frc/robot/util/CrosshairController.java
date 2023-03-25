@@ -1,9 +1,9 @@
 package frc.robot.util;
 
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 
 public class CrosshairController {
-   Supplier<Boolean>[] conditions;
+   BooleanSupplier[] conditions;
    protected double p = 0;
    protected double rammingPrecent = 0.7;
    protected double threshold = 0.01;
@@ -49,6 +49,7 @@ public class CrosshairController {
    }
 
    public double calculate(double error) {
+      prevError = error;
       if (!hasTraveled()) {
          double calculated = maxSpeed;
          if (isPastRammingPrecent(error)) {
@@ -67,8 +68,8 @@ public class CrosshairController {
       if (conditions == null) {
          return true;
       }
-      for (Supplier<Boolean> condition: conditions) {
-         if (condition.get()) {
+      for (BooleanSupplier condition: conditions) {
+         if (condition.getAsBoolean()) {
             continue;
          } else {
             return false;
@@ -134,15 +135,16 @@ public class CrosshairController {
       this.threshold = threshold;
    }
 
-   public void addCondition(Supplier<Boolean> condition) {
+   public void addCondition(BooleanSupplier condition) {
       if (conditions == null) {
-         conditions = (Supplier<Boolean>[]) new Supplier[] { () -> condition };
+         conditions = new BooleanSupplier[] { () -> condition.getAsBoolean() };
       } else {
-         Supplier<Boolean>[] newArray = (Supplier<Boolean>[]) new Supplier[conditions.length + 1];
+         BooleanSupplier[] newArray = new BooleanSupplier[conditions.length + 1];
          for (int i = 0; i < conditions.length; i++) {
             newArray[i] = conditions[i];
          }
          newArray[conditions.length] = condition;
+         conditions = newArray;
       }
    }
 
