@@ -2,6 +2,16 @@ package frc.robot.util;
 
 import java.util.function.BooleanSupplier;
 
+/**
+ * 
+ * 
+ * The Crosshair controller is a three stage movement controller for high precision no over shoot moves.
+ * Stage 1 ("Ramming"): run at {@value maxSpeed} until error is {@value rammingPrecent} less than {@value startingError}.
+ * Stage 2 ("Porportinal"): run at {@value p} * error (or {@value minSpeed} to prevent the output from being under powered) until {@value threshold} is reached.
+ * Stage 3 ("Conditional"): run at {@value minSpeed} until all added conditionals have been met.
+ * 
+ * @author aheitkamp
+ */
 public class CrosshairController {
    BooleanSupplier[] conditions;
    protected double p = 0;
@@ -10,25 +20,60 @@ public class CrosshairController {
    protected double maxSpeed = 1;
    protected double minSpeed = 0;
    protected double startingError = 0;
-   protected double prevError = 0;
+   protected double error = 0;
 
+   /**
+    * 
+    *
+    * Creates a new CrosshairController
+    */
    public CrosshairController() {}
 
+   /**
+    * 
+    *
+    * Creates a new CrosshairController
+    * @param pGain the porportinal gain for stage 2
+    */
    public CrosshairController(double pGain) {
       p = pGain;
    }
 
+   /**
+    * 
+    *
+    * Creates a new CrosshairController
+    * @param pGain the porportinal gain for stage 2
+    * @param minSpeed the minimum moving speed
+    * @param maxSpeed the maximum moving speed
+    */
    public CrosshairController(double pGain, double minSpeed, double maxSpeed) {
       p = pGain;
       this.minSpeed = minSpeed;
       this.maxSpeed = maxSpeed;
    }
 
+   /**
+    * 
+    *
+    * Creates a new CrosshairController
+    * @param pGain the porportinal gain for stage 2
+    * @param rammingPrecent the precent of error corrected by the ramming phase
+    */
    public CrosshairController(double pGain, double rammingPrecent) {
       p = pGain;
       this.rammingPrecent = rammingPrecent;
    }
 
+   /**
+    * 
+    *
+    * Creates a new CrosshairController
+    * @param pGain the porportinal gain for stage 2
+    * @param minSpeed the minimum moving speed
+    * @param maxSpeed the maximum moving speed
+    * @param rammingPrecent the precent of error corrected by the ramming phase
+    */
    public CrosshairController(double pGain, double minSpeed, double maxSpeed, double rammingPrecent) {
       p = pGain;
       this.minSpeed = minSpeed;
@@ -36,6 +81,16 @@ public class CrosshairController {
       this.rammingPrecent = rammingPrecent;
    }
 
+   /**
+    * 
+    *
+    * Creates a new CrosshairController
+    * @param pGain the porportinal gain for stage 2
+    * @param minSpeed the minimum moving speed
+    * @param maxSpeed the maximum moving speed
+    * @param rammingPrecent the precent of error corrected by the ramming phase
+    * @param startingError the amount of error to the target when starting
+    */
    public CrosshairController(double pGain, double minSpeed, double maxSpeed, double rammingPrecent, double startingError) {
       p = pGain;
       this.minSpeed = minSpeed;
@@ -44,27 +99,37 @@ public class CrosshairController {
       this.startingError = startingError;
    }
 
-   public boolean hasTraveled() {
-      return prevError <= threshold;
+   /**
+    * 
+    *
+    * @return has the error passed the threshold to move to stage 3
+    */
+   protected boolean hasTraveled() {
+      return error <= threshold;
    }
 
    public double calculate(double error) {
-      prevError = error;
+      this.error = error;
       if (!hasTraveled()) {
          double calculated = maxSpeed;
-         if (isPastRammingPrecent(error)) {
+         if (isPastRammingPrecent()) {
             calculated = Math.max(error * p, minSpeed);
          }
          return calculated;
       } else {
-         if (isConditionsMet()) {
+         if (areConditionsMet()) {
             return 0.0;
          }
          return minSpeed;
       }
    }
 
-   protected boolean isConditionsMet() {
+   /**
+    * 
+    *
+    * @return are all conditions add true to finnish the move
+    */
+   protected boolean areConditionsMet() {
       if (conditions == null) {
          return true;
       }
@@ -78,13 +143,23 @@ public class CrosshairController {
       return true;
    }
 
-   protected boolean isPastRammingPrecent(double error) {
+   /**
+    * 
+    *
+    * @return has the error been lowered enough to enter stage 2
+    */
+   protected boolean isPastRammingPrecent() {
       return error <= (startingError - (startingError * rammingPrecent));
    }
 
+   /**
+    * 
+    *
+    * sets the {@value startingError} and the stored {@value error} to 0
+    */
    public void reset() {
       startingError = 0;
-      prevError = 0;
+      error = 0;
    }
 
    public double getRammingPrecent() {
@@ -111,11 +186,11 @@ public class CrosshairController {
       this.minSpeed = minSpeed;
    }
 
-   public double getP() {
+   public double getPGain() {
       return p;
    }
 
-   public void setP(double p) {
+   public void setPGain(double p) {
       this.p = p;
    }
 
@@ -135,6 +210,12 @@ public class CrosshairController {
       this.threshold = threshold;
    }
 
+   /**
+    * 
+    *
+    * Adds a condition to the conditional array for stage 3
+    * @param condition
+    */
    public void addCondition(BooleanSupplier condition) {
       if (conditions == null) {
          conditions = new BooleanSupplier[] { () -> condition.getAsBoolean() };
@@ -148,7 +229,12 @@ public class CrosshairController {
       }
    }
 
+   /**
+    * 
+    *
+    * @return has the controller completed its move
+    */
    public boolean isFinnished() {
-      return isConditionsMet() && hasTraveled();
+      return areConditionsMet() && hasTraveled();
    }
 }

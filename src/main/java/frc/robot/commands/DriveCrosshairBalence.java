@@ -13,6 +13,12 @@ import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.DriveSubsystem.DriveMode;
 import frc.robot.util.CrosshairController;
 
+/**
+ * 
+ * 
+ * Tries to auto balence on the docking station using a CrosshairController
+ * @author aheitkamp
+ */
 public class DriveCrosshairBalence extends EntechCommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem drive;
@@ -21,12 +27,18 @@ public class DriveCrosshairBalence extends EntechCommandBase {
   private CrosshairController chc;
   private static final double FIRST_STAGE_DISTANCE = 2.4;
   private static final double DEGREES_TOLERANCE = 10;
+  private static final double P_GAIN = 0.4;
+  private static final double MIN_SPEED = 0.15;
+  private static final double MAX_SPEED = 0.4;
+  private static final double RAMMING_PRECENT = 0.75;
+  private static final double THRESHOLD = 0.05;
 
   /**
    * Creates a new DriveCrosshairBalence.
    *
    * @param dsubsys Drive subsystem used by this command.
    * @param nsubsys NavX subsystem used for pitch measurement
+   * @param brakeSubsystem for the command to prepare to deploy it after moving
    */
   public DriveCrosshairBalence(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem) {
 	  super(dsubsys,nsubsys,brakeSubsystem);
@@ -39,11 +51,11 @@ public class DriveCrosshairBalence extends EntechCommandBase {
   @Override
   public void initialize() {
     chc = new CrosshairController();
-    chc.setP(0.4);
-    chc.setMinSpeed(0.15);
-    chc.setMaxSpeed(0.4);
-    chc.setRammingPrecent(0.75);
-    chc.setThreshold(0.05);
+    chc.setPGain(P_GAIN);
+    chc.setMinSpeed(MIN_SPEED);
+    chc.setMaxSpeed(MAX_SPEED);
+    chc.setRammingPrecent(RAMMING_PRECENT);
+    chc.setThreshold(THRESHOLD);
     chc.setStartingError(FIRST_STAGE_DISTANCE);
     chc.addCondition((() -> {return Math.abs(navx.getPitch()) <= DEGREES_TOLERANCE; }));
     drive.setDriveMode(DriveMode.BRAKE);
