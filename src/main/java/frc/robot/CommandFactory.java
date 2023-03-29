@@ -21,6 +21,7 @@ import frc.robot.commands.DriveSetBrakeMode;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.FilteredDriveCommand;
+import frc.robot.commands.FlipDirectionCommand;
 import frc.robot.commands.ArmElbowForgetHomesCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
@@ -104,6 +105,32 @@ public class CommandFactory {
     		homeTelescopeAndElbow()
     	);
     }
+
+    public Command autonomoustestRightCommand() {
+
+        double MOVE_DISTANCE_METERS_A = 4.08;
+        double MOVE_SECS  = 0.4;    
+        double JOG_FORWARD_SPEED = -0.15;
+        double JOG_RIGHT_SPEED = -0.15;
+        // double HOLD_BRAKE_TIME = 2.0;
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+              autonomousSetup()
+            // , autonomousArmHigh()
+            // , autonomousScoreCube()
+            // , autonomousArmSafe()
+            , new GripperCommand(gripperSubsystem, GripperState.kOpen)
+            , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,MOVE_SECS)
+            , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS_A, 0.55, 0.4, .1)
+            , new DriveDirectionCommand(driveSubsystem, 0, -JOG_RIGHT_SPEED, MOVE_SECS)
+            , autoGroundPickupPosition()
+            , new GripperCommand(gripperSubsystem, GripperState.kClose)
+            // , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+        );
+        sg.setName("Cube Right + Cone");
+        return sg;
+    }
+
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
@@ -118,8 +145,11 @@ public class CommandFactory {
 			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, false),
 			new PositionElbowCommand(elbowSubsystem,RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, false),
 			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
-			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper")
-
+			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
+            new FlipDirectionCommand(driveSubsystem, navxSubsystem),
+            new DriveDirectionCommand(driveSubsystem, 0, -0.2, 1),
+            new DriveDistanceCommand(driveSubsystem, 2.5, 0.4),
+            autonomoustestRightCommand()
     	);
     }
 
@@ -172,6 +202,13 @@ public class CommandFactory {
         return new SequentialCommandGroup(
               new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)	        
             , new PositionElbowCommand ( elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.CARRY_DEGREES, true)  
+        );
+    }
+
+    public Command autoGroundPickupPosition() {
+        return new SequentialCommandGroup(
+            new PositionElbowCommand(elbowSubsystem, 33.9, true),
+            new PositionTelescopeCommand(armSubsystem, 0.34, true)
         );
     }
 
