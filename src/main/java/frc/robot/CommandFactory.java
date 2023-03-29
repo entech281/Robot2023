@@ -13,6 +13,7 @@ import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DeployBrakeCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
+import frc.robot.commands.DriveCrosshairBalence;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.DriveForwardToBalanceCommand;
@@ -88,6 +89,7 @@ public class CommandFactory {
     	//ALSO: the robot is facing opposite that way
     	//both autonomous right and autonomous left should move the robout slightly OUTwards
     	return List.of(
+                autonomousBalanceCrosshairCommand(),
     			autonomousAutoBalanceCommand(true),
     			autonomousAutoBalanceCommand(false),    			
     			autonomousBalanceDeadRecCommand(true),
@@ -233,13 +235,13 @@ public class CommandFactory {
     }
 
     public Command autonomousBalanceDeadRecCommand(boolean useBrakes) {
-        double MOVE_DISTANCE_METERS = -2.5;
+        double MOVE_DISTANCE_METERS = -2.465;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.3, 0.3, .1)
 
         );
         if ( useBrakes) {
@@ -279,6 +281,20 @@ public class CommandFactory {
         	sg.setName("Center Auto Balance  no brakes"); 
         }
 
+        return sg;
+    }
+
+    public Command autonomousBalanceCrosshairCommand() {
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+              autonomousSetup()
+            , autonomousArmHigh()
+            , autonomousScoreCube()
+            , autonomousArmSafe()
+            , new DriveCrosshairBalence(driveSubsystem, navxSubsystem, brakeSubsystem)
+            , deployBrakeCommand()
+
+        );
+        sg.setName("Crosshair Balence Auto");
         return sg;
     }
 
