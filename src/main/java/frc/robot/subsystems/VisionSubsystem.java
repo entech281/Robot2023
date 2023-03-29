@@ -10,12 +10,14 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.opencv.core.Point;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -40,11 +42,13 @@ public class VisionSubsystem extends EntechSubsystem {
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
   private PhotonPoseEstimator photonPoseEstimator;
   private boolean enabled=true;
+  private boolean coneMode = true;
 
   public static final double NO_GOOD_ANGLE=-299;
   public static final Pose2d REFERENCE_POSE = new Pose2d(0,0,Rotation2d.fromDegrees(0));
-  
-  private double lastPhotonYawAngle = 0;
+  public static final int PIPELINE_COLOR = 0;
+  public static final int PIPELINE_APRILTAG = 1;
+
   @Override
   public void initialize() {
 
@@ -55,12 +59,12 @@ public class VisionSubsystem extends EntechSubsystem {
 	} catch (IOException e) {
 		throw new RuntimeException("Could not load wpilib AprilTagFields");
 	}
-	if ( Robot.isReal()) {
+	//if ( Robot.isReal()) {
 	    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
 	    photonPoseEstimator = new PhotonPoseEstimator(photonAprilTagFieldLayout,PoseStrategy.AVERAGE_BEST_TARGETS,camera,ROBOT_TO_CAM);
 	    photonPoseEstimator.setLastPose(REFERENCE_POSE);
 
-	}	
+	//}	
   }
 
   @Override
@@ -127,10 +131,9 @@ public class VisionSubsystem extends EntechSubsystem {
 	  }
 	  return "NONE";
   }
-  private void updateStatus(){
+  private void updateStatusAprilTag(){
 	  
 	  	VisionStatus newStatus = new VisionStatus();
-	  	lastPhotonYawAngle = NO_GOOD_ANGLE;
 	    PhotonPipelineResult result = camera.getLatestResult();
 
 	    newStatus.setLatency(camera.getLatestResult().getLatencyMillis());
@@ -145,7 +148,7 @@ public class VisionSubsystem extends EntechSubsystem {
 		    	SmartDashboard.putNumber("CAMERAY", bestTarget.getBestCameraToTarget().getY());
 		    	newStatus.setCameraY(bestTarget.getBestCameraToTarget().getY());
 		    	newStatus.setBestTarget(createRecognizedTarget(bestTarget));
-		    	lastPhotonYawAngle = bestTarget.getYaw();
+
 		    }
 	    }
  
@@ -159,6 +162,20 @@ public class VisionSubsystem extends EntechSubsystem {
 	    
 	  currentStatus = newStatus;
 	  debugStatus();
+  }
+  public void updateStatusConeMode() {
+
+  }
+  
+  public Optional<Point> getColoredObjectCenter() {
+	  PhotonPipelineResult result = camera.getLatestResult();
+	  if ( result.hasTargets()) {
+		  PhotonTrackedTarget bestTarget = result.getBestTarget();
+		  if ( bestTarget != null ) {
+			  return Optional.of(getCenter(bestTarget));
+		  }
+	  }
+	  return Optional.empty();
   }
   
   private void updateStatusSimulated(){
@@ -206,11 +223,34 @@ private void debugStatus() {
 	  return tagId > 0 && tagId < 9;
   }
   
+  private Point getCenter(PhotonTrackedTarget target) {
+	  double avgX = 0.0;
+	  double avgY = 0.0;
+	  for ( TargetCorner tc: target.getMinAreaRectCorners()){
+		  avgX += tc.x;
+		  avgY += tc.y;
+	  }
+	  return new Point(avgX/4.0, avgY/4.0);
+  }
+  
+  public void setColorMode() {
+	  camera.setPipelineIndex(PIPELINE_COLOR);	  
+  }
+  public void setAprilTagMode() {
+	  camera.setPipelineIndex(PIPELINE_APRILTAG);	  
+  }
+  
   @Override
   public void periodic() {
 	  if ( Robot.isReal()) {
 		  if (enabled) {
-			  updateStatus();
+			  if ( coneMode) {
+				  updateStatusConeMode();
+			  }
+			  else {
+				  updateStatusAprilTag();
+			  }
+			  
 		  }		    
 	  }
 	  else {

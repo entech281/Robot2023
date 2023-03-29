@@ -20,6 +20,7 @@ import frc.robot.commands.DriveSetBrakeMode;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.FilteredDriveCommand;
+import frc.robot.commands.GetConeCommand;
 import frc.robot.commands.ArmElbowForgetHomesCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GripperCommand;
@@ -108,6 +109,7 @@ public class CommandFactory {
     	return List.of (
     		balanceFromAlreadyCloseCommand(),
 			highScoringElbowCommand(),
+			getConeCommand(),
 			middleScoringElbowCommand(),
 			groundScoringElbowCommand(),
 			loadingElbowCommand(),
@@ -293,6 +295,9 @@ public class CommandFactory {
         return new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, balance_speed,useBrakes);
     }
 
+    public Command getConeCommand() {
+    	return new GetConeCommand(driveSubsystem, visionSubsystem);
+    }
     private boolean isTimeForCommunityMove() {
         // NOTE: getMatchTime() documentation says it returns the time REMAINING in the current game phase (auto/teleop)
         double SECS_REQUIRED_FOR_OVER_AND_BALANCE = 8.0;
