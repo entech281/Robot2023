@@ -114,7 +114,7 @@ public final class RobotConstants {
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES = 18.0;    		
     		  public static double CARRY_DEGREES = 20.0;
-    		  public static double SAFE_ANGLE = 18.0;  
+    		  public static double SAFE_ANGLE = 30.0;  
     		  public static double SCORE_LOW_DEGREES = 43.0;
     		  public static double SCORE_MIDDLE_DEGREES = 79.0;
     		  public static double LOAD_STATION_DEGREES = 74.0;
@@ -154,8 +154,8 @@ public final class RobotConstants {
     	public static final boolean DEFAULT_FIELD_ABSOLUTE = false;
         public static final double PRECISION_DRIVE_FACTOR = 0.4;
         public static final double ROTATION_DAMPING_FACTOR = 0.5;
-        public static final double SPEED_LIMIT_WITH_ARM_OUT = 0.5;
-        public static final double BALANCE_SPEED = 0.16;
+        public static final double SPEED_LIMIT_WITH_ARM_OUT = 0.7;
+        public static final double BALANCE_APPROACH_SPEED = 0.3;
         public static final double YAW_NUDGE_DEGREES = 3.5;
     }
     public interface DRIVER_STICK {

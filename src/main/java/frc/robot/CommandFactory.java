@@ -13,6 +13,7 @@ import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DeployBrakeCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
+import frc.robot.commands.DriveCrosshairBalence;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.DriveForwardToBalanceCommand;
@@ -86,8 +87,11 @@ public class CommandFactory {
     	//ALSO: the robot is facing opposite that way
     	//both autonomous right and autonomous left should move the robout slightly OUTwards
     	return List.of(
-    			autonomousAutoBalanceCommand(),
-    			autonomousBalanceDeadRecCommand(),
+                autonomousBalanceCrosshairCommand(),
+    			autonomousAutoBalanceCommand(true),
+    			autonomousAutoBalanceCommand(false),    			
+    			autonomousBalanceDeadRecCommand(true),
+    			autonomousBalanceDeadRecCommand(false),
     			autonomousRightCommand(),
     			autonomousLeftCommand(),
     			autonomousConeCommand()
@@ -136,7 +140,7 @@ public class CommandFactory {
 
 
     public Command getAutonomousChoice() {
-        return autonomousAutoBalanceCommand();
+        return autonomousAutoBalanceCommand(false);
     }
 
     private Command autonomousSetup() {
@@ -226,21 +230,27 @@ public class CommandFactory {
         return sg;
     }
 
-    public Command autonomousBalanceDeadRecCommand() {
-        double MOVE_DISTANCE_METERS = -2.5;
+    public Command autonomousBalanceDeadRecCommand(boolean useBrakes) {
+        double MOVE_DISTANCE_METERS = -2.465;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
-            ,deployBrakeCommand()
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.3, 0.3, .1)
+
         );
-        sg.setName("Center DeadRec Balance");
+        if ( useBrakes) {
+        	sg.addCommands(deployBrakeCommand());
+        	sg.setName("Center DeadRec Balance w/brakes");
+        }
+        else {
+        	sg.setName("Center DeadRec Balance no brakes");
+        }
         return sg;
     }
 
-    public Command autonomousAutoBalanceCommand() {
+    public Command autonomousAutoBalanceCommand(boolean useBrakes) {
         double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
         double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
         double HOLD_BRAKE_TIME = 0;         // Time to hold brake when changing direction
@@ -252,25 +262,47 @@ public class CommandFactory {
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new ConditionalCommand(autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, HOLD_BRAKE_TIME, RobotConstants.DRIVE.BALANCE_SPEED),
-                                     autoDriveBalanceOnly(-RobotConstants.DRIVE.BALANCE_SPEED), 
+            , new ConditionalCommand(autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, 
+            		HOLD_BRAKE_TIME, 
+            		RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,useBrakes),
+                                     autoDriveBalanceOnly(-RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,useBrakes), 
                                      this::isTimeForCommunityMove)
-            ,deployBrakeCommand()
         );
-        sg.setName("Center Auto Balance");
+        if ( useBrakes) {
+            sg.setName("Center Auto Balance w/brakes");        	
+        }
+        else {
+        	sg.setName("Center Auto Balance  no brakes"); 
+        }
+
         return sg;
     }
 
-    private Command autoDriveOverAndBalance(double over_distance, double over_speed, double brake_time, double balance_speed) {
+    public Command autonomousBalanceCrosshairCommand() {
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+              autonomousSetup()
+            , autonomousArmHigh()
+            , autonomousScoreCube()
+            , autonomousArmSafe()
+            , new DriveCrosshairBalence(driveSubsystem, navxSubsystem, brakeSubsystem)
+            , deployBrakeCommand()
+
+        );
+        sg.setName("Crosshair Balence Auto");
+        return sg;
+    }
+
+    private Command autoDriveOverAndBalance(double over_distance, double over_speed, double brake_time, double balance_speed, boolean useBrakes) {
         return new SequentialCommandGroup(
               new DriveDistanceCommand(driveSubsystem, over_distance, over_speed, 0.3, .1)
             , new DriveBrakeForSeconds(driveSubsystem, brake_time)
-            , new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, balance_speed)
+            , new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, balance_speed,useBrakes)
         );
     }
 
-    public Command autoDriveBalanceOnly(double balance_speed) {
-        return new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, balance_speed);
+    
+    public Command autoDriveBalanceOnly(double balance_speed, boolean useBrakes) {
+        return new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, balance_speed,useBrakes);
     }
 
     private boolean isTimeForCommunityMove() {
