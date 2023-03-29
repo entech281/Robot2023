@@ -21,6 +21,7 @@ import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.ArmElbowForgetHomesCommand;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
@@ -105,6 +106,7 @@ public class CommandFactory {
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
+    		balanceFromAlreadyCloseCommand(),
 			highScoringElbowCommand(),
 			middleScoringElbowCommand(),
 			groundScoringElbowCommand(),
@@ -247,7 +249,9 @@ public class CommandFactory {
         }
         return sg;
     }
-
+    public Command balanceFromAlreadyCloseCommand() {
+    	return new BalanceCommand(driveSubsystem,navxSubsystem,brakeSubsystem);
+    }
     public Command autonomousAutoBalanceCommand(boolean useBrakes) {
         double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
         double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
