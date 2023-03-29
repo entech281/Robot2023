@@ -23,9 +23,10 @@ public class DriveForwardToBalanceCommand extends EntechCommandBase {
   private double speed = 0.0;
   private double original_speed = 0.0;
   private static final int    ROBOT_STABLE_COUNT = 500;
+  private static final double PITCH_THRESHOLD = 14.0;
+  private static final double SPEED_AFTER_PITCH = 0.13;
   private static final double PITCH_SLOW_THRESHOLD = 18.0;
   private static final double PITCH_FLAT_THRESHOLD = 12.0;
-  private static final double SPEED_AFTER_PITCH = 0.15;
   private static final double BACK_NUDGE_TIME = 0.0;   // Set to zero (or negative) to turn off the back nudge
   private static final double BACK_NUDGE_SPEED = 0.15;
   private static final double CHARGESTATION_DEPTH = 1.22;

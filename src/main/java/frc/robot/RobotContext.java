@@ -105,18 +105,26 @@ public class RobotContext {
 		robotState.alignState = c;      	
     }
     private void capSpeedIfTooCloseToTag(Pose2d currentRobotPose, LateralOffset lateralOffset) {
-    	driveSubsystem.clearSpeedLimit(); //clear speed as default
-		Pose2d tagPose = lateralOffset.getNearestLocation().computeAbsolutePose();
-		double distanceFromTagMeters = Math.abs(tagPose.getX() - currentRobotPose.getX());
-		double MAX_SPEED_WHEN_TAG_CLOSE = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
-		double armProjectionMeters = RobotConstants.ARM.MAX_EXTENSION_METERS * Math.sin(Units.degreesToRadians(elbow.getActualPosition()));
+    	// driveSubsystem.clearSpeedLimit(); //clear speed as default
+		// Pose2d tagPose = lateralOffset.getNearestLocation().computeAbsolutePose();
+		// double distanceFromTagMeters = Math.abs(tagPose.getX() - currentRobotPose.getX());
+		// double MAX_SPEED_WHEN_TAG_CLOSE = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
+		// double armProjectionMeters = RobotConstants.ARM.MAX_EXTENSION_METERS * Math.sin(Units.degreesToRadians(elbow.getActualPosition()));
 		
-		if ( (distanceFromTagMeters < (RobotConstants.ALIGNMENT.TAG_DISTANCE_TO_REDUCE_SPEED) + armProjectionMeters) ) {
-				driveSubsystem.setMaxSpeedPercent(RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT);
+		// if ( (distanceFromTagMeters < (RobotConstants.ALIGNMENT.TAG_DISTANCE_TO_REDUCE_SPEED) + armProjectionMeters) ) {
+		// 		driveSubsystem.setMaxSpeedPercent(RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT);
+		// 		DriverStation.reportWarning(
+		// 				String.format("Forward Speed Reduced to %.2f : tag within %.2f meters.",MAX_SPEED_WHEN_TAG_CLOSE,distanceFromTagMeters),
+		// 		false);
+		// }    
+		if (elbow.getActualPosition() > RobotConstants.ELBOW.POSITION_PRESETS.SAFE_ANGLE) {
+			driveSubsystem.setMaxSpeedPercent(RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT);
 				DriverStation.reportWarning(
-						String.format("Forward Speed Reduced to %.2f : tag within %.2f meters.",MAX_SPEED_WHEN_TAG_CLOSE,distanceFromTagMeters),
+						String.format("Forward Speed Reduced to %.2f", RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT),
 				false);
-		}    	
+		} else {
+			driveSubsystem.setMaxSpeedPercent(1.0);
+		}
     }
     
     private Color getAlignColor(LateralOffset offset) {
