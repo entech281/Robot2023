@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
@@ -32,6 +33,7 @@ import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.DriveYawToNearestPerpendicular;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.ToggleGripperCommand;
+import frc.robot.commands.TurnRobotRelitiveCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeElbowDownCommand;
@@ -95,7 +97,8 @@ public class CommandFactory {
     			autonomousBalanceDeadRecCommand(false),
     			autonomousRightCommand(),
     			autonomousLeftCommand(),
-    			autonomousConeCommand()
+    			autonomousConeCommand(),
+                autonomousTwoScoreRightCommand()
     	);
 
     }
@@ -106,28 +109,19 @@ public class CommandFactory {
     	);
     }
 
-    public Command autonomoustestRightCommand() {
-
-        double MOVE_DISTANCE_METERS_A = 4.08;
-        double MOVE_SECS  = 0.4;    
-        double JOG_FORWARD_SPEED = -0.15;
-        double JOG_RIGHT_SPEED = -0.15;
-        // double HOLD_BRAKE_TIME = 2.0;
+    public Command autonomousTwoScoreRightCommand() {
+        double MOVE_DISTANCE_METERS = -4.21;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-              autonomousSetup()
+            autonomousSetup()
             // , autonomousArmHigh()
-            // , autonomousScoreCube()
+    		// , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             // , autonomousArmSafe()
-            , new GripperCommand(gripperSubsystem, GripperState.kOpen)
-            , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,MOVE_SECS)
-            , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS_A, 0.55, 0.4, .1)
-            , new DriveDirectionCommand(driveSubsystem, 0, -JOG_RIGHT_SPEED, MOVE_SECS)
-            , autoGroundPickupPosition()
-            , new GripperCommand(gripperSubsystem, GripperState.kClose)
-            // , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.4, .1)
+            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, -127)
+            //, new DriveDistanceCommand(driveSubsystem, 0.2, 0.4, 0.3, 0.1)
+            , frogGrabCommand()
         );
-        sg.setName("Cube Right + Cone");
+        sg.setName("Cone wide + Cube");
         return sg;
     }
 
@@ -149,7 +143,8 @@ public class CommandFactory {
             new FlipDirectionCommand(driveSubsystem, navxSubsystem),
             new DriveDirectionCommand(driveSubsystem, 0, -0.2, 1),
             new DriveDistanceCommand(driveSubsystem, 2.5, 0.4),
-            autonomoustestRightCommand()
+            autonomousTwoScoreRightCommand(),
+            autoGroundPickupPosition()
     	);
     }
 
@@ -206,9 +201,20 @@ public class CommandFactory {
     }
 
     public Command autoGroundPickupPosition() {
+        SequentialCommandGroup sg = new SequentialCommandGroup(
+            new PositionElbowCommand(elbowSubsystem, 29, true),
+            new PositionTelescopeCommand(armSubsystem, 0.45, true)
+        );
+        sg.setName("Dial ground position");
+        return sg;
+    }
+
+    public Command frogGrabCommand() {
         return new SequentialCommandGroup(
-            new PositionElbowCommand(elbowSubsystem, 33.9, true),
-            new PositionTelescopeCommand(armSubsystem, 0.34, true)
+            new GripperCommand(gripperSubsystem, GripperState.kOpen),
+            autoGroundPickupPosition(),
+            new GripperCommand(gripperSubsystem, GripperState.kClose),
+            dialCarryPosition()
         );
     }
 

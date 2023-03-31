@@ -27,7 +27,7 @@ public class OperatorInterface {
         .onFalse(commandFactory.setDriverRotationEnableCommand(false));
 
 	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
-	        .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
+	        .onTrue(commandFactory.frogGrabCommand()); // NOT RUNNING SAME COMMAND AS BUTTON NAME
 
         driveStick.button(RobotConstants.DRIVER_STICK.SNAP_YAW)
             .onTrue(commandFactory.getYawToNearestPerpendicular());
