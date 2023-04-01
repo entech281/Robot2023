@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
@@ -45,15 +46,18 @@ public class FlipDirectionCommand extends EntechCommandBase {
             angleToWait = 0.0;
         }
         sc = new StoppingCounter("FlipDirection", STOPPING_COUNT);
+        DriverStation.reportWarning("INIT" + this, false);
     }
 
     @Override
     public void execute() {
-        drive.filteredDrive(new DriveInput(0, 0, 0, yawSupplier.getYawAngleDegrees()));
+        DriverStation.reportWarning("exe" + this, false);
+        drive.driveFilterYawRobotRelative(new DriveInput(0, 0, 0, yawSupplier.getYawAngleDegrees()));
     }
 
     @Override
     public void end(boolean interrupted) {
+        DriverStation.reportWarning("END" + this, false);
     }
 
     @Override

@@ -8,6 +8,8 @@ import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.StoppingCounter;
+
+import edu.wpi.first.wpilibj.DriverStation;
 /**
  *
  * 
@@ -39,19 +41,24 @@ public class TurnRobotRelitiveCommand extends EntechCommandBase {
 
     @Override
     public void initialize() {
+        drive.resetEncoders();
         double newAngle = yawSupplier.getYawAngleDegrees() + AngleToTurn;
         drive.setHoldYawAngle(newAngle);
         angleToWait = newAngle;
-        sc = new StoppingCounter("FlipDirection", STOPPING_COUNT);
+        sc = new StoppingCounter("TurnRelitive", STOPPING_COUNT);
+        DriverStation.reportWarning("INIT", false);
     }
 
     @Override
     public void execute() {
-        drive.filteredDrive(new DriveInput(0, 0, 0, yawSupplier.getYawAngleDegrees()));
+        DriverStation.reportWarning("exe", false);
+        drive.driveFilterYawOnly(new DriveInput(0, 0, 0, yawSupplier.getYawAngleDegrees()));
     }
 
     @Override
     public void end(boolean interrupted) {
+        DriverStation.reportWarning("END", false);
+        drive.resetEncoders();
     }
 
     @Override

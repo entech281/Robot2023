@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
@@ -41,6 +42,7 @@ import frc.robot.commands.nudge.NudgeElbowUpCommand;
 import frc.robot.commands.nudge.NudgeTelescopeBackwardsCommand;
 import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
+import frc.robot.commands.DriveDistanceStraightCommand;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BrakeSubsystem;
@@ -110,18 +112,23 @@ public class CommandFactory {
     }
 
     public Command autonomousTwoScoreRightCommand() {
-        double MOVE_DISTANCE_METERS = -4.21;
+        double MOVE_DISTANCE_METERS = -3.98;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             autonomousSetup()
-            // , autonomousArmHigh()
-    		// , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
-            // , autonomousArmSafe()
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.4, .1)
-            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, -127)
-            //, new DriveDistanceCommand(driveSubsystem, 0.2, 0.4, 0.3, 0.1)
+            , autonomousArmHigh()
+    		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+            , autonomousArmSafe()
+            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.4, 0.2, navxSubsystem)
+            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, -131)
             , frogGrabCommand()
+            // , new DriveDistanceStraightCommand(driveSubsystem, -0.1, 0.27, 0.15, 0.3, navxSubsystem)
+            , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
+            , new DriveDistanceStraightCommand(driveSubsystem, 4.22, 0.7, 0.5, 0.35, navxSubsystem)
+            // , dialMiddlePosition()
+            // , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+            // , autonomousArmSafe()
         );
-        sg.setName("Cone wide + Cube");
+        sg.setName("Cone wide + Cone");
         return sg;
     }
 
@@ -144,7 +151,7 @@ public class CommandFactory {
             new DriveDirectionCommand(driveSubsystem, 0, -0.2, 1),
             new DriveDistanceCommand(driveSubsystem, 2.5, 0.4),
             autonomousTwoScoreRightCommand(),
-            autoGroundPickupPosition()
+            autoGroundPickupPositionCube()
     	);
     }
 
@@ -170,7 +177,7 @@ public class CommandFactory {
 
     private Command autonomousSetup() {
         return new SequentialCommandGroup(
-              new ZeroGyroCommand(navxSubsystem, driveSubsystem)
+            new ZeroGyroCommand(navxSubsystem, driveSubsystem)
             , new RetractBrakeCommand(brakeSubsystem)
 	        , new GripperCommand(gripperSubsystem, GripperState.kClose)
 	        , new DriveSetBrakeMode(driveSubsystem)
@@ -200,21 +207,31 @@ public class CommandFactory {
         );
     }
 
-    public Command autoGroundPickupPosition() {
+    public Command autoGroundPickupPositionCone() {
         SequentialCommandGroup sg = new SequentialCommandGroup(
-            new PositionElbowCommand(elbowSubsystem, 29, true),
+            new PositionElbowCommand(elbowSubsystem, 30.75, true),
             new PositionTelescopeCommand(armSubsystem, 0.45, true)
         );
-        sg.setName("Dial ground position");
+        sg.setName("Dial ground position COne");
+        return sg;
+    }
+
+    public Command autoGroundPickupPositionCube() {
+        SequentialCommandGroup sg = new SequentialCommandGroup(
+            new PositionElbowCommand(elbowSubsystem, 30.75, true),
+            new PositionTelescopeCommand(armSubsystem, 0.42, true)
+        );
+        sg.setName("Dial ground position Cube");
         return sg;
     }
 
     public Command frogGrabCommand() {
         return new SequentialCommandGroup(
             new GripperCommand(gripperSubsystem, GripperState.kOpen),
-            autoGroundPickupPosition(),
-            new GripperCommand(gripperSubsystem, GripperState.kClose),
-            dialCarryPosition()
+            autoGroundPickupPositionCone()
+            , new DriveDistanceStraightCommand(driveSubsystem, 0.1375, 0.22, 0.15, 0.3, navxSubsystem)
+            , new GripperCommand(gripperSubsystem, GripperState.kClose)
+            , dialCarryPosition()
         );
     }
 

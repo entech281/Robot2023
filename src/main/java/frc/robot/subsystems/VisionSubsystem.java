@@ -39,7 +39,7 @@ public class VisionSubsystem extends EntechSubsystem {
   private PhotonCamera camera;
   private Transform3d ROBOT_TO_CAM = PoseUtil.robotToCameraTransform3d();
   private PhotonPoseEstimator photonPoseEstimator;
-  private boolean enabled=true;
+  private boolean enabled=false;
 
   public static final double NO_GOOD_ANGLE=-299;
   public static final Pose2d REFERENCE_POSE = new Pose2d(0,0,Rotation2d.fromDegrees(0));

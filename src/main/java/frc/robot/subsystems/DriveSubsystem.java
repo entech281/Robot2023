@@ -151,6 +151,14 @@ public class DriveSubsystem extends EntechSubsystem {
         DriveInput filtered = yawHoldFilter.filter(di);
         drive(filtered);
     }
+
+    public void driveFilterYawRobotRelative(DriveInput di) {
+        if (!yawHoldFilter.isSetpointValid()) {
+            yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
+        }
+        DriveInput filtered = robotRelativeFilter.filter(yawHoldFilter.filter(di));
+        drive(filtered);
+    }
     public void filteredDrive(DriveInput di) {
 
         // Special case: set the setpoint for the HoldYawFilter if nothing has until now
