@@ -32,8 +32,8 @@ public class VisionSubsystem extends EntechSubsystem {
   private double latency = 0.0;
   private boolean enabled=true;
   private Optional<Point> lastPosition = Optional.empty();
-  public static final int PIPELINE_COLOR = 0;
-  public static final int PIPELINE_APRILTAG = 1;
+  public static final int PIPELINE_COLOR = 1;
+  public static final int PIPELINE_APRILTAG = 2;
   
   @Override
   public void initialize() {
@@ -47,6 +47,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	}
 	if ( Robot.isReal()) {
 	    camera = new PhotonCamera(RobotConstants.VISION.PHOTON_HOST);
+		camera.setPipelineIndex(PIPELINE_COLOR);
 
 	}	
   }
@@ -83,20 +84,20 @@ public class VisionSubsystem extends EntechSubsystem {
 	  Point p = new Point();
 	  p.x = 100;
 	  p.y = 20;
-	  return Optional.of(p);
-//	  if ( camera != null ) {
-//		  PhotonPipelineResult result = camera.getLatestResult();
-//		  latency = result.getLatencyMillis();
-//		  if ( result.hasTargets()) {
-//			  PhotonTrackedTarget bestTarget = result.getBestTarget();
-//			  if ( bestTarget != null ) {
-//				  lastPosition = Optional.of(getCenter(bestTarget));
-//				  return lastPosition;
-//			  }
-//		  }
-//		  return Optional.empty();		  
-//	  }
-//	  return Optional.empty();
+	  //return Optional.of(p);
+	  if ( camera != null ) {
+		  PhotonPipelineResult result = camera.getLatestResult();
+		  latency = result.getLatencyMillis();
+		  if ( result.hasTargets()) {
+			  PhotonTrackedTarget bestTarget = result.getBestTarget();
+			  if ( bestTarget != null ) {
+				  lastPosition = Optional.of(getCenter(bestTarget));
+				  return lastPosition;
+			  }
+		  }
+		  return Optional.empty();		  
+	  }
+	  return Optional.empty();
   }
   
   private Point getCenter(PhotonTrackedTarget target) {
@@ -111,7 +112,7 @@ public class VisionSubsystem extends EntechSubsystem {
   
   @Override
   public void periodic() {
-
+	Optional<Point> point = getColoredObjectCenter();
   }
 
 @Override
