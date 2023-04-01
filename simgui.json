@@ -21,6 +21,8 @@
       "/Shuffleboard/Match/SendableChooser[0]": "String Chooser",
       "/Shuffleboard/Match/TargetNode": "String Chooser",
       "/Shuffleboard/PreMatch/AutoCommand": "String Chooser",
+      "/Shuffleboard/Testing/AlignToGamePieceCommand": "Command",
+      "/SmartDashboard/AlignToGamePieceCommand": "Command",
       "/SmartDashboard/DriveSubsystem": "Subsystem"
     }
   },
@@ -63,7 +65,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 338
+          "height": 127
         }
       ]
     }

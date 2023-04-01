@@ -20,6 +20,7 @@ public class ShuffleboardDriverControls implements TargetNodeSupplier {
 	
 	private ShuffleboardTab operatorTab;
 	private ShuffleboardTab prematchTab;
+	private ShuffleboardTab debugTab;
 	private SendableChooser<TargetNode> nodeChooser = new SendableChooser<>();
 	private SendableChooser<Command> autoCommandChooser = new SendableChooser<>();
 	private GenericEntry fieldAbsolute;
@@ -27,7 +28,7 @@ public class ShuffleboardDriverControls implements TargetNodeSupplier {
 	
 	public ShuffleboardDriverControls() {
 		operatorTab = Shuffleboard.getTab(MATCH);		
-		prematchTab = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.PREMATCH);
+		prematchTab = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.PREMATCH);		
 		
     	nodeChooser.setDefaultOption("NONE",TargetNode.NONE);
     	nodeChooser.addOption("A1", TargetNode.A1); 
@@ -43,6 +44,7 @@ public class ShuffleboardDriverControls implements TargetNodeSupplier {
     	driverYawEnabled = operatorTab.add("YawEnabled",DEFAULT_YAW_LOCK).withWidget(BuiltInWidgets.kToggleButton).withPosition(0,3).getEntry();
     	fieldAbsolute.setBoolean(DEFAULT_FIELD_ABSOLUTE);
     	driverYawEnabled.setBoolean(DEFAULT_YAW_LOCK);
+    	
 	}
 	
 	public void setFieldAbsolute(boolean newValue) {

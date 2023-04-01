@@ -3,10 +3,18 @@ package frc.robot;
 import java.util.List;
 import java.util.function.Supplier;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.LayoutType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotConstants.ARM;
 import frc.robot.adapter.DriveInputYawMixer;
+import frc.robot.commands.AlignToGamePieceCommand;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.ArmForgetHomeCommand;
 import frc.robot.commands.DriveDirectionCommand;
@@ -46,6 +54,7 @@ public class CommandFactory {
 	private ArmSubsystem armSubsystem;
 	private ElbowSubsystem elbowSubsystem;
 	private GripperSubsystem gripperSubsystem;
+
     
     public CommandFactory(RobotState robotState, SubsystemHolder allSubsystems ){
     	this.driveSubsystem = allSubsystems.getDrive();
@@ -76,14 +85,18 @@ public class CommandFactory {
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
-    			moveArmCommand(ARM.POSITION_PRESETS.MAX_METERS),
-    			moveArmCommand(ARM.POSITION_PRESETS.SCORE_HIGH_METERS),
-    			moveArmCommand(ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS),
-    			forgetArmHome()    			
+    			alignToGamePieceCommand()
     	);
     			
     	
     }
+    public Command alignToGamePieceCommand() {
+    	AlignToGamePieceCommand c =  new AlignToGamePieceCommand(driveSubsystem,visionSubsystem);
+    	ShuffleboardTab t = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.DEBUG);    	
+    	c.populateControls(t);    	
+    	return c;
+    }
+    
     public Command moveArmCommand(double position) {
     	Command p = new PositionArmCommand ( armSubsystem,position,true);
     	return p;

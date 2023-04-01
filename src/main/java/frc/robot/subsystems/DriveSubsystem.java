@@ -86,6 +86,9 @@ public class DriveSubsystem extends EntechSubsystem {
     robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
   }
 
+  public void stop() {
+   robotDrive.stopMotor();
+  }
   public void brake() {
     robotDrive.stopMotor();
   }

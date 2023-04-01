@@ -22,7 +22,7 @@ public class ArmSubsystem extends EntechSubsystem{
 	
   private CANSparkMax telescopeMotor;
   private SparkMaxPositionController positionController;
-  private boolean enabled = true;
+  private boolean enabled = false;
   
   //for unit testing
   public ArmSubsystem( CANSparkMax motor, SparkMaxPositionController controller) {

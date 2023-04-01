@@ -79,35 +79,35 @@ public class RobotContext {
     	ElbowStatus es = elbowSubsystem.getStatus();
     	GripperStatus gs = gripperSubsystem.getStatus();
     	
-    	//estimate pose
-    	Optional<Pose2d> estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
-        robotState.setEstimatedPose(estimatedRobotPose);
-        if ( estimatedRobotPose.isPresent() ) {
-        	SmartDashboard.putString("our pose",estimatedRobotPose.get().toString());
-        	fieldDisplay.setRobotPose(estimatedRobotPose.get());
-        }
-
-        
-        //get selected target and scoring location
-        robotState.setBestAprilTagTarget(vs.getBestAprilTagTarget());
-        robotState.setTargetNode(driverControls.getSelectedTarget());
-        
-        if ( vs.getBestAprilTagTarget().isPresent()) {
-        	PhotonTrackedTarget pt = vs.getBestAprilTagTarget().get().getPhotonTarget();
-        	if ( pt != null) {
-        		robotState.setPhotonYawAngle(Optional.of(pt.getYaw()));
-        	}        	
-        }
-        
-        if ( robotState.getScoringLocation().isPresent()) {
-        	ScoringLocation scoreloc = robotState.getScoringLocation().get();
-        	Pose2d absoluteScoringPose = scoreloc.computeAbsolutePose();
-        	
-        	Pose2d realRobotPose = estimatedRobotPose.get();
-            fieldDisplay.displayScoringSolution(realRobotPose,absoluteScoringPose); 
-            double targetYaw = alignmentCalculator.calculateAngleToScoringLocation(absoluteScoringPose, realRobotPose);
-            robotState.setTargetYawAngle(targetYaw);
-        }
+//    	//estimate pose
+//    	Optional<Pose2d> estimatedRobotPose =  poseEstimator.estimateRobotPose(vs,ns,ds);
+//        robotState.setEstimatedPose(estimatedRobotPose);
+//        if ( estimatedRobotPose.isPresent() ) {
+//        	SmartDashboard.putString("our pose",estimatedRobotPose.get().toString());
+//        	fieldDisplay.setRobotPose(estimatedRobotPose.get());
+//        }
+//
+//        
+//        //get selected target and scoring location
+//        robotState.setBestAprilTagTarget(vs.getBestAprilTagTarget());
+//        robotState.setTargetNode(driverControls.getSelectedTarget());
+//        
+//        if ( vs.getBestAprilTagTarget().isPresent()) {
+//        	PhotonTrackedTarget pt = vs.getBestAprilTagTarget().get().getPhotonTarget();
+//        	if ( pt != null) {
+//        		robotState.setPhotonYawAngle(Optional.of(pt.getYaw()));
+//        	}        	
+//        }
+//        
+//        if ( robotState.getScoringLocation().isPresent()) {
+//        	ScoringLocation scoreloc = robotState.getScoringLocation().get();
+//        	Pose2d absoluteScoringPose = scoreloc.computeAbsolutePose();
+//        	
+//        	Pose2d realRobotPose = estimatedRobotPose.get();
+//            fieldDisplay.displayScoringSolution(realRobotPose,absoluteScoringPose); 
+//            double targetYaw = alignmentCalculator.calculateAngleToScoringLocation(absoluteScoringPose, realRobotPose);
+//            robotState.setTargetYawAngle(targetYaw);
+//        }
            
         
     }    
