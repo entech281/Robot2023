@@ -155,8 +155,18 @@ public final class RobotConstants {
         public static final double PRECISION_DRIVE_FACTOR = 0.4;
         public static final double ROTATION_DAMPING_FACTOR = 0.5;
         public static final double SPEED_LIMIT_WITH_ARM_OUT = 0.7;
-        public static final double BALANCE_APPROACH_SPEED = 0.3;
         public static final double YAW_NUDGE_DEGREES = 3.5;
+    }
+    public interface BALANCE_PARAMETERS {
+        public static final double CHARGESTATION_APPROACH_SPEED = 0.35;
+        public static final double TIP_PITCH_THRESHOLD = 10.0;
+        public static final double DOCK_DISTANCE = 0.5*1.22;  // charge stattion platform depth = 4ft (1.22m)
+        public static final double DOCK_INITIAL_SPEED = 0.35;
+        public static final double DOCK_FINAL_SPEED = 0.15;
+        public static final double BALANCE_SPEED = 0.10;
+        public static final double BALANCE_PITCH_THRESHOLD = 12.0;
+        public static final int    BALANCE_STABLE_COUNT = 100;
+        public static final double DEPLOY_BRAKE_AUTO_TIME_REMAINING = 0.25;
     }
     public interface DRIVER_STICK {
         public static final int TURN_TOGGLE = 1;

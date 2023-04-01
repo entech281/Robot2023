@@ -13,6 +13,9 @@ import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DeployBrakeCommand;
 import frc.robot.commands.DriveBrakeForSeconds;
+import frc.robot.commands.DriveCSForwardBalanceCommand;
+import frc.robot.commands.DriveCSForwardDockCommand;
+import frc.robot.commands.DriveCSForwardTipCommand;
 import frc.robot.commands.DriveCrosshairBalence;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
@@ -255,18 +258,15 @@ public class CommandFactory {
         double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
         double HOLD_BRAKE_TIME = 0;         // Time to hold brake when changing direction
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-            // MA:  Ask DC why these were here
-            //  new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)    
-            //, new PositionElbowCommand(elbowSubsystem, RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, true)                
               autonomousSetup()
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new ConditionalCommand(autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, 
-            		HOLD_BRAKE_TIME, 
-            		RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,useBrakes),
-                                     autoDriveBalanceOnly(-RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,useBrakes), 
-                                     this::isTimeForCommunityMove)
+            , new ConditionalCommand(
+                autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, 
+            		HOLD_BRAKE_TIME, RobotConstants.BALANCE_PARAMETERS.CHARGESTATION_APPROACH_SPEED,useBrakes),
+                autoDriveBalanceOnly(-RobotConstants.BALANCE_PARAMETERS.CHARGESTATION_APPROACH_SPEED,useBrakes), 
+                this::isTimeForCommunityMove)
         );
         if ( useBrakes) {
             sg.setName("Center Auto Balance w/brakes");        	
@@ -296,13 +296,19 @@ public class CommandFactory {
         return new SequentialCommandGroup(
               new DriveDistanceCommand(driveSubsystem, over_distance, over_speed, 0.3, .1)
             , new DriveBrakeForSeconds(driveSubsystem, brake_time)
-            , new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, balance_speed,useBrakes)
+            , new DriveCSForwardTipCommand(driveSubsystem, navxSubsystem)
+            , new DriveCSForwardDockCommand(driveSubsystem, navxSubsystem)
+            , new DriveCSForwardBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, useBrakes)
         );
     }
 
     
     public Command autoDriveBalanceOnly(double balance_speed, boolean useBrakes) {
-        return new DriveForwardToBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, balance_speed,useBrakes);
+        return new SequentialCommandGroup(
+          new DriveCSForwardTipCommand(driveSubsystem, navxSubsystem, balance_speed)
+        , new DriveCSForwardDockCommand(driveSubsystem, navxSubsystem)
+        , new DriveCSForwardBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, useBrakes)
+        );
     }
 
     private boolean isTimeForCommunityMove() {
