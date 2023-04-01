@@ -32,22 +32,22 @@ public class AlignToGamePieceCommand extends EntechCommandBase {
   private double fwdOut = 0.0;
   private double lateralOut = 0.0;
   
-  public double TOLERANCE = 2.0;
-
+  public double LATERAL_TOLERANCE = 12.0;
+  public double FWD_TOLERANCE = 3.0;
 
 public static interface REFERENCE{
 	  public static double LATERAL=160.0;
-	  public static double FWD=120;
+	  public static double FWD=12.0;
   }
 
   public static interface LATERAL_GAINS{
-	  public static double P = 0.0004;
-	  public static double I = 0.0;
+	  public static double P = 0.008;
+	  public static double I = 0.002;
 	  public static double D = 0.0;
   }
 
   public static interface FWD_GAINS{
-	  public static double P = 0.0004;
+	  public static double P = 0.05;
 	  public static double I = 0.0;
 	  public static double D = 0.0;
   }
@@ -74,8 +74,10 @@ public void initSendable(SendableBuilder builder) {
 
 @Override
     public void initialize() {
-	  lateralPID.setTolerance(TOLERANCE);
-	  forwardPID.setTolerance(TOLERANCE);
+	  lateralPID.setSetpoint(REFERENCE.LATERAL);
+	  forwardPID.setSetpoint(REFERENCE.FWD);
+	  lateralPID.setTolerance(LATERAL_TOLERANCE);
+	  forwardPID.setTolerance(FWD_TOLERANCE);
 	  lateralPID.reset();
 	  forwardPID.reset();
     }
@@ -85,25 +87,29 @@ public void initSendable(SendableBuilder builder) {
   public void execute() {
     DriverStation.reportWarning("setpoint:" + lateralPID.getSetpoint(),false);
 	Optional<Point> coneCenter = vision.getColoredObjectCenter();
-
+	double area = vision.getLastArea();
 	Point center = new Point();
 	center.x = lateralPID.getSetpoint();
 	center.y = forwardPID.getSetpoint();
 	
 	if ( coneCenter.isPresent()) {
 		Point visionCenter = coneCenter.get();
+
 		center.x = visionCenter.x;
 		center.y = visionCenter.y;
 	}
-	lateralOut = lateralPID.calculate(center.x  );
-	fwdOut = forwardPID.calculate(center.y  );
+	lateralOut = -lateralPID.calculate(center.x  );
+	fwdOut = forwardPID.calculate(area  );
+	if ( area > 14.0 ) {
+		fwdOut = 0;
+	}
 
-//	SmartDashboard.putNumber("GamePieceAlign/fwdOut", fwdOut);
-//	SmartDashboard.putNumber("GamePieceAlign/latOut", lateralOut);	
-//	SmartDashboard.putNumber("GamePieceAlign/latErr",lateralPID.getPositionError());
-//	SmartDashboard.putNumber("GamePieceAlign/fwdErr",forwardPID.getPositionError());
-
-	DriveInput di = new DriveInput(fwdOut,lateralOut,0.,0.);
+	DriveInput di = new DriveInput(0,0,0.,0.);
+	if ( area > 0 ) {
+		di.setForward(fwdOut);
+		di.setRight(lateralOut);
+	}
+	
     drive.drive(di);
   }
 
@@ -114,7 +120,7 @@ public void populateControls(ShuffleboardTab alignTest) {
 	alignTest.add("FWD PID", forwardPID).withSize(2, 2).withPosition(2, 1);
 	alignTest.addDouble("fwdErr", () -> { return forwardPID.getPositionError();} ).withSize(1, 1).withPosition(0, 3);
 	alignTest.addDouble("fwdOut", () -> { return fwdOut;} ).withSize(1, 1).withPosition(1, 3);
-	alignTest.addDouble("latErr", () -> { return forwardPID.getPositionError();} ).withSize(1, 1).withPosition(2, 3);	
+	alignTest.addDouble("latErr", () -> { return lateralPID.getPositionError();} ).withSize(1, 1).withPosition(2, 3);	
 	alignTest.addDouble("latOut", () -> { return lateralOut;} ).withSize(1, 1).withPosition(3, 3);	
 }
 

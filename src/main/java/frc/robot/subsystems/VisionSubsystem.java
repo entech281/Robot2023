@@ -32,6 +32,7 @@ public class VisionSubsystem extends EntechSubsystem {
   private double latency = 0.0;
   private boolean enabled=true;
   private Optional<Point> lastPosition = Optional.empty();
+  private Optional<Double> lastArea = Optional.empty();
   public static final int PIPELINE_COLOR = 1;
   public static final int PIPELINE_APRILTAG = 2;
   
@@ -57,6 +58,7 @@ public class VisionSubsystem extends EntechSubsystem {
      sb.addDoubleProperty("getLastX", this::getLastX, null);
      sb.addDoubleProperty("Latency", this::getLatency, null);
      sb.addDoubleProperty("getLastY", this::getLastY, null);
+     sb.addDoubleProperty("targetArea", this::getLastArea, null);
 
   }
   
@@ -77,6 +79,16 @@ public class VisionSubsystem extends EntechSubsystem {
 		  return -1.0;
 	  }
   }
+  
+  public double getLastArea() {
+	  if ( lastArea.isPresent()) {
+		  return lastArea.get();
+	  }
+	  else {
+		  return -1.0;
+	  }
+  }  
+  
   public double getLatency() {
 	  return this.latency;
   }
@@ -84,6 +96,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	  Point p = new Point();
 	  p.x = 100;
 	  p.y = 20;
+	  lastArea = Optional.empty();
 	  //return Optional.of(p);
 	  if ( camera != null ) {
 		  PhotonPipelineResult result = camera.getLatestResult();
@@ -92,6 +105,7 @@ public class VisionSubsystem extends EntechSubsystem {
 			  PhotonTrackedTarget bestTarget = result.getBestTarget();
 			  if ( bestTarget != null ) {
 				  lastPosition = Optional.of(getCenter(bestTarget));
+				  lastArea = Optional.of(bestTarget.getArea());
 				  return lastPosition;
 			  }
 		  }
@@ -101,6 +115,7 @@ public class VisionSubsystem extends EntechSubsystem {
   }
   
   private Point getCenter(PhotonTrackedTarget target) {
+	 
 	  double avgX = 0.0;
 	  double avgY = 0.0;
 	  for ( TargetCorner tc: target.getMinAreaRectCorners()){

@@ -67,11 +67,7 @@ public class DriveSubsystem extends EntechSubsystem {
     SmartDashboard.putNumber("Front Right Talon", frontRightTalon.get());
     SmartDashboard.putNumber("Back Left Talon", rearLeftTalon.get());
     SmartDashboard.putNumber("Back Right Talon", rearRightTalon.get());
-    //SmartDashboard.putNumber("Driver Input Forward", loggingDriveInput.getForward());
-    //SmartDashboard.putNumber("Driver Input Left", loggingDriveInput.getRight());
-    //SmartDashboard.putNumber("Driver Input Rotation", loggingDriveInput.getRotation());
-    //SmartDashboard.putBoolean("Field Absolute", isFieldAbsoluteActive());
-    //SmartDashboard.putNumber("Auto Align Angle", autoAlignAngle);
+
 
     robotDrive.feed();
     robotDrive.feedWatchdog();
@@ -82,7 +78,8 @@ public class DriveSubsystem extends EntechSubsystem {
   }
   
   public void drive(DriveInput di) {
-
+	SmartDashboard.putNumber("DriveForward", di.getForward());
+	SmartDashboard.putNumber("DriveRight", di.getRight());
     robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
   }
 
