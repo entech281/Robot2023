@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
@@ -32,6 +31,7 @@ import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.RetractBrakeCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.DriveYawToNearestPerpendicular;
+import frc.robot.commands.ElbowPositionModeCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.ToggleGripperCommand;
 import frc.robot.commands.TurnRobotRelitiveCommand;
@@ -100,7 +100,8 @@ public class CommandFactory {
     			autonomousRightCommand(),
     			autonomousLeftCommand(),
     			autonomousConeCommand(),
-                autonomousTwoScoreRightCommand()
+                autonomousTwoScoreLaneCommand(),
+                autonomousTwoScoreBumpCommand()
     	);
 
     }
@@ -111,24 +112,53 @@ public class CommandFactory {
     	);
     }
 
-    public Command autonomousTwoScoreRightCommand() {
+    public Command autonomousTwoScoreLaneCommand() {
+        double MOVE_DISTANCE_METERS = -4.2;
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+            autonomousSetup()
+            , autonomousArmHigh()
+    		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+            , autonomousArmSafe()
+            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.2, 0.35, navxSubsystem)
+            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, -131)
+            , autofrogGrabCommand()
+            , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
+            , new ParallelCommandGroup(
+                new DriveDistanceStraightCommand(driveSubsystem, 4.35, 0.6, 0.2, 0.35, navxSubsystem)
+                , new SequentialCommandGroup(
+                    new PositionElbowCommand(elbowSubsystem, 82, true),
+                    new PositionTelescopeCommand(armSubsystem, 0.175, true)
+                )
+            )
+            , new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem)
+            , new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem)
+            , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+            , autonomousArmSafe()
+            // , new WaitCommand(0.25)
+            // , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.35, 0.2, navxSubsystem)
+        );
+        sg.setName("Lane Cone wide + Cone");
+        return sg;
+    }
+
+    public Command autonomousTwoScoreBumpCommand() {
         double MOVE_DISTANCE_METERS = -3.98;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             autonomousSetup()
             , autonomousArmHigh()
     		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
-            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.4, 0.2, navxSubsystem)
-            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, -131)
-            , frogGrabCommand()
+            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, 0.2, navxSubsystem)
+            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, 140)
+            , autofrogGrabCommand()
             // , new DriveDistanceStraightCommand(driveSubsystem, -0.1, 0.27, 0.15, 0.3, navxSubsystem)
             , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
-            , new DriveDistanceStraightCommand(driveSubsystem, 4.22, 0.7, 0.5, 0.35, navxSubsystem)
+            , new DriveDistanceStraightCommand(driveSubsystem, 4.22, 0.4, 0.5, 0.35, navxSubsystem)
             // , dialMiddlePosition()
             // , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             // , autonomousArmSafe()
         );
-        sg.setName("Cone wide + Cone");
+        sg.setName("Bump Cone wide + Cone");
         return sg;
     }
 
@@ -150,7 +180,7 @@ public class CommandFactory {
             new FlipDirectionCommand(driveSubsystem, navxSubsystem),
             new DriveDirectionCommand(driveSubsystem, 0, -0.2, 1),
             new DriveDistanceCommand(driveSubsystem, 2.5, 0.4),
-            autonomousTwoScoreRightCommand(),
+            autonomousTwoScoreLaneCommand(),
             autoGroundPickupPositionCube()
     	);
     }
@@ -218,18 +248,29 @@ public class CommandFactory {
 
     public Command autoGroundPickupPositionCube() {
         SequentialCommandGroup sg = new SequentialCommandGroup(
+            new GripperCommand(gripperSubsystem, GripperState.kOpen),
             new PositionElbowCommand(elbowSubsystem, 30.75, true),
-            new PositionTelescopeCommand(armSubsystem, 0.42, true)
+            new PositionTelescopeCommand(armSubsystem, 0.37, true)
         );
         sg.setName("Dial ground position Cube");
         return sg;
     }
 
-    public Command frogGrabCommand() {
+    public Command autofrogGrabCommand() {
         return new SequentialCommandGroup(
             new GripperCommand(gripperSubsystem, GripperState.kOpen),
             autoGroundPickupPositionCone()
-            , new DriveDistanceStraightCommand(driveSubsystem, 0.1375, 0.22, 0.15, 0.3, navxSubsystem)
+            , new DriveDistanceStraightCommand(driveSubsystem, 0.139, 0.22, 0.15, 0.3, navxSubsystem)
+            , new GripperCommand(gripperSubsystem, GripperState.kClose)
+            , dialCarryPosition()
+        );
+    }
+
+    public Command telefrogGrabCommand() {
+        return new SequentialCommandGroup(
+            new GripperCommand(gripperSubsystem, GripperState.kOpen)
+            , autoGroundPickupPositionCube()
+            , new WaitCommand(0.25)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
             , dialCarryPosition()
         );

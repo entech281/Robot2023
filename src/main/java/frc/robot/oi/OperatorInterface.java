@@ -27,10 +27,14 @@ public class OperatorInterface {
         .onFalse(commandFactory.setDriverRotationEnableCommand(false));
 
 	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
-	        .onTrue(commandFactory.frogGrabCommand()); // NOT RUNNING SAME COMMAND AS BUTTON NAME
+	        .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
 
         driveStick.button(RobotConstants.DRIVER_STICK.SNAP_YAW)
             .onTrue(commandFactory.getYawToNearestPerpendicular());
+
+        driveStick.button(RobotConstants.DRIVER_STICK.FROG_GRAB)
+            .onTrue(commandFactory.autoGroundPickupPositionCube())
+            .onFalse(commandFactory.telefrogGrabCommand());
 
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_BALANCE_FORWARD)
             .whileTrue(commandFactory.autoDriveBalanceOnly(RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,false));
