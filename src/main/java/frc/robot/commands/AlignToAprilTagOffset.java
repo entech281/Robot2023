@@ -22,24 +22,21 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class AlignToGamePieceCommand extends EntechCommandBase {
+public class AlignToAprilTagOffset extends EntechCommandBase {
   private final DriveSubsystem drive;
   private final VisionSubsystem vision;
   private PIDController lateralPID;
-  private PIDController forwardPID;
-  
-  private double lastGoodArea = 0.0;
   private double lastGoodX = 0.0;
-
-  private double fwdOut = 0.0;
   private double lateralOut = 0.0;
-  
-  public double LATERAL_TOLERANCE = 12.0;
-  public double FWD_TOLERANCE = 3.0;
+  private AprilTagOffset offset;
+  public double LATERAL_TOLERANCE = 10.0;
 
+
+  public enum AprilTagOffset { LEFT, CENTER, RIGHT };
 public static interface REFERENCE{
-	  public static double LATERAL=247.0;
-	  public static double FWD=12.0;
+	  public static double LATERAL_RIGHT=55.0;
+	  public static double LATERAL_LEFT=301.0;
+	  public static double LATERAL_CENTER=218.0;
   }
 
   public static interface LATERAL_GAINS{
@@ -48,24 +45,18 @@ public static interface REFERENCE{
 	  public static double D = 0.0;
   }
 
-  public static interface FWD_GAINS{
-	  public static double P = 0.06;
-	  public static double I = 0.0;
-	  public static double D = 0.0;
-  }
-
 /**
    * Drives by certain time in the directions given.  Negative time means opposite direction (so backward or left)
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AlignToGamePieceCommand( DriveSubsystem drive, VisionSubsystem vision) {
+  public AlignToAprilTagOffset( DriveSubsystem drive, VisionSubsystem vision, AprilTagOffset offset) {
       super(drive);
       this.drive = drive;
       this.vision = vision;
-	  lateralPID = new PIDController(LATERAL_GAINS.P,LATERAL_GAINS.I, LATERAL_GAINS.D);	  
-	  forwardPID = new PIDController(FWD_GAINS.P,FWD_GAINS.I, FWD_GAINS.D);
-
+	  lateralPID = new PIDController(LATERAL_GAINS.P,LATERAL_GAINS.I, LATERAL_GAINS.D);	
+	  this.offset = offset;
+	  setName("AlignToAprilTagOffset" + offset);
   }
 
   @Override
@@ -75,32 +66,30 @@ public void initSendable(SendableBuilder builder) {
 }
 
 @Override
-    public void initialize() {
-	  lateralPID.setSetpoint(REFERENCE.LATERAL);
-	  forwardPID.setSetpoint(REFERENCE.FWD);
-	  lateralPID.setTolerance(LATERAL_TOLERANCE);
-	  forwardPID.setTolerance(FWD_TOLERANCE);
-	  lateralPID.reset();
-	  forwardPID.reset();
-    }
+public void initialize() {
+	if ( offset == AprilTagOffset.RIGHT) {
+		lateralPID.setSetpoint(REFERENCE.LATERAL_RIGHT);
+	}
+	else if ( offset == AprilTagOffset.CENTER) {
+		lateralPID.setSetpoint(REFERENCE.LATERAL_CENTER);
+	}
+	else {
+		lateralPID.setSetpoint(REFERENCE.LATERAL_LEFT);
+	}  
+	lateralPID.setTolerance(LATERAL_TOLERANCE);
+	lateralPID.reset();
+}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-	  
 	if ( vision.hasTarget()) {
-		lastGoodArea = vision.getLastArea();
 		lastGoodX = vision.getLastX();
 	}
 		
 	lateralOut = -lateralPID.calculate(lastGoodX);
-	fwdOut = forwardPID.calculate(lastGoodArea  );
-	if ( lastGoodArea > REFERENCE.FWD ) {
-		fwdOut = 0;
-	}
 
-	DriveInput di = new DriveInput(fwdOut,lateralOut,0.,0.);
+	DriveInput di = new DriveInput(0,lateralOut,0.,0.);
     drive.drive(di);
   }
 
@@ -108,9 +97,6 @@ public void initSendable(SendableBuilder builder) {
 public void populateControls(ShuffleboardTab alignTest) {
 	alignTest.add(this.toString(),(Sendable)this).withSize(4, 1).withPosition(0, 0);
 	alignTest.add("LateralPID", lateralPID).withSize(2, 2).withPosition(0, 1);
-	alignTest.add("FWD PID", forwardPID).withSize(2, 2).withPosition(2, 1);
-	alignTest.addDouble("fwdErr", () -> { return forwardPID.getPositionError();} ).withSize(1, 1).withPosition(0, 3);
-	alignTest.addDouble("fwdOut", () -> { return fwdOut;} ).withSize(1, 1).withPosition(1, 3);
 	alignTest.addDouble("latErr", () -> { return lateralPID.getPositionError();} ).withSize(1, 1).withPosition(2, 3);	
 	alignTest.addDouble("latOut", () -> { return lateralOut;} ).withSize(1, 1).withPosition(3, 3);	
 }
@@ -136,7 +122,7 @@ public InterruptionBehavior getInterruptionBehavior() {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	  return lateralPID.atSetpoint() && forwardPID.atSetpoint();
+	  return lateralPID.atSetpoint();
   }
 
   // Returns true if this command should run when robot is disabled.

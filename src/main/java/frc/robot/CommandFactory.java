@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotConstants.ARM;
 import frc.robot.adapter.DriveInputYawMixer;
+import frc.robot.commands.AlignToAprilTagOffset;
 import frc.robot.commands.AlignToGamePieceCommand;
 import frc.robot.commands.AlignToScoringLocationCommand;
 import frc.robot.commands.ArmForgetHomeCommand;
@@ -85,7 +86,10 @@ public class CommandFactory {
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
-    			alignToGamePieceCommand()
+    			alignToGamePieceCommand(),
+    			alignToAprilTag(AlignToAprilTagOffset.AprilTagOffset.CENTER),
+    			alignToAprilTag(AlignToAprilTagOffset.AprilTagOffset.LEFT),
+    			alignToAprilTag(AlignToAprilTagOffset.AprilTagOffset.RIGHT)
     	);
     			
     	
@@ -95,6 +99,9 @@ public class CommandFactory {
     	ShuffleboardTab t = Shuffleboard.getTab(RobotConstants.SHUFFLEBOARD.TABS.DEBUG);    	
     	c.populateControls(t);    	
     	return c;
+    }
+    public Command alignToAprilTag(AlignToAprilTagOffset.AprilTagOffset offset) {
+    	return new AlignToAprilTagOffset(driveSubsystem, visionSubsystem,offset);
     }
     
     public Command moveArmCommand(double position) {

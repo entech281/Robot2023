@@ -35,6 +35,7 @@ public class VisionSubsystem extends EntechSubsystem {
   private Optional<Double> lastArea = Optional.empty();
   public static final int PIPELINE_COLOR = 1;
   public static final int PIPELINE_APRILTAG = 2;
+  public static final double NO_TARGET = -1.0;
   
   @Override
   public void initialize() {
@@ -61,13 +62,16 @@ public class VisionSubsystem extends EntechSubsystem {
      sb.addDoubleProperty("targetArea", this::getLastArea, null);
 
   }
+  public boolean hasTarget() {
+	  return getLastX() > 0 && getLastArea() > 0 ;
+  }
   
   public double getLastX() {
 	  if ( lastPosition.isPresent()) {
 		  return lastPosition.get().x;
 	  }
 	  else {
-		  return -1.0;
+		  return NO_TARGET;
 	  }
   }
  
@@ -76,7 +80,7 @@ public class VisionSubsystem extends EntechSubsystem {
 		  return lastPosition.get().y;
 	  }
 	  else {
-		  return -1.0;
+		  return NO_TARGET;
 	  }
   }
   
@@ -85,19 +89,16 @@ public class VisionSubsystem extends EntechSubsystem {
 		  return lastArea.get();
 	  }
 	  else {
-		  return -1.0;
+		  return NO_TARGET;
 	  }
   }  
   
   public double getLatency() {
 	  return this.latency;
   }
-  public Optional<Point> getColoredObjectCenter() {
-	  Point p = new Point();
-	  p.x = 100;
-	  p.y = 20;
+  private void updateCone() {
 	  lastArea = Optional.empty();
-	  //return Optional.of(p);
+	  lastPosition = Optional.empty();
 	  if ( camera != null ) {
 		  PhotonPipelineResult result = camera.getLatestResult();
 		  latency = result.getLatencyMillis();
@@ -106,12 +107,9 @@ public class VisionSubsystem extends EntechSubsystem {
 			  if ( bestTarget != null ) {
 				  lastPosition = Optional.of(getCenter(bestTarget));
 				  lastArea = Optional.of(bestTarget.getArea());
-				  return lastPosition;
 			  }
-		  }
-		  return Optional.empty();		  
+		  }	  
 	  }
-	  return Optional.empty();
   }
   
   private Point getCenter(PhotonTrackedTarget target) {
@@ -127,7 +125,7 @@ public class VisionSubsystem extends EntechSubsystem {
   
   @Override
   public void periodic() {
-	Optional<Point> point = getColoredObjectCenter();
+	  updateCone();
   }
 
 @Override
