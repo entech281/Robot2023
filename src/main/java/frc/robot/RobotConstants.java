@@ -37,12 +37,12 @@ public final class RobotConstants {
             public static final int RED_RIGHT = 1;
             public static final int RED_LEFT = 3; 
         }
-        public static final String PHOTON_HOST = "OV5647";  
+        public static final String PHOTON_HOST = "Arducam_OV9281_USB_Camera";  
         public static final double MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES = 40.0;
         public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
         
         public interface CAMERA_POSITION{
-        	public static final double UP_METERS = 0.15875;
+        	public static final double UP_METERS = 0.17875;
         	public static final double LEFT_OF_CENTER_METERS = 0.215;
         	public static final double FORWARD_OF_CENTER_METERS = 0.38;
             public static final double CAMERA_YAW_RADIANS = 0;

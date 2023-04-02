@@ -10,6 +10,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.StoppingCounter;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 /**
  *
  * 
@@ -23,7 +24,9 @@ public class TurnRobotRelitiveCommand extends EntechCommandBase {
     private final double AngleToTurn;
     private static final double TOLERANCE = 1.0;
     private static final int STOPPING_COUNT = 5;
+    private static double TIMEOUT_SECS = 4.0;
     private StoppingCounter sc;
+    private Timer timer;    
 
     /**
      * Creates a new snap yaw degrees command that will snap the robot to the specified angle
@@ -47,6 +50,8 @@ public class TurnRobotRelitiveCommand extends EntechCommandBase {
         angleToWait = newAngle;
         sc = new StoppingCounter("TurnRelitive", STOPPING_COUNT);
         DriverStation.reportWarning("INIT", false);
+        timer = new Timer();
+        timer.start();        
     }
 
     @Override
@@ -63,6 +68,14 @@ public class TurnRobotRelitiveCommand extends EntechCommandBase {
 
     @Override
     public boolean isFinished() {
+
+    	if ( timer.get() > TIMEOUT_SECS ) {
+    		DriverStation.reportWarning("TurnRobotRelativeTimedOut at " + TIMEOUT_SECS + "secs" , false);
+    		return true;
+    	}
+    	String msg = String.format("TurnRobotRelative:Yaw=%.2f, waiting for %.2f", yawSupplier.getYawAngleDegrees(),angleToWait);
+    	DriverStation.reportWarning(msg , false);
+    	
         return sc.isFinished(Math.abs(yawSupplier.getYawAngleDegrees() - angleToWait) < TOLERANCE);
     }
 
