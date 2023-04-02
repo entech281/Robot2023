@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.util.EntechUtils;
 import frc.robot.util.StoppingCounter;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -21,7 +22,7 @@ public class TurnRobotRelativeCommand extends EntechCommandBase {
     protected final DriveSubsystem drive;
     private YawAngleSupplier yawSupplier;
     private double angleToWait;
-    private final double AngleToTurn;
+    private final double robotRelativeAngle;
     private static final double TOLERANCE = 1.0;
     private static final int STOPPING_COUNT = 5;
     private static double TIMEOUT_SECS = 2.5;
@@ -35,20 +36,20 @@ public class TurnRobotRelativeCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param current_angle The current yaw angle
      */
-    public TurnRobotRelativeCommand(DriveSubsystem drive, YawAngleSupplier yawSupplier, double AngleToTurn) {
+    public TurnRobotRelativeCommand(DriveSubsystem drive, YawAngleSupplier yawSupplier, double robotRelativeAngle) {
         super(drive);
         this.drive = drive;
         this.yawSupplier = yawSupplier;
-        this.AngleToTurn = AngleToTurn;
+        this.robotRelativeAngle = robotRelativeAngle;
     }
 
     @Override
     public void initialize() {
         drive.resetEncoders();
-        double newAngle = yawSupplier.getYawAngleDegrees() + AngleToTurn;
-        drive.setHoldYawAngle(newAngle);
-        angleToWait = newAngle;
-        sc = new StoppingCounter("TurnRelitive", STOPPING_COUNT);
+        angleToWait = EntechUtils.normalizeAngle( yawSupplier.getYawAngleDegrees() + robotRelativeAngle );
+        drive.setHoldYawAngle(angleToWait);
+
+        sc = new StoppingCounter("TurnRelative", STOPPING_COUNT);
         DriverStation.reportWarning("INIT", false);
         timer = new Timer();
         timer.start();        
