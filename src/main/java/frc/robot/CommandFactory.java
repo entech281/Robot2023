@@ -95,15 +95,16 @@ public class CommandFactory {
     	//"RIGHT" means from the driver perspective looking towards the field
     	//ALSO: the robot is facing opposite that way
     	//both autonomous right and autonomous left should move the robout slightly OUTwards
+    	boolean USE_BRAKES = true;
     	return List.of(
-                //autonomousBalanceCrosshairCommand(),
-    			//autonomousAutoBalanceCommand(true),
-    			autonomousAutoBalanceCommand(false),    			
-    			//autonomousBalanceDeadRecCommand(true),
-    			autonomousBalanceDeadRecCommand(false),
-    			autonomousRightCommand(),
-    			autonomousLeftCommand(),
-    			autonomousConeCommand(),
+    			
+    			autonomousAutoBalanceCommand(USE_BRAKES),    			
+    			autonomousBalanceDeadRecCommand(USE_BRAKES),
+    			autonomousCubeRight(),
+    			autonomousCubeLeftCommand(),
+    			
+    			//NOTE: the choices below are just three phases of the same two-pice wide cone auto.
+    			//each one auto-detects blue vs red side
     			autonomousScoreConeGetConeThenHangOutCommand(),
     			autonomousScoreConeGetConeScoreMidCommand(),
     			autonomousScoreConeGetConeScoreMidDriveBackOutCommand()
@@ -116,8 +117,6 @@ public class CommandFactory {
     		homeTelescopeAndElbow()
     	);
     }
-
-    
     
     public Command autonomousScoreConeGetConeThenHangOutCommand() {
     	Command sg =  autoWideConeThenGetCone();
@@ -146,6 +145,7 @@ public class CommandFactory {
     	return sg;
     }
 
+    //BUILDING BLOCK FOR VARIANTS ABOVE
     private SequentialCommandGroup autoWideConeThenGetCone() {
         double MOVE_DISTANCE_METERS = -4.0;
 
@@ -194,12 +194,6 @@ public class CommandFactory {
 			loadingElbowCommand(),
 			carryElbowCommand(),
             homeTelescopeAndElbow(),
-            new ArmElbowForgetHomesCommand(elbowSubsystem,armSubsystem),
-			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.MAX_METERS, false),
-			new PositionTelescopeCommand(armSubsystem,RobotConstants.ARM.POSITION_PRESETS.SCORE_MIDDLE_METERS, false),
-			new PositionElbowCommand(elbowSubsystem,RobotConstants.ELBOW.POSITION_PRESETS.MIN_POSITION_DEGREES, false),
-			new GripperCommand(gripperSubsystem,GripperState.kClose,"CloseGripper"),
-			new GripperCommand(gripperSubsystem,GripperState.kOpen,"OpenGripper"),
             new FlipDirectionCommand(driveSubsystem, navxSubsystem),
             new DriveDirectionCommand(driveSubsystem, 0, -0.2, 1),
             new DriveDistanceCommand(driveSubsystem, 2.5, 0.4),
@@ -314,6 +308,7 @@ public class CommandFactory {
         );
     }
 
+    //EMERGENCY BACKUP ONLY-- ONLY scores a code and that's it.
     public Command autonomousConeCommand() {
         double MOVE_DISTANCE_METERS = -4.0;
         double HOLD_BRAKE_TIME = 2.0;
@@ -329,7 +324,7 @@ public class CommandFactory {
         return sg;
     }
 
-    public Command autonomousRightCommand() {
+    public Command autonomousCubeRight() {
 
         double MOVE_DISTANCE_METERS = -3.2;
         double MOVE_SECS  = 1.5;    
@@ -349,7 +344,7 @@ public class CommandFactory {
         return sg;
     }
 
-    public Command autonomousLeftCommand() {
+    public Command autonomousCubeLeftCommand() {
         double MOVE_DISTANCE_METERS = -3.2;
         double MOVE_SECS  = 1.5;    
         double JOG_FORWARD_SPEED = -0.15;
