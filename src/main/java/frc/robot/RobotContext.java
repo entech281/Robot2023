@@ -85,6 +85,7 @@ public class RobotContext {
     	if (photonEstimatedPose.isPresent() ){
     		Pose2d pep = photonEstimatedPose.get();
     		movingAveragePose.update(pep);
+    		robotState.estimatedPose = Optional.of(movingAveragePose.getMovingAverage());
     		LateralOffset lateralOffset = lateralAlignCalculator.findOffsetToNearestTarget(movingAveragePose.getX(), movingAveragePose.getY());
     		robotState.closestScoringLocationOffset = Optional.of(lateralOffset);
 

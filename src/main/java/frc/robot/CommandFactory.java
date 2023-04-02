@@ -132,7 +132,8 @@ public class CommandFactory {
                 )
             )
             , new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem)
-            //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 0.3, 0.25, navxSubsystem, robotState)
+            //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 0.3, 0.25, navxSubsystem, robotState, 
+            //		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())
             , new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem)
             , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
@@ -155,7 +156,9 @@ public class CommandFactory {
             , autofrogGrabCommand()
             // , new DriveDistanceStraightCommand(driveSubsystem, -0.1, 0.27, 0.15, 0.3, navxSubsystem)
             , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
-            //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.22, 0.4, 0.5, 0.35, navxSubsystem, robotState)
+
+            //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.22, 0.4, 0.5, 0.35, navxSubsystem, robotState, 
+           // 		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())            
             , new DriveDistanceStraightCommand(driveSubsystem, 4.22, 0.4, 0.5, 0.35, navxSubsystem)
             // , dialMiddlePosition()
             // , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)

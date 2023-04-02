@@ -4,36 +4,49 @@
 
 package frc.robot.commands;
 
-import java.util.function.Supplier;
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.commands.supplier.LateralOffsetSupplier;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
+import frc.robot.pose.AprilTagLocation;
+import frc.robot.pose.ScoringLocation;
+import frc.robot.pose.TargetNode;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase {
   private static final int STOPPING_COUNT = 4;
-  public static final double LATERAL_ALIGN_GAIN = 0.2;
+  public static final double LATERAL_ALIGN_GAIN = 0.1;
   private double speed;
   private double minSpeed;
   private double rampFraction;
   private double desiredDistanceMeters;
   private final DriveSubsystem drive;
   private YawAngleSupplier yawSupplier;
-  private LateralOffsetSupplier offsetSupplier;
+  private EstimatedPoseSupplier poseSupplier;
+  private ScoringLocation targetLocation;
   
   private int exeCounter;
 
+  
+  public static ScoringLocation getScoringLocationForWideAuto() {
+	  if ( DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+		  return new ScoringLocation(AprilTagLocation.RED_LEFT, TargetNode.B1);
+	  }
+	  else {
+		  return new ScoringLocation(AprilTagLocation.BLUE_RIGHT, TargetNode.B3);
+	  }
+  }
   /**
    * Creates a new DriveDirectionCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
   public DriveDistanceStraightWhileAligningCommand(DriveSubsystem drive, double desiredDistanceMeters, 
-		  double speed, YawAngleSupplier yawSupplier, LateralOffsetSupplier offsetSupplier) {
+		  double speed, YawAngleSupplier yawSupplier, EstimatedPoseSupplier poseSupplier, ScoringLocation targetLocation) {
       super(drive);
       this.drive = drive;
       this.desiredDistanceMeters = desiredDistanceMeters;
@@ -41,11 +54,12 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
       this.rampFraction = 0.0;
       this.minSpeed = speed;
       this.yawSupplier = yawSupplier;
-      this.offsetSupplier=offsetSupplier;
+      this.poseSupplier=poseSupplier;
+      this.targetLocation = targetLocation;
   }
 
   public DriveDistanceStraightWhileAligningCommand(DriveSubsystem drive, double desiredDistanceMeters, 
-		  double speed, double minSpeed, double ramp_fraction, YawAngleSupplier yawSupplier,LateralOffsetSupplier offsetSupplier) {
+		  double speed, double minSpeed, double ramp_fraction, YawAngleSupplier yawSupplier,EstimatedPoseSupplier poseSupplier, ScoringLocation targetLocation) {
     super(drive);
     this.drive = drive;
     this.desiredDistanceMeters = desiredDistanceMeters;
@@ -53,7 +67,8 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
     this.minSpeed = minSpeed;
     this.rampFraction = ramp_fraction;
     this.yawSupplier = yawSupplier;
-    this.offsetSupplier=offsetSupplier;    
+    this.poseSupplier=poseSupplier; 
+    this.targetLocation=targetLocation;
   }
 
   @Override
@@ -81,18 +96,22 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
         }
     }
     exeCounter++;
-    double lateral = 0.0;
-    if ( offsetSupplier.getLateralOffset().isPresent()) {
-    	lateral = offsetSupplier.getLateralOffset().get() * LATERAL_ALIGN_GAIN;
+    double lateralOutput = 0.0;
+    if ( poseSupplier.getEstimatedPose().isPresent()) {
+    	Pose2d currentPose = poseSupplier.getEstimatedPose().get(); 
+
+    	double lateralOffset = computeRobotRelativeOffsetToTarget(targetLocation.computeAbsolutePose().getY(),currentPose.getY());
+    	lateralOutput = lateralOffset * LATERAL_ALIGN_GAIN;
+    	SmartDashboard.putNumber("AlignWhileDriving:lateralOffset", lateralOffset); 	
     }
-    drive.driveFilterYawRobotRelative(new DriveInput(s, lateral, 0, yawSupplier.getYawAngleDegrees()));
+    
+	SmartDashboard.putNumber("AlignWhileDriving:lateralOutput", lateralOutput);
+    drive.driveFilterYawRobotRelative(new DriveInput(s, lateralOutput, 0, yawSupplier.getYawAngleDegrees()));
   }
 
   // Called once the command ends or is interrupted
   @Override
   public void end(boolean interrupted) {
-    DriverStation.reportWarning("END"+this, false);
-    DriverStation.reportWarning("Encoder average meters: " + drive.getAverageDistanceMeters() + this, false);
     drive.stop();
     drive.setDriveMode(DriveMode.BRAKE);
   }
@@ -100,7 +119,6 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // DriverStation.reportWarning("Distance: " + drive.getAverageDistanceMeters(), false);
     if (exeCounter < STOPPING_COUNT) {
       return false;
     }
@@ -111,5 +129,14 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
   @Override
   public boolean runsWhenDisabled() {
       return false;
+  }
+  
+  private double computeRobotRelativeOffsetToTarget(double targetAbsoluteY, double robotAbsoluteY) {
+	  if ( DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+		  return targetAbsoluteY - robotAbsoluteY;
+	  }
+	  else {
+		  return robotAbsoluteY - targetAbsoluteY;
+	  }
   }
 }

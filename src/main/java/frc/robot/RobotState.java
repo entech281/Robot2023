@@ -2,9 +2,11 @@ package frc.robot;
 
 import java.util.Optional;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.LateralOffsetSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.pose.AprilTagLocation;
@@ -13,7 +15,7 @@ import frc.robot.pose.ScoringLocation;
 import frc.robot.pose.TargetNode;
 import frc.robot.util.SendableUtil;
 
-public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSupplier{
+public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSupplier, EstimatedPoseSupplier{
 
 
 	public double yawAngleDegrees = 0;
@@ -22,6 +24,7 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 	public double cameraY = 0;
 	public double movingAverageY = 0.0;
 	public Color alignState = Color.kBlack;
+	public Optional<Pose2d> estimatedPose = Optional.empty();
 	
 	@Override	
 	public Optional<Double> getLateralOffset(){
@@ -58,6 +61,11 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 		sb.addDoubleProperty("CameraY", () -> { return cameraY ;},null );
 		sb.addDoubleProperty("CameraY:MovAvg", () -> { return movingAverageY ;},null );
 		sb.addStringProperty("AlignColor", () -> { return alignState.toString() ;}, null);
+	}
+
+	@Override
+	public Optional<Pose2d> getEstimatedPose() {
+		return estimatedPose;
 	}
 
 
