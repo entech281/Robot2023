@@ -118,20 +118,14 @@ public class CommandFactory {
 
     public Command autonomousScoreConeGetConeScoreMidCommand() {
         double MOVE_DISTANCE_METERS = -4.0;
-        double TURN_ANGLE = 0.0;
-        if ( DriverStation.getAlliance() == Alliance.Red) {
-        	TURN_ANGLE = -140.0;
-        }
-        else {
-        	TURN_ANGLE = 140.0;
-        }
+
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             autonomousSetup()
             , autonomousArmHigh()
     		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
             , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.2, 0.35, navxSubsystem)
-            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, TURN_ANGLE)
+            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, getAutoConePickupTurnAngle())
             , autofrogGrabCommand()
             , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
             , new ParallelCommandGroup(
@@ -164,7 +158,7 @@ public class CommandFactory {
     		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
             , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, 0.2, navxSubsystem)
-            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, 140)
+            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, getAutoConePickupTurnAngle())
             , autofrogGrabCommand()
             // , new DriveDistanceStraightCommand(driveSubsystem, -0.1, 0.27, 0.15, 0.3, navxSubsystem)
             , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
@@ -180,6 +174,14 @@ public class CommandFactory {
         return sg;
     }
 
+    private double getAutoConePickupTurnAngle() {
+        if ( DriverStation.getAlliance() == Alliance.Red) {
+        	return -140.0;
+        }
+        else {
+        	return 140.0;
+        }    	
+    }
     public Command autonomousTwoScoreRightCommandFromWorking() {
         double MOVE_DISTANCE_METERS = -3.98;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
