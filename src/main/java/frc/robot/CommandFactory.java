@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
 import frc.robot.commands.ArmElbowForgetHomesCommand;
+import frc.robot.commands.BalanceAfterAlreadyOnTopCommand;
 import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DeployBrakeCommand;
@@ -199,7 +200,8 @@ public class CommandFactory {
             new DriveDistanceCommand(driveSubsystem, 2.5, 0.4),
             autonomousScoreConeGetConeScoreMidCommand(),
             autoGroundPickupPositionCube(),
-            getCommandToTestAlignWhileDriving()
+            getCommandToTestAlignWhileDriving(),
+            new BalanceAfterAlreadyOnTopCommand(driveSubsystem,navxSubsystem,brakeSubsystem)
     	);
     }
 
