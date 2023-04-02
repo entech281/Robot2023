@@ -104,8 +104,9 @@ public class CommandFactory {
     			autonomousRightCommand(),
     			autonomousLeftCommand(),
     			autonomousConeCommand(),
-                autonomousScoreConeGetConeScoreMidCommand(),
-                autonomousScoreConeGetConeGetCloseCommand()
+    			autonomousScoreConeGetConeThenHangOutCommand(),
+    			autonomousScoreConeGetConeScoreMidCommand(),
+    			autonomousScoreConeGetConeScoreMidDriveBackOutCommand()
     	);
 
     }
@@ -116,7 +117,36 @@ public class CommandFactory {
     	);
     }
 
-    public Command autonomousScoreConeGetConeScoreMidCommand() {
+    
+    
+    public Command autonomousScoreConeGetConeThenHangOutCommand() {
+    	Command sg =  autoWideConeThenGetCone();
+    	sg.setName(sg.getName() + ",HangOut");
+    	return sg;
+    }    
+    
+    public SequentialCommandGroup autonomousScoreConeGetConeScoreMidCommand() {
+    	SequentialCommandGroup sg = autoWideConeThenGetCone();
+        sg.addCommands(
+            	new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+                , autonomousArmSafe()
+        );
+        sg.setName(sg.getName() + ",ConeMid");
+        return sg;
+    }
+    
+    public Command autonomousScoreConeGetConeScoreMidDriveBackOutCommand() {
+    	double MOVE_DISTANCE_METERS = -4.0;
+    	SequentialCommandGroup sg = autonomousScoreConeGetConeScoreMidCommand();
+    	sg.addCommands(
+                new WaitCommand(0.25)
+                , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.35, 0.2, navxSubsystem)        			
+     	);    	
+    	sg.setName(sg.getName() + ",MoveOut");
+    	return sg;
+    }
+
+    private SequentialCommandGroup autoWideConeThenGetCone() {
         double MOVE_DISTANCE_METERS = -4.0;
 
         SequentialCommandGroup sg =  new SequentialCommandGroup(
@@ -136,41 +166,13 @@ public class CommandFactory {
                     new PositionTelescopeCommand(armSubsystem, 0.175, true)
                 )
             )
-            , new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem)
+            , new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem)  //this shouldnt be needed! redundant with FlipDirectionCommand above
             //this will let us try to align with the location on the way
             //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 0.3, 0.25, navxSubsystem, robotState, 
             //		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())
-            , new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem)
-            , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
-            , autonomousArmSafe()
-            // , new WaitCommand(0.25)
-            // , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.35, 0.2, navxSubsystem)
+            , new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem)  //shouldnt be needed-- we should already be all the way back?
         );
-        sg.setName("ScoreConeHigh:GetCone:ScoreConeMid");
-        return sg;
-    }
-
-    public Command autonomousScoreConeGetConeGetCloseCommand() {
-        double MOVE_DISTANCE_METERS = -3.98;
-        SequentialCommandGroup sg =  new SequentialCommandGroup(
-            autonomousSetup()
-            , autonomousArmHigh()
-    		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
-            , autonomousArmSafe()
-            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, 0.2, navxSubsystem)
-            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, getAutoConePickupTurnAngle())
-            , autofrogGrabCommand()
-            // , new DriveDistanceStraightCommand(driveSubsystem, -0.1, 0.27, 0.15, 0.3, navxSubsystem)
-            , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
-
-            //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.22, 0.4, 0.5, 0.35, navxSubsystem, robotState, 
-           // 		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())            
-            , new DriveDistanceStraightCommand(driveSubsystem, 4.22, 0.4, 0.5, 0.35, navxSubsystem)
-            // , dialMiddlePosition()
-            // , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
-            // , autonomousArmSafe()
-        );
-        sg.setName("ScoreCone:GetCone:GetClose");
+        sg.setName("ConeWide,GetCone");
         return sg;
     }
 
@@ -182,26 +184,6 @@ public class CommandFactory {
         	return 140.0;
         }    	
     }
-    public Command autonomousTwoScoreRightCommandFromWorking() {
-        double MOVE_DISTANCE_METERS = -3.98;
-        SequentialCommandGroup sg =  new SequentialCommandGroup(
-            autonomousSetup()
-            , autonomousArmHigh()
-    		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
-            , autonomousArmSafe()
-            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.4, 0.2, navxSubsystem)
-            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, -131)
-            , autofrogGrabCommand()
-            // , new DriveDistanceStraightCommand(driveSubsystem, -0.1, 0.27, 0.15, 0.3, navxSubsystem)
-            , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
-            , new DriveDistanceStraightCommand(driveSubsystem, 4.22, 0.7, 0.5, 0.35, navxSubsystem)
-            // , dialMiddlePosition()
-            // , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
-            // , autonomousArmSafe()
-        );
-        sg.setName("Cone wide + Cone");
-        return sg;
-    }    
     
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
