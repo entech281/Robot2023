@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
+import frc.robot.commands.ArmElbowForgetHomesCommand;
 import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
 import frc.robot.commands.DeployBrakeCommand;
@@ -17,21 +18,20 @@ import frc.robot.commands.DriveBrakeForSeconds;
 import frc.robot.commands.DriveCrosshairBalence;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
+import frc.robot.commands.DriveDistanceStraightCommand;
 import frc.robot.commands.DriveForwardToBalanceCommand;
 import frc.robot.commands.DriveSetBrakeMode;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
+import frc.robot.commands.DriveYawToNearestPerpendicular;
 import frc.robot.commands.FilteredDriveCommand;
 import frc.robot.commands.FlipDirectionCommand;
-import frc.robot.commands.ArmElbowForgetHomesCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
 import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.RetractBrakeCommand;
 import frc.robot.commands.SimpleDriveCommand;
-import frc.robot.commands.DriveYawToNearestPerpendicular;
-import frc.robot.commands.ElbowPositionModeCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.ToggleGripperCommand;
 import frc.robot.commands.TurnRobotRelitiveCommand;
@@ -42,8 +42,6 @@ import frc.robot.commands.nudge.NudgeElbowUpCommand;
 import frc.robot.commands.nudge.NudgeTelescopeBackwardsCommand;
 import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
-import frc.robot.commands.DriveDistanceStraightCommand;
-import frc.robot.commands.DriveDistanceStraightWhileAligningCommand;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BrakeSubsystem;
@@ -93,16 +91,16 @@ public class CommandFactory {
     	//ALSO: the robot is facing opposite that way
     	//both autonomous right and autonomous left should move the robout slightly OUTwards
     	return List.of(
-                autonomousBalanceCrosshairCommand(),
-    			autonomousAutoBalanceCommand(true),
+                //autonomousBalanceCrosshairCommand(),
+    			//autonomousAutoBalanceCommand(true),
     			autonomousAutoBalanceCommand(false),    			
-    			autonomousBalanceDeadRecCommand(true),
+    			//autonomousBalanceDeadRecCommand(true),
     			autonomousBalanceDeadRecCommand(false),
     			autonomousRightCommand(),
     			autonomousLeftCommand(),
     			autonomousConeCommand(),
-                autonomousTwoScoreLaneCommand(),
-                autonomousTwoScoreBumpCommand()
+                autonomousScoreConeGetConeScoreMidCommand(),
+                autonomousScoreConeGetConeGetCloseCommand()
     	);
 
     }
@@ -113,7 +111,7 @@ public class CommandFactory {
     	);
     }
 
-    public Command autonomousTwoScoreLaneCommand() {
+    public Command autonomousScoreConeGetConeScoreMidCommand() {
         double MOVE_DISTANCE_METERS = -4.2;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             autonomousSetup()
@@ -127,6 +125,7 @@ public class CommandFactory {
             , new ParallelCommandGroup(
                 new DriveDistanceStraightCommand(driveSubsystem, 4.35, 0.6, 0.2, 0.35, navxSubsystem)
                 , new SequentialCommandGroup(
+                	//this is essentially middle position, but up a bit
                     new PositionElbowCommand(elbowSubsystem, 82, true),
                     new PositionTelescopeCommand(armSubsystem, 0.175, true)
                 )
@@ -140,11 +139,11 @@ public class CommandFactory {
             // , new WaitCommand(0.25)
             // , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.35, 0.2, navxSubsystem)
         );
-        sg.setName("Lane Cone wide + Cone");
+        sg.setName("ScoreConeHigh:GetCone:ScoreConeMid");
         return sg;
     }
 
-    public Command autonomousTwoScoreBumpCommand() {
+    public Command autonomousScoreConeGetConeGetCloseCommand() {
         double MOVE_DISTANCE_METERS = -3.98;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             autonomousSetup()
@@ -164,7 +163,7 @@ public class CommandFactory {
             // , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             // , autonomousArmSafe()
         );
-        sg.setName("Bump Cone wide + Cone");
+        sg.setName("ScoreCone:GetCone:GetClose");
         return sg;
     }
 
@@ -207,7 +206,7 @@ public class CommandFactory {
             new FlipDirectionCommand(driveSubsystem, navxSubsystem),
             new DriveDirectionCommand(driveSubsystem, 0, -0.2, 1),
             new DriveDistanceCommand(driveSubsystem, 2.5, 0.4),
-            autonomousTwoScoreLaneCommand(),
+            autonomousScoreConeGetConeScoreMidCommand(),
             autoGroundPickupPositionCube()
     	);
     }
@@ -267,8 +266,7 @@ public class CommandFactory {
     public Command autoGroundPickupPositionCone() {
         SequentialCommandGroup sg = new SequentialCommandGroup(
             new PositionElbowCommand(elbowSubsystem, 30.75, true),
-            //from working version new PositionTelescopeCommand(armSubsystem, 0.42, true)
-            new PositionTelescopeCommand(armSubsystem, 0.45, true)
+            new PositionTelescopeCommand(armSubsystem, 0.42, true)
         );
         sg.setName("Dial ground position COne");
         return sg;
