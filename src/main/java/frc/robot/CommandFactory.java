@@ -116,18 +116,18 @@ public class CommandFactory {
     }
 
     public Command autonomousScoreConeGetConeScoreMidCommand() {
-        double MOVE_DISTANCE_METERS = -4.2;
+        double MOVE_DISTANCE_METERS = -4.0;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             autonomousSetup()
             , autonomousArmHigh()
     		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
             , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.2, 0.35, navxSubsystem)
-            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, -131)
+            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, -140)
             , autofrogGrabCommand()
             , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
             , new ParallelCommandGroup(
-                new DriveDistanceStraightCommand(driveSubsystem, 4.35, 0.6, 0.2, 0.35, navxSubsystem)
+                new DriveDistanceStraightCommand(driveSubsystem, 4.2, 0.6, 0.2, 0.35, navxSubsystem)
                 , new SequentialCommandGroup(
                 	//this is essentially middle position, but up a bit
                     new PositionElbowCommand(elbowSubsystem, 82, true),
@@ -295,12 +295,19 @@ public class CommandFactory {
     }
 
     public Command autofrogGrabCommand() {
+    	double MOVE_DISTANCE_FWD = 0.15;
+    	double MOVE_DISTANCE_BWD = 0.07;
+    	double MOVE_SPEED = 0.22;
+    	double MOVE_MIN_SPEED = 0.15;
+    	double MOVE_RAMP = 0.3;
         return new SequentialCommandGroup(
+        	
             new GripperCommand(gripperSubsystem, GripperState.kOpen),
             autoGroundPickupPositionCone()
             // from prior working, new DriveDistanceStraightCommand(driveSubsystem, 0.1375, 0.22, 0.15, 0.3, navxSubsystem)
-            , new DriveDistanceStraightCommand(driveSubsystem, 0.239, 0.22, 0.15, 0.3, navxSubsystem)
+            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_FWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
+            , new DriveDistanceStraightCommand(driveSubsystem, -MOVE_DISTANCE_BWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
             , dialCarryPosition()
         );
     }

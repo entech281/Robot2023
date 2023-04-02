@@ -156,7 +156,7 @@ public class Robot extends TimedRobot {
 
     // Get selected routine 
     autoCommand = shuffleboardControls.getSelectedAutoCommand();
-    // autoCommand = commandFactory.getAutonomousChoice();
+
     //allSubsystems.getArm().clearRequestedPosition();
     //allSubsystems.getElbow().clearRequestedPosition();
     // schedule the autonomous command
