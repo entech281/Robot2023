@@ -32,7 +32,7 @@ public class OperatorInterface {
         driveStick.button(RobotConstants.DRIVER_STICK.SNAP_YAW)
             .onTrue(commandFactory.getYawToNearestPerpendicular());
 
-        driveStick.button(RobotConstants.DRIVER_STICK.FROG_GRAB)
+        driveStick.button(RobotConstants.DRIVER_STICK.AUTO_YAW_TOGGLE)
             .onTrue(commandFactory.autoGroundPickupPositionCube())
             .onFalse(commandFactory.telefrogGrabCommand());
 

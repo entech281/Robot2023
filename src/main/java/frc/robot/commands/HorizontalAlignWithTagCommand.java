@@ -21,7 +21,7 @@ import frc.robot.subsystems.LEDSubsystem;
  */
 public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
-    private static final double LATERAL_P_GAIN = 2.25;
+    private static final double LATERAL_P_GAIN = 1.0;
     private static final double LATERAL_I_GAIN = 0.000;	
     private static final double LATERAL_D_GAIN = 0.00;
 
@@ -79,11 +79,13 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         newDi = jsDeadbandFilter.filter(newDi);
         newDi = squareInputsFilter.filter(newDi);
         
+        double lateralOutput = 0.0;
         if (lateralOffsetSupplier.getLateralOffset().isPresent()) {
         	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();        	
-        	double calcValue = lateralPid.calculate(lateralOffset);
-        	newDi.setRight(calcValue);
+        	lateralOutput = lateralPid.calculate(lateralOffset);
+        	
         }
+        newDi.setRight(lateralOutput);
         drive.driveFilterYawOnly(newDi);
     }
 

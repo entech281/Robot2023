@@ -33,6 +33,7 @@ import frc.robot.commands.PositionTelescopeCommand;
 import frc.robot.commands.RetractBrakeCommand;
 import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
+import frc.robot.commands.DriveDistanceStraightWhileAligningCommand;
 import frc.robot.commands.ToggleGripperCommand;
 import frc.robot.commands.TurnRobotRelitiveCommand;
 import frc.robot.commands.ZeroGyroCommand;
@@ -43,6 +44,9 @@ import frc.robot.commands.nudge.NudgeTelescopeBackwardsCommand;
 import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.filters.DriveInput;
+import frc.robot.pose.AprilTagLocation;
+import frc.robot.pose.ScoringLocation;
+import frc.robot.pose.TargetNode;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -131,6 +135,7 @@ public class CommandFactory {
                 )
             )
             , new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem)
+            //this will let us try to align with the location on the way
             //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 0.3, 0.25, navxSubsystem, robotState, 
             //		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())
             , new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem)
@@ -207,7 +212,8 @@ public class CommandFactory {
             new DriveDirectionCommand(driveSubsystem, 0, -0.2, 1),
             new DriveDistanceCommand(driveSubsystem, 2.5, 0.4),
             autonomousScoreConeGetConeScoreMidCommand(),
-            autoGroundPickupPositionCube()
+            autoGroundPickupPositionCube(),
+            getCommandToTestAlignWhileDriving()
     	);
     }
 
@@ -227,6 +233,12 @@ public class CommandFactory {
     }
 
 
+    public Command getCommandToTestAlignWhileDriving() {
+    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.5, 0.3, 0.5, 0.35, navxSubsystem, robotState, 
+    	           new ScoringLocation( AprilTagLocation.RED_LEFT, TargetNode.A1));   
+    	c.setName("Drive1.5MetersWhileTryingtoAlignToA2");
+    	return c;
+    }
     public Command getAutonomousChoice() {
         return autonomousAutoBalanceCommand(false);
     }
@@ -287,7 +299,7 @@ public class CommandFactory {
             new GripperCommand(gripperSubsystem, GripperState.kOpen),
             autoGroundPickupPositionCone()
             // from prior working, new DriveDistanceStraightCommand(driveSubsystem, 0.1375, 0.22, 0.15, 0.3, navxSubsystem)
-            , new DriveDistanceStraightCommand(driveSubsystem, 0.139, 0.22, 0.15, 0.3, navxSubsystem)
+            , new DriveDistanceStraightCommand(driveSubsystem, 0.239, 0.22, 0.15, 0.3, navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
             , dialCarryPosition()
         );

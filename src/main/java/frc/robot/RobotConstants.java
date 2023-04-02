@@ -42,11 +42,16 @@ public final class RobotConstants {
         public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
         
         public interface CAMERA_POSITION{
-        	public static final double UP_METERS = 0.17875;
-        	public static final double LEFT_OF_CENTER_METERS = 0.215;
-        	public static final double FORWARD_OF_CENTER_METERS = 0.38;
+        	//public static final double UP_METERS = 0.17875;
+        	//public static final double LEFT_OF_CENTER_METERS = 0.215;
+        	//public static final double FORWARD_OF_CENTER_METERS = 0.38;
+            //public static final double CAMERA_YAW_RADIANS = 0;
+            //public static final double CAMERA_PITCH_RADIANS = 0.278986;
+        	public static final double UP_METERS = 0.486;
+        	public static final double LEFT_OF_CENTER_METERS = 0.0;
+        	public static final double FORWARD_OF_CENTER_METERS = 0.406;
             public static final double CAMERA_YAW_RADIANS = 0;
-            public static final double CAMERA_PITCH_RADIANS = 0.278986;
+            public static final double CAMERA_PITCH_RADIANS = 0.0;        	
         }
     }
     public interface ARM{
