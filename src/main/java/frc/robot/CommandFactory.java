@@ -234,9 +234,9 @@ public class CommandFactory {
 
 
     public Command getCommandToTestAlignWhileDriving() {
-    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.5, 0.3, 0.5, 0.35, navxSubsystem, robotState, 
+    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.0, 0.2, 0.15, 0.25, navxSubsystem, robotState, 
     	           new ScoringLocation( AprilTagLocation.RED_LEFT, TargetNode.A1));   
-    	c.setName("Drive1.5MetersWhileTryingtoAlignToA2");
+    	c.setName("Drive1.5MetersWhileTryingtoAlignToA1");
     	return c;
     }
     public Command getAutonomousChoice() {
