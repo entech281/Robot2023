@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -117,13 +118,20 @@ public class CommandFactory {
 
     public Command autonomousScoreConeGetConeScoreMidCommand() {
         double MOVE_DISTANCE_METERS = -4.0;
+        double TURN_ANGLE = 0.0;
+        if ( DriverStation.getAlliance() == Alliance.Red) {
+        	TURN_ANGLE = -140.0;
+        }
+        else {
+        	TURN_ANGLE = 140.0;
+        }
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             autonomousSetup()
             , autonomousArmHigh()
     		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
             , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.2, 0.35, navxSubsystem)
-            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, -140)
+            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, TURN_ANGLE)
             , autofrogGrabCommand()
             , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
             , new ParallelCommandGroup(
