@@ -24,7 +24,7 @@ public class TurnRobotRelitiveCommand extends EntechCommandBase {
     private final double AngleToTurn;
     private static final double TOLERANCE = 1.0;
     private static final int STOPPING_COUNT = 5;
-    private static double TIMEOUT_SECS = 4.0;
+    private static double TIMEOUT_SECS = 2.5;
     private StoppingCounter sc;
     private Timer timer;    
 
