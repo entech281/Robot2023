@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Timer;
  * 
  * @author aheitkamp
  */
-public class TurnRobotRelitiveCommand extends EntechCommandBase {
+public class TurnRobotRelativeCommand extends EntechCommandBase {
 
     protected final DriveSubsystem drive;
     private YawAngleSupplier yawSupplier;
@@ -35,7 +35,7 @@ public class TurnRobotRelitiveCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param current_angle The current yaw angle
      */
-    public TurnRobotRelitiveCommand(DriveSubsystem drive, YawAngleSupplier yawSupplier, double AngleToTurn) {
+    public TurnRobotRelativeCommand(DriveSubsystem drive, YawAngleSupplier yawSupplier, double AngleToTurn) {
         super(drive);
         this.drive = drive;
         this.yawSupplier = yawSupplier;

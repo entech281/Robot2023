@@ -35,7 +35,7 @@ import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.DriveDistanceStraightWhileAligningCommand;
 import frc.robot.commands.ToggleGripperCommand;
-import frc.robot.commands.TurnRobotRelitiveCommand;
+import frc.robot.commands.TurnRobotRelativeCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeElbowDownCommand;
@@ -123,7 +123,7 @@ public class CommandFactory {
     		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
             , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.2, 0.35, navxSubsystem)
-            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, -140)
+            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, -140)
             , autofrogGrabCommand()
             , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
             , new ParallelCommandGroup(
@@ -156,7 +156,7 @@ public class CommandFactory {
     		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
             , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, 0.2, navxSubsystem)
-            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, 140)
+            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, 140)
             , autofrogGrabCommand()
             // , new DriveDistanceStraightCommand(driveSubsystem, -0.1, 0.27, 0.15, 0.3, navxSubsystem)
             , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
@@ -180,7 +180,7 @@ public class CommandFactory {
     		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
             , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.4, 0.2, navxSubsystem)
-            , new TurnRobotRelitiveCommand(driveSubsystem, navxSubsystem, -131)
+            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, -131)
             , autofrogGrabCommand()
             // , new DriveDistanceStraightCommand(driveSubsystem, -0.1, 0.27, 0.15, 0.3, navxSubsystem)
             , new FlipDirectionCommand(driveSubsystem, navxSubsystem)

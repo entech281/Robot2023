@@ -205,6 +205,9 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 	public void update() {	 
       	 switch ( axisState) {
       		 case UNINITIALIZED:
+      			 if ( isAtLowerLimit() ) {
+      				arrivedHome();
+      			 }      			 
       			 break;
       		 case FINDING_LIMIT:
       			 speedMode = true;
