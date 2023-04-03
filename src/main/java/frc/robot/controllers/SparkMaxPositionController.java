@@ -205,6 +205,9 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 	public void update() {	 
       	 switch ( axisState) {
       		 case UNINITIALIZED:
+      			 if ( isAtLowerLimit() ) {
+      				arrivedHome();
+      			 }      			 
       			 break;
       		 case FINDING_LIMIT:
       			 speedMode = true;
@@ -214,12 +217,6 @@ public class SparkMaxPositionController implements Sendable, PositionController 
       			 else {
       				setMotorSpeedInternal(-config.getHomingSpeedPercent());
       			 }
-//      			 if ( config.getHomeAtCurrentAmps().isPresent()) {
-//      				 if ( spark.getOutputCurrent() > config.getHomeAtCurrentAmps().get()) {
-//      					 DriverStation.reportWarning("Axis " + config.getName() +" homed based on current.", false);
-//      					 arrivedHome();
-//      				 }
-//      			 }
       			 break;
       		 case HOMED:
       			 updateRequestedPosition();

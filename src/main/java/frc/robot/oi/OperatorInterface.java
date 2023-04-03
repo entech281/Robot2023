@@ -32,6 +32,10 @@ public class OperatorInterface {
         driveStick.button(RobotConstants.DRIVER_STICK.SNAP_YAW)
             .onTrue(commandFactory.getYawToNearestPerpendicular());
 
+        driveStick.button(RobotConstants.DRIVER_STICK.AUTO_YAW_TOGGLE)
+            .onTrue(commandFactory.autoGroundPickupPositionCube())
+            .onFalse(commandFactory.telefrogGrabCommand());
+
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_BALANCE_FORWARD)
             .whileTrue(commandFactory.autoDriveBalanceOnly(RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,false));
 

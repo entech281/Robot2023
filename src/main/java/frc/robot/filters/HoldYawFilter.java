@@ -11,7 +11,7 @@ public class HoldYawFilter extends DriveInputFilter {
 
     private static final double P_GAIN = 0.05;
     private static final double MAX_ROT = 0.25;
-    private static final double TOLERANCE = 2.0;
+    private static final double TOLERANCE = 1.0;
     private static double yawSetPoint = 0.0;
     private static boolean setPointValid;
 
