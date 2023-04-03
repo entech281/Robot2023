@@ -8,22 +8,22 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import frc.robot.RobotConstants;
+
 
 /** Add your docs here. */
 public class TestAprilTagLocation {
 
-    public static double comparisonTolerance = 0.01;
-
     @Test
     public void TestBlueLoading() {
         AprilTagLocation loc = AprilTagLocation.BLUE_LOADING;
-        assertEquals(loc.getXMeters(), 16.178784, comparisonTolerance);
-        assertEquals(loc.getYMeters(), 6.749796, comparisonTolerance);
+        assertEquals(loc.getXMeters(), 16.178784, RobotConstants.TEST.TOLERANCE_DISTANCE);
+        assertEquals(loc.getYMeters(), 6.749796, RobotConstants.TEST.TOLERANCE_DISTANCE);
     }
 
     public void TestRedLeft() {
         AprilTagLocation loc = AprilTagLocation.RED_LEFT;
-        assertEquals(loc.getXMeters(), 15.513558, comparisonTolerance);
-        assertEquals(loc.getYMeters(), 4.424426, comparisonTolerance);
+        assertEquals(loc.getXMeters(), 15.513558, RobotConstants.TEST.TOLERANCE_DISTANCE);
+        assertEquals(loc.getYMeters(), 4.424426, RobotConstants.TEST.TOLERANCE_DISTANCE);
     }
 }

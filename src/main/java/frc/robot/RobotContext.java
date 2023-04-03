@@ -81,15 +81,13 @@ public class RobotContext {
     	//photonvision pose estimate
     	Optional<Pose2d> photonEstimatedPose = vs.getPhotonEstimatedPose2d();
 
-    	
     	if (photonEstimatedPose.isPresent() ){
     		Pose2d pep = photonEstimatedPose.get();
     		movingAveragePose.update(pep);
     		LateralOffset lateralOffset = lateralAlignCalculator.findOffsetToNearestTarget(movingAveragePose.getX(), movingAveragePose.getY());
     		robotState.closestScoringLocationOffset = Optional.of(lateralOffset);
 
-    		setAlignState ( getAlignColor(lateralOffset)); 		
-    		robotState.realLateralOffset = lateralOffset.getLateralOffsetToLocationMeters();
+			ledSubsystem.setAlighnColors(null, lateralOffset);
     		
     		capSpeedIfTooCloseToTag(pep,lateralOffset);
 

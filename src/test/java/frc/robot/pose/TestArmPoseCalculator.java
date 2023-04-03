@@ -6,11 +6,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.ArmStatus;
 import frc.robot.subsystems.ElbowStatus;
+import frc.robot.RobotConstants;
 import frc.robot.RobotConstants.ELBOW;
 
 public class TestArmPoseCalculator {
-
-    public static final double TOLERANCE_DISTANCE = 0.01;
     
     @Test
     public void testFacingScoringLocation(){
@@ -22,7 +21,7 @@ public class TestArmPoseCalculator {
         ArmPoseResult armPoseAnswer = armPose.getDeploymentStatus(robotPose, sloc, elbowAngle, armStatus);
 
         System.out.println(armPoseAnswer);
-        assertEquals(1.42, armPoseAnswer.targetDistance, TOLERANCE_DISTANCE);
+        assertEquals(1.42, armPoseAnswer.targetDistance, RobotConstants.TEST.TOLERANCE_DISTANCE);
         assertEquals(false, armPoseAnswer.canDeploy);
     }
 
@@ -35,7 +34,7 @@ public class TestArmPoseCalculator {
         ArmPoseCalculator armPose = new ArmPoseCalculator();
         ArmPoseResult armPoseAnswer = armPose.getDeploymentStatus(robotPose, sloc, elbowAngle, armStatus);
 
-        assertEquals(0.12, armPoseAnswer.targetDistance, TOLERANCE_DISTANCE);
+        assertEquals(0.12, armPoseAnswer.targetDistance, RobotConstants.TEST.TOLERANCE_DISTANCE);
         assertEquals(false, armPoseAnswer.canDeploy);
     }
 
@@ -48,7 +47,7 @@ public class TestArmPoseCalculator {
         ArmPoseCalculator armPose = new ArmPoseCalculator();
         ArmPoseResult armPoseAnswer = armPose.getDeploymentStatus(robotPose, sloc, elbowAngle, armStatus);
 
-        assertEquals(1.62, armPoseAnswer.targetDistance, TOLERANCE_DISTANCE);
+        assertEquals(1.62, armPoseAnswer.targetDistance, RobotConstants.TEST.TOLERANCE_DISTANCE);
         assertEquals(false, armPoseAnswer.canDeploy);
     }
 

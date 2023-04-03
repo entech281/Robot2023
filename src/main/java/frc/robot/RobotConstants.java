@@ -233,4 +233,9 @@ public final class RobotConstants {
     public interface MAST{
         public static final double MAST_DISTANCE_OVER_MID_NODE = 19.25;
     }
+
+    public interface TEST{
+        public static final double TOLERANCE_DISTANCE = 0.01;
+        public static final double TOLERANCE_DEGREES = 1.0;
+    }
 }

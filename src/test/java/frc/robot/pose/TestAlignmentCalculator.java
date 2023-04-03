@@ -4,14 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.RobotConstants;
 import frc.robot.util.PoseUtil;
 
 
 public class TestAlignmentCalculator {
 
 	protected AlignmentCalculator calculator = new AlignmentCalculator(0, 0);
-	public static final double TOLERANCE_DEGREES=1.0;
-	
 	
 	protected Pose2d computePoseOffset ( Pose2d original, double x, double y) {
 		return new Pose2d(
@@ -33,7 +32,7 @@ public class TestAlignmentCalculator {
 		//must convert this to meters
 		Pose2d robotPoseInMeters = PoseUtil.inchesToMeters(robotPose);
 		double turnAngle = calculator.calculateAngleToScoringLocation(sloc.computeAbsolutePose(), robotPoseInMeters);
-		assertEquals( 0, turnAngle, TOLERANCE_DEGREES);		
+		assertEquals( 0, turnAngle, RobotConstants.TEST.TOLERANCE_DEGREES);		
 	}
 	
 	
@@ -49,7 +48,7 @@ public class TestAlignmentCalculator {
 		//must convert this to meters
 		Pose2d robotPoseInMeters = PoseUtil.inchesToMeters(robotPose);
 		double turnAngle = calculator.calculateAngleToScoringLocation(sloc.computeAbsolutePose(), robotPoseInMeters);
-		assertEquals( Units.radiansToDegrees(Math.atan(10/48)), turnAngle, TOLERANCE_DEGREES);			
+		assertEquals( Units.radiansToDegrees(Math.atan(10/48)), turnAngle, RobotConstants.TEST.TOLERANCE_DEGREES);			
 		
 	}
 
@@ -66,7 +65,7 @@ public class TestAlignmentCalculator {
 		//must convert this to meters
 		Pose2d robotPoseInMeters = PoseUtil.inchesToMeters(robotPose);
 		double turnAngle = calculator.calculateAngleToScoringLocation(sloc.computeAbsolutePose(), robotPoseInMeters);
-		assertEquals( -Units.radiansToDegrees(Math.atan(10/48)), turnAngle, TOLERANCE_DEGREES);		
+		assertEquals( -Units.radiansToDegrees(Math.atan(10/48)), turnAngle, RobotConstants.TEST.TOLERANCE_DEGREES);		
 		
 	}
 	

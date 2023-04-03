@@ -11,8 +11,7 @@ public class LateralOffset {
 		this.nearestLocation = nearestLocation;
 		this.lateralOffsetToLocationMeters = lateralOffsetToLocation;
 	}
-	
-	
+
 	public double getLateralOffsetToLocationMeters() {
 		return lateralOffsetToLocationMeters;
 	}
