@@ -182,8 +182,8 @@ public class CommandFactory {
         	return -140.0;
         }
         else {
-        	return 140.0;
-        }    	
+        	return 142.0;
+        }
     }
     
     public List<Command> getTestCommands(){

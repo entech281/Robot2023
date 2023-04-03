@@ -19,7 +19,9 @@ import frc.robot.subsystems.DriveSubsystem.DriveMode;
 /** An example command that uses an example subsystem. */
 public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase {
   private static final int STOPPING_COUNT = 4;
-  public static final double LATERAL_ALIGN_GAIN = 0.5;
+  private static final double LATERAL_ALIGN_GAIN = 0.5;
+  private static final double DISTANCE_TO_TARGET_TOLLERENCE = 2;
+
   private double speed;
   private double minSpeed;
   private double rampFraction;
@@ -100,9 +102,13 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
     if ( poseSupplier.getEstimatedPose().isPresent()) {
     	Pose2d currentPose = poseSupplier.getEstimatedPose().get(); 
 
-    	double lateralOffset = computeRobotRelativeOffsetToTarget(targetLocation.computeAbsolutePose().getY(),currentPose.getY());
-    	lateralOutput = lateralOffset * LATERAL_ALIGN_GAIN;
-    	SmartDashboard.putNumber("AlignWhileDriving:lateralOffset", lateralOffset); 	
+      double distToTarget = Math.abs(currentPose.getX() - targetLocation.computeAbsolutePose().getX());
+
+      if (distToTarget < DISTANCE_TO_TARGET_TOLLERENCE) {
+        double lateralOffset = computeRobotRelativeOffsetToTarget(targetLocation.computeAbsolutePose().getY(),currentPose.getY());
+        lateralOutput = lateralOffset * LATERAL_ALIGN_GAIN;
+        SmartDashboard.putNumber("AlignWhileDriving:lateralOffset", lateralOffset); 	
+      }
     }
     
 	SmartDashboard.putNumber("AlignWhileDriving:lateralOutput", lateralOutput);
