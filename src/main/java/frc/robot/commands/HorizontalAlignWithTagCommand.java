@@ -9,6 +9,7 @@ import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.SquareInputsFilter;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.util.EntechUtils;
 
 /**
  * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -22,7 +23,7 @@ import frc.robot.subsystems.LEDSubsystem;
 public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
     private static final double LATERAL_P_GAIN = 1.0;
-    private static final double LATERAL_I_GAIN = 0.000;	
+    private static final double LATERAL_I_GAIN = 0.001;	
     private static final double LATERAL_D_GAIN = 0.00;
 
 
@@ -32,7 +33,6 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
     protected final LateralOffsetSupplier lateralOffsetSupplier;
     protected final Supplier<DriveInput> operatorInput;
     private RobotLateralPIDController lateralPid;
-    private double yawSetPoint;
     private JoystickDeadbandFilter jsDeadbandFilter;
     private SquareInputsFilter squareInputsFilter;
     
@@ -67,8 +67,9 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         lateralPid.setSetpoint(0);        
         lateralPid.reset();
 
-    	//lets hold it whereever we started
-        drive.setHoldYawAngle(operatorInput.get().getYawAngleDegrees());
+        //enable after making sure lateral works
+        //double nearestPerpendicularYawAngle = EntechUtils.nearestPerpendicularYawAngle(operatorInput.get().getYawAngleDegrees());
+        //drive.setHoldYawAngle(nearestPerpendicularYawAngle);
     }
 
     @Override
@@ -79,12 +80,14 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
         newDi = jsDeadbandFilter.filter(newDi);
         newDi = squareInputsFilter.filter(newDi);
         
-        double lateralOutput = 0.0;
+        double lateralOffsetInput = 0.0;
+        
         if (lateralOffsetSupplier.getLateralOffset().isPresent()) {
-        	double lateralOffset = lateralOffsetSupplier.getLateralOffset().get();        	
-        	lateralOutput = lateralPid.calculate(lateralOffset);
-        	
+        	lateralOffsetInput = lateralOffsetSupplier.getLateralOffset().get();        	        	
         }
+        
+        //must calculate in every loop with built-in PID controller
+        double lateralOutput = lateralPid.calculate(lateralOffsetInput);
         newDi.setRight(lateralOutput);
         drive.driveFilterYawOnly(newDi);
     }
