@@ -95,7 +95,7 @@ public class TestSparkMaxPositionController {
 		sm.requestPosition(REQUESTED_POSITION);
 		sm.update();
 		
-		assertPositionAndState(sm,0,HomingState.FINDING_LIMIT);
+		assertPositionAndState(sm,0,HomingState.MOVING_OUT);
 		
 		//positive motor speed, opposite from the usual direction
 		verify(mockMotor2, Mockito.atLeastOnce()).set(HOMING_SPEED);				
@@ -103,7 +103,7 @@ public class TestSparkMaxPositionController {
 		//lowerLimit should do nothing, since they are reversed
 		fakeLowerLimit.setPressed(true);
 		sm.update();
-		assertEquals(HomingState.FINDING_LIMIT, sm.getMotionState());
+		assertEquals(HomingState.MOVING_OUT, sm.getMotionState());
 		
 		//upperLimit should trigger home
 		fakeUpperLimit.setPressed(true);
@@ -124,7 +124,7 @@ public class TestSparkMaxPositionController {
 	public void testUsingSpeedControlInvalidatesRequestedPosition() {
 		c.requestPosition(REQUESTED_POSITION);
 		c.update();
-		assertPositionAndState(c,0,HomingState.FINDING_LIMIT);
+		assertPositionAndState(c,0,HomingState.MOVING_OUT);
 		fakeLowerLimit.setPressed(true);
 		c.update();
 		c.update();
@@ -148,7 +148,7 @@ public class TestSparkMaxPositionController {
 		assertPositionAndState(c,0,HomingState.UNINITIALIZED);
 		c.requestPosition(UPPER_LIMIT + UPPER_LIMIT);
 		c.update();
-		assertPositionAndState(c,0.0,HomingState.FINDING_LIMIT);
+		assertPositionAndState(c,0.0,HomingState.MOVING_OUT);
         // TODO More mock action needed here.
 	}	
 	
@@ -164,13 +164,13 @@ public class TestSparkMaxPositionController {
 		verify(mockMotor).set(0);
 		verify(mockMotor).set(-HOMING_SPEED);
 		
-		assertEquals(HomingState.FINDING_LIMIT, c.getMotionState());
+		assertEquals(HomingState.MOVING_OUT, c.getMotionState());
 		
 		assertFalse(c.isAtLowerLimit());
 		assertFalse(c.isAtUpperLimit());
 		c.update();
 		c.update();
-		assertEquals(HomingState.FINDING_LIMIT, c.getMotionState());
+		assertEquals(HomingState.MOVING_OUT, c.getMotionState());
 		
 		
 		fakeLowerLimit.setPressed(true); 

@@ -10,6 +10,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
+import frc.robot.util.Counter;
 import frc.robot.util.EntechUtils;
 
 /**
@@ -35,9 +36,10 @@ import frc.robot.util.EntechUtils;
  */
 public class SparkMaxPositionController implements Sendable, PositionController {
 
-	public enum HomingState { FINDING_LIMIT, HOMED, UNINITIALIZED }
+	public enum HomingState { UNINITIALIZED, MOVING_OUT, FINDING_LIMIT, HOMED  }
 	
-	public static final int CAN_TIMEOUT_MILLIS = 1000;	
+	public static final int CAN_TIMEOUT_MILLIS = 1000;
+	public static final int MOVE_OUT_COUNTS = 10;  //200ms 
 	protected CANSparkMax spark;
 	private HomingState axisState = HomingState.UNINITIALIZED;
 	
@@ -47,6 +49,7 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     private Optional<Double> requestedPosition = Optional.empty();
     private SparkMaxLimitSwitch upperLimit;    
     private boolean speedMode = false;
+    private Counter movingOutCounter = new Counter(MOVE_OUT_COUNTS);
     
 	public SparkMaxPositionController (CANSparkMax spark,  PositionControllerConfig config, SparkMaxLimitSwitch lowerLimit, 
 			SparkMaxLimitSwitch upperLimit, RelativeEncoder encoder) {
@@ -202,36 +205,36 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     
 
 	@Override
-	public void update() {	 
+	public void update() {	
+		 checkArrivedHome();
       	 switch ( axisState) {
       		 case UNINITIALIZED:
-      			 if ( isAtLowerLimit() ) {
-      				arrivedHome();
-      			 }      			 
       			 break;
       		 case FINDING_LIMIT:
       			 speedMode = true;
-      			 if ( isAtLowerLimit() ) {
-      				arrivedHome();
-      			 }
-      			 else {
-      				setMotorSpeedInternal(-config.getHomingSpeedPercent());
-      			 }
+     			 setMotorSpeedInternal(-config.getHomingSpeedPercent());
       			 break;
       		 case HOMED:
       			 updateRequestedPosition();
-				 if ( isAtLowerLimit() ) {
-				 	setEncoder(config.getMinPosition());
-				 }
-  	    }
+			 case MOVING_OUT:
+				movingOutCounter.up();
+				if ( movingOutCounter.atOrAboveTarget()) {
+					axisState = HomingState.FINDING_LIMIT;
+				}
+				break;
+			 default:
+			 	break;
+	  	     }
 
   	}
   	
-    private void arrivedHome() {
-		setMotorSpeedInternal(0);
-		setEncoder(config.getMinPosition());	
-		axisState = HomingState.HOMED;   
-		speedMode = false;
+    private void checkArrivedHome() {
+    	if ( isAtLowerLimit() ) {
+    		setMotorSpeedInternal(0);
+    		setEncoder(config.getMinPosition());	
+    		axisState = HomingState.HOMED;   
+    		speedMode = false;    		
+    	}
     }
  
     private double correctDirection(double input) {
@@ -253,7 +256,8 @@ public class SparkMaxPositionController implements Sendable, PositionController 
     private void startHoming() {
     	//if we are already on the limit switch, we'll get homed in the next update loop
     	setMotorSpeedInternal(-config.getHomingSpeedPercent());
-    	axisState = HomingState.FINDING_LIMIT;	    
+    	axisState = HomingState.MOVING_OUT;
+    	movingOutCounter.reset();
     }
     
     private void updateRequestedPosition() {
