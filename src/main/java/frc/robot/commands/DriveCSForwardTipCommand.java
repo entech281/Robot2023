@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
@@ -72,12 +73,16 @@ public class DriveCSForwardTipCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double pitch = Math.abs(navx.getPitch());
-    if (pitch_seen && (pitch < last_pitch)) {
-        return true;
+    if (pitch_seen) {
+        DriverStation.reportWarning("END:" + this, false);
     }
-    last_pitch = pitch;
-    return false;
+    return pitch_seen;
+    // double pitch = Math.abs(navx.getPitch());
+    // if (pitch_seen && (pitch < last_pitch)) {
+    //     return true;
+    // }
+    // last_pitch = pitch;
+    // return false;
   }
 
   // Returns true if this command should run when robot is disabled.

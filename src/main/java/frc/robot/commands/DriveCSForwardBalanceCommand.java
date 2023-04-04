@@ -90,10 +90,9 @@ public class DriveCSForwardBalanceCommand extends EntechCommandBase {
         brake.setBrakeState(BrakeState.kDeploy);
         pitch_stable_count += 1;
     } else {
-        pitch_stable_count = 0;
-        DriveInput di=new DriveInput(speed,0.0,0.0, 0.0);
         brake.setBrakeState(BrakeState.kRetract);
-        di.setForward(Math.copySign(this.speed, pitch_angle));
+        pitch_stable_count = 0;
+        DriveInput di=new DriveInput(Math.copySign(this.speed, pitch_angle),0.0,0.0, 0.0);
         drive.drive(di);
     }
   }
@@ -113,7 +112,11 @@ public class DriveCSForwardBalanceCommand extends EntechCommandBase {
       DriverStation.reportWarning("AUTONOMOUS ENDING: DEPLOY BRAKE",false);
       return true;
     }
-    return pitch_stable_count > RobotConstants.BALANCE_PARAMETERS.BALANCE_STABLE_COUNT;
+    if (pitch_stable_count > RobotConstants.BALANCE_PARAMETERS.BALANCE_STABLE_COUNT) {
+        DriverStation.reportWarning("END:" + this,false);
+        return true;
+    }
+    return false;
   }
 
   // Returns true if this command should run when robot is disabled.

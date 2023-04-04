@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
@@ -19,6 +20,7 @@ public class DriveCSForwardDockCommand extends EntechCommandBase {
   private final NavXSubSystem navx;
   private double start_speed = 0.0;
   private double end_speed = 0.0;
+  private double startDistance;
 
   /**
    * Creates a new DriveCSForwardDockCommand.
@@ -55,13 +57,14 @@ public class DriveCSForwardDockCommand extends EntechCommandBase {
   @Override
   public void initialize() {
     drive.resetEncoders();
+    startDistance = drive.getAverageDistanceMeters();
+    startDistance = 0.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    double s = calculateSpeed(drive.getAverageDistanceMeters(), RobotConstants.BALANCE_PARAMETERS.DOCK_DISTANCE, start_speed, end_speed);
+    double s = calculateSpeed(Math.abs(drive.getAverageDistanceMeters()-startDistance), RobotConstants.BALANCE_PARAMETERS.DOCK_DISTANCE, start_speed, end_speed);
     DriveInput di=new DriveInput(s,0.0,0.0, navx.getYawAngleDegrees());
     drive.driveFilterYawRobotRelative(di);
   }
@@ -79,7 +82,11 @@ public class DriveCSForwardDockCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return (drive.getAverageDistanceMeters() > RobotConstants.BALANCE_PARAMETERS.DOCK_DISTANCE);
+    if (Math.abs(drive.getAverageDistanceMeters()-startDistance) > RobotConstants.BALANCE_PARAMETERS.DOCK_DISTANCE) {
+        DriverStation.reportWarning("END:" + this, false);
+        return true;
+    }
+      return false;
   }
 
   // Returns true if this command should run when robot is disabled.
