@@ -21,6 +21,7 @@ import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.util.Counter;
 
 
 /**
@@ -35,11 +36,9 @@ import frc.robot.subsystems.VisionSubsystem;
 public class RobotContext {
 	
 	public static final int NUM_SAMPLES = 3;
-    public static final double ALIGN_TOLERANCE_METERS = 0.08;
-    public static final double ALIGN_CLOSE_METERS = 0.3;
-    public static final double ALIGN_KINDA_CLOSE_METERS = 0.8;
-    
-	
+    public static final double ALIGN_TOLERANCE_INCHES = 4.0;
+    public static final int MISSING_ESTIMATES_TO_TRIGGER_NO_TAG = 5;
+    private Counter missingPoseEstimateCounter = new Counter ( MISSING_ESTIMATES_TO_TRIGGER_NO_TAG);
 	private LateralAlignCalculator lateralAlignCalculator = new LateralAlignCalculator();
 	private MovingAveragePose movingAveragePose = new MovingAveragePose(NUM_SAMPLES);
 	private LinearFilter movingAverageY = LinearFilter.movingAverage(NUM_SAMPLES);
@@ -71,8 +70,6 @@ public class RobotContext {
     	
     	//pollSubsystems
     	VisionStatus vs =visionSubsystem.getStatus();
-    	NavxStatus ns = navXSubSystem.getStatus();
-    	DriveStatus ds = driveSubsystem.getStatus();
     	
     	robotState.yawAngleDegrees = navXSubSystem.getYaw();
     	robotState.cameraY = vs.getCameraY();
@@ -92,12 +89,16 @@ public class RobotContext {
     		setAlignState ( getAlignColor(lateralOffset)); 		
     		robotState.realLateralOffset = lateralOffset.getLateralOffsetToLocationMeters();
     		
-    		if ( capSpeedIfTooCloseToTag(pep,lateralOffset)) {
+    		if (elbow.getActualPosition() > RobotConstants.ELBOW.POSITION_PRESETS.SAFE_ANGLE) {
     			maxSpeed = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
-    		};    		
+    		};
+    		missingPoseEstimateCounter.reset();
     	}
     	else {
-    		setAlignState(Color.kRed);
+    		missingPoseEstimateCounter.up();
+    		if ( missingPoseEstimateCounter.atOrAboveTarget()) {
+    			setAlignState(Color.kRed);
+    		}
     	}
     	driveSubsystem.setMaxSpeedPercent(maxSpeed);
     }   
@@ -106,43 +107,17 @@ public class RobotContext {
 		ledSubsystem.setColor(c);
 		robotState.alignState = c;      	
     }
-    private boolean capSpeedIfTooCloseToTag(Pose2d currentRobotPose, LateralOffset lateralOffset) {
-    	// driveSubsystem.clearSpeedLimit(); //clear speed as default
-		// Pose2d tagPose = lateralOffset.getNearestLocation().computeAbsolutePose();
-		// double distanceFromTagMeters = Math.abs(tagPose.getX() - currentRobotPose.getX());
-		// double MAX_SPEED_WHEN_TAG_CLOSE = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
-		// double armProjectionMeters = RobotConstants.ARM.MAX_EXTENSION_METERS * Math.sin(Units.degreesToRadians(elbow.getActualPosition()));
-		
-		// if ( (distanceFromTagMeters < (RobotConstants.ALIGNMENT.TAG_DISTANCE_TO_REDUCE_SPEED) + armProjectionMeters) ) {
-		// 		driveSubsystem.setMaxSpeedPercent(RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT);
-		// 		DriverStation.reportWarning(
-		// 				String.format("Forward Speed Reduced to %.2f : tag within %.2f meters.",MAX_SPEED_WHEN_TAG_CLOSE,distanceFromTagMeters),
-		// 		false);
-		// }    
-		if (elbow.getActualPosition() > RobotConstants.ELBOW.POSITION_PRESETS.SAFE_ANGLE) {
-			DriverStation.reportWarning(
-					String.format("Forward Speed Reduced to %.2f", RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT),
-			false);			
-			return true;
-		} else {
-			return false;
-		}
-    }
     
     private Color getAlignColor(LateralOffset offset) {
     	double absOffset = Math.abs(offset.getLateralOffsetToLocationMeters());
-    	ScoringLocation scoringLocation = offset.getNearestLocation();
-    	if ( absOffset < scoringLocation.getAlignmentToleranceMeters()) {
+
+    	if ( absOffset < Units.inchesToMeters(ALIGN_TOLERANCE_INCHES)) {
     		return Color.kGreen;
     	}
-    	else if ( absOffset < scoringLocation.getAlignmentToleranceMeters() + RobotConstants.ALIGNMENT.ALIGN_CLOSE_WINDOW_METERS) {
+    	else {
     		return Color.kBlue;
     	}
-    	else {
-    		return Color.kOrange;
-    	}
     }
-
 
     private RobotState robotState;
 	private DriveSubsystem driveSubsystem;

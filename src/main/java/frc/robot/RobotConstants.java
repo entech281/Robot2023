@@ -47,9 +47,9 @@ public final class RobotConstants {
         	//public static final double FORWARD_OF_CENTER_METERS = 0.38;
             //public static final double CAMERA_YAW_RADIANS = 0;
             //public static final double CAMERA_PITCH_RADIANS = 0.278986;
-        	public static final double UP_METERS = 0.486;
-        	public static final double LEFT_OF_CENTER_METERS = 0.0;
-        	public static final double FORWARD_OF_CENTER_METERS = 0.406;
+        	public static final double UP_METERS = 0.466;
+        	public static final double LEFT_OF_CENTER_METERS = -0.0;
+        	public static final double FORWARD_OF_CENTER_METERS = 0.05;
             public static final double CAMERA_YAW_RADIANS = 0;
             public static final double CAMERA_PITCH_RADIANS = 0.0;        	
         }
@@ -119,7 +119,7 @@ public final class RobotConstants {
     	public interface POSITION_PRESETS{
     		  public static final double MIN_POSITION_DEGREES = 18.0;    		
     		  public static double CARRY_DEGREES = 20.0;
-    		  public static double SAFE_ANGLE = 30.0;  
+    		  public static double SAFE_ANGLE = 35.0;  
     		  public static double SCORE_LOW_DEGREES = 43.0;
     		  public static double SCORE_MIDDLE_DEGREES = 79.0;
     		  public static double LOAD_STATION_DEGREES = 74.0;
@@ -142,8 +142,8 @@ public final class RobotConstants {
         //public static final double ALIGN_KINDA_CLOSE_METERS = 0.15;
         
         //tolerances are vs nominal, so the 'windows' is 2x this value
-        public static final double CUBE_TOLERANCE_METERS = Units.inchesToMeters(4.0);
-        public static final double CONE_TOLERANCE_METERS = Units.inchesToMeters(1.0);
+        public static final double CUBE_TOLERANCE_METERS = Units.inchesToMeters(5.0);
+        public static final double CONE_TOLERANCE_METERS = Units.inchesToMeters(2.0);
         public static final double LOADING_TOLERANCE_METERS = Units.inchesToMeters(8.0);
         public static final double TAG_DISTANCE_TO_REDUCE_SPEED = Units.inchesToMeters(24);
     }

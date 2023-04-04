@@ -142,7 +142,6 @@ public class VisionSubsystem extends EntechSubsystem {
 
 		    PhotonTrackedTarget bestTarget = result.getBestTarget();
 		    if ( bestTarget != null ) {
-		    	SmartDashboard.putNumber("CAMERAY", bestTarget.getBestCameraToTarget().getY());
 		    	newStatus.setCameraY(bestTarget.getBestCameraToTarget().getY());
 		    	newStatus.setBestTarget(createRecognizedTarget(bestTarget));
 		    	lastPhotonYawAngle = bestTarget.getYaw();
