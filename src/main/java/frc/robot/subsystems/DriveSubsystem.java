@@ -50,13 +50,12 @@ public class DriveSubsystem extends EntechSubsystem {
     private RelativeEncoder rearLeftEncoder;
     private RelativeEncoder frontRightEncoder;
     private RelativeEncoder rearRightEncoder;
-
     private CANSparkMax frontLeftSparkMax;
     private CANSparkMax rearLeftSparkMax;
     private CANSparkMax frontRightSparkMax;
     private CANSparkMax rearRightSparkMax;
     private MecanumDrive robotDrive;
-
+    private double referenceAvgPosition = 0.0;
     private DriveMode currentDriveMode;
 
     private static final int COUNTER_RESET = 6;
@@ -92,7 +91,7 @@ public class DriveSubsystem extends EntechSubsystem {
         rearLeftEncoder = rearLeftSparkMax.getEncoder();
         frontRightEncoder = frontRightSparkMax.getEncoder();
         rearRightEncoder = rearRightSparkMax.getEncoder();
-
+        
         currentDriveMode = DriveMode.BRAKE;
         setBrakeMode();
 
@@ -124,7 +123,7 @@ public class DriveSubsystem extends EntechSubsystem {
         SmartDashboard.putNumber("Front Right SparkMax", frontRightSparkMax.get());
         SmartDashboard.putNumber("Back Left SparkMax", rearLeftSparkMax.get());
         SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.get());
-        SmartDashboard.putNumber("Average Position", getAveragePosition());
+        SmartDashboard.putNumber("Average Position", getAverageDistanceMeters());
         SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
         SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
         SmartDashboard.putBoolean("Brake Mode", isBrakeMode());
@@ -301,23 +300,28 @@ public class DriveSubsystem extends EntechSubsystem {
 	    return true;
     }
     public void resetEncoders() {
+
         frontLeftEncoder.setPosition(0);
         rearLeftEncoder.setPosition(0);
         frontRightEncoder.setPosition(0);
         rearRightEncoder.setPosition(0);
+        
+        //This approach is simpler than referencing each individual encoder.
+        //normally that's not ok, but in this case, it is safe because we dont expose the individual encoders anywhere
+    	referenceAvgPosition = getAveragePosition();        
     }
 
     /**
      *
      * @return average motor revolutions for the 4 motors
      */
-    public double getAveragePosition() {
+    private double getAveragePosition() {
         double position = 0;
         position += frontLeftEncoder.getPosition();
         position += rearLeftEncoder.getPosition();
         position += frontRightEncoder.getPosition();
         position += rearRightEncoder.getPosition();
-        return position / 4;
+        return (position / 4.0) - referenceAvgPosition;
     }
 
     public double getAverageDistanceMeters() {

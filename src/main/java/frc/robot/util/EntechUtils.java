@@ -27,6 +27,13 @@ public final class EntechUtils {
         return value;
     }
 
+    public static double nearestPerpendicularYawAngle(double inputAngle ) {
+        if (Math.abs(inputAngle) < 90.0) {
+            return 0.0;
+        } else {
+            return 180.0;
+        }    	
+    }
     /**
      * Take an angle and return its value between -180 and +180 degrees
      * @param angle in degrees
