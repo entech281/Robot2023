@@ -58,10 +58,10 @@ public class DriveSubsystem extends EntechSubsystem {
     private MecanumDrive robotDrive;
 
     private DriveMode currentDriveMode;
-    
+
     private static final int COUNTER_RESET = 6;
     private int holdYawSetPointCounter = COUNTER_RESET;
-  
+
     public DriveSubsystem() {
     }
 
@@ -81,11 +81,11 @@ public class DriveSubsystem extends EntechSubsystem {
         rearLeftSparkMax.setInverted(false);
         frontRightSparkMax.setInverted(true);
         rearRightSparkMax.setInverted(true);
-    
+
         // frontLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
         // rearLeftSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
         // frontRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
-        // rearRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);    
+        // rearRightSparkMax.setSmartCurrentLimit(RobotConstants.DRIVE.CURRENT_LIMIT_AMPS);
 
 
         frontLeftEncoder = frontLeftSparkMax.getEncoder();
@@ -102,7 +102,7 @@ public class DriveSubsystem extends EntechSubsystem {
 
         jsSquareInputsFilter = new SquareInputsFilter();
         jsSquareInputsFilter.enable(true);
-        
+
         robotRelativeFilter = new RobotRelativeDriveFilter();
         yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
         setFieldAbsolute(RobotConstants.DRIVE.DEFAULT_FIELD_ABSOLUTE);
@@ -112,10 +112,10 @@ public class DriveSubsystem extends EntechSubsystem {
 
         yawHoldFilter = new HoldYawFilter();
         yawHoldFilter.enable(true);
-        
+
         speedLimitFilter = new ForwardSpeedLimitFilter();
         speedLimitFilter.enable(true);
-        
+
     }
 
     @Override
@@ -138,11 +138,11 @@ public class DriveSubsystem extends EntechSubsystem {
     public void clearSpeedLimit() {
     	speedLimitFilter.setMaxSpeedPercent(1.0);
     }
-    
+
     public void drive(DriveInput di) {
         robotDrive.driveCartesian(di.getForward(), di.getRight(), di.getRotation(), Rotation2d.fromDegrees(di.getYawAngleDegrees()));
     }
-  
+
     public void driveFilterYawOnly(DriveInput di) {
 
         if ( ! yawHoldFilter.isSetpointValid() ) {
@@ -172,7 +172,7 @@ public class DriveSubsystem extends EntechSubsystem {
         // printDI("DI(1):",filtered);
         filtered = jsSquareInputsFilter.filter(filtered);
         // printDI("DI(2):",filtered);
-    	
+
     	if (isRotationEnabled()) {
             // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
             // We run the holdyaw filter just to get the dashboard updated.
@@ -191,7 +191,7 @@ public class DriveSubsystem extends EntechSubsystem {
                 // printDI("DI(4)",filtered);
             }
     	}
-        
+
     	if (isFieldAbsolute()) {
             filtered = yawAngleCorrectionFilter.filter(filtered);
             // printDI("DI(5)",filtered);
@@ -199,9 +199,9 @@ public class DriveSubsystem extends EntechSubsystem {
     		filtered = robotRelativeFilter.filter(filtered);
             // printDI("DI(6)",filtered);
         }
-    	
+
     	filtered = speedLimitFilter.filter(filtered);
-    	
+
         // printDI("DI(7)",filtered);
         drive(filtered);
     }
@@ -280,14 +280,14 @@ public class DriveSubsystem extends EntechSubsystem {
   	    builder.setSmartDashboardType(getName());
   	    builder.addDoubleProperty("FrontLeft", () -> { return frontLeftEncoder.getPosition();} , null);
   	    builder.addDoubleProperty("FrontRight", () -> { return frontRightEncoder.getPosition();} , null);
-  	    builder.addDoubleProperty("RearLeft", () -> { return rearLeftEncoder.getPosition();} , null);  	    
+  	    builder.addDoubleProperty("RearLeft", () -> { return rearLeftEncoder.getPosition();} , null);
   	    builder.addDoubleProperty("RearRight", () -> { return rearRightEncoder.getPosition();} , null);
         builder.addBooleanProperty("Field Absolute", this::isFieldAbsolute, null);
         builder.addBooleanProperty("Rotation Allowed", this::isRotationEnabled, null);
         builder.addBooleanProperty("Brake Mode", this::isBrakeMode, null);
         builder.addStringProperty("Command", this::getCurrentCommandName, null);
     }
-  
+
 	public String getCurrentCommandName() {
 		if ( this.getCurrentCommand() != null ) {
 			return this.getCurrentCommand().getName();
@@ -308,7 +308,7 @@ public class DriveSubsystem extends EntechSubsystem {
     }
 
     /**
-     * 
+     *
      * @return average motor revolutions for the 4 motors
      */
     public double getAveragePosition() {
@@ -340,7 +340,7 @@ public class DriveSubsystem extends EntechSubsystem {
 	}
 	public boolean isFieldRelative() {
 		return robotRelativeFilter.isEnabled();
-	}	
+	}
 	public void toggleFieldAbsolute() {
 		setFieldAbsolute( ! isFieldAbsolute() );
 	}
@@ -350,7 +350,7 @@ public class DriveSubsystem extends EntechSubsystem {
 	}
 	public boolean isRotationEnabled() {
 		return ! isRotationLocked();
-	}	
+	}
 	public boolean isRotationLocked() {
 		return noRotationFilter.isEnabled();
 	}

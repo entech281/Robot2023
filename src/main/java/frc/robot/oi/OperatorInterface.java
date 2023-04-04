@@ -37,7 +37,7 @@ public class OperatorInterface {
             .onFalse(commandFactory.telefrogGrabCommand());
 
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_BALANCE_FORWARD)
-            .whileTrue(commandFactory.autoDriveBalanceOnly(RobotConstants.DRIVE.BALANCE_APPROACH_SPEED,false));
+            .whileTrue(commandFactory.autoDriveBalanceOnly(RobotConstants.BALANCE_PARAMETERS.CHARGESTATION_APPROACH_SPEED,false));
 
         driveStick.button(RobotConstants.DRIVER_STICK.DEPLOY_BRAKE)
             .onTrue(commandFactory.deployBrakeCommand())
