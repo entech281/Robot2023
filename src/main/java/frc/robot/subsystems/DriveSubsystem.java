@@ -23,7 +23,6 @@ import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
 import frc.robot.filters.RobotRelativeDriveFilter;
 import frc.robot.filters.ForwardSpeedLimitFilter;
 import frc.robot.filters.SquareInputsFilter;
-import frc.robot.util.DriveEncoders;
 import frc.robot.filters.HoldYawFilter;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.NoRotationFilter;
@@ -316,7 +315,7 @@ public class DriveSubsystem extends EntechSubsystem {
      *
      * @return average motor revolutions for the 4 motors
      */
-    public double getAveragePosition() {
+    private double getAveragePosition() {
         double position = 0;
         position += frontLeftEncoder.getPosition();
         position += rearLeftEncoder.getPosition();
