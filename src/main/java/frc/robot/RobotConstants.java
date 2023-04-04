@@ -37,16 +37,21 @@ public final class RobotConstants {
             public static final int RED_RIGHT = 1;
             public static final int RED_LEFT = 3; 
         }
-        public static final String PHOTON_HOST = "OV5647";  
+        public static final String PHOTON_HOST = "Arducam_OV9281_USB_Camera";  
         public static final double MAXIMUM_2NDROW_APPROACH_ANGLE_DEGREES = 40.0;
         public static final double MAXIMUM_3RDROW_APPROACH_ANGLE_DEGREES = 8.0;
         
         public interface CAMERA_POSITION{
-        	public static final double UP_METERS = 0.15875;
-        	public static final double LEFT_OF_CENTER_METERS = 0.215;
-        	public static final double FORWARD_OF_CENTER_METERS = 0.38;
+        	//public static final double UP_METERS = 0.17875;
+        	//public static final double LEFT_OF_CENTER_METERS = 0.215;
+        	//public static final double FORWARD_OF_CENTER_METERS = 0.38;
+            //public static final double CAMERA_YAW_RADIANS = 0;
+            //public static final double CAMERA_PITCH_RADIANS = 0.278986;
+        	public static final double UP_METERS = 0.486;
+        	public static final double LEFT_OF_CENTER_METERS = 0.0;
+        	public static final double FORWARD_OF_CENTER_METERS = 0.406;
             public static final double CAMERA_YAW_RADIANS = 0;
-            public static final double CAMERA_PITCH_RADIANS = 0.278986;
+            public static final double CAMERA_PITCH_RADIANS = 0.0;        	
         }
     }
     public interface ARM{
@@ -95,7 +100,7 @@ public final class RobotConstants {
     		public static final int MAX_SPIKE_CURRENT=50;
     		public static final double COUNTS_PER_DEGREE=1.95; 
     		public static final double ELBOW_SLOWDOWN_SPEED= 0.2;
-    		public static final double MIDDLE_HIGH_CONE_DEPLOY_THRESHOLD = 82.0;
+    		public static final double MIDDLE_HIGH_CONE_DEPLOY_THRESHOLD = 83.0;
     	} 
     	public interface HOMING{
     		public static final double HOMING_SPEED_PERCENT = 0.2;
@@ -175,6 +180,7 @@ public final class RobotConstants {
         public static final int NUDGE_YAW_LEFT = 3;
         public static final int NUDGE_YAW_RIGHT = 4;
         public static final int SNAP_YAW = 5;
+        public static final int FROG_GRAB = 6;
         public static final int AUTO_BALANCE_FORWARD = 7;
         public static final int DEPLOY_BRAKE = 8;
         public static final int ZERO_GYRO_ANGLE = 9;

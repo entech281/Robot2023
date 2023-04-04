@@ -73,7 +73,7 @@ public class VisionSubsystem extends EntechSubsystem {
 	     sb.addBooleanProperty("HasBestTarget", this::hasBestTarget, null);
 	     sb.addStringProperty("Target", this::getBestTagName, null);
 		 sb.addDoubleProperty("RobotLateralOffset", this::getLateralOffset , null);
-		 sb.addDoubleProperty("CameraDistance", this::getCameraDistance , null);		 
+		 sb.addDoubleProperty("CameraDistance", this::getCameraDistance , null);	
 	 }
 	 else {
 		 sb.addBooleanProperty("Enabled", () -> { return false;} , null);

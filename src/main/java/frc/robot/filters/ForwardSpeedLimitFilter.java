@@ -12,14 +12,12 @@ public class ForwardSpeedLimitFilter extends DriveInputFilter {
 
     }
 
-
 	@Override
 	protected DriveInput doFilter(DriveInput inputDI) {
         DriveInput output = new DriveInput(inputDI);
         if ( inputDI.getForward() > 0 ) {
         	output.setForward(Math.min(maxSpeedPercent, inputDI.getForward()));
         }
-
 		return output;
 	}
 
