@@ -35,7 +35,7 @@ import frc.robot.subsystems.VisionSubsystem;
 public class RobotContext {
 	
 	public static final int NUM_SAMPLES = 3;
-    public static final double ALIGN_TOLERANCE_METERS = 0.08;
+    public static final double ALIGN_TOLERANCE_INCHES = 4.0;
     public static final double ALIGN_CLOSE_METERS = 0.3;
     public static final double ALIGN_KINDA_CLOSE_METERS = 0.8;
     
@@ -87,6 +87,7 @@ public class RobotContext {
     		movingAveragePose.update(pep);
     		robotState.estimatedPose = Optional.of(movingAveragePose.getMovingAverage());
     		LateralOffset lateralOffset = lateralAlignCalculator.findOffsetToNearestTarget(movingAveragePose.getX(), movingAveragePose.getY());
+    		//LateralOffset lateralOffset = lateralAlignCalculator.findOffsetToNearestTarget(pep.getX(), pep.getY());
     		robotState.closestScoringLocationOffset = Optional.of(lateralOffset);
 
     		setAlignState ( getAlignColor(lateralOffset)); 		
@@ -96,9 +97,9 @@ public class RobotContext {
     			maxSpeed = RobotConstants.DRIVE.SPEED_LIMIT_WITH_ARM_OUT;
     		};    		
     	}
-    	else {
-    		setAlignState(Color.kRed);
-    	}
+//    	else {
+//    		setAlignState(Color.kRed);
+//    	}
     	driveSubsystem.setMaxSpeedPercent(maxSpeed);
     }   
 
@@ -132,14 +133,15 @@ public class RobotContext {
     private Color getAlignColor(LateralOffset offset) {
     	double absOffset = Math.abs(offset.getLateralOffsetToLocationMeters());
     	ScoringLocation scoringLocation = offset.getNearestLocation();
-    	if ( absOffset < scoringLocation.getAlignmentToleranceMeters()) {
+    	//if ( absOffset < scoringLocation.getAlignmentToleranceMeters()) {
+    	if ( absOffset < Units.inchesToMeters(ALIGN_TOLERANCE_INCHES)) {
     		return Color.kGreen;
     	}
-    	else if ( absOffset < scoringLocation.getAlignmentToleranceMeters() + RobotConstants.ALIGNMENT.ALIGN_CLOSE_WINDOW_METERS) {
-    		return Color.kBlue;
-    	}
+//    	else if ( absOffset < scoringLocation.getAlignmentToleranceMeters() + RobotConstants.ALIGNMENT.ALIGN_CLOSE_WINDOW_METERS) {
+//    		return Color.kBlue;
+//    	}
     	else {
-    		return Color.kOrange;
+    		return Color.kBlue;
     	}
     }
 
