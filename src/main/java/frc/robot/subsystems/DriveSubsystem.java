@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -76,6 +77,7 @@ public class DriveSubsystem extends EntechSubsystem {
         rearRightSparkMax  = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
         robotDrive         = new MecanumDrive(frontLeftSparkMax, rearLeftSparkMax, frontRightSparkMax, rearRightSparkMax);
 
+        
         frontLeftSparkMax.setInverted(false);
         rearLeftSparkMax.setInverted(false);
         frontRightSparkMax.setInverted(true);
@@ -119,10 +121,11 @@ public class DriveSubsystem extends EntechSubsystem {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Front Left SparkMax", frontLeftSparkMax.get());
-        SmartDashboard.putNumber("Front Right SparkMax", frontRightSparkMax.get());
-        SmartDashboard.putNumber("Back Left SparkMax", rearLeftSparkMax.get());
-        SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.get());
+        SmartDashboard.putNumber("Front Left SparkMax", frontLeftSparkMax.getEncoder().getPosition());
+        SmartDashboard.putNumber("Front Right SparkMax", frontRightSparkMax.getEncoder().getPosition());
+        SmartDashboard.putNumber("Back Left SparkMax", rearLeftSparkMax.getEncoder().getPosition());
+        SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.getEncoder().getPosition());
+        
         SmartDashboard.putNumber("Average Position", getAverageDistanceMeters());
         SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
         SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
@@ -299,16 +302,27 @@ public class DriveSubsystem extends EntechSubsystem {
     public boolean isEnabled() {
 	    return true;
     }
-    public void resetEncoders() {
+    public void initEncoders() {
 
-        frontLeftEncoder.setPosition(0);
-        rearLeftEncoder.setPosition(0);
-        frontRightEncoder.setPosition(0);
-        rearRightEncoder.setPosition(0);
-        
+        referenceAvgPosition = getAveragePosition();
+            	
+    }
+    public void resetEncoders() {
         //This approach is simpler than referencing each individual encoder.
         //normally that's not ok, but in this case, it is safe because we dont expose the individual encoders anywhere
-    	referenceAvgPosition = getAveragePosition();        
+    	//referenceAvgPosition = getAveragePosition();        
+    	trySetSparkMaxPosition(frontLeftEncoder,0);
+    	trySetSparkMaxPosition(frontLeftEncoder,0);
+    	trySetSparkMaxPosition(rearLeftEncoder,0);
+    	trySetSparkMaxPosition(frontRightEncoder,0);
+    	trySetSparkMaxPosition(rearRightEncoder,0);    	
+    }
+    
+    private void trySetSparkMaxPosition(RelativeEncoder encoder, double pos) {
+    	REVLibError re = encoder.setPosition(pos);
+    	if ( re != REVLibError.kOk) {
+    		throw new RuntimeException("Error setting Spark Posittion: " + re);
+    	}
     }
 
     /**
@@ -317,11 +331,16 @@ public class DriveSubsystem extends EntechSubsystem {
      */
     private double getAveragePosition() {
         double position = 0;
+
         position += frontLeftEncoder.getPosition();
         position += rearLeftEncoder.getPosition();
         position += frontRightEncoder.getPosition();
         position += rearRightEncoder.getPosition();
-        return (position / 4.0) - referenceAvgPosition;
+        //double p =  (position / 4.0) - referenceAvgPosition;
+
+        double p = position/4.0;
+        //DriverStation.reportWarning("AveragePosition:" + p, false);        
+        return p;
     }
 
     public double getAverageDistanceMeters() {

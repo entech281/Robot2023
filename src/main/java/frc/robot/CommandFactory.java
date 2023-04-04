@@ -153,33 +153,44 @@ public class CommandFactory {
     private SequentialCommandGroup autoWideConeThenGetCone() {
         double MOVE_DISTANCE_METERS = -4.05;
 
-        SequentialCommandGroup sg =  new SequentialCommandGroup(
-            autonomousSetup()
-            , autonomousArmHigh()
-    		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
-            , autonomousArmSafe()
-            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.2, 0.35, navxSubsystem)
-            , new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, getAutoConePickupTurnAngle())
-            , autofrogGrabCommand()
-            , new FlipDirectionCommand(driveSubsystem, navxSubsystem)
-            , new ParallelCommandGroup(
+        SequentialCommandGroup sg =  new SequentialCommandGroup();
+            sg.addCommands(autonomousSetup());
+            sg.addCommands( autonomousArmHigh());          
+    		sg.addCommands( new ConeDeployCommand(elbowSubsystem, gripperSubsystem));
+    		sg.addCommands( autonomousArmSafe());
+    		sg.addCommands( new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.2, 0.35, navxSubsystem));
+    		sg.addCommands( new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, getAutoConePickupTurnAngle()));
+    		sg.addCommands( autofrogGrabCommand());
+    		sg.addCommands( new FlipDirectionCommand(driveSubsystem, navxSubsystem));
+    		sg.addCommands( new ParallelCommandGroup(
                 new DriveDistanceStraightCommand(driveSubsystem, 4.26, 0.6, 0.2, 0.35, navxSubsystem)
                 , new SequentialCommandGroup(
                 	//this is essentially middle position, but up a bit
                     new PositionElbowCommand(elbowSubsystem, 82, true),
                     new PositionTelescopeCommand(armSubsystem, 0.175, true)
                 )
-            )
-            , new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem)  //this shouldnt be needed! redundant with FlipDirectionCommand above
+            ));
+    		sg.addCommands( new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem));  //this shouldnt be needed! redundant with FlipDirectionCommand above
             //this will let us try to align with the location on the way
             //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 0.3, 0.25, navxSubsystem, robotState, 
             //		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())
-            , new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem)  //shouldnt be needed-- we should already be all the way back?
-        );
+            sg.addCommands( new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem));  //shouldnt be needed-- we should already be all the way back?
+        //);
         sg.setName("ConeWide,GetCone");
         return sg;
     }
 
+    public Command testDriveDistanceWeirdness() {
+    	SequentialCommandGroup sg = new SequentialCommandGroup(
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem),
+    			new WaitCommand(1.0),
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem),
+    			new WaitCommand(1.0),
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem)
+    			);
+        sg.setName("TestWeirdness");
+        return sg;
+    }
     private double getAutoConePickupTurnAngle() {
         if ( DriverStation.getAlliance() == Alliance.Red) {
         	return -140.0;
@@ -192,6 +203,7 @@ public class CommandFactory {
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
     	return List.of (
+    	    testDriveDistanceWeirdness(),
 			highScoringElbowCommand(),
 			middleScoringElbowCommand(),
 			groundScoringElbowCommand(),

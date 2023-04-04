@@ -12,7 +12,7 @@ import frc.robot.subsystems.DriveSubsystem.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveDistanceStraightCommand extends EntechCommandBase {
-  private static final int STOPPING_COUNT = 4;
+  private static final int STOPPING_COUNT = 5;
   private double speed;
   private double minSpeed;
   private double rampFraction;
@@ -77,8 +77,16 @@ public class DriveDistanceStraightCommand extends EntechCommandBase {
   // Called once the command ends or is interrupted
   @Override
   public void end(boolean interrupted) {
-    DriverStation.reportWarning("END"+this, false);
-    DriverStation.reportWarning("Encoder average meters: " + drive.getAverageDistanceMeters() + this, false);
+	if ( interrupted ) {
+	    DriverStation.reportWarning("END"+this, false);
+	    DriverStation.reportWarning("Interrupted: Encoder average meters: " + drive.getAverageDistanceMeters() + this, false);		
+		
+	}
+	else {
+	    DriverStation.reportWarning("END"+this, false);
+	    DriverStation.reportWarning("Finished: Encoder average meters: " + drive.getAverageDistanceMeters() + this, false);		
+	}
+
     drive.stop();
     drive.setDriveMode(DriveMode.BRAKE);
   }
@@ -90,7 +98,13 @@ public class DriveDistanceStraightCommand extends EntechCommandBase {
     if (exeCounter < STOPPING_COUNT) {
       return false;
     }
-    return Math.abs(drive.getAverageDistanceMeters()) >= Math.abs(desiredDistanceMeters);
+    //double dist = Math.abs(drive.getAverageDistanceMeters()) >= Math.abs(desiredDistanceMeters);
+    
+    boolean ended =  Math.abs(drive.getAverageDistanceMeters()) >= Math.abs(desiredDistanceMeters);
+    if ( ended ) {
+    	DriverStation.reportWarning("Ending, avg dist=" + drive.getAverageDistanceMeters()+  "desired=" + desiredDistanceMeters , false);
+    }
+    return ended;
   }
 
   // Returns true if this command should run when robot is disabled.

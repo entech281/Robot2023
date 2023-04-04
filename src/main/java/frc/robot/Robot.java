@@ -90,6 +90,7 @@ public class Robot extends TimedRobot {
 	Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
 	c.enableDigital();
 	navx.zeroYaw();
+	drive.initEncoders();
 	
     // Enable telematics of the SmartDashboard data.  Joystick data is currently true
     DataLogManager.start();
@@ -109,22 +110,22 @@ public class Robot extends TimedRobot {
   }
   
   private void doPeriodic() {
-    // robotContext.periodic();	  
-    // CommandScheduler.getInstance().run();		  
-    try {
-			robotContext.periodic();	  
-	  }
-	  catch (Throwable t) {
-		  exceptionHandler.handleException(t);
-          t.printStackTrace();
-	  }
-	  try {
-		    CommandScheduler.getInstance().run();		  
-	  }
-	  catch (Throwable t) {
-		  exceptionHandler.handleException(t);
-          t.printStackTrace();
-	  }
+    robotContext.periodic();	  
+    CommandScheduler.getInstance().run();		  
+//    try {
+//			robotContext.periodic();	  
+//	  }
+//	  catch (Throwable t) {
+//		  exceptionHandler.handleException(t);
+//          t.printStackTrace();
+//	  }
+//	  try {
+//		    CommandScheduler.getInstance().run();		  
+//	  }
+//	  catch (Throwable t) {
+//		  exceptionHandler.handleException(t);
+//          t.printStackTrace();
+//	  }
   }
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like

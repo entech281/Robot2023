@@ -57,25 +57,25 @@ public class TurnRobotRelativeCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        DriverStation.reportWarning("exe", false);
+        //DriverStation.reportWarning("exe", false);
         drive.driveFilterYawOnly(new DriveInput(0, 0, 0, yawSupplier.getYawAngleDegrees()));
     }
 
     @Override
     public void end(boolean interrupted) {
         DriverStation.reportWarning("END", false);
-        drive.resetEncoders();
+        //drive.resetEncoders();
     }
 
     @Override
     public boolean isFinished() {
 
     	if ( timer.get() > TIMEOUT_SECS ) {
-    		DriverStation.reportWarning("TurnRobotRelativeTimedOut at " + TIMEOUT_SECS + "secs" , false);
+    		//DriverStation.reportWarning("TurnRobotRelativeTimedOut at " + TIMEOUT_SECS + "secs" , false);
     		return true;
     	}
     	String msg = String.format("TurnRobotRelative:Yaw=%.2f, waiting for %.2f", yawSupplier.getYawAngleDegrees(),angleToWait);
-    	DriverStation.reportWarning(msg , false);
+    	//DriverStation.reportWarning(msg , false);
     	
         return sc.isFinished(Math.abs(yawSupplier.getYawAngleDegrees() - angleToWait) < TOLERANCE);
     }
