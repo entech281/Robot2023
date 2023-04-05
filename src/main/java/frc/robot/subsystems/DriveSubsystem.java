@@ -128,7 +128,7 @@ public class DriveSubsystem extends EntechSubsystem {
         SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.getEncoder().getPosition());
         
         SmartDashboard.putNumber("Average Position", getAverageDistanceMeters());
-        SmartDashboard.putNumber("Average Position Offset", referenceAvgPosition);
+        SmartDashboard.putNumber("Average Position Offset", referenceAvgPositionwe do);
         SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
         SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
         SmartDashboard.putBoolean("Brake Mode", isBrakeMode());
@@ -334,14 +334,14 @@ public class DriveSubsystem extends EntechSubsystem {
     private double getAveragePosition() {
         double position = 0;
 
-//        position += frontLeftEncoder.getPosition();
-//        position += rearLeftEncoder.getPosition();
-//        position += frontRightEncoder.getPosition();
-//        position += rearRightEncoder.getPosition();
+        position += frontLeftEncoder.getPosition();
+        position += rearLeftEncoder.getPosition();
+        position += frontRightEncoder.getPosition();
+        position += rearRightEncoder.getPosition();
         //double p =  (position / 4.0) - referenceAvgPosition;
 
         double avgPos = position/4.0;
-        return avgPos - referenceAvgPosition;
+        return (avgPos - referenceAvgPosition);
         
         //DriverStation.reportWarning("AveragePosition:" + p, false);        
         //return p;
