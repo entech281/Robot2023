@@ -310,16 +310,14 @@ public class DriveSubsystem extends EntechSubsystem {
     	trySetSparkMaxPosition(rearLeftEncoder,0);
     	trySetSparkMaxPosition(frontRightEncoder,0);
     	trySetSparkMaxPosition(rearRightEncoder,0);  
+    	
+    	//NOT initialized to the initial value because there could be a delay between
+    	//when they are reset and the current value. use zero here because
+    	//within a couple of CAN bus frames, they _will_ return zero , but may not now
         referenceAvgPosition = 0.0;
             	
     }
-    public void resetEncoders() {
-        //This approach is simpler than referencing each individual encoder.
-        //normally that's not ok, but in this case, it is safe because we dont expose the individual encoders anywhere
-    	referenceAvgPosition = getAveragePosition();        
-  	
-    }
-    
+
     private void trySetSparkMaxPosition(RelativeEncoder encoder, double pos) {
     	REVLibError re = encoder.setPosition(pos);
     	if ( re != REVLibError.kOk) {
@@ -327,30 +325,49 @@ public class DriveSubsystem extends EntechSubsystem {
     		ex.printStackTrace();
     	}
     }
+    
+    
+    /**
+     * Reset the baselines for distance measurement returned by getAverageDistanceMeteres()
+     */
+    public void resetEncoders() {
+        //This approach is simpler than referencing each individual encoder.
+        //normally that's not ok, but in this case, it is safe because we dont expose the individual encoders anywhere
+    	referenceAvgPosition = getRawEncoderAvgPosition();        
+  	
+    }
+    
 
+    /*
+     * @eturn the average dinstance, in meters, travelled since the last time resetEncoders() was called, or since initialization 
+     * this is the only publicly exposed distance method
+     */
+    public double getAverageDistanceMeters() {
+        double distance = (getAveragePosition() / RobotConstants.DRIVE.GEAR_BOX_RATIO) * RobotConstants.DRIVE.METERS_PER_GEARBOX_REVOLTION;
+        return distance;
+    }
+    
     /**
      *
-     * @return average motor revolutions for the 4 motors
+     * @return average motor revolutions, SINCE resetEncoders was last called
      */
-    private double getAveragePosition() {
+    private double getAveragePosition() {  
+    	return getRawEncoderAvgPosition() - referenceAvgPosition;
+    }
+    
+    /**
+     * 
+     * @return the average position reported by the encoders. NOTE this coudl be delayed a bit from reality,
+     * so this is used only internally 
+     */
+    private double getRawEncoderAvgPosition() {
         double position = 0;
 
         position += frontLeftEncoder.getPosition();
         position += rearLeftEncoder.getPosition();
         position += frontRightEncoder.getPosition();
         position += rearRightEncoder.getPosition();
-        //double p =  (position / 4.0) - referenceAvgPosition;
-
-        double avgPos = position/4.0;
-        return (avgPos - referenceAvgPosition);
-        
-        //DriverStation.reportWarning("AveragePosition:" + p, false);        
-        //return p;
-    }
-
-    public double getAverageDistanceMeters() {
-        double distance = (getAveragePosition() / RobotConstants.DRIVE.GEAR_BOX_RATIO) * RobotConstants.DRIVE.METERS_PER_GEARBOX_REVOLTION;
-        return distance;
+        return position/4.0;    	
     }
 
     // Store drive state in the DriveSubsysten rather than the Shuffleboard
