@@ -85,8 +85,13 @@ public class DriveCSForwardDockCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      if (Math.abs(drive.getAverageDistanceMeters()-startDistance) > RobotConstants.BALANCE_PARAMETERS.DOCK_DISTANCE) {
-          DriverStation.reportWarning("END:" + this, false);
+	  
+	  
+	
+	  double diffA = drive.getAverageDistanceMeters()-startDistance;
+	  
+      if (Math.abs(diffA) > RobotConstants.BALANCE_PARAMETERS.DOCK_DISTANCE) {
+          DriverStation.reportWarning("END:" + this + ":" + diffA, false);
           return true;
       }
       return false;
