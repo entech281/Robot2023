@@ -44,9 +44,9 @@ public class HoldYawFilter extends DriveInputFilter {
         outDI.setRotation(rot);        	
 
 
-        SmartDashboard.putNumber("HoldYaw meas", inputDI.getYawAngleDegrees());
-        SmartDashboard.putNumber("HoldYaw setp", yawSetPoint);
-        SmartDashboard.putNumber("HoldYaw rot", rot);
+        //SmartDashboard.putNumber("HoldYaw meas", inputDI.getYawAngleDegrees());
+        //SmartDashboard.putNumber("HoldYaw setp", yawSetPoint);
+        //SmartDashboard.putNumber("HoldYaw rot", rot);
         return outDI;
     }
 

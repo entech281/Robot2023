@@ -51,7 +51,7 @@ public class FlipDirectionCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        DriverStation.reportWarning("exe" + this, false);
+        //DriverStation.reportWarning("exe" + this, false);
         drive.driveFilterYawRobotRelative(new DriveInput(0, 0, 0, yawSupplier.getYawAngleDegrees()));
     }
 

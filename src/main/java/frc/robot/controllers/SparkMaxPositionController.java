@@ -37,7 +37,6 @@ public class SparkMaxPositionController implements Sendable, PositionController 
 
 	public enum HomingState { FINDING_LIMIT, HOMED, UNINITIALIZED }
 	
-	public static final int CAN_TIMEOUT_MILLIS = 1000;	
 	protected CANSparkMax spark;
 	private HomingState axisState = HomingState.UNINITIALIZED;
 	

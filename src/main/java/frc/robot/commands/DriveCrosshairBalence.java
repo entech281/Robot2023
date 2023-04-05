@@ -68,7 +68,7 @@ public class DriveCrosshairBalence extends EntechCommandBase {
     DriveInput di = new DriveInput(0.0, 0.0, 0.0, navx.getYaw());
     di.setForward(chc.calculate(FIRST_STAGE_DISTANCE - Math.abs(drive.getAverageDistanceMeters())));
     drive.drive(di);
-    SmartDashboard.putNumber("Crosshair dist", drive.getAverageDistanceMeters());
+    //SmartDashboard.putNumber("Crosshair dist", drive.getAverageDistanceMeters());
   }
 
   // Called once the command ends or is interrupted.

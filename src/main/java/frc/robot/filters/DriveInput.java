@@ -10,7 +10,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
  * 
  * @author aheitkamp
  */
-public class DriveInput implements Sendable {
+public class DriveInput  {
     private double forward;
     private double right;
     private double rotation;
@@ -110,13 +110,13 @@ public class DriveInput implements Sendable {
         return Objects.hash(forward, right, rotation,yawAngleDegrees);
     }
 
-	@Override
-    public void initSendable(SendableBuilder builder) {
-  	    builder.setSmartDashboardType("DriveInput");
-  	    builder.addDoubleProperty("Forward", this::getForward , null);
-  	    builder.addDoubleProperty("Right", this::getRight , null);
-  	    builder.addDoubleProperty("Rotation", this::getRotation , null);  	    
-  	    builder.addDoubleProperty("Yaw", this::getYawAngleDegrees , null);
-    }
+//	@Override
+//    public void initSendable(SendableBuilder builder) {
+//  	    builder.setSmartDashboardType("DriveInput");
+//  	    builder.addDoubleProperty("Forward", this::getForward , null);
+//  	    builder.addDoubleProperty("Right", this::getRight , null);
+//  	    builder.addDoubleProperty("Rotation", this::getRotation , null);  	    
+//  	    builder.addDoubleProperty("Yaw", this::getYawAngleDegrees , null);
+//    }
 
 }
