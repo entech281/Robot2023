@@ -107,11 +107,11 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
       if (distToTarget < DISTANCE_TO_TARGET_TOLLERENCE) {
         double lateralOffset = computeRobotRelativeOffsetToTarget(targetLocation.computeAbsolutePose().getY(),currentPose.getY());
         lateralOutput = lateralOffset * LATERAL_ALIGN_GAIN;
-        SmartDashboard.putNumber("AlignWhileDriving:lateralOffset", lateralOffset); 	
+        //SmartDashboard.putNumber("AlignWhileDriving:lateralOffset", lateralOffset); 	
       }
     }
     
-	SmartDashboard.putNumber("AlignWhileDriving:lateralOutput", lateralOutput);
+	//SmartDashboard.putNumber("AlignWhileDriving:lateralOutput", lateralOutput);
     drive.driveFilterYawRobotRelative(new DriveInput(s, lateralOutput, 0, yawSupplier.getYawAngleDegrees()));
   }
 

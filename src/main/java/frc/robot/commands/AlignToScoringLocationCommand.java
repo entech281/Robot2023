@@ -54,8 +54,8 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
         	double currentRobotAngle = currentYawAngleSupplier.getYawAngleDegrees();
         	double objectiveAngle = alignAngleSupplier.getTargetYawAngle().get();
 
-        	SmartDashboard.putNumber("ObjectiveAngleFromAlign", objectiveAngle);
-        	SmartDashboard.putData(pid);
+        	//SmartDashboard.putNumber("ObjectiveAngleFromAlign", objectiveAngle);
+        	//SmartDashboard.putData(pid);
 
         	pid.setSetpoint(objectiveAngle);
 

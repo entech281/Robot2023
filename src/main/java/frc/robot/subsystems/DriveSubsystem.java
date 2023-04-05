@@ -122,16 +122,16 @@ public class DriveSubsystem extends EntechSubsystem {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Front Left SparkMax", frontLeftSparkMax.getEncoder().getPosition());
-        SmartDashboard.putNumber("Front Right SparkMax", frontRightSparkMax.getEncoder().getPosition());
-        SmartDashboard.putNumber("Back Left SparkMax", rearLeftSparkMax.getEncoder().getPosition());
-        SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.getEncoder().getPosition());
-        
-        SmartDashboard.putNumber("Average Position", getAverageDistanceMeters());
-        SmartDashboard.putNumber("Average Position Offset", referenceAvgPosition);
-        SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
-        SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
-        SmartDashboard.putBoolean("Brake Mode", isBrakeMode());
+//        SmartDashboard.putNumber("Front Left SparkMax", frontLeftSparkMax.getEncoder().getPosition());
+//        SmartDashboard.putNumber("Front Right SparkMax", frontRightSparkMax.getEncoder().getPosition());
+//        SmartDashboard.putNumber("Back Left SparkMax", rearLeftSparkMax.getEncoder().getPosition());
+//        SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.getEncoder().getPosition());
+//        
+//        SmartDashboard.putNumber("Average Position", getAverageDistanceMeters());
+//        SmartDashboard.putNumber("Average Position Offset", referenceAvgPosition);
+//        SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
+//        SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
+//        SmartDashboard.putBoolean("Brake Mode", isBrakeMode());
 
         robotDrive.feed();
         robotDrive.feedWatchdog();
@@ -323,7 +323,8 @@ public class DriveSubsystem extends EntechSubsystem {
     private void trySetSparkMaxPosition(RelativeEncoder encoder, double pos) {
     	REVLibError re = encoder.setPosition(pos);
     	if ( re != REVLibError.kOk) {
-    		throw new RuntimeException("Error setting Spark Posittion: " + re);
+    		RuntimeException ex = new RuntimeException("Error setting Spark Posittion: " + re);
+    		ex.printStackTrace();
     	}
     }
 

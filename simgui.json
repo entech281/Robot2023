@@ -9,6 +9,11 @@
       "window": {
         "visible": false
       }
+    },
+    "RoboRIO": {
+      "window": {
+        "visible": true
+      }
     }
   },
   "NTProvider": {
@@ -34,8 +39,15 @@
       "/Shuffleboard/PreMatch/AutoCommand": "String Chooser",
       "/Shuffleboard/PreMatch/homeTelescopeAndElbow": "Command",
       "/Shuffleboard/Testing/ArmForgetHomeCommand": "Command",
+      "/Shuffleboard/Testing/BalanceAfterAlreadyOnTopCommand": "Command",
       "/Shuffleboard/Testing/CloseGripper": "Command",
+      "/Shuffleboard/Testing/ConeWide,GetCone,ConeMid": "Command",
+      "/Shuffleboard/Testing/Dial ground position Cube": "Command",
+      "/Shuffleboard/Testing/Drive1.5MetersWhileTryingtoAlignToA1": "Command",
+      "/Shuffleboard/Testing/DriveDirectionCommand": "Command",
+      "/Shuffleboard/Testing/DriveDistanceCommand": "Command",
       "/Shuffleboard/Testing/ElbowForgetHomeCommand": "Command",
+      "/Shuffleboard/Testing/FlipDirectionCommand": "Command",
       "/Shuffleboard/Testing/HomeArmCommand": "Command",
       "/Shuffleboard/Testing/HomeArmCommandwait:false": "Command",
       "/Shuffleboard/Testing/HomeArmCommandwait:true": "Command",
@@ -66,18 +78,24 @@
       "/Shuffleboard/Testing/SetElbowSpeedCommand,s=-0.1": "Command",
       "/Shuffleboard/Testing/SetElbowSpeedCommand,s=0.0": "Command",
       "/Shuffleboard/Testing/SetElbowSpeedCommand,s=0.1": "Command",
+      "/Shuffleboard/Testing/TestWeirdness": "Command",
+      "/Shuffleboard/Testing/carryElbowCommand@20.0deg": "Command",
       "/Shuffleboard/Testing/carryElbowCommand@8.0deg": "Command",
       "/Shuffleboard/Testing/groundScoringElbowCommand@23.784deg": "Command",
       "/Shuffleboard/Testing/groundScoringElbowCommand@43.0deg": "Command",
       "/Shuffleboard/Testing/highScoringElbowCommand@102.0deg": "Command",
       "/Shuffleboard/Testing/highScoringElbowCommand@122.0deg": "Command",
       "/Shuffleboard/Testing/highScoringElbowCommand@125.0deg": "Command",
+      "/Shuffleboard/Testing/highScoringElbowCommand@94.0deg": "Command",
       "/Shuffleboard/Testing/homeTelescopeAndElbow": "Command",
+      "/Shuffleboard/Testing/loadingElbowCommand@74.0deg": "Command",
       "/Shuffleboard/Testing/loadingElbowCommand@80.0deg": "Command",
       "/Shuffleboard/Testing/loadingElbowCommand@92.0deg": "Command",
+      "/Shuffleboard/Testing/middleScoringElbowCommand@79.0deg": "Command",
       "/Shuffleboard/Testing/middleScoringElbowCommand@80.22deg": "Command",
       "/Shuffleboard/Testing/middleScoringElbowCommand@94.0deg": "Command",
-      "/SmartDashboard/DriveSubsystem": "Subsystem"
+      "/SmartDashboard/DriveSubsystem": "Subsystem",
+      "/SmartDashboard/NavX": "Gyro"
     }
   },
   "NetworkTables": {

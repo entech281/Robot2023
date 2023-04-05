@@ -24,14 +24,14 @@ public class AlignmentCalculator {
 
 		double fieldAbsoluteTargetAngle = scoringLocation.getRotation().rotateBy(Rotation2d.fromDegrees(180)).getDegrees();
 
-		SmartDashboard.putNumber("robotToScoringLocationAngle", robotToScoringLocationAngle);
-		SmartDashboard.putNumber("fieldAbsoluteTargetAngle", fieldAbsoluteTargetAngle);
-		SmartDashboard.putNumber("t-getY()", t.getY());
-		SmartDashboard.putNumber("t-getX()",  t.getX());
-		SmartDashboard.putNumber("sl-getX()",  scoringLocation.getX());
-		SmartDashboard.putNumber("sl-getY()",  scoringLocation.getY());
-		SmartDashboard.putNumber("pose-getX()",  estimatedRobotPose.getX());
-		SmartDashboard.putNumber("pose-getY()",  estimatedRobotPose.getY());
+		//SmartDashboard.putNumber("robotToScoringLocationAngle", robotToScoringLocationAngle);
+		//SmartDashboard.putNumber("fieldAbsoluteTargetAngle", fieldAbsoluteTargetAngle);
+		//SmartDashboard.putNumber("t-getY()", t.getY());
+		//SmartDashboard.putNumber("t-getX()",  t.getX());
+		//SmartDashboard.putNumber("sl-getX()",  scoringLocation.getX());
+		//SmartDashboard.putNumber("sl-getY()",  scoringLocation.getY());
+		//SmartDashboard.putNumber("pose-getX()",  estimatedRobotPose.getX());
+		//SmartDashboard.putNumber("pose-getY()",  estimatedRobotPose.getY());
 		return fieldAbsoluteTargetAngle + robotToScoringLocationAngle;
 	}
 

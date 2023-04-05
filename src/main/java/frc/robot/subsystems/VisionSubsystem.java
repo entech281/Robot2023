@@ -158,7 +158,7 @@ public class VisionSubsystem extends EntechSubsystem {
 
 		    
 		  currentStatus = newStatus;
-		  debugStatus();		  
+		  //debugStatus();		  
 	  }
 
   }
@@ -182,7 +182,7 @@ public class VisionSubsystem extends EntechSubsystem {
   					  3.0,2.0,Rotation2d.fromDegrees(0)
   	  )));
 	  currentStatus = newStatus;
-	  debugStatus();
+	  //debugStatus();
 }  
 
 private void debugStatus() {
