@@ -128,7 +128,7 @@ public class DriveSubsystem extends EntechSubsystem {
         SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.getEncoder().getPosition());
         
         SmartDashboard.putNumber("Average Position", getAverageDistanceMeters());
-        SmartDashboard.putNumber("Average Position Offset", referenceAvgPositionwe do);
+        SmartDashboard.putNumber("Average Position Offset", referenceAvgPosition);
         SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
         SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
         SmartDashboard.putBoolean("Brake Mode", isBrakeMode());
