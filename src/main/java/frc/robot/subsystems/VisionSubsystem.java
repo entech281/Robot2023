@@ -129,35 +129,38 @@ public class VisionSubsystem extends EntechSubsystem {
   }
   private void updateStatus(){
 	  
-	  	VisionStatus newStatus = new VisionStatus();
-	  	lastPhotonYawAngle = NO_GOOD_ANGLE;
-	    PhotonPipelineResult result = camera.getLatestResult();
+	  if ( DriverStation.isTeleop()) {
+		  	VisionStatus newStatus = new VisionStatus();
+		  	lastPhotonYawAngle = NO_GOOD_ANGLE;
+		    PhotonPipelineResult result = camera.getLatestResult();
 
-	    newStatus.setLatency(camera.getLatestResult().getLatencyMillis());
+		    newStatus.setLatency(camera.getLatestResult().getLatencyMillis());
 
-	    if ( result.hasTargets()) {
-	        for ( PhotonTrackedTarget t: result.getTargets()){	          
-	        	newStatus.addRecognizedTarget(createRecognizedTarget(t));
-	        }	   	    
+		    if ( result.hasTargets()) {
+		        for ( PhotonTrackedTarget t: result.getTargets()){	          
+		        	newStatus.addRecognizedTarget(createRecognizedTarget(t));
+		        }	   	    
 
-		    PhotonTrackedTarget bestTarget = result.getBestTarget();
-		    if ( bestTarget != null ) {
-		    	newStatus.setCameraY(bestTarget.getBestCameraToTarget().getY());
-		    	newStatus.setBestTarget(createRecognizedTarget(bestTarget));
-		    	lastPhotonYawAngle = bestTarget.getYaw();
+			    PhotonTrackedTarget bestTarget = result.getBestTarget();
+			    if ( bestTarget != null ) {
+			    	newStatus.setCameraY(bestTarget.getBestCameraToTarget().getY());
+			    	newStatus.setBestTarget(createRecognizedTarget(bestTarget));
+			    	lastPhotonYawAngle = bestTarget.getYaw();
+			    }
 		    }
-	    }
- 
-		Optional<EstimatedRobotPose> updatedPose = photonPoseEstimator.update();
-		  
-		if ( updatedPose.isPresent()) {
-			newStatus.setPhotonEstimatedPose(updatedPose.get().estimatedPose);  
-			photonPoseEstimator.setLastPose(updatedPose.get().estimatedPose);
-		}		    
+	 
+			Optional<EstimatedRobotPose> updatedPose = photonPoseEstimator.update();
+			  
+			if ( updatedPose.isPresent()) {
+				newStatus.setPhotonEstimatedPose(updatedPose.get().estimatedPose);  
+				photonPoseEstimator.setLastPose(updatedPose.get().estimatedPose);
+			}		    
 
-	    
-	  currentStatus = newStatus;
-	  debugStatus();
+		    
+		  currentStatus = newStatus;
+		  debugStatus();		  
+	  }
+
   }
   
   private void updateStatusSimulated(){

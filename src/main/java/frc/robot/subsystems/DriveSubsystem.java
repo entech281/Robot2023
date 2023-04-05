@@ -116,7 +116,8 @@ public class DriveSubsystem extends EntechSubsystem {
 
         speedLimitFilter = new ForwardSpeedLimitFilter();
         speedLimitFilter.enable(true);
-
+        this.initEncoders();
+        
     }
 
     @Override
@@ -127,6 +128,7 @@ public class DriveSubsystem extends EntechSubsystem {
         SmartDashboard.putNumber("Back Right SparkMax", rearRightSparkMax.getEncoder().getPosition());
         
         SmartDashboard.putNumber("Average Position", getAverageDistanceMeters());
+        SmartDashboard.putNumber("Average Position Offset", referenceAvgPosition);
         SmartDashboard.putBoolean("Field Absolute", isFieldAbsolute());
         SmartDashboard.putBoolean("Rotation Allowed", isRotationEnabled());
         SmartDashboard.putBoolean("Brake Mode", isBrakeMode());
@@ -303,19 +305,19 @@ public class DriveSubsystem extends EntechSubsystem {
 	    return true;
     }
     public void initEncoders() {
-
+    	trySetSparkMaxPosition(frontLeftEncoder,0);
+    	trySetSparkMaxPosition(frontLeftEncoder,0);
+    	trySetSparkMaxPosition(rearLeftEncoder,0);
+    	trySetSparkMaxPosition(frontRightEncoder,0);
+    	trySetSparkMaxPosition(rearRightEncoder,0);  
         referenceAvgPosition = getAveragePosition();
             	
     }
     public void resetEncoders() {
         //This approach is simpler than referencing each individual encoder.
         //normally that's not ok, but in this case, it is safe because we dont expose the individual encoders anywhere
-    	//referenceAvgPosition = getAveragePosition();        
-    	trySetSparkMaxPosition(frontLeftEncoder,0);
-    	trySetSparkMaxPosition(frontLeftEncoder,0);
-    	trySetSparkMaxPosition(rearLeftEncoder,0);
-    	trySetSparkMaxPosition(frontRightEncoder,0);
-    	trySetSparkMaxPosition(rearRightEncoder,0);    	
+    	referenceAvgPosition = getAveragePosition();        
+  	
     }
     
     private void trySetSparkMaxPosition(RelativeEncoder encoder, double pos) {
@@ -332,15 +334,17 @@ public class DriveSubsystem extends EntechSubsystem {
     private double getAveragePosition() {
         double position = 0;
 
-        position += frontLeftEncoder.getPosition();
-        position += rearLeftEncoder.getPosition();
-        position += frontRightEncoder.getPosition();
-        position += rearRightEncoder.getPosition();
+//        position += frontLeftEncoder.getPosition();
+//        position += rearLeftEncoder.getPosition();
+//        position += frontRightEncoder.getPosition();
+//        position += rearRightEncoder.getPosition();
         //double p =  (position / 4.0) - referenceAvgPosition;
 
-        double p = position/4.0;
+        double avgPos = position/4.0;
+        return avgPos - referenceAvgPosition;
+        
         //DriverStation.reportWarning("AveragePosition:" + p, false);        
-        return p;
+        //return p;
     }
 
     public double getAverageDistanceMeters() {

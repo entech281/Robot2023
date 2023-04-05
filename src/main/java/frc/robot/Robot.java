@@ -90,7 +90,6 @@ public class Robot extends TimedRobot {
 	Compressor c = new Compressor(PneumaticsModuleType.CTREPCM);
 	c.enableDigital();
 	navx.zeroYaw();
-	drive.initEncoders();
 	
     // Enable telematics of the SmartDashboard data.  Joystick data is currently true
     DataLogManager.start();
@@ -110,8 +109,7 @@ public class Robot extends TimedRobot {
   }
   
   private void doPeriodic() {
-    robotContext.periodic();	  
-    CommandScheduler.getInstance().run();		  
+ 
     try {
 			robotContext.periodic();	  
 	  }
