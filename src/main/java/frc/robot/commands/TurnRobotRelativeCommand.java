@@ -71,10 +71,10 @@ public class TurnRobotRelativeCommand extends EntechCommandBase {
     public boolean isFinished() {
 
     	if ( timer.get() > TIMEOUT_SECS ) {
-    		//DriverStation.reportWarning("TurnRobotRelativeTimedOut at " + TIMEOUT_SECS + "secs" , false);
+    		DriverStation.reportWarning("TurnRobotRelativeTimedOut at " + TIMEOUT_SECS + "secs" , false);
     		return true;
     	}
-    	String msg = String.format("TurnRobotRelative:Yaw=%.2f, waiting for %.2f", yawSupplier.getYawAngleDegrees(),angleToWait);
+    	//String msg = String.format("TurnRobotRelative:Yaw=%.2f, waiting for %.2f", yawSupplier.getYawAngleDegrees(),angleToWait);
     	//DriverStation.reportWarning(msg , false);
     	
         return sc.isFinished(Math.abs(yawSupplier.getYawAngleDegrees() - angleToWait) < TOLERANCE);

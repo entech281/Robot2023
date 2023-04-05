@@ -310,7 +310,7 @@ public class DriveSubsystem extends EntechSubsystem {
     	trySetSparkMaxPosition(rearLeftEncoder,0);
     	trySetSparkMaxPosition(frontRightEncoder,0);
     	trySetSparkMaxPosition(rearRightEncoder,0);  
-        referenceAvgPosition = getAveragePosition();
+        referenceAvgPosition = 0.0;
             	
     }
     public void resetEncoders() {
