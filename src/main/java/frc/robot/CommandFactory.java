@@ -186,7 +186,8 @@ public class CommandFactory {
     			new WaitCommand(1.0),
     			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem),
     			new WaitCommand(1.0),
-    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem)
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem),
+    			new DriveDistanceStraightCommand(driveSubsystem, 3.0, 0.4, 0.2, 0.35, navxSubsystem)
     			);
         sg.setName("TestWeirdness");
         return sg;
