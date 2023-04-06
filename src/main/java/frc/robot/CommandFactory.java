@@ -181,12 +181,15 @@ public class CommandFactory {
     }
 
     public Command testDriveDistanceWeirdness() {
+    	//each wheel turn is 0.478 meters
+    	//2.08 turns per meter
     	SequentialCommandGroup sg = new SequentialCommandGroup(
-    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem),
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.478, 0.4, 0.2, 0.35, navxSubsystem), //1 turn
     			new WaitCommand(1.0),
-    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem),
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.478, 0.4, 0.2, 0.35, navxSubsystem), //1 turn
     			new WaitCommand(1.0),
-    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem)
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.478, 0.4, 0.2, 0.35, navxSubsystem), //1 turn
+    			new DriveDistanceStraightCommand(driveSubsystem, 2.868, 0.4, 0.2, 0.35, navxSubsystem) //6 turns last move total is 7 turns
     			);
         sg.setName("TestWeirdness");
         return sg;
