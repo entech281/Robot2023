@@ -105,6 +105,7 @@ public class CommandFactory {
     			autonomousAutoBalanceCommand(USE_BRAKES),    			
     			autonomousBalanceDeadRecCommand(USE_BRAKES),
     			autonomousCubeRight(),
+                autonomousConeCommand(),
     			autonomousCubeLeftCommand(),
     			
     			//NOTE: the choices below are just three phases of the same two-pice wide cone auto.
@@ -151,7 +152,7 @@ public class CommandFactory {
 
     //BUILDING BLOCK FOR VARIANTS ABOVE
     private SequentialCommandGroup autoWideConeThenGetCone() {
-        double MOVE_DISTANCE_METERS = -4.05;
+        double MOVE_DISTANCE_METERS = -4.2;
 
         SequentialCommandGroup sg =  new SequentialCommandGroup();
             sg.addCommands(autonomousSetup());
@@ -302,7 +303,7 @@ public class CommandFactory {
 
     public Command autofrogGrabCommand() {
     	double MOVE_DISTANCE_FWD = 0.15;
-    	double MOVE_DISTANCE_BWD = 0.06;
+    	double MOVE_DISTANCE_BWD = 0.1;
     	double MOVE_SPEED = 0.22;
     	double MOVE_MIN_SPEED = 0.15;
     	double MOVE_RAMP = 0.3;
