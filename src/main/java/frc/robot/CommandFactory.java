@@ -152,7 +152,7 @@ public class CommandFactory {
 
     //BUILDING BLOCK FOR VARIANTS ABOVE
     private SequentialCommandGroup autoWideConeThenGetCone() {
-        double MOVE_DISTANCE_METERS = -4.2;
+        double MOVE_DISTANCE_METERS = -4.15;
 
         SequentialCommandGroup sg =  new SequentialCommandGroup();
             sg.addCommands(autonomousSetup());
