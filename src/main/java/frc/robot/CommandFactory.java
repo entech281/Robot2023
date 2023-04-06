@@ -303,7 +303,7 @@ public class CommandFactory {
 
     public Command autofrogGrabCommand() {
     	double MOVE_DISTANCE_FWD = 0.15;
-    	double MOVE_DISTANCE_BWD = 0.1;
+    	double MOVE_DISTANCE_BWD = 0.15;
     	double MOVE_SPEED = 0.22;
     	double MOVE_MIN_SPEED = 0.15;
     	double MOVE_RAMP = 0.3;
