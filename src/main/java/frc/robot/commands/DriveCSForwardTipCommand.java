@@ -16,7 +16,6 @@ public class DriveCSForwardTipCommand extends EntechCommandBase {
   private final DriveSubsystem drive;
   private final NavXSubSystem navx;
   private double speed = 0.0;
-  private boolean pitch_seen;
   private double last_pitch;
 
   /**
@@ -50,7 +49,6 @@ public class DriveCSForwardTipCommand extends EntechCommandBase {
   @Override
   public void initialize() {
     last_pitch = Math.abs(navx.getPitch());
-    pitch_seen = false;
     drive.setDriveMode(DriveMode.BRAKE);
   }
 
@@ -58,9 +56,6 @@ public class DriveCSForwardTipCommand extends EntechCommandBase {
   @Override
   public void execute() {
 
-    if (Math.abs(navx.getPitch()) > RobotConstants.BALANCE_PARAMETERS.TIP_PITCH_THRESHOLD) {
-        pitch_seen = true;
-    }
     DriveInput di=new DriveInput(speed,0.0,0.0, navx.getYawAngleDegrees());
     drive.driveFilterYawRobotRelative(di);
   }
@@ -73,16 +68,16 @@ public class DriveCSForwardTipCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (pitch_seen) {
+    double curr_pitch = Math.abs(navx.getPitch());
+
+    // If either the last pitch or the curr_pitch exceeds the threshold and the pitch is starting to drop, then we are done tipping the charging station
+    if (((curr_pitch > RobotConstants.BALANCE_PARAMETERS.TIP_PITCH_THRESHOLD) || (last_pitch > RobotConstants.BALANCE_PARAMETERS.TIP_PITCH_THRESHOLD))
+     && (curr_pitch < last_pitch)) {
         DriverStation.reportWarning("END:" + this, false);
+        return true;
     }
-    return pitch_seen;
-    // double pitch = Math.abs(navx.getPitch());
-    // if (pitch_seen && (pitch < last_pitch)) {
-    //     return true;
-    // }
-    // last_pitch = pitch;
-    // return false;
+    last_pitch = curr_pitch;
+    return false;
   }
 
   // Returns true if this command should run when robot is disabled.

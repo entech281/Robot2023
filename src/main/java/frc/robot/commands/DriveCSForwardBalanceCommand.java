@@ -18,22 +18,14 @@ public class DriveCSForwardBalanceCommand extends EntechCommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveSubsystem drive;
   private final NavXSubSystem navx;
-  BrakeSubsystem brake;
+  private final BrakeSubsystem brake;
   private boolean pitch_seen;
   private int pitch_stable_count;
   private double speed = 0.0;
   private double original_speed = 0.0;
   private static final int    ROBOT_STABLE_COUNT = 500;
-  private static final double PITCH_THRESHOLD = 14.0;
-  private static final double SPEED_AFTER_PITCH = 0.13;
-  private static final double PITCH_SLOW_THRESHOLD = 18.0;
-  private static final double PITCH_FLAT_THRESHOLD = 12.0;
-  private static final double BACK_NUDGE_TIME = 0.0;   // Set to zero (or negative) to turn off the back nudge
-  private static final double BACK_NUDGE_SPEED = 0.15;
-  private static final double CHARGESTATION_DEPTH = 1.22;
   private double start_slowdown;
   private boolean useBrakes = false;
-  private Timer backNudgeTimer;
 
   /**
    * Creates a new DriveForwardToBalanceCommand.
@@ -48,7 +40,6 @@ public class DriveCSForwardBalanceCommand extends EntechCommandBase {
       this.brake = bsubsys;
       speed = RobotConstants.BALANCE_PARAMETERS.BALANCE_SPEED;
       this.useBrakes = useBrakes;
-      this.backNudgeTimer = new Timer();
   }
 
   /**
@@ -66,7 +57,6 @@ public class DriveCSForwardBalanceCommand extends EntechCommandBase {
     this.speed = speed;
     original_speed = speed;
     this.useBrakes = useBrakes;
-    this.backNudgeTimer = new Timer();
   }
 
   // Called when the command is initially scheduled.
@@ -76,8 +66,6 @@ public class DriveCSForwardBalanceCommand extends EntechCommandBase {
     pitch_stable_count = 0;
     speed = original_speed;
     drive.setDriveMode(DriveMode.BRAKE);
-    backNudgeTimer.stop();
-    backNudgeTimer.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -87,7 +75,9 @@ public class DriveCSForwardBalanceCommand extends EntechCommandBase {
     double pitch_angle = navx.getPitch();
     if (Math.abs(pitch_angle) < RobotConstants.BALANCE_PARAMETERS.BALANCE_PITCH_THRESHOLD) {
         drive.stop();
-        brake.setBrakeState(BrakeState.kDeploy);
+        if (useBrakes) {
+            brake.setBrakeState(BrakeState.kDeploy);
+        }
         pitch_stable_count += 1;
     } else {
         brake.setBrakeState(BrakeState.kRetract);
@@ -99,8 +89,10 @@ public class DriveCSForwardBalanceCommand extends EntechCommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) { 
-    brake.setBrakeState(BrakeState.kDeploy);
+  public void end(boolean interrupted) {
+    if (useBrakes) {
+        brake.setBrakeState(BrakeState.kDeploy);
+    }
     drive.stop();	  
   }
 

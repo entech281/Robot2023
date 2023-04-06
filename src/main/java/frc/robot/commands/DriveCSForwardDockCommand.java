@@ -20,7 +20,6 @@ public class DriveCSForwardDockCommand extends EntechCommandBase {
     private final NavXSubSystem navx;
     private double start_speed = 0.0;
     private double end_speed = 0.0;
-    private double startDistance;
 
   /**
    * Creates a new DriveCSForwardDockCommand.
@@ -56,17 +55,14 @@ public class DriveCSForwardDockCommand extends EntechCommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      // If for some reason, resetting the encoders does not work properly, the command can track the distance itself by
-      // removing the first two lines and replacing them with the last line
       drive.resetEncoders();
-      startDistance = 0.0;
-      // startDistance = drive.getAverageDistanceMeters();
-  }
+      DriverStation.reportWarning("INIT:" + this, false);
+    }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      double s = calculateSpeed(Math.abs(drive.getAverageDistanceMeters()-startDistance), RobotConstants.BALANCE_PARAMETERS.DOCK_DISTANCE, start_speed, end_speed);
+      double s = calculateSpeed(Math.abs(drive.getAverageDistanceMeters()), RobotConstants.BALANCE_PARAMETERS.DOCK_DISTANCE, start_speed, end_speed);
       DriveInput di=new DriveInput(s,0.0,0.0, navx.getYawAngleDegrees());
       drive.driveFilterYawRobotRelative(di);
   }
@@ -85,10 +81,7 @@ public class DriveCSForwardDockCommand extends EntechCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-	  
-	  
-	
-	  double diffA = drive.getAverageDistanceMeters()-startDistance;
+	  double diffA = drive.getAverageDistanceMeters();
 	  
       if (Math.abs(diffA) > RobotConstants.BALANCE_PARAMETERS.DOCK_DISTANCE) {
           DriverStation.reportWarning("END:" + this + ":" + diffA, false);
