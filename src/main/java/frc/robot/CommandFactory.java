@@ -105,6 +105,7 @@ public class CommandFactory {
     			autonomousAutoBalanceCommand(USE_BRAKES),    			
     			autonomousBalanceDeadRecCommand(USE_BRAKES),
     			autonomousCubeRight(),
+                autonomousConeCommand(),
     			autonomousCubeLeftCommand(),
     			
     			//NOTE: the choices below are just three phases of the same two-pice wide cone auto.
@@ -151,8 +152,7 @@ public class CommandFactory {
 
     //BUILDING BLOCK FOR VARIANTS ABOVE
     private SequentialCommandGroup autoWideConeThenGetCone() {
-        double MOVE_DISTANCE_METERS = -4.05;
-
+        double MOVE_DISTANCE_METERS = -4;
         SequentialCommandGroup sg =  new SequentialCommandGroup();
             sg.addCommands(autonomousSetup());
             sg.addCommands( autonomousArmHigh());          
@@ -163,7 +163,7 @@ public class CommandFactory {
     		sg.addCommands( autofrogGrabCommand());
     		sg.addCommands( new FlipDirectionCommand(driveSubsystem, navxSubsystem));
     		sg.addCommands( new ParallelCommandGroup(
-                new DriveDistanceStraightCommand(driveSubsystem, 4.26, 0.6, 0.2, 0.35, navxSubsystem)
+                new DriveDistanceStraightCommand(driveSubsystem, 4.1, 0.6, 0.2, 0.35, navxSubsystem)
                 , new SequentialCommandGroup(
                 	//this is essentially middle position, but up a bit
                     new PositionElbowCommand(elbowSubsystem, 82, true),
@@ -302,7 +302,7 @@ public class CommandFactory {
 
     public Command autofrogGrabCommand() {
     	double MOVE_DISTANCE_FWD = 0.15;
-    	double MOVE_DISTANCE_BWD = 0.06;
+    	double MOVE_DISTANCE_BWD = 0.15;
     	double MOVE_SPEED = 0.22;
     	double MOVE_MIN_SPEED = 0.15;
     	double MOVE_RAMP = 0.3;
@@ -407,7 +407,7 @@ public class CommandFactory {
     public Command autonomousAutoBalanceCommand(boolean useBrakes) {
         double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
         double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
-        double HOLD_BRAKE_TIME = 0;         // Time to hold brake when changing direction
+        double HOLD_BRAKE_TIME = 0.75;         // Time to hold brake when changing direction
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
             , autonomousArmHigh()
