@@ -408,7 +408,7 @@ public class CommandFactory {
     public Command autonomousAutoBalanceCommand(boolean useBrakes) {
         double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
         double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
-        double HOLD_BRAKE_TIME = 0;         // Time to hold brake when changing direction
+        double HOLD_BRAKE_TIME = 0.75;         // Time to hold brake when changing direction
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
             , autonomousArmHigh()
