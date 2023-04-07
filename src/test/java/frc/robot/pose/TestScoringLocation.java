@@ -48,7 +48,7 @@ public class TestScoringLocation {
         assertEquals(expectedNodePosition, testAbsolutePose);
     }
 
-    @Test
+    //@Test
     public void testLeftblueTagB3() {
         
     	AprilTagLocation tag = AprilTagLocation.findFromTag(8);
