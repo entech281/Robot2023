@@ -152,8 +152,7 @@ public class CommandFactory {
 
     //BUILDING BLOCK FOR VARIANTS ABOVE
     private SequentialCommandGroup autoWideConeThenGetCone() {
-        double MOVE_DISTANCE_METERS = -4.15;
-
+        double MOVE_DISTANCE_METERS = -4;
         SequentialCommandGroup sg =  new SequentialCommandGroup();
             sg.addCommands(autonomousSetup());
             sg.addCommands( autonomousArmHigh());          
@@ -164,7 +163,7 @@ public class CommandFactory {
     		sg.addCommands( autofrogGrabCommand());
     		sg.addCommands( new FlipDirectionCommand(driveSubsystem, navxSubsystem));
     		sg.addCommands( new ParallelCommandGroup(
-                new DriveDistanceStraightCommand(driveSubsystem, 4.26, 0.6, 0.2, 0.35, navxSubsystem)
+                new DriveDistanceStraightCommand(driveSubsystem, 4.1, 0.6, 0.2, 0.35, navxSubsystem)
                 , new SequentialCommandGroup(
                 	//this is essentially middle position, but up a bit
                     new PositionElbowCommand(elbowSubsystem, 82, true),
