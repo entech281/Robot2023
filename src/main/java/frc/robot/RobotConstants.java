@@ -169,7 +169,7 @@ public final class RobotConstants {
         public static final double DOCK_DISTANCE = 0.5*1.22 + 0.25*DRIVE.WHEELBASE_INCHES/39.37;  // charge station platform depth = 4ft (1.22m)
         public static final double DOCK_INITIAL_SPEED = 0.30;
         public static final double DOCK_FINAL_SPEED = 0.22;
-        public static final double BALANCE_SPEED = 0.11;
+        public static final double BALANCE_SPEED = 0.12;
         public static final double BALANCE_PITCH_THRESHOLD = 12.0;
         public static final int    BALANCE_STABLE_COUNT = 100;
         public static final double DEPLOY_BRAKE_AUTO_TIME_REMAINING = 0.25;
