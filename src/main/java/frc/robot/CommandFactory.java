@@ -112,7 +112,8 @@ public class CommandFactory {
     			//each one auto-detects blue vs red side
     			autonomousScoreConeGetConeThenHangOutCommand(),
     			autonomousScoreConeGetConeScoreMidCommand(),
-    			autonomousScoreConeGetConeScoreMidDriveBackOutCommand()
+    			autonomousScoreConeGetConeScoreMidDriveBackOutCommand(),
+                autonomousScoreConeGetConeThenHangOutCommand()
     	);
 
     }
@@ -124,7 +125,8 @@ public class CommandFactory {
     }
     
     public Command autonomousScoreConeGetConeThenHangOutCommand() {
-    	Command sg =  autoWideConeThenGetCone();
+    	Command sg =  autoWideConeThenGetConeWithoutBack();
+
     	sg.setName(sg.getName() + ",HangOut");
     	return sg;
     }    
@@ -151,7 +153,7 @@ public class CommandFactory {
     }
 
     //BUILDING BLOCK FOR VARIANTS ABOVE
-    private SequentialCommandGroup autoWideConeThenGetCone() {
+    private SequentialCommandGroup autoWideConeThenGetConeWithoutBack() {
         double MOVE_DISTANCE_METERS = -4;
         SequentialCommandGroup sg =  new SequentialCommandGroup();
             sg.addCommands(autonomousSetup());
@@ -161,8 +163,16 @@ public class CommandFactory {
     		sg.addCommands( new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.2, 0.35, navxSubsystem));
     		sg.addCommands( new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, getAutoConePickupTurnAngle()));
     		sg.addCommands( autofrogGrabCommand());
-    		sg.addCommands( new FlipDirectionCommand(driveSubsystem, navxSubsystem));
-    		sg.addCommands( new ParallelCommandGroup(
+    		
+    		
+        sg.setName("ConeWide,GetCone");
+        return sg;
+    }
+
+    public SequentialCommandGroup autoWideConeThenGetCone() {
+        SequentialCommandGroup sg = autoWideConeThenGetConeWithoutBack();
+        sg.addCommands( new FlipDirectionCommand(driveSubsystem, navxSubsystem));
+        sg.addCommands( new ParallelCommandGroup(
                 new DriveDistanceStraightCommand(driveSubsystem, 4.1, 0.6, 0.2, 0.35, navxSubsystem)
                 , new SequentialCommandGroup(
                 	//this is essentially middle position, but up a bit
@@ -176,7 +186,7 @@ public class CommandFactory {
             //		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())
             sg.addCommands( new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem));  //shouldnt be needed-- we should already be all the way back?
         //);
-        sg.setName("ConeWide,GetCone");
+        sg.setName(sg.getName() + ",MoveBack");
         return sg;
     }
 

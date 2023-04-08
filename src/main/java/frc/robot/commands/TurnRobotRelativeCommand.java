@@ -47,14 +47,14 @@ public class TurnRobotRelativeCommand extends EntechCommandBase {
     @Override
     public void initialize() {
         drive.resetEncoders();
-        angleToWait = EntechUtils.normalizeAngle( yawSupplier.getYawAngleDegrees() + robotRelativeAngle );
         if ( DriverStation.getAlliance() == Alliance.Red) {
             drive.setHoldYawAngle(-164.0);
+            angleToWait = -164.0;
         }
         else {
             drive.setHoldYawAngle(164.0);
+            angleToWait = 164;
         }
-        drive.setHoldYawAngle(angleToWait);
 
         sc = new StoppingCounter("TurnRelative", STOPPING_COUNT);
         DriverStation.reportWarning("INIT", false);
