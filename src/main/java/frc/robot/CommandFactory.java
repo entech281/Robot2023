@@ -103,7 +103,8 @@ public class CommandFactory {
     	return List.of(
     			
     			autonomousAutoBalanceCommand(USE_BRAKES),    			
-    			autonomousBalanceDeadRecCommand(USE_BRAKES),
+    			autonomousBalanceDeadRecCubeCommand(USE_BRAKES),
+                autonomousBalanceDeadRecConeCommand(USE_BRAKES),
     			autonomousCubeRight(),
                 autonomousConeCommand(),
     			autonomousCubeLeftCommand(),
@@ -394,7 +395,7 @@ public class CommandFactory {
         return sg;
     }
 
-    public Command autonomousBalanceDeadRecCommand(boolean useBrakes) {
+    public Command autonomousBalanceDeadRecCubeCommand(boolean useBrakes) {
         double MOVE_DISTANCE_METERS = -2.465;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
@@ -406,10 +407,30 @@ public class CommandFactory {
         );
         if ( useBrakes) {
         	sg.addCommands(deployBrakeCommand());
-        	sg.setName("Center DeadRec Balance w/brakes");
+        	sg.setName("Center DeadRec Balance cube w/brakes");
         }
         else {
-        	sg.setName("Center DeadRec Balance no brakes");
+        	sg.setName("Center DeadRec Balance cube no brakes");
+        }
+        return sg;
+    }
+
+    public Command autonomousBalanceDeadRecConeCommand(boolean useBrakes) {
+        double MOVE_DISTANCE_METERS = -2.465;
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+              autonomousSetup()
+            , autonomousArmHigh()
+            , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+            , autonomousArmSafe()
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.3, 0.3, .1)
+
+        );
+        if ( useBrakes) {
+        	sg.addCommands(deployBrakeCommand());
+        	sg.setName("Center DeadRec Balance cone w/brakes");
+        }
+        else {
+        	sg.setName("Center DeadRec Balance cone no brakes");
         }
         return sg;
     }
