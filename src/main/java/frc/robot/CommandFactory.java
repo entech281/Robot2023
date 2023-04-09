@@ -103,15 +103,18 @@ public class CommandFactory {
     	return List.of(
     			
     			autonomousAutoBalanceCommand(USE_BRAKES),    			
-    			autonomousBalanceDeadRecCommand(USE_BRAKES),
+    			autonomousBalanceDeadRecCubeCommand(USE_BRAKES),
+                autonomousBalanceDeadRecConeCommand(USE_BRAKES),
     			autonomousCubeRight(),
+                autonomousConeCommand(),
     			autonomousCubeLeftCommand(),
     			
     			//NOTE: the choices below are just three phases of the same two-pice wide cone auto.
     			//each one auto-detects blue vs red side
     			autonomousScoreConeGetConeThenHangOutCommand(),
     			autonomousScoreConeGetConeScoreMidCommand(),
-    			autonomousScoreConeGetConeScoreMidDriveBackOutCommand()
+    			autonomousScoreConeGetConeScoreMidDriveBackOutCommand(),
+                autonomousScoreConeGetConeThenHangOutCommand()
     	);
 
     }
@@ -123,7 +126,8 @@ public class CommandFactory {
     }
     
     public Command autonomousScoreConeGetConeThenHangOutCommand() {
-    	Command sg =  autoWideConeThenGetCone();
+    	Command sg =  autoWideConeThenGetConeWithoutBack();
+
     	sg.setName(sg.getName() + ",HangOut");
     	return sg;
     }    
@@ -150,9 +154,8 @@ public class CommandFactory {
     }
 
     //BUILDING BLOCK FOR VARIANTS ABOVE
-    private SequentialCommandGroup autoWideConeThenGetCone() {
-        double MOVE_DISTANCE_METERS = -4.05;
-
+    private SequentialCommandGroup autoWideConeThenGetConeWithoutBack() {
+        double MOVE_DISTANCE_METERS = -4;
         SequentialCommandGroup sg =  new SequentialCommandGroup();
             sg.addCommands(autonomousSetup());
             sg.addCommands( autonomousArmHigh());          
@@ -161,9 +164,17 @@ public class CommandFactory {
     		sg.addCommands( new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.6, 0.2, 0.35, navxSubsystem));
     		sg.addCommands( new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem, getAutoConePickupTurnAngle()));
     		sg.addCommands( autofrogGrabCommand());
-    		sg.addCommands( new FlipDirectionCommand(driveSubsystem, navxSubsystem));
-    		sg.addCommands( new ParallelCommandGroup(
-                new DriveDistanceStraightCommand(driveSubsystem, 4.26, 0.6, 0.2, 0.35, navxSubsystem)
+    		
+    		
+        sg.setName("ConeWide,GetCone");
+        return sg;
+    }
+
+    public SequentialCommandGroup autoWideConeThenGetCone() {
+        SequentialCommandGroup sg = autoWideConeThenGetConeWithoutBack();
+        sg.addCommands( new FlipDirectionCommand(driveSubsystem, navxSubsystem));
+        sg.addCommands( new ParallelCommandGroup(
+                new DriveDistanceStraightCommand(driveSubsystem, 4.1, 0.6, 0.2, 0.35, navxSubsystem)
                 , new SequentialCommandGroup(
                 	//this is essentially middle position, but up a bit
                     new PositionElbowCommand(elbowSubsystem, 82, true),
@@ -176,17 +187,20 @@ public class CommandFactory {
             //		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())
             sg.addCommands( new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem));  //shouldnt be needed-- we should already be all the way back?
         //);
-        sg.setName("ConeWide,GetCone");
+        sg.setName(sg.getName() + ",MoveBack");
         return sg;
     }
 
     public Command testDriveDistanceWeirdness() {
+    	//each wheel turn is 0.478 meters
+    	//2.08 turns per meter
     	SequentialCommandGroup sg = new SequentialCommandGroup(
-    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem),
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.478, 0.1, 0.2, 0.35, navxSubsystem), //1 turn
     			new WaitCommand(1.0),
-    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem),
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.478, 0.1, 0.2, 0.35, navxSubsystem), //1 turn
     			new WaitCommand(1.0),
-    			new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.4, 0.2, 0.35, navxSubsystem)
+    			new DriveDistanceStraightCommand(driveSubsystem, 0.478, 0.1, 0.2, 0.35, navxSubsystem), //1 turn
+    			new DriveDistanceStraightCommand(driveSubsystem, 2.868, 0.1, 0.2, 0.35, navxSubsystem) //6 turns last move total is 7 turns
     			);
         sg.setName("TestWeirdness");
         return sg;
@@ -299,7 +313,7 @@ public class CommandFactory {
 
     public Command autofrogGrabCommand() {
     	double MOVE_DISTANCE_FWD = 0.15;
-    	double MOVE_DISTANCE_BWD = 0.06;
+    	double MOVE_DISTANCE_BWD = 0.15;
     	double MOVE_SPEED = 0.22;
     	double MOVE_MIN_SPEED = 0.15;
     	double MOVE_RAMP = 0.3;
@@ -381,7 +395,7 @@ public class CommandFactory {
         return sg;
     }
 
-    public Command autonomousBalanceDeadRecCommand(boolean useBrakes) {
+    public Command autonomousBalanceDeadRecCubeCommand(boolean useBrakes) {
         double MOVE_DISTANCE_METERS = -2.465;
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
@@ -393,18 +407,38 @@ public class CommandFactory {
         );
         if ( useBrakes) {
         	sg.addCommands(deployBrakeCommand());
-        	sg.setName("Center DeadRec Balance w/brakes");
+        	sg.setName("Center DeadRec Balance cube w/brakes");
         }
         else {
-        	sg.setName("Center DeadRec Balance no brakes");
+        	sg.setName("Center DeadRec Balance cube no brakes");
+        }
+        return sg;
+    }
+
+    public Command autonomousBalanceDeadRecConeCommand(boolean useBrakes) {
+        double MOVE_DISTANCE_METERS = -2.465;
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+              autonomousSetup()
+            , autonomousArmHigh()
+            , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+            , autonomousArmSafe()
+            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.3, 0.3, .1)
+
+        );
+        if ( useBrakes) {
+        	sg.addCommands(deployBrakeCommand());
+        	sg.setName("Center DeadRec Balance cone w/brakes");
+        }
+        else {
+        	sg.setName("Center DeadRec Balance cone no brakes");
         }
         return sg;
     }
 
     public Command autonomousAutoBalanceCommand(boolean useBrakes) {
-        double MOVE_DISTANCE_METERS = -4.0;   // Distance to clear the Charging Station
+        double MOVE_DISTANCE_METERS = -4.2;   // Distance to clear the Charging Station
         double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
-        double HOLD_BRAKE_TIME = 0;         // Time to hold brake when changing direction
+        double HOLD_BRAKE_TIME = 1.5;         // Time to hold brake when changing direction
         SequentialCommandGroup sg =  new SequentialCommandGroup(
               autonomousSetup()
             , autonomousArmHigh()

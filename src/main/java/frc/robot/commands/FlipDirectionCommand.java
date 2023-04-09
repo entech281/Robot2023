@@ -19,7 +19,7 @@ public class FlipDirectionCommand extends EntechCommandBase {
     protected final DriveSubsystem drive;
     private YawAngleSupplier yawSupplier;
     private double angleToWait;
-    private static final double TOLERANCE = 1.0;
+    private static final double TOLERANCE = 2.0;
     private static final int STOPPING_COUNT = 5;
     private StoppingCounter sc;
 
