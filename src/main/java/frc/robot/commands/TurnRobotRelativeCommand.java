@@ -53,7 +53,7 @@ public class TurnRobotRelativeCommand extends EntechCommandBase {
         }
         else {
             drive.setHoldYawAngle(164.0);
-            angleToWait = 164;
+            angleToWait = -16;
         }
 
         sc = new StoppingCounter("TurnRelative", STOPPING_COUNT);
