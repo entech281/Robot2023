@@ -64,8 +64,9 @@ public class DriveCSForwardBalanceCommand extends EntechCommandBase {
   public void initialize() {
     pitch_seen = false;
     pitch_stable_count = 0;
-    speed = original_speed;
+    speed = RobotConstants.BALANCE_PARAMETERS.BALANCE_SPEED;
     drive.setDriveMode(DriveMode.BRAKE);
+    DriverStation.reportWarning("INIT:" + this +":" + this.speed,false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

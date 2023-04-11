@@ -2,6 +2,8 @@ package frc.robot.oi;
 
 import java.util.List;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
@@ -58,10 +60,11 @@ public class ShuffleboardInterface {
 		MATCH_TAB.add(allSubsystems.getNavx()).withSize(2, 2).withPosition(4,3);
 		MATCH_TAB.add(allSubsystems.getVision()).withSize(2, 2).withPosition(6,0);
 		MATCH_TAB.add(arm).withSize(2, 1).withPosition(6,2);
-		MATCH_TAB.add(elbow).withSize(2, 1).withPosition(6,3);
-		MATCH_TAB.add(allSubsystems.getGripper()).withSize(2, 1).withPosition(6,4);
+		MATCH_TAB.add(elbow).withSize(2, 1).withPosition(2,3);
+		MATCH_TAB.add(allSubsystems.getGripper()).withSize(2, 1).withPosition(2,4);
 
-
+		//VideoSource photonvision = CameraServer.getServer("photonvision").getSource();
+		//MATCH_TAB.add(photonvision).withSize(3, 2).withPosition(7, 3);
 		if ( arm.isEnabled()) {
 			MATCH_TAB.add("ArmController",arm.getPositionController()).withSize(2, 3).withPosition(0, 0);		
 		}
