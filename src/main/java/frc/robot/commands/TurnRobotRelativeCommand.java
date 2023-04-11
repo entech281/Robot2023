@@ -12,6 +12,7 @@ import frc.robot.util.StoppingCounter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 /**
  *
  * 
@@ -46,8 +47,14 @@ public class TurnRobotRelativeCommand extends EntechCommandBase {
     @Override
     public void initialize() {
         drive.resetEncoders();
-        angleToWait = EntechUtils.normalizeAngle( yawSupplier.getYawAngleDegrees() + robotRelativeAngle );
-        drive.setHoldYawAngle(angleToWait);
+        if ( DriverStation.getAlliance() == Alliance.Red) {
+            drive.setHoldYawAngle(-164.0);
+            angleToWait = -164.0;
+        }
+        else {
+            drive.setHoldYawAngle(164.0);
+            angleToWait = 164;
+        }
 
         sc = new StoppingCounter("TurnRelative", STOPPING_COUNT);
         DriverStation.reportWarning("INIT", false);

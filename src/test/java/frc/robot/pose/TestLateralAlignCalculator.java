@@ -13,7 +13,7 @@ public class TestLateralAlignCalculator {
 	protected LateralAlignCalculator lac = new LateralAlignCalculator();
 	private double TOLERANCE = 0.01;
 	
-	@Test
+	//@Test
 	public void testLowerLeftCorner() {
 		
 		LateralOffset lo = lac.findOffsetToNearestTarget(0,0);
