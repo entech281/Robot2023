@@ -162,6 +162,15 @@ public final class RobotConstants {
         public static final double SPEED_LIMIT_WITH_ARM_OUT = 0.7;
         public static final double YAW_NUDGE_DEGREES = 3.5;
         public static final double WHEELBASE_INCHES = 24.5;
+        public interface PID {
+        	public static final double kP = 0.01;
+        	public static final double kI = 0.0;
+        	public static final double kD = 0.0;
+        	public static final double kMAX_SPEED = 100.0;
+        	public static final double kMAX_ACCEL = 50.0;
+        	public static final double kTURN_TOLLERENCE = 2.0;
+        	public static final double kTURN_TOLLERENCE_RATE = 0.0;
+        }
     }
     public interface BALANCE_PARAMETERS {
         public static final double CHARGESTATION_APPROACH_SPEED = 0.30;
