@@ -22,7 +22,7 @@ import frc.robot.util.EntechUtils;
  */
 public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
-    private static final double LATERAL_P_GAIN = 1.0;
+    private static final double LATERAL_P_GAIN = 1.2;
     private static final double LATERAL_I_GAIN = 0.001;	
     private static final double LATERAL_D_GAIN = 0.00;
 
