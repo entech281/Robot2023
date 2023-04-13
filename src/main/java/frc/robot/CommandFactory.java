@@ -133,8 +133,8 @@ public class CommandFactory {
         		autofrogGrabCommand(),
         		new FlipDirectionCommand(driveSubsystem, navxSubsystem),
         		new ParallelCommandGroup(
-        				//new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.175, 0.6, 0.2, 0.35, navxSubsystem)
-                        new DriveDistanceStraightCommand(driveSubsystem, 4.175, 0.6, 0.2, 0.35, navxSubsystem)
+        				new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.175, 0.6, 0.2, 0.35, navxSubsystem,robotState)
+                        //new DriveDistanceStraightCommand(driveSubsystem, 4.175, 0.6, 0.2, 0.35, navxSubsystem)
                         , new SequentialCommandGroup(
                         	//this is essentially middle position, but up a bit
                             new PositionElbowCommand(elbowSubsystem, 82, true),
@@ -271,8 +271,7 @@ public class CommandFactory {
 
 
     public Command getCommandToTestAlignWhileDriving() {
-    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.0, 0.2, 0.15, 0.25, navxSubsystem, robotState, 
-    	           new ScoringLocation( AprilTagLocation.RED_LEFT, TargetNode.A1));   
+    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.0, 0.2, 0.15, 0.25, navxSubsystem, robotState);   
     	c.setName("Drive1.5MetersWhileTryingtoAlignToA1");
     	return c;
     }
