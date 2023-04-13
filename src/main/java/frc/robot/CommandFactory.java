@@ -40,6 +40,7 @@ import frc.robot.commands.SimpleDriveCommand;
 import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.DriveDistanceStraightWhileAligningCommand;
 import frc.robot.commands.ToggleGripperCommand;
+import frc.robot.commands.TurnAngleCommand;
 import frc.robot.commands.TurnRobotRelativeCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
@@ -111,10 +112,10 @@ public class CommandFactory {
     			
     			//NOTE: the choices below are just three phases of the same two-pice wide cone auto.
     			//each one auto-detects blue vs red side
-    			autonomousScoreConeGetConeThenHangOutCommand(),
-    			autonomousScoreConeGetConeScoreMidCommand(),
-    			autonomousScoreConeGetConeScoreMidDriveBackOutCommand(),
-                autonomousScoreConeGetConeThenHangOutCommand()
+    			//autonomousScoreConeGetConeThenHangOutCommand(),
+    			//autonomousScoreConeGetConeScoreMidCommand(),
+    			autonomousScoreConeGetConeScoreMidDriveBackOutCommand()
+                //autonomousScoreConeGetConeThenHangOutCommand()
     	);
 
     }
@@ -132,27 +133,48 @@ public class CommandFactory {
     	return sg;
     }    
     
-    public SequentialCommandGroup autonomousScoreConeGetConeScoreMidCommand() {
-    	SequentialCommandGroup sg = autoWideConeThenGetCone();
-        sg.addCommands(
-            	new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
-                , autonomousArmSafe()
-        );
-        sg.setName(sg.getName() + ",ConeMid");
-        return sg;
-    }
-    
     public Command autonomousScoreConeGetConeScoreMidDriveBackOutCommand() {
-    	double MOVE_DISTANCE_METERS = -4.0;
+    	double MOVE_DISTANCE_METERS = -5.0;
     	SequentialCommandGroup sg = autonomousScoreConeGetConeScoreMidCommand();
-    	sg.addCommands(
-                new WaitCommand(0.25)
-                , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.35, 0.2, navxSubsystem)        			
+   	sg.addCommands(
+               new WaitCommand(0.25)
+               , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.76, 0.35, 0.2, navxSubsystem)        			
      	);    	
     	sg.setName(sg.getName() + ",MoveOut");
     	return sg;
     }
 
+    public SequentialCommandGroup autonomousScoreConeGetConeScoreMidCommand() {
+    	SequentialCommandGroup sg = autoWideConeThenGetCone();
+       sg.addCommands(
+           	new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+               , autonomousArmSafe()
+       );
+        sg.setName(sg.getName() + ",ConeMid");
+        return sg;
+    }
+
+    public SequentialCommandGroup autoWideConeThenGetCone() {
+        SequentialCommandGroup sg = autoWideConeThenGetConeWithoutBack();
+        sg.addCommands( new FlipDirectionCommand(driveSubsystem, navxSubsystem));
+        sg.addCommands( new ParallelCommandGroup(
+                new DriveDistanceStraightCommand(driveSubsystem, 4.175, 0.6, 0.2, 0.35, navxSubsystem)
+                , new SequentialCommandGroup(
+                	//this is essentially middle position, but up a bit
+                    new PositionElbowCommand(elbowSubsystem, 82, true),
+                    new PositionTelescopeCommand(armSubsystem, 0.175, true)
+                )
+            ));
+    		sg.addCommands( new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem));  //this shouldnt be needed! redundant with FlipDirectionCommand above
+            //this will let us try to align with the location on the way
+            //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 0.3, 0.25, navxSubsystem, robotState, 
+            //		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())
+            sg.addCommands( new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem));  //shouldnt be needed-- we should already be all the way back?
+        //);
+        sg.setName(sg.getName() + ",MoveBack");
+        return sg;
+    }    
+    
     //BUILDING BLOCK FOR VARIANTS ABOVE
     private SequentialCommandGroup autoWideConeThenGetConeWithoutBack() {
         double MOVE_DISTANCE_METERS = -4;
@@ -170,26 +192,7 @@ public class CommandFactory {
         return sg;
     }
 
-    public SequentialCommandGroup autoWideConeThenGetCone() {
-        SequentialCommandGroup sg = autoWideConeThenGetConeWithoutBack();
-        sg.addCommands( new FlipDirectionCommand(driveSubsystem, navxSubsystem));
-        sg.addCommands( new ParallelCommandGroup(
-                new DriveDistanceStraightCommand(driveSubsystem, 4.1, 0.6, 0.2, 0.35, navxSubsystem)
-                , new SequentialCommandGroup(
-                	//this is essentially middle position, but up a bit
-                    new PositionElbowCommand(elbowSubsystem, 82, true),
-                    new PositionTelescopeCommand(armSubsystem, 0.175, true)
-                )
-            ));
-    		sg.addCommands( new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem));  //this shouldnt be needed! redundant with FlipDirectionCommand above
-            //this will let us try to align with the location on the way
-            //, new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 0.3, 0.25, navxSubsystem, robotState, 
-            //		DriveDistanceStraightWhileAligningCommand.getScoringLocationForWideAuto())
-            sg.addCommands( new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem));  //shouldnt be needed-- we should already be all the way back?
-        //);
-        sg.setName(sg.getName() + ",MoveBack");
-        return sg;
-    }
+
 
     public Command testDriveDistanceWeirdness() {
     	//each wheel turn is 0.478 meters
@@ -232,7 +235,8 @@ public class CommandFactory {
             autonomousScoreConeGetConeScoreMidCommand(),
             autoGroundPickupPositionCube(),
             getCommandToTestAlignWhileDriving(),
-            new BalanceAfterAlreadyOnTopCommand(driveSubsystem,navxSubsystem,brakeSubsystem)
+            new BalanceAfterAlreadyOnTopCommand(driveSubsystem,navxSubsystem,brakeSubsystem),
+            new TurnAngleCommand(120.0, driveSubsystem, navxSubsystem)
     	);
     }
 
@@ -315,7 +319,7 @@ public class CommandFactory {
 
     public Command autofrogGrabCommand() {
     	double MOVE_DISTANCE_FWD = 0.15;
-    	double MOVE_DISTANCE_BWD = 0.15;
+    	double MOVE_DISTANCE_BWD = 0.12;
     	double MOVE_SPEED = 0.22;
     	double MOVE_MIN_SPEED = 0.15;
     	double MOVE_RAMP = 0.3;
