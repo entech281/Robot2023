@@ -129,7 +129,7 @@ public class VisionSubsystem extends EntechSubsystem {
   }
   private void updateStatus(){
 	  
-	  if ( DriverStation.isTeleop()) {
+	  //if ( DriverStation.isTeleop()) {
 		  	VisionStatus newStatus = new VisionStatus();
 		  	lastPhotonYawAngle = NO_GOOD_ANGLE;
 		    PhotonPipelineResult result = camera.getLatestResult();
@@ -159,7 +159,7 @@ public class VisionSubsystem extends EntechSubsystem {
 		    
 		  currentStatus = newStatus;
 		  //debugStatus();		  
-	  }
+	 // }
 
   }
   

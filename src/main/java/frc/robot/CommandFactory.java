@@ -271,7 +271,7 @@ public class CommandFactory {
 
 
     public Command getCommandToTestAlignWhileDriving() {
-    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.0, 0.2, 0.15, 0.25, navxSubsystem, robotState);   
+    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.0, 0.3, 0.2, 0.25, navxSubsystem, robotState);   
     	c.setName("Drive1.5MetersWhileTryingtoAlignToA1");
     	return c;
     }
