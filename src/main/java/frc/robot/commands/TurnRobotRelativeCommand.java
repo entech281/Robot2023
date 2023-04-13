@@ -7,9 +7,7 @@ package frc.robot.commands;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.util.EntechUtils;
 import frc.robot.util.StoppingCounter;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -23,7 +21,7 @@ public class TurnRobotRelativeCommand extends EntechCommandBase {
     protected final DriveSubsystem drive;
     private YawAngleSupplier yawSupplier;
     private double angleToWait;
-    private final double robotRelativeAngle;
+ 
     private static final double TOLERANCE = 1.0;
     private static final int STOPPING_COUNT = 5;
     private static double TIMEOUT_SECS = 2.5;
@@ -37,11 +35,10 @@ public class TurnRobotRelativeCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param current_angle The current yaw angle
      */
-    public TurnRobotRelativeCommand(DriveSubsystem drive, YawAngleSupplier yawSupplier, double robotRelativeAngle) {
+    public TurnRobotRelativeCommand(DriveSubsystem drive, YawAngleSupplier yawSupplier) {
         super(drive);
         this.drive = drive;
         this.yawSupplier = yawSupplier;
-        this.robotRelativeAngle = robotRelativeAngle;
     }
 
     @Override
