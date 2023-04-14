@@ -15,7 +15,7 @@ import frc.robot.subsystems.NavXSubSystem;
 /** A command that will turn the robot to the specified angle. */
 public class TurnAngleCommand extends EntechCommandBase {
 
-	 public static final double P = 0.006;
+	 public static final double P = 0.005;
 	 public static final double I = 0.001;
 	 public static final double D = 0.0;
 	 public static final double TOLERANCE = 1.5;
@@ -29,10 +29,11 @@ public class TurnAngleCommand extends EntechCommandBase {
    * @param targetAngleDegrees The angle to turn to
    * @param drive The drive subsystem to use
    */
-  public TurnAngleCommand(DriveSubsystem drive, NavXSubSystem navx) {
+  public TurnAngleCommand(DriveSubsystem drive, NavXSubSystem navx, double targetAngleDegrees) {
 	  this.drive = drive;
 	  this.navx = navx;
 	  controller = new PIDController(P,I,D);
+	  this.targetAngleDegrees= targetAngleDegrees;
 	  //SmartDashboard.putData("TurnAnglePID",controller);
   }
 
@@ -41,8 +42,8 @@ public class TurnAngleCommand extends EntechCommandBase {
 
 
       if ( DriverStation.getAlliance() == Alliance.Red) {
-          drive.setHoldYawAngle(-135.0);
-          targetAngleDegrees = -135.0;
+          drive.setHoldYawAngle(targetAngleDegrees);
+          targetAngleDegrees = targetAngleDegrees;
       }
       else {
           drive.setHoldYawAngle(-45);

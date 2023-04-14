@@ -144,12 +144,13 @@ public class CommandFactory {
         		new DriveDistanceStraightCommand(driveSubsystem, -4, 0.6, 0.1, 0.35, navxSubsystem),
         		new WaitCommand(0.3),
         		//new TurnRobotRelativeCommand(driveSubsystem, navxSubsystem )
-        		new TurnAngleCommand(driveSubsystem, navxSubsystem),
+        		new TurnAngleCommand(driveSubsystem, navxSubsystem,-138.0),
         		autofrogGrabCommand(),
-        		new FlipDirectionCommand(driveSubsystem, navxSubsystem),
+        		new TurnAngleCommand(driveSubsystem, navxSubsystem,0),
+        		//new FlipDirectionCommand(driveSubsystem, navxSubsystem),
         		new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem),        		
         		new ParallelCommandGroup(
-        				new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.19, 0.4, 0.2, 0.35, navxSubsystem,robotState) 
+        				new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.5, 0.4, 0.2, 0.25, navxSubsystem,robotState) 
                         //new DriveDistanceStraightCommand(driveSubsystem, 4.175, 0.6, 0.2, 0.35, navxSubsystem)
                         , new SequentialCommandGroup(
                         	//this is essentially middle position, but up a bit
@@ -160,8 +161,8 @@ public class CommandFactory {
         		//new DriveDistanceStraightCommand(driveSubsystem, 0.3, 0.25, navxSubsystem),        		
        		    new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
         		autonomousArmSafe(),
-        		new WaitCommand(0.25),
-        		new DriveDistanceStraightCommand(driveSubsystem, -5.0, 0.76, 0.35, 0.2, navxSubsystem)   
+        		//new WaitCommand(0.25),
+        		new DriveDistanceStraightCommand(driveSubsystem, -4.5, 0.6, 0.35, 0.2, navxSubsystem)   
         		
         );
     	sg.setName("TwoPieceLane");
@@ -344,9 +345,9 @@ public class CommandFactory {
     }
 
     public Command autofrogGrabCommand() {
-    	double MOVE_DISTANCE_FWD = 0.19;
-    	double MOVE_DISTANCE_BWD = 0.14;
-    	double MOVE_SPEED = 0.22;
+    	double MOVE_DISTANCE_FWD = 0.25;
+    	double MOVE_DISTANCE_BWD = 0.18;
+    	double MOVE_SPEED = 0.2;
     	double MOVE_MIN_SPEED = 0.15;
     	double MOVE_RAMP = 0.3;
         return new SequentialCommandGroup(
