@@ -109,7 +109,8 @@ public class CommandFactory {
     			autonomousCubeRight(),
                 autonomousConeCommand(),
     			autonomousCubeLeftCommand(),    			
-    			autonomousTwoPieceLaneCommand(),
+    			autonomousTwoPieceLaneCommand(true),
+    			autonomousTwoPieceLaneCommand(false),
     			autonomousConeBump()
 
     	);
@@ -134,8 +135,8 @@ public class CommandFactory {
     	return sg;    	
     }
     
-    public Command autonomousTwoPieceLaneCommand() {
-    	boolean scoreAndDriveOut = true;
+    public Command autonomousTwoPieceLaneCommand(boolean scoreAndDriveOut) {
+
     	
         SequentialCommandGroup sg =  new SequentialCommandGroup(
         		autonomousSetup(),
@@ -163,9 +164,12 @@ public class CommandFactory {
             		//new WaitCommand(0.25),
             		new DriveDistanceStraightCommand(driveSubsystem, -4.5, 0.6, 0.35, 0.2, navxSubsystem)           			
        		);
+        	sg.setName("TwoPieceLane");
         }
-        		
-    	sg.setName("TwoPieceLane");
+        else {
+        	sg.setName("TwoPieceLane--Safe");
+        }        		
+    	
     	return sg;
     }    
     
@@ -482,7 +486,10 @@ public class CommandFactory {
 	}
 
     public Command alignHorizontalToTag( Supplier<DriveInput> operatorInput) {
-  		return new HorizontalAlignWithTagCommand(driveSubsystem, ledSubsystem, addYawToOperatorJoystickInput(operatorInput), robotState);
+  		return new SequentialCommandGroup(
+  				new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem ),
+  				new HorizontalAlignWithTagCommand(driveSubsystem, ledSubsystem, addYawToOperatorJoystickInput(operatorInput), robotState)
+  		);
     }
 
     public Command getYawToNearestPerpendicular() {
