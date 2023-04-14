@@ -20,7 +20,7 @@ import frc.robot.subsystems.DriveSubsystem.DriveMode;
 public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase {
   private static final int STOPPING_COUNT = 4;
   private static final double LATERAL_ALIGN_GAIN = 0.5;
-  private static final double DISTANCE_TO_TARGET_TOLLERENCE = 2;
+  private static final double DISTANCE_TO_TARGET_TOLLERENCE = 2.5;
 
   private double speed;
   private double minSpeed;
@@ -48,7 +48,7 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
    * @param subsystem The subsystem used by this command.
    */
   public DriveDistanceStraightWhileAligningCommand(DriveSubsystem drive, double desiredDistanceMeters, 
-		  double speed, YawAngleSupplier yawSupplier, EstimatedPoseSupplier poseSupplier, ScoringLocation targetLocation) {
+		  double speed, YawAngleSupplier yawSupplier, EstimatedPoseSupplier poseSupplier) {
       super(drive);
       this.drive = drive;
       this.desiredDistanceMeters = desiredDistanceMeters;
@@ -57,11 +57,11 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
       this.minSpeed = speed;
       this.yawSupplier = yawSupplier;
       this.poseSupplier=poseSupplier;
-      this.targetLocation = targetLocation;
+
   }
 
   public DriveDistanceStraightWhileAligningCommand(DriveSubsystem drive, double desiredDistanceMeters, 
-		  double speed, double minSpeed, double ramp_fraction, YawAngleSupplier yawSupplier,EstimatedPoseSupplier poseSupplier, ScoringLocation targetLocation) {
+		  double speed, double minSpeed, double ramp_fraction, YawAngleSupplier yawSupplier,EstimatedPoseSupplier poseSupplier) {
     super(drive);
     this.drive = drive;
     this.desiredDistanceMeters = desiredDistanceMeters;
@@ -99,6 +99,7 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
     }
     exeCounter++;
     double lateralOutput = 0.0;
+    ScoringLocation targetLocation = getScoringLocationForWideAuto();
     if ( poseSupplier.getEstimatedPose().isPresent()) {
     	Pose2d currentPose = poseSupplier.getEstimatedPose().get(); 
 
