@@ -150,7 +150,7 @@ public class CommandFactory {
         		//new FlipDirectionCommand(driveSubsystem, navxSubsystem),
         		new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem),        		
         		new ParallelCommandGroup(
-        				new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.5, 0.4, 0.2, 0.25, navxSubsystem,robotState) 
+        				new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.5, 0.5, 0.2, 0.25, navxSubsystem,robotState) 
                         //new DriveDistanceStraightCommand(driveSubsystem, 4.175, 0.6, 0.2, 0.35, navxSubsystem)
                         , new SequentialCommandGroup(
                         	//this is essentially middle position, but up a bit
@@ -346,8 +346,8 @@ public class CommandFactory {
 
     public Command autofrogGrabCommand() {
     	double MOVE_DISTANCE_FWD = 0.25;
-    	double MOVE_DISTANCE_BWD = 0.18;
-    	double MOVE_SPEED = 0.2;
+    	double MOVE_DISTANCE_BWD = 0.16;
+    	double MOVE_SPEED = 0.3;
     	double MOVE_MIN_SPEED = 0.15;
     	double MOVE_RAMP = 0.3;
         return new SequentialCommandGroup(
