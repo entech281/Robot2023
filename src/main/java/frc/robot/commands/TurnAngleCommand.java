@@ -19,6 +19,8 @@ public class TurnAngleCommand extends EntechCommandBase {
 	 public static final double I = 0.001;
 	 public static final double D = 0.0;
 	 public static final double TOLERANCE = 1.5;
+	 private double redTargetAngleDegrees = 0.0;
+	 private double blueTargetAngleDegrees = 0.0;
 	 private double targetAngleDegrees = 0.0;
 	 private DriveSubsystem drive;
 	 private NavXSubSystem navx;
@@ -29,12 +31,12 @@ public class TurnAngleCommand extends EntechCommandBase {
    * @param targetAngleDegrees The angle to turn to
    * @param drive The drive subsystem to use
    */
-  public TurnAngleCommand(DriveSubsystem drive, NavXSubSystem navx, double targetAngleDegrees) {
+  public TurnAngleCommand(DriveSubsystem drive, NavXSubSystem navx, double redTargetAngleDegrees, double blueTargetAngleDegrees) {
 	  this.drive = drive;
 	  this.navx = navx;
 	  controller = new PIDController(P,I,D);
-	  this.targetAngleDegrees= targetAngleDegrees;
-	  //SmartDashboard.putData("TurnAnglePID",controller);
+	  this.redTargetAngleDegrees= redTargetAngleDegrees;
+	  this.blueTargetAngleDegrees= blueTargetAngleDegrees;
   }
 
   @Override
@@ -42,14 +44,12 @@ public class TurnAngleCommand extends EntechCommandBase {
 
 
       if ( DriverStation.getAlliance() == Alliance.Red) {
-          drive.setHoldYawAngle(targetAngleDegrees);
-          targetAngleDegrees = targetAngleDegrees;
+          targetAngleDegrees = redTargetAngleDegrees;
       }
       else {
-          drive.setHoldYawAngle(-45);
-          targetAngleDegrees = -45;
-
+          targetAngleDegrees = blueTargetAngleDegrees;
       }	  
+      drive.setHoldYawAngle(targetAngleDegrees);
 	  controller.setSetpoint(targetAngleDegrees);      
 	  controller.enableContinuousInput(-180, 180);
 	  controller.setTolerance(TOLERANCE,20.0);
