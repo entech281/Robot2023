@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-
-
 public class BrakeStatus implements SubsystemStatus{
 
     private BrakeSubsystem.BrakeState state;

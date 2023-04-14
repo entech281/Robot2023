@@ -45,7 +45,7 @@ public class GripperSubsystem extends EntechSubsystem {
 	
 	public void setSolenoids(DoubleSolenoid.Value newValue) {
         leftGripperSolenoid.set(newValue);
-        rightGripperSolenoid.set(newValue);		
+        rightGripperSolenoid.set(newValue);
 	}
 
 	public void toggleGripper() {

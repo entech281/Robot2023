@@ -3,12 +3,12 @@ package frc.robot.subsystems;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+
 import frc.robot.RobotConstants;
 
 public class BrakeSubsystem extends EntechSubsystem {
 	
-	private Solenoid brakeSolenoid;
+	private DoubleSolenoid brakeSolenoid;
 	
 	private BrakeState brakeStatus;
 	
@@ -22,9 +22,11 @@ public class BrakeSubsystem extends EntechSubsystem {
 	
 	@Override
 	public void initialize() {
-		if (enabled ) {
-			brakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 
-					RobotConstants.PNEUMATICS.BRAKE_SOLENOID);
+		if (enabled) {
+			brakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+							RobotConstants.PNEUMATICS.BRAKE_SOLENOID_DEPLOYED,
+							RobotConstants.PNEUMATICS.BRAKE_SOLENOID_RETRACTED);
+
             brakeStatus = BrakeState.kRetract;
 		}
 	}
@@ -34,6 +36,10 @@ public class BrakeSubsystem extends EntechSubsystem {
 	  if ( enabled ) {
 		  handleSolenoid();
 	  }
+	}
+
+	public void setBrakeSolenoid(BrakeSubsystem.BrakeState newValue) {
+        setBrakeSolenoid(newValue);
 	}
 	
     @Override
@@ -46,10 +52,10 @@ public class BrakeSubsystem extends EntechSubsystem {
 	
 	private void handleSolenoid() {
           if (brakeStatus == BrakeState.kDeploy) {
-        	  brakeSolenoid.set(true);
+        	  setBrakeSolenoid(BrakeState.kDeploy);
           } else 
           {
-        	  brakeSolenoid.set(false);       	  
+			setBrakeSolenoid(BrakeState.kRetract);     	  
           } 
 	}
 
