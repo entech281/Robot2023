@@ -3,14 +3,17 @@ package frc.robot.subsystems;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+
 import frc.robot.RobotConstants;
 
 public class BrakeSubsystem extends EntechSubsystem {
 	
-	private Solenoid brakeSolenoid;
+	private DoubleSolenoid brakeSolenoid;
 	
 	private BrakeState brakeStatus;
+	private int brakeSolenoidCounter;
+
+	private final int SOLENOID_HIT_COUNT = 20;
 	
 	public BrakeState getBrakeStatus() {
 		return brakeStatus;
@@ -22,9 +25,11 @@ public class BrakeSubsystem extends EntechSubsystem {
 	
 	@Override
 	public void initialize() {
-		if (enabled ) {
-			brakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 
-					RobotConstants.PNEUMATICS.BRAKE_SOLENOID);
+		if (enabled) {
+			brakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+							RobotConstants.PNEUMATICS.BRAKE_SOLENOID_DEPLOYED,
+							RobotConstants.PNEUMATICS.BRAKE_SOLENOID_RETRACTED);
+
             brakeStatus = BrakeState.kRetract;
 		}
 	}
@@ -35,6 +40,10 @@ public class BrakeSubsystem extends EntechSubsystem {
 		  handleSolenoid();
 	  }
 	}
+
+	public void setBrakeSolenoids(DoubleSolenoid.Value newValue) {
+        brakeSolenoid.set(newValue);
+	}
 	
     @Override
     public void initSendable(SendableBuilder builder) {
@@ -43,21 +52,31 @@ public class BrakeSubsystem extends EntechSubsystem {
   	      builder.addBooleanProperty("Brake deployed",this::isBrakeDeployed, null);
   	  }
     }	
-	
+
 	private void handleSolenoid() {
-          if (brakeStatus == BrakeState.kDeploy) {
-        	  brakeSolenoid.set(true);
-          } else 
-          {
-        	  brakeSolenoid.set(false);       	  
-          } 
-	}
+		if (brakeSolenoidCounter < SOLENOID_HIT_COUNT) {
+			brakeSolenoidCounter += 1;
+			if (brakeStatus == BrakeState.kDeploy) {
+				setBrakeSolenoids(DoubleSolenoid.Value.kForward);
+			} else if (brakeStatus == BrakeState.kRetract) {
+				setBrakeSolenoids(DoubleSolenoid.Value.kReverse);	        	  
+			} else {
+				setBrakeSolenoids(DoubleSolenoid.Value.kOff);
+			}
+		} else {
+			setBrakeSolenoids(DoubleSolenoid.Value.kOff);
+		}		
+  }
 
 	public boolean isBrakeDeployed() {
 		return brakeStatus == BrakeState.kDeploy;
 	}
 	
     public void setBrakeState(BrakeState state) {
+		if (state != brakeStatus) {
+			brakeSolenoidCounter = 0;
+			brakeStatus = state;
+		  }
 	    brakeStatus = state;
 	}
 	
