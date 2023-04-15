@@ -31,6 +31,8 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.BrakeSubsystem.BrakeState;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -139,7 +141,11 @@ public class Robot extends TimedRobot {
   
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    if(allSubsystems.getBrake().isBrakeDeployed() == true){
+      allSubsystems.getBrake().setBrakeSolenoids(DoubleSolenoid.Value.kReverse);
+    }
+  }
   
   @Override
   public void disabledExit() {
@@ -176,6 +182,9 @@ public class Robot extends TimedRobot {
     // use the default command which is ArcadeDrive. If you want the autonomous
     // to continue until interrupted by another command, remove
     // this line or comment it out.
+    if(allSubsystems.getBrake().isBrakeDeployed() == true){
+      allSubsystems.getBrake().setBrakeSolenoids(DoubleSolenoid.Value.kReverse);
+    }
     if (autoCommand != null) {
       autoCommand.cancel();
     }
