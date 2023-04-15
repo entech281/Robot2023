@@ -4,14 +4,12 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.adapter.DriveInputYawMixer;
-import frc.robot.commands.ArmElbowForgetHomesCommand;
 import frc.robot.commands.BalanceAfterAlreadyOnTopCommand;
 import frc.robot.commands.ConeDeployCommand;
 import frc.robot.commands.DefaultGripperCommand;
@@ -24,13 +22,11 @@ import frc.robot.commands.DriveCrosshairBalence;
 import frc.robot.commands.DriveDirectionCommand;
 import frc.robot.commands.DriveDistanceCommand;
 import frc.robot.commands.DriveDistanceStraightCommand;
-import frc.robot.commands.DriveForwardToBalanceCommand;
 import frc.robot.commands.DriveSetBrakeMode;
 import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.DriveYawToNearestPerpendicular;
 import frc.robot.commands.FilteredDriveCommand;
-import frc.robot.commands.FlipDirectionCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
@@ -41,7 +37,6 @@ import frc.robot.commands.ToggleFieldAbsoluteCommand;
 import frc.robot.commands.DriveDistanceStraightWhileAligningCommand;
 import frc.robot.commands.ToggleGripperCommand;
 import frc.robot.commands.TurnAngleCommand;
-import frc.robot.commands.TurnRobotRelativeCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.nudge.NudgeDirectionCommand;
 import frc.robot.commands.nudge.NudgeElbowDownCommand;
@@ -50,9 +45,6 @@ import frc.robot.commands.nudge.NudgeTelescopeBackwardsCommand;
 import frc.robot.commands.nudge.NudgeTelescopeForwardCommand;
 import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.filters.DriveInput;
-import frc.robot.pose.AprilTagLocation;
-import frc.robot.pose.ScoringLocation;
-import frc.robot.pose.TargetNode;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -103,12 +95,11 @@ public class CommandFactory {
     	boolean USE_BRAKES = true;
     	return List.of(
     			
-    			autonomousAutoBalanceCommand(USE_BRAKES),    			
-    			autonomousBalanceDeadRecCubeCommand(USE_BRAKES),
-                autonomousBalanceDeadRecConeCommand(USE_BRAKES),
+    			autonomousAutoBalanceCubeCommand(USE_BRAKES),
+                autonomousAutoBalanceConeCommand(USE_BRAKES),
     			autonomousCubeRight(),
                 autonomousConeCommand(),
-    			autonomousCubeLeftCommand(),    			
+    			autonomousCubeLeftCommand(),
     			autonomousTwoPieceLaneCommand(true),
     			autonomousTwoPieceLaneCommand(false),
     			autonomousConeBump()
@@ -129,7 +120,8 @@ public class CommandFactory {
         		autonomousArmHigh(),
         		new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
         		autonomousArmSafe(),
-        		new DriveDistanceStraightCommand(driveSubsystem, -4, 0.6, 0.2, 0.35, navxSubsystem)
+        		new DriveDistanceStraightCommand(driveSubsystem, -4, 0.6, 0.2, 0.35, navxSubsystem),
+                new TurnAngleCommand(driveSubsystem, navxSubsystem, -13.7, 0)
         );
     	sg.setName("ConeBump");
     	return sg;    	
@@ -143,14 +135,15 @@ public class CommandFactory {
         		autonomousArmHigh(),
         		new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
         		autonomousArmSafe(),
-        		new DriveDistanceStraightCommand(driveSubsystem, -4, 0.6, 0.1, 0.35, navxSubsystem),
+        		new DriveDistanceStraightCommand(driveSubsystem, -4.05, 0.6, 0.1, 0.35, navxSubsystem),
         		new WaitCommand(0.3),
         		new TurnAngleCommand(driveSubsystem, navxSubsystem,-138.0,-42.0),
         		autofrogGrabCommand(),
-        		new TurnAngleCommand(driveSubsystem, navxSubsystem,0,0),
-        		new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem),        		
+        		new TurnAngleCommand(driveSubsystem, navxSubsystem,0,180),
+        		new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem),
         		new ParallelCommandGroup(
-        				new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.5, 0.55, 0.2, 0.25, navxSubsystem,robotState) 
+        				// new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.5, 0.55, 0.2, 0.25, navxSubsystem,robotState) 
+        				new DriveDistanceStraightCommand(driveSubsystem, 4.5, 0.55, 0.2, 0.25, navxSubsystem) 
                         , new SequentialCommandGroup(
                             new PositionElbowCommand(elbowSubsystem, 82, true),
                             new PositionTelescopeCommand(armSubsystem, 0.175, true)
@@ -191,7 +184,7 @@ public class CommandFactory {
     	return c;
     }
     public Command getAutonomousChoice() {
-        return autonomousAutoBalanceCommand(false);
+        return autonomousAutoBalanceCubeCommand(false);
     }
 
     private Command autonomousSetup() {
@@ -290,7 +283,6 @@ public class CommandFactory {
     }
 
     public Command autonomousCubeRight() {
-
         double MOVE_DISTANCE_METERS = -3.2;
         double MOVE_SECS  = 1.5;    
         double JOG_FORWARD_SPEED = -0.15;
@@ -369,7 +361,7 @@ public class CommandFactory {
         return sg;
     }
 
-    public Command autonomousAutoBalanceCommand(boolean useBrakes) {
+    public Command autonomousAutoBalanceCubeCommand(boolean useBrakes) {
         double MOVE_DISTANCE_METERS = -4.2;   // Distance to clear the Charging Station
         double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
         double HOLD_BRAKE_TIME = 1.5;         // Time to hold brake when changing direction
@@ -385,10 +377,34 @@ public class CommandFactory {
                 this::isTimeForCommunityMove)
         );
         if ( useBrakes) {
-            sg.setName("Center Auto Balance w/brakes");        	
+            sg.setName("Center Auto Balance Cube");        	
         }
         else {
-        	sg.setName("Center Auto Balance  no brakes"); 
+        	sg.setName("Center Auto Balance Cube no brakes"); 
+        }
+
+        return sg;
+    }
+    public Command autonomousAutoBalanceConeCommand(boolean useBrakes) {
+        double MOVE_DISTANCE_METERS = -4.2;   // Distance to clear the Charging Station
+        double MOVE_SPEED = 0.35;              // Speed when clearing the community zone
+        double HOLD_BRAKE_TIME = 1.5;         // Time to hold brake when changing direction
+        SequentialCommandGroup sg =  new SequentialCommandGroup(
+              autonomousSetup()
+            , autonomousArmHigh()
+            , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
+            , autonomousArmSafe()
+            , new ConditionalCommand(
+                autoDriveOverAndBalance(MOVE_DISTANCE_METERS, MOVE_SPEED, 
+            		HOLD_BRAKE_TIME, RobotConstants.BALANCE_PARAMETERS.CHARGESTATION_APPROACH_SPEED,useBrakes),
+                autoDriveBalanceOnly(-RobotConstants.BALANCE_PARAMETERS.CHARGESTATION_APPROACH_SPEED,useBrakes), 
+                this::isTimeForCommunityMove)
+        );
+        if ( useBrakes) {
+            sg.setName("Center Auto Balance Cone");        	
+        }
+        else {
+        	sg.setName("Center Auto Balance Cone no brakes"); 
         }
 
         return sg;
@@ -487,7 +503,7 @@ public class CommandFactory {
 
     public Command alignHorizontalToTag( Supplier<DriveInput> operatorInput) {
   		return new SequentialCommandGroup(
-  				new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem ),
+  				new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem),
   				new HorizontalAlignWithTagCommand(driveSubsystem, ledSubsystem, addYawToOperatorJoystickInput(operatorInput), robotState)
   		);
     }
