@@ -288,11 +288,11 @@ public class DriveSubsystem extends EntechSubsystem {
   	    builder.addDoubleProperty("RearRight", () -> { return rearRightEncoder.getPosition();} , null);
         builder.addBooleanProperty("Field Absolute", this::isFieldAbsolute, null);
         builder.addBooleanProperty("Rotation Allowed", this::isRotationEnabled, null);
-        builder.addBooleanProperty("Brake Mode", this::isBrakeMode, null);
+        //builder.addBooleanProperty("Brake Mode", this::isBrakeMode, null);
         builder.addStringProperty("Command", this::getCurrentCommandName, null);
         builder.addDoubleProperty("Average Position Meters", this::getAverageDistanceMeters,null);
-        builder.addDoubleProperty("Average Position", this::getAveragePosition,null);
-        builder.addDoubleProperty("Average Position Ref", () -> { return referenceAvgPosition;},null );        
+        //builder.addDoubleProperty("Average Position", this::getAveragePosition,null);
+        //builder.addDoubleProperty("Average Position Ref", () -> { return referenceAvgPosition;},null );        
     }
 
 	public String getCurrentCommandName() {
