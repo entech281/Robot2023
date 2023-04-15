@@ -27,6 +27,7 @@ import frc.robot.commands.DriveSetRotationEnableCommand;
 import frc.robot.commands.DriveToggleBrakeMode;
 import frc.robot.commands.DriveYawToNearestPerpendicular;
 import frc.robot.commands.FilteredDriveCommand;
+import frc.robot.commands.FlipDirectionCommand;
 import frc.robot.commands.GripperCommand;
 import frc.robot.commands.HorizontalAlignWithTagCommand;
 import frc.robot.commands.PositionElbowCommand;
@@ -55,6 +56,11 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.SubsystemHolder;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.pose.TargetNode;
+import frc.robot.pose.AprilTagLocation;
+import frc.robot.pose.ScoringLocation;
+import frc.robot.commands.supplier.EstimatedPoseSupplier;
+import frc.robot.commands.supplier.YawAngleSupplier;
 /**
  *
  * @author dcowden
@@ -116,12 +122,24 @@ public class CommandFactory {
  
     public Command autonomousConeBump() {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
-        		autonomousSetup(),
-        		autonomousArmHigh(),
-        		new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
-        		autonomousArmSafe(),
-        		new DriveDistanceStraightCommand(driveSubsystem, -4, 0.6, 0.2, 0.35, navxSubsystem),
-                new TurnAngleCommand(driveSubsystem, navxSubsystem, -13.7, 0)
+            autonomousSetup(),
+            autonomousArmHigh(),
+            new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
+            autonomousArmSafe(),
+            new DriveDistanceStraightCommand(driveSubsystem, -4.2, 0.6, 0.2, 0.35, navxSubsystem),
+            new TurnAngleCommand(driveSubsystem, navxSubsystem, 147, -33),
+            autofrogGrabBumpCommand(),
+            new TurnAngleCommand(driveSubsystem, navxSubsystem, 0, 180),
+            new ParallelCommandGroup(
+                // new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.4, 0.45, 0.15, 0.3, navxSubsystem,robotState) 
+                new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.8, 0.45, 0.15, 0.3, navxSubsystem, robotState, () -> { return getScoringLocationForBumpAuto(); }) 
+                , new SequentialCommandGroup(
+                    new PositionElbowCommand(elbowSubsystem, 82, true),
+                    new PositionTelescopeCommand(armSubsystem, 0.175, true)
+                )
+            ),
+            new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
+            autonomousArmSafe()
         );
     	sg.setName("ConeBump");
     	return sg;    	
@@ -164,7 +182,25 @@ public class CommandFactory {
         }        		
     	
     	return sg;
-    }    
+    }
+
+    public static ScoringLocation getScoringLocationForLaneAuto() {
+        if ( DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+            return new ScoringLocation(AprilTagLocation.RED_LEFT, TargetNode.B1);
+        }
+        else {
+            return new ScoringLocation(AprilTagLocation.BLUE_RIGHT, TargetNode.B3);
+        }
+    }
+
+    public static ScoringLocation getScoringLocationForBumpAuto() {
+        if ( DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+            return new ScoringLocation(AprilTagLocation.RED_RIGHT, TargetNode.B3);
+        }
+        else {
+            return new ScoringLocation(AprilTagLocation.BLUE_LEFT, TargetNode.B1);
+        }
+    }
     
     public List<Command> getTestCommands(){
     	//these will be available to run ad-hoc on the TESTING tab
@@ -180,7 +216,7 @@ public class CommandFactory {
 
 
     public Command getCommandToTestAlignWhileDriving() {
-    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.0, 0.3, 0.2, 0.25, navxSubsystem, robotState);   
+    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.0, 0.3, 0.2, 0.25, navxSubsystem, robotState, () -> { return getScoringLocationForLaneAuto(); });   
     	c.setName("Drive1.5MetersWhileTryingtoAlignToA1");
     	return c;
     }
@@ -242,6 +278,24 @@ public class CommandFactory {
     public Command autofrogGrabCommand() {
     	double MOVE_DISTANCE_FWD = 0.25;
     	double MOVE_DISTANCE_BWD = 0.16;
+    	double MOVE_SPEED = 0.3;
+    	double MOVE_MIN_SPEED = 0.15;
+    	double MOVE_RAMP = 0.3;
+        return new SequentialCommandGroup(
+        	
+            new GripperCommand(gripperSubsystem, GripperState.kOpen),
+            autoGroundPickupPositionCone()
+            // from prior working, new DriveDistanceStraightCommand(driveSubsystem, 0.1375, 0.22, 0.15, 0.3, navxSubsystem)
+            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_FWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
+            , new GripperCommand(gripperSubsystem, GripperState.kClose)
+            , new DriveDistanceStraightCommand(driveSubsystem, -MOVE_DISTANCE_BWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
+            , dialCarryPosition()
+        );
+    }
+
+    public Command autofrogGrabBumpCommand() {
+    	double MOVE_DISTANCE_FWD = 0.2;
+    	double MOVE_DISTANCE_BWD = 0.13;
     	double MOVE_SPEED = 0.3;
     	double MOVE_MIN_SPEED = 0.15;
     	double MOVE_RAMP = 0.3;
