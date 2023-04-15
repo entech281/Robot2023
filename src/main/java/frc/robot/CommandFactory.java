@@ -180,7 +180,8 @@ public class CommandFactory {
             homeTelescopeAndElbow(),
             autoGroundPickupPositionCube(),
             getCommandToTestAlignWhileDriving(),
-            new BalanceAfterAlreadyOnTopCommand(driveSubsystem,navxSubsystem,brakeSubsystem)          
+            new BalanceAfterAlreadyOnTopCommand(driveSubsystem,navxSubsystem,brakeSubsystem),   
+            deployBrakeCommand()       
     	);
     }
 

@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.BrakeSubsystem.BrakeState;
 
@@ -25,6 +26,7 @@ public class RetractBrakeCommand extends EntechCommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    DriverStation.reportWarning("Init" + this, false);
     brakeSubsystem.setBrakeState(BrakeState.kRetract);
   }
 
