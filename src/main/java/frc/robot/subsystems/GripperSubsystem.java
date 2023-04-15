@@ -6,9 +6,8 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.RobotConstants;
 
 public class GripperSubsystem extends EntechSubsystem {
-
-	private DoubleSolenoid leftGripperSolenoid;	
-	private DoubleSolenoid rightGripperSolenoid;
+	
+	private DoubleSolenoid GripperSolenoid;
 	
 	private int gripperSolenoidCounter;
 	private GripperState gripperState;
@@ -25,15 +24,11 @@ public class GripperSubsystem extends EntechSubsystem {
 	@Override
 	public void initialize() {
 		if (enabled ) {
-			leftGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
-					RobotConstants.PNEUMATICS.LEFT_GRIPPER_OPEN, 
-					RobotConstants.PNEUMATICS.LEFT_GRIPPER_CLOSE);
-			rightGripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
+			GripperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
 					RobotConstants.PNEUMATICS.RIGHT_GRIPPER_OPEN, 
 					RobotConstants.PNEUMATICS.RIGHT_GRIPPER_CLOSE);
             gripperState = GripperState.kUnknown;
 		}
-		
 	}
 	
 	@Override
@@ -44,8 +39,7 @@ public class GripperSubsystem extends EntechSubsystem {
 	}
 	
 	public void setSolenoids(DoubleSolenoid.Value newValue) {
-        leftGripperSolenoid.set(newValue);
-        rightGripperSolenoid.set(newValue);		
+        GripperSolenoid.set(newValue);		
 	}
 
 	public void toggleGripper() {
