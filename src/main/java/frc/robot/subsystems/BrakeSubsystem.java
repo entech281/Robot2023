@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 import frc.robot.RobotConstants;
@@ -41,7 +42,7 @@ public class BrakeSubsystem extends EntechSubsystem {
 	  }
 	}
 
-	public void setBrakeSolenoids(DoubleSolenoid.Value newValue) {
+	private void setBrakeSolenoids(DoubleSolenoid.Value newValue) {
         brakeSolenoid.set(newValue);
 	}
 	
@@ -73,11 +74,13 @@ public class BrakeSubsystem extends EntechSubsystem {
 	}
 	
     public void setBrakeState(BrakeState state) {
-		if (state != brakeStatus) {
-			brakeSolenoidCounter = 0;
-			brakeStatus = state;
-		  }
-	    brakeStatus = state;
+		if (!DriverStation.isDisabled()){
+			if (state != brakeStatus) {
+				brakeSolenoidCounter = 0;
+				brakeStatus = state;
+			  }
+			brakeStatus = state;	
+		}
 	}
 	
 	@Override
