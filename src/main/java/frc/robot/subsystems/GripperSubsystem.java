@@ -78,6 +78,7 @@ public class GripperSubsystem extends EntechSubsystem {
 	    	  setSolenoids(DoubleSolenoid.Value.kOff);
           }		
 	}
+
     public void setGripperState(GripperState state) {
     	//this guards against shorting a solenoid by holding it too long/often
 	    if (state != gripperState) {

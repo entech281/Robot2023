@@ -11,6 +11,9 @@ public class BrakeSubsystem extends EntechSubsystem {
 	private DoubleSolenoid brakeSolenoid;
 	
 	private BrakeState brakeStatus;
+	private int brakeSolenoidCounter;
+
+	private final int SOLENOID_HIT_COUNT = 20;
 	
 	public BrakeState getBrakeStatus() {
 		return brakeStatus;
@@ -38,8 +41,8 @@ public class BrakeSubsystem extends EntechSubsystem {
 	  }
 	}
 
-	public void setBrakeSolenoid(BrakeSubsystem.BrakeState newValue) {
-        setBrakeSolenoid(newValue);
+	public void setBrakeSolenoids(DoubleSolenoid.Value newValue) {
+        brakeSolenoid.set(newValue);
 	}
 	
     @Override
@@ -49,21 +52,31 @@ public class BrakeSubsystem extends EntechSubsystem {
   	      builder.addBooleanProperty("Brake deployed",this::isBrakeDeployed, null);
   	  }
     }	
-	
+
 	private void handleSolenoid() {
-          if (brakeStatus == BrakeState.kDeploy) {
-        	  setBrakeSolenoid(BrakeState.kDeploy);
-          } else 
-          {
-			setBrakeSolenoid(BrakeState.kRetract);     	  
-          } 
-	}
+		if (brakeSolenoidCounter < SOLENOID_HIT_COUNT) {
+			brakeSolenoidCounter += 1;
+			if (brakeStatus == BrakeState.kDeploy) {
+				setBrakeSolenoids(DoubleSolenoid.Value.kForward);
+			} else if (brakeStatus == BrakeState.kRetract) {
+				setBrakeSolenoids(DoubleSolenoid.Value.kReverse);	        	  
+			} else {
+				setBrakeSolenoids(DoubleSolenoid.Value.kOff);
+			}
+		} else {
+			setBrakeSolenoids(DoubleSolenoid.Value.kOff);
+		}		
+  }
 
 	public boolean isBrakeDeployed() {
 		return brakeStatus == BrakeState.kDeploy;
 	}
 	
     public void setBrakeState(BrakeState state) {
+		if (state != brakeStatus) {
+			brakeSolenoidCounter = 0;
+			brakeStatus = state;
+		  }
 	    brakeStatus = state;
 	}
 	
