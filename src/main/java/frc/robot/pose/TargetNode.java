@@ -16,9 +16,9 @@ public class TargetNode {
     public static double A_ROW_X_METERS = Units.inchesToMeters(-25.5);
     public static double B_ROW_X_METERS = Units.inchesToMeters(-8.5);
 
-    public static double LEFT_NODE_Y_OFSET_METERS = Units.inchesToMeters(-24);
+    public static double LEFT_NODE_Y_OFSET_METERS = Units.inchesToMeters(-22);
     public static double MIDDLE_NODE_Y_OFSET_METERS = 0;
-    public static double RIGHT_NODE_Y_OFSET_METERS = Units.inchesToMeters(24);
+    public static double RIGHT_NODE_Y_OFSET_METERS = Units.inchesToMeters(22);
     public static double LOADING_STATION_OFFSET = Units.inchesToMeters(29.5);
     
     public static TargetNode A1 = new TargetNode(A_ROW_X_METERS,LEFT_NODE_Y_OFSET_METERS,NodeID.A1);
