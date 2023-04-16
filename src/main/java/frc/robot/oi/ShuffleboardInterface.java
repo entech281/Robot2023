@@ -37,9 +37,12 @@ public class ShuffleboardInterface {
 	}
 	
 	public void addRobotState(RobotState robotState) {
-		MATCH_TAB.add("RobotState",robotState).withSize(2, 2).withPosition(0, 3);	
+		MATCH_TAB.add("RobotState",robotState).withSize(2, 3).withPosition(2, 0);	
 	}
 
+	public void addVisionCamera() {
+		MATCH_TAB.addCamera("Vision", "Arudcam","http://10.2.81.99:1182/?action=stream" ).withSize(3, 2).withPosition(7, 0);
+	}
 	public void addTestCommands(List<Command> testCommands) {
 		testCommands.forEach( (c)->{
 			DEBUG_TAB.add(c.getName(),(Sendable)c).withSize(2, 1);
@@ -56,20 +59,20 @@ public class ShuffleboardInterface {
 		ArmSubsystem arm = allSubsystems.getArm();
 		ElbowSubsystem elbow = allSubsystems.getElbow();
 		
-		MATCH_TAB.add(allSubsystems.getDrive()).withSize(2, 3).withPosition(4,0);
-		MATCH_TAB.add(allSubsystems.getNavx()).withSize(2, 2).withPosition(4,3);
-		MATCH_TAB.add(allSubsystems.getVision()).withSize(2, 2).withPosition(6,0);
-		MATCH_TAB.add(arm).withSize(2, 1).withPosition(6,2);
-		MATCH_TAB.add(elbow).withSize(2, 1).withPosition(2,3);
-		MATCH_TAB.add(allSubsystems.getGripper()).withSize(2, 1).withPosition(2,4);
+		MATCH_TAB.add(allSubsystems.getDrive()).withSize(2, 3).withPosition(0,0);
+		//MATCH_TAB.add(allSubsystems.getNavx()).withSize(2, 2).withPosition(4,0);
+		//MATCH_TAB.add(allSubsystems.getVision()).withSize(2, 2).withPosition(2,2);
+		//MATCH_TAB.add(arm).withSize(2, 1).withPosition(6,2);
+		//MATCH_TAB.add(elbow).withSize(2, 1).withPosition(2,3);
+		//MATCH_TAB.add(allSubsystems.getGripper()).withSize(2, 1).withPosition(2,4);
 
 		//VideoSource photonvision = CameraServer.getServer("photonvision").getSource();
 		//MATCH_TAB.add(photonvision).withSize(3, 2).withPosition(7, 3);
 		if ( arm.isEnabled()) {
-			MATCH_TAB.add("ArmController",arm.getPositionController()).withSize(2, 3).withPosition(0, 0);		
+			MATCH_TAB.add("ArmController",arm.getPositionController()).withSize(2, 2).withPosition(4, 2);		
 		}
 		if ( elbow.isEnabled()) {
-			MATCH_TAB.add("ElbowController",elbow.getPositionController()).withSize(2, 3).withPosition(2, 0);		
+			MATCH_TAB.add("ElbowController",elbow.getPositionController()).withSize(2, 2).withPosition(4, 0);		
 		}		
 	}
 	
