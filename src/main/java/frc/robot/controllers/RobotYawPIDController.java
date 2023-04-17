@@ -1,8 +1,8 @@
 package frc.robot.controllers;
 
 import edu.wpi.first.math.controller.PIDController;
+
 import frc.robot.util.EntechUtils;
-import frc.robot.util.StoppingCounter;
 
 public class RobotYawPIDController extends PIDController {
 	
@@ -13,22 +13,17 @@ public class RobotYawPIDController extends PIDController {
     private static final double D_GAIN = 0.00;
     private static final double ANGLE_TOLERANCE = 2;
     private static final double SPEED_LIMIT = 0.5;
-    private static final int STOP_COUNT = 4;
-    private StoppingCounter counter;
     
     public RobotYawPIDController() {
         super(P_GAIN, I_GAIN, D_GAIN);
-        counter = new StoppingCounter("RobotYawPID", STOP_COUNT);
         setParameters();
     }
     public RobotYawPIDController(double p, double i, double d) {
         super(p, i, d);
-        counter = new StoppingCounter("RobotYawPID", STOP_COUNT);
         setParameters();
     }
     public RobotYawPIDController(double p, double i, double d, double period) {
         super(p, i, d, period);
-        counter = new StoppingCounter("RobotYawPID", STOP_COUNT);
         setParameters();
     }
 
