@@ -36,7 +36,7 @@ import frc.robot.util.Counter;
 public class RobotContext {
 	
 	public static final int NUM_SAMPLES = 3;
-    public static final double ALIGN_TOLERANCE_INCHES = 4.0;
+    public static final double ALIGN_TOLERANCE_INCHES = 2.0;
     public static final int MISSING_ESTIMATES_TO_TRIGGER_NO_TAG = 5;
     private Counter missingPoseEstimateCounter = new Counter ( MISSING_ESTIMATES_TO_TRIGGER_NO_TAG);
 	private LateralAlignCalculator lateralAlignCalculator = new LateralAlignCalculator();
