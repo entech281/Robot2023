@@ -57,7 +57,6 @@ public class LEDSubsystem extends EntechSubsystem{
 	
 	@Override
 	public SubsystemStatus getStatus() {
-		// TODO Auto-generated method stub
 		return null;
 }
 

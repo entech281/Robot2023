@@ -105,7 +105,8 @@ public class CommandFactory {
     			autonomousCubeLeftCommand(),
     			autonomousTwoPieceLaneCommand(true),
     			autonomousTwoPieceLaneCommand(false),
-    			autonomousConeBump()
+    			autonomousConeBump(true),
+                autonomousConeBump(false)
 
     	);
 
@@ -117,7 +118,7 @@ public class CommandFactory {
     	);
     }
  
-    public Command autonomousConeBump() {
+    public Command autonomousConeBump(boolean safe) {
         SequentialCommandGroup sg =  new SequentialCommandGroup(
             autonomousSetup(),
             autonomousArmHigh(),
@@ -125,20 +126,26 @@ public class CommandFactory {
             autonomousArmSafe(),
             new DriveDistanceStraightCommand(driveSubsystem, -4.2, 0.6, 0.2, 0.35, navxSubsystem),
             new TurnAngleCommand(driveSubsystem, navxSubsystem, 147, -33),
-            autofrogGrabBumpCommand(),
-            new TurnAngleCommand(driveSubsystem, navxSubsystem, 0, 180),
-            new ParallelCommandGroup(
-                // new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.4, 0.45, 0.15, 0.3, navxSubsystem,robotState) 
-                new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.8, 0.45, 0.15, 0.3, navxSubsystem, robotState, () -> { return getScoringLocationForBumpAuto(); }) 
-                , new SequentialCommandGroup(
-                    new PositionElbowCommand(elbowSubsystem, 82, true),
-                    new PositionTelescopeCommand(armSubsystem, 0.175, true)
-                )
-            ),
-            new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
-            autonomousArmSafe()
+            autofrogGrabBumpCommand()
         );
-    	sg.setName("ConeBump");
+    	if (safe) {
+            sg.setName("ConeBump -- Safe");
+        } else {
+            sg.addCommands(
+                new TurnAngleCommand(driveSubsystem, navxSubsystem, 0, 180),
+                new ParallelCommandGroup(
+                    // new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.4, 0.45, 0.15, 0.3, navxSubsystem,robotState) 
+                    new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.8, 0.45, 0.15, 0.3, navxSubsystem, robotState, () -> { return getScoringLocationForBumpAuto(); }) 
+                    , new SequentialCommandGroup(
+                        new PositionElbowCommand(elbowSubsystem, 82, true),
+                        new PositionTelescopeCommand(armSubsystem, 0.175, true)
+                    )
+                ),
+                new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
+                autonomousArmSafe()
+            );
+            sg.setName("ConeBump -- unsafe");
+        }
     	return sg;    	
     }
     

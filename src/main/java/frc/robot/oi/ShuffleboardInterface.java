@@ -2,24 +2,16 @@ package frc.robot.oi;
 
 import java.util.List;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.VideoSource;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.RobotConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.SubsystemHolder;
-import frc.robot.util.PoseUtil;
 
 public class ShuffleboardInterface {
 

@@ -1,13 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.RobotConstants;
+
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.BrakeSubsystem.BrakeState;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
-import frc.robot.subsystems.DriveSubsystem.DriveMode;
 
 public class BalanceAfterAlreadyOnTopCommand extends EntechCommandBase {
 

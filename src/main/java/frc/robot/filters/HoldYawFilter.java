@@ -1,7 +1,5 @@
 package frc.robot.filters;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  * Changes the rotation
  * 
