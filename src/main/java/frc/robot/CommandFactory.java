@@ -125,7 +125,7 @@ public class CommandFactory {
             new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
             autonomousArmSafe(),
             new DriveDistanceStraightCommand(driveSubsystem, -4.2, 0.6, 0.2, 0.35, navxSubsystem),
-            new TurnAngleCommand(driveSubsystem, navxSubsystem, 147, -33),
+            new TurnAngleCommand(driveSubsystem, navxSubsystem, 147, 33),
             autofrogGrabBumpCommand()
         );
     	if (safe) {
@@ -157,15 +157,15 @@ public class CommandFactory {
         		autonomousArmHigh(),
         		new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
         		autonomousArmSafe(),
-        		new DriveDistanceStraightCommand(driveSubsystem, -4.05, 0.6, 0.1, 0.35, navxSubsystem),
+        		new DriveDistanceStraightCommand(driveSubsystem, -3.9, 0.6, 0.1, 0.35, navxSubsystem),
         		new WaitCommand(0.3),
-        		new TurnAngleCommand(driveSubsystem, navxSubsystem,-138.0,-42.0),
+        		new TurnAngleCommand(driveSubsystem, navxSubsystem,-163.0,-22),
         		autofrogGrabCommand(),
-        		new TurnAngleCommand(driveSubsystem, navxSubsystem,0,180),
-        		new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem),
-        		new ParallelCommandGroup(
-        				// new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.5, 0.55, 0.2, 0.25, navxSubsystem,robotState) 
-        				new DriveDistanceStraightCommand(driveSubsystem, 4.5, 0.55, 0.2, 0.25, navxSubsystem) 
+                new TurnAngleCommand(driveSubsystem, navxSubsystem,0,180),
+                new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem),
+                new ParallelCommandGroup(
+                        new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.25, 0.5, 0.2, 0.25, navxSubsystem,robotState, () -> { return getScoringLocationForLaneAuto(); }) 
+                        // new DriveDistanceStraightCommand(driveSubsystem, 4.5, 0.55, 0.2, 0.25, navxSubsystem) 
                         , new SequentialCommandGroup(
                             new PositionElbowCommand(elbowSubsystem, 82, true),
                             new PositionTelescopeCommand(armSubsystem, 0.175, true)
@@ -177,7 +177,7 @@ public class CommandFactory {
            		    new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
             		autonomousArmSafe(),
             		//new WaitCommand(0.25),
-            		new DriveDistanceStraightCommand(driveSubsystem, -4.5, 0.6, 0.35, 0.2, navxSubsystem)           			
+            		new DriveDistanceStraightCommand(driveSubsystem, -4.5, 0.6, 0.35, 0.2, navxSubsystem)      			
        		);
         	sg.setName("TwoPieceLane");
         }
@@ -263,7 +263,7 @@ public class CommandFactory {
     public Command autoGroundPickupPositionCone() {
         SequentialCommandGroup sg = new SequentialCommandGroup(
             new PositionElbowCommand(elbowSubsystem, 30.75, true),
-            new PositionTelescopeCommand(armSubsystem, 0.42, true)
+            new PositionTelescopeCommand(armSubsystem, 0.38, true)
         );
         sg.setName("Dial ground position COne");
         return sg;
@@ -280,8 +280,8 @@ public class CommandFactory {
     }
 
     public Command autofrogGrabCommand() {
-    	double MOVE_DISTANCE_FWD = 0.25;
-    	double MOVE_DISTANCE_BWD = 0.16;
+    	double MOVE_DISTANCE_FWD = 0.2;
+    	double MOVE_DISTANCE_BWD = 0.2;
     	double MOVE_SPEED = 0.3;
     	double MOVE_MIN_SPEED = 0.15;
     	double MOVE_RAMP = 0.3;

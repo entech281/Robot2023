@@ -18,7 +18,7 @@ import frc.robot.subsystems.DriveSubsystem.DriveMode;
 /** An example command that uses an example subsystem. */
 public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase {
   private static final int STOPPING_COUNT = 4;
-  private static final double LATERAL_ALIGN_GAIN = 0.6;
+  private static final double LATERAL_ALIGN_GAIN = 1.5;
   private static final double DISTANCE_TO_TARGET_TOLLERENCE = 2.5;
 
   private double speed;
