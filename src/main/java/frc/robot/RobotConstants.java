@@ -122,7 +122,7 @@ public final class RobotConstants {
     		  public static double SAFE_ANGLE = 35.0;  
     		  public static double SCORE_LOW_DEGREES = 43.0;
     		  public static double SCORE_MIDDLE_DEGREES = 79.0;
-    		  public static double LOAD_STATION_DEGREES = 74.0;
+    		  public static double LOAD_STATION_DEGREES = 75.0;
     		  public static double SCORE_HIGH_DEGREES = 94.0;
     		  public static double SCORE_HIGH_RELEASE_DEGREES = 83.0;
     		  public static double SCORE_MID_RELEASE_DEGREES = 71;
