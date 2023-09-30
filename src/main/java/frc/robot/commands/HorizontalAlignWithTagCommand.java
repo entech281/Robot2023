@@ -9,7 +9,6 @@ import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.SquareInputsFilter;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.util.EntechUtils;
 
 /**
  * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -22,7 +21,7 @@ import frc.robot.util.EntechUtils;
  */
 public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
-    private static final double LATERAL_P_GAIN = 1.0;
+    private static final double LATERAL_P_GAIN = 1.25;
     private static final double LATERAL_I_GAIN = 0.001;	
     private static final double LATERAL_D_GAIN = 0.00;
 

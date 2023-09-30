@@ -3,8 +3,8 @@ package frc.robot.adapter;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Joystick;
+
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.NavXSubSystem;
 
 public class JoystickDriveInputSupplier implements Supplier<DriveInput>{
 	

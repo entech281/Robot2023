@@ -5,20 +5,16 @@ import java.util.Optional;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
+
 import frc.robot.pose.LateralAlignCalculator;
 import frc.robot.pose.LateralOffset;
 import frc.robot.pose.MovingAveragePose;
 import frc.robot.pose.PoseEstimator;
-import frc.robot.pose.RecognizedAprilTagTarget;
-import frc.robot.pose.ScoringLocation;
-import frc.robot.subsystems.DriveStatus;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
-import frc.robot.subsystems.NavxStatus;
 import frc.robot.subsystems.VisionStatus;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.util.Counter;
@@ -36,7 +32,7 @@ import frc.robot.util.Counter;
 public class RobotContext {
 	
 	public static final int NUM_SAMPLES = 3;
-    public static final double ALIGN_TOLERANCE_INCHES = 4.0;
+    public static final double ALIGN_TOLERANCE_INCHES = 2.0;
     public static final int MISSING_ESTIMATES_TO_TRIGGER_NO_TAG = 5;
     private Counter missingPoseEstimateCounter = new Counter ( MISSING_ESTIMATES_TO_TRIGGER_NO_TAG);
 	private LateralAlignCalculator lateralAlignCalculator = new LateralAlignCalculator();

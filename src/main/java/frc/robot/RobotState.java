@@ -60,7 +60,7 @@ public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSuppl
 	    sb.addDoubleProperty("LateralYOffset", () -> { return SendableUtil.doubleForOptional(getLateralOffset()) ;},null );
 		sb.addDoubleProperty("CameraY", () -> { return cameraY ;},null );
 		sb.addDoubleProperty("CameraY:MovAvg", () -> { return movingAverageY ;},null );
-		sb.addStringProperty("AlignColor", () -> { return alignState.toString() ;}, null);
+		//sb.addStringProperty("AlignColor", () -> { return alignState.toString() ;}, null);
 	}
 
 	@Override

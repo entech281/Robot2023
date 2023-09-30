@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.BrakeSubsystem.BrakeState;

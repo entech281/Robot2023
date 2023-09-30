@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.supplier.TargetYawSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.controllers.RobotYawPIDController;

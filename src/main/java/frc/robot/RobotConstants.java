@@ -122,10 +122,10 @@ public final class RobotConstants {
     		  public static double SAFE_ANGLE = 35.0;  
     		  public static double SCORE_LOW_DEGREES = 43.0;
     		  public static double SCORE_MIDDLE_DEGREES = 79.0;
-    		  public static double LOAD_STATION_DEGREES = 74.0;
+    		  public static double LOAD_STATION_DEGREES = 75.0;
     		  public static double SCORE_HIGH_DEGREES = 94.0;
     		  public static double SCORE_HIGH_RELEASE_DEGREES = 83.0;
-    		  public static double SCORE_MID_RELEASE_DEGREES = 73;
+    		  public static double SCORE_MID_RELEASE_DEGREES = 71;
      		  public static final double MAX_POSITION_DEGREES = 104.8; 
     	}
     }
@@ -162,6 +162,15 @@ public final class RobotConstants {
         public static final double SPEED_LIMIT_WITH_ARM_OUT = 0.7;
         public static final double YAW_NUDGE_DEGREES = 3.5;
         public static final double WHEELBASE_INCHES = 24.5;
+        public interface PID {
+        	public static final double kP = 0.01;
+        	public static final double kI = 0.0;
+        	public static final double kD = 0.0;
+        	public static final double kMAX_SPEED = 100.0;
+        	public static final double kMAX_ACCEL = 50.0;
+        	public static final double kTURN_TOLLERENCE = 2.0;
+        	public static final double kTURN_TOLLERENCE_RATE = 0.0;
+        }
     }
     public interface BALANCE_PARAMETERS {
         public static final double CHARGESTATION_APPROACH_SPEED = 0.30;
@@ -230,12 +239,10 @@ public final class RobotConstants {
 
     }
     public interface PNEUMATICS {
-        public static final int LEFT_GRIPPER_OPEN = 3;
-        public static final int LEFT_GRIPPER_CLOSE = 2;
         public static final int RIGHT_GRIPPER_OPEN = 4;
         public static final int RIGHT_GRIPPER_CLOSE = 5;  
-        public static final int BRAKE_SOLENOID = 7;    
-
+        public static final int BRAKE_SOLENOID_RETRACTED = 6;
+        public static final int BRAKE_SOLENOID_DEPLOYED = 7;
     }    
     public interface SHUFFLEBOARD {
     	public interface TABS{

@@ -1,8 +1,6 @@
 
 package frc.robot.pose;
 
-import java.util.Optional;
-
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Transform3d;

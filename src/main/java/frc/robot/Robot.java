@@ -11,15 +11,14 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import frc.robot.logging.ExceptionHandler;
 import frc.robot.oi.OperatorInterface;
 import frc.robot.oi.ShuffleboardDriverControls;
 import frc.robot.oi.ShuffleboardInterface;
-import frc.robot.pose.AlignmentCalculator;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BrakeSubsystem;
@@ -101,6 +100,7 @@ public class Robot extends TimedRobot {
 		shuffleboardInterface.addSubsystems(allSubsystems);
 		shuffleboardInterface.addTestCommands(commandFactory.getTestCommands());
 		shuffleboardInterface.addPreMatchCommands(commandFactory.getPrematchCommands());
+		// shuffleboardInterface.addVisionCamera();
 		List<Command> autoChoices = commandFactory.getAutoCommandChoices();
 		autoChoices.forEach((c)->{
             shuffleboardControls.addAutoCommandChoice(c,c == autoChoices.get(0));
@@ -139,7 +139,9 @@ public class Robot extends TimedRobot {
   
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+
+  }
   
   @Override
   public void disabledExit() {
@@ -176,6 +178,8 @@ public class Robot extends TimedRobot {
     // use the default command which is ArcadeDrive. If you want the autonomous
     // to continue until interrupted by another command, remove
     // this line or comment it out.
+    DriverStation.reportWarning("TeleopInitRuns", false);
+    // allSubsystems.getBrake().setBrakeState(BrakeState.kRetract);
     if (autoCommand != null) {
       autoCommand.cancel();
     }
