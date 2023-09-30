@@ -17,7 +17,7 @@ import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.VisionStatus;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.util.Counter;
+import frc.robot.utils.Counter;
 
 
 /**

@@ -10,7 +10,7 @@ import frc.robot.subsystems.BrakeSubsystem.BrakeState;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
 import frc.robot.subsystems.DriveSubsystem.DriveMode;
-import frc.robot.util.CrosshairController;
+import frc.robot.utils.CrosshairController;
 
 /**
  * 

@@ -13,7 +13,7 @@ import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.LateralOffset;
 import frc.robot.pose.ScoringLocation;
 import frc.robot.pose.TargetNode;
-import frc.robot.util.SendableUtil;
+import frc.robot.utils.SendableUtil;
 
 public class RobotState implements Sendable, YawAngleSupplier,LateralOffsetSupplier, EstimatedPoseSupplier{
 

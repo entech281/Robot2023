@@ -1,8 +1,8 @@
 package frc.robot.controllers;
 
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.util.EntechUtils;
-import frc.robot.util.StoppingCounter;
+import frc.robot.utils.EntechUtils;
+import frc.robot.utils.StoppingCounter;
 
 public class RobotLateralPIDController extends PIDController {
 	

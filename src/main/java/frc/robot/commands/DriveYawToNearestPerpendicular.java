@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.util.StoppingCounter;
+import frc.robot.utils.StoppingCounter;
 /**
  *
  * 

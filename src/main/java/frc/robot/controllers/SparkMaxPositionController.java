@@ -10,7 +10,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
 import frc.robot.RobotConstants;
-import frc.robot.util.EntechUtils;
+import frc.robot.utils.EntechUtils;
 
 /**
  * Overview:

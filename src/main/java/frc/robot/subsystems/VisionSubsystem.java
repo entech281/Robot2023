@@ -32,7 +32,7 @@ import frc.robot.Robot;
 import frc.robot.RobotConstants;
 import frc.robot.pose.AprilTagLocation;
 import frc.robot.pose.RecognizedAprilTagTarget;
-import frc.robot.util.PoseUtil;
+import frc.robot.utils.PoseUtil;
 
 public class VisionSubsystem extends EntechSubsystem {
 

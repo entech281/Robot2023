@@ -1,7 +1,7 @@
 package frc.robot.filters;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.util.EntechUtils;
+import frc.robot.utils.EntechUtils;
 
 /**
  * Changes yawAngle insider DriveInput

@@ -2,7 +2,7 @@ package frc.robot.controllers;
 
 import edu.wpi.first.math.controller.PIDController;
 
-import frc.robot.util.EntechUtils;
+import frc.robot.utils.EntechUtils;
 
 public class RobotYawPIDController extends PIDController {
 	

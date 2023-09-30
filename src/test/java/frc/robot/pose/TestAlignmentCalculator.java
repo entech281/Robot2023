@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import frc.robot.util.PoseUtil;
+import frc.robot.utils.PoseUtil;
 
 
 public class TestAlignmentCalculator {

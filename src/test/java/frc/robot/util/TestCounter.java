@@ -1,4 +1,4 @@
-package frc.robot.util;
+package frc.robot.utils;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
