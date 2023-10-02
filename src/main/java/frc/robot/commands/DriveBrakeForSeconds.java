@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveMode;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveBrakeForSeconds extends EntechCommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveSubsystem m_drive;
+  private final Drivetrain m_drive;
   private double time;
   private Timer timer;
 
@@ -20,7 +20,7 @@ public class DriveBrakeForSeconds extends EntechCommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveBrakeForSeconds(DriveSubsystem subsystem, double time) {
+  public DriveBrakeForSeconds(Drivetrain subsystem, double time) {
       super(subsystem);
       m_drive = subsystem;
       this.time = time;

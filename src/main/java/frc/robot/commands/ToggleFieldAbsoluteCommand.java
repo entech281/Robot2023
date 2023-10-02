@@ -4,18 +4,18 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 
 /** An example command that uses an example subsystem. */
 public class ToggleFieldAbsoluteCommand extends  EntechCommandBase {
-    private DriveSubsystem drive;
+    private Drivetrain drive;
 
   /**
    * Creates a new ToggleFieldAbsoluteCommand.
    *
    * @param drive The subsystem used by this command.
    */
-  public ToggleFieldAbsoluteCommand(DriveSubsystem drive) {
+  public ToggleFieldAbsoluteCommand(Drivetrain drive) {
     super(drive);
     this.drive = drive;
   }

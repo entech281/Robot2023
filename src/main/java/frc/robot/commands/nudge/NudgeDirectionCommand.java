@@ -7,7 +7,7 @@ package frc.robot.commands.nudge;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  *
@@ -15,7 +15,7 @@ import frc.robot.subsystems.DriveSubsystem;
  * @author aheitkamp
  */
 public class NudgeDirectionCommand extends EntechCommandBase {
-    private final DriveSubsystem drive;
+    private final Drivetrain drive;
     private Timer timer;
     private final DriveInput direction;
 
@@ -39,7 +39,7 @@ public class NudgeDirectionCommand extends EntechCommandBase {
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeDirectionCommand(DriveSubsystem drive, DriveInput direction) {
+    public NudgeDirectionCommand(Drivetrain drive, DriveInput direction) {
         super(drive);
         this.drive = drive;
         this.direction = new DriveInput(direction);

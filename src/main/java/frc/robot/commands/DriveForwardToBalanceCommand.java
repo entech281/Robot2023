@@ -9,13 +9,13 @@ import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.BrakeSubsystem.BrakeState;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.NavXSubSystem;
-import frc.robot.subsystems.DriveSubsystem.DriveMode;
+import frc.robot.subsystems.Drivetrain.DriveMode;
 
 public class  DriveForwardToBalanceCommand extends EntechCommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveSubsystem drive;
+  private final Drivetrain drive;
   private final NavXSubSystem navx;
   BrakeSubsystem brake;
   private boolean pitch_seen;
@@ -40,7 +40,7 @@ public class  DriveForwardToBalanceCommand extends EntechCommandBase {
    * @param dsubsys Drive subsystem used by this command.
    * @param nsubsys NavX subsystem used for pitch measurement
    */
-  public DriveForwardToBalanceCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem, boolean useBrakes) {
+  public DriveForwardToBalanceCommand(Drivetrain dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem, boolean useBrakes) {
 	  super(dsubsys,nsubsys,brakeSubsystem);
       drive = dsubsys;
       navx = nsubsys;
@@ -58,7 +58,7 @@ public class  DriveForwardToBalanceCommand extends EntechCommandBase {
    * @param nsubsys NavX subsystem used for pitch measurement
    * @param speed Drive speed (forward is positive, default)
    */
-  public DriveForwardToBalanceCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem, double speed,boolean useBrakes) {
+  public DriveForwardToBalanceCommand(Drivetrain dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem, double speed,boolean useBrakes) {
     super(dsubsys,nsubsys,brakeSubsystem);
     drive = dsubsys;
     navx = nsubsys;

@@ -7,8 +7,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveMode;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveDistanceStraightCommand extends EntechCommandBase {
@@ -17,7 +17,7 @@ public class DriveDistanceStraightCommand extends EntechCommandBase {
   private double minSpeed;
   private double rampFraction;
   private double desiredDistanceMeters;
-  private final DriveSubsystem drive;
+  private final Drivetrain drive;
   private YawAngleSupplier yawSupplier;
   private int exeCounter;
 
@@ -26,7 +26,7 @@ public class DriveDistanceStraightCommand extends EntechCommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveDistanceStraightCommand(DriveSubsystem drive, double desiredDistanceMeters, double speed, YawAngleSupplier yawSupplier) {
+  public DriveDistanceStraightCommand(Drivetrain drive, double desiredDistanceMeters, double speed, YawAngleSupplier yawSupplier) {
       super(drive);
       this.drive = drive;
       this.desiredDistanceMeters = desiredDistanceMeters;
@@ -36,7 +36,7 @@ public class DriveDistanceStraightCommand extends EntechCommandBase {
       this.yawSupplier = yawSupplier;
   }
 
-  public DriveDistanceStraightCommand(DriveSubsystem drive, double desiredDistanceMeters, double speed, double minSpeed, double ramp_fraction, YawAngleSupplier yawSupplier) {
+  public DriveDistanceStraightCommand(Drivetrain drive, double desiredDistanceMeters, double speed, double minSpeed, double ramp_fraction, YawAngleSupplier yawSupplier) {
     super(drive);
     this.drive = drive;
     this.desiredDistanceMeters = desiredDistanceMeters;

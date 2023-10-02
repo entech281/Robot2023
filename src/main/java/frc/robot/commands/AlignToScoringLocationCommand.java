@@ -6,7 +6,7 @@ import frc.robot.commands.supplier.TargetYawSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.controllers.RobotYawPIDController;
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * Tries to align to the target scoring location, by rotating the robot about its axis
@@ -19,7 +19,7 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class AlignToScoringLocationCommand extends EntechCommandBase {
 
-    protected final DriveSubsystem drive;
+    protected final Drivetrain drive;
     protected final RobotYawPIDController pid;
     protected final Supplier<DriveInput> operatorInput;
     private YawAngleSupplier currentYawAngleSupplier;
@@ -31,7 +31,7 @@ public class AlignToScoringLocationCommand extends EntechCommandBase {
      * (Operator can still drive in the meantime)
      * @param joystick the joystick you controll the robot with
      */
-    public AlignToScoringLocationCommand(DriveSubsystem drive,
+    public AlignToScoringLocationCommand(Drivetrain drive,
     		Supplier<DriveInput> operatorInput,
     		YawAngleSupplier currentYawAngleSupplier,
     		TargetYawSupplier alignAngleSupplier) {

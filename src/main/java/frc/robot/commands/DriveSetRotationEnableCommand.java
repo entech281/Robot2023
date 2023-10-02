@@ -1,12 +1,12 @@
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 
 public class DriveSetRotationEnableCommand extends EntechCommandBase {
 
-    DriveSubsystem drive;
+    Drivetrain drive;
 	boolean newValue;
-	public DriveSetRotationEnableCommand(DriveSubsystem drive, boolean newValue) {
+	public DriveSetRotationEnableCommand(Drivetrain drive, boolean newValue) {
 		//super(drive);
         this.drive = drive;
 		this.newValue = newValue;

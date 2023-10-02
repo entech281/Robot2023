@@ -5,7 +5,7 @@
 package frc.robot.commands.nudge;
 
 import frc.robot.commands.EntechCommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  *
@@ -13,7 +13,7 @@ import frc.robot.subsystems.DriveSubsystem;
  * @author aheitkamp
  */
 public class NudgeYawCommand extends EntechCommandBase {
-    private final DriveSubsystem drive;
+    private final Drivetrain drive;
     private final DIRECTION direction;
     
     public enum DIRECTION {
@@ -26,7 +26,7 @@ public class NudgeYawCommand extends EntechCommandBase {
      *
      * @param drive The drive subsystem on which this command will run
      */
-    public NudgeYawCommand(DriveSubsystem drive, NudgeYawCommand.DIRECTION direction) {
+    public NudgeYawCommand(Drivetrain drive, NudgeYawCommand.DIRECTION direction) {
         super(drive);
         this.drive = drive;
         this.direction = direction;

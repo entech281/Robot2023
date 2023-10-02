@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotConstants;
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.NavXSubSystem;
 
 /**
@@ -16,7 +16,7 @@ import frc.robot.subsystems.NavXSubSystem;
  */
 public class DriveCSForwardDockCommand extends EntechCommandBase {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    private final DriveSubsystem drive;
+    private final Drivetrain drive;
     private final NavXSubSystem navx;
     private double start_speed = 0.0;
     private double end_speed = 0.0;
@@ -27,7 +27,7 @@ public class DriveCSForwardDockCommand extends EntechCommandBase {
    * @param dsubsys Drive subsystem used by this command.
    * @param nsubsys NavX subsystem used for pitch measurement
    */
-  public DriveCSForwardDockCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys) {
+  public DriveCSForwardDockCommand(Drivetrain dsubsys, NavXSubSystem nsubsys) {
       super(dsubsys);
       this.drive = dsubsys;
       this.navx = nsubsys;
@@ -43,7 +43,7 @@ public class DriveCSForwardDockCommand extends EntechCommandBase {
    * @param nsubsys NavX subsystem used for pitch measurement
    * @param speed Drive speed (forward is positive, default)
    */
-  public DriveCSForwardDockCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, double start_speed, double end_speed) {
+  public DriveCSForwardDockCommand(Drivetrain dsubsys, NavXSubSystem nsubsys, double start_speed, double end_speed) {
       super(dsubsys);
       this.drive = dsubsys;
       this.navx = nsubsys;

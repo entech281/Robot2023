@@ -7,10 +7,10 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 
 public class SimpleDriveCommand extends EntechCommandBase {
-    protected final DriveSubsystem drive;
+    protected final Drivetrain drive;
     protected final Supplier<DriveInput> operatorInput;
 
     /**
@@ -21,7 +21,7 @@ public class SimpleDriveCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param stick Driver joystick object
      */
-    public SimpleDriveCommand(DriveSubsystem drive, Supplier<DriveInput> operatorInput) {
+    public SimpleDriveCommand(Drivetrain drive, Supplier<DriveInput> operatorInput) {
         super(drive);
         this.drive = drive;
         this.operatorInput = operatorInput;

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.NavXSubSystem;
 
 /** A command that will turn the robot to the specified angle. */
@@ -22,7 +22,7 @@ public class TurnAngleCommand extends EntechCommandBase {
 	 private double redTargetAngleDegrees = 0.0;
 	 private double blueTargetAngleDegrees = 0.0;
 	 private double targetAngleDegrees = 0.0;
-	 private DriveSubsystem drive;
+	 private Drivetrain drive;
 	 private NavXSubSystem navx;
 	 private PIDController controller;
 	/**
@@ -31,7 +31,7 @@ public class TurnAngleCommand extends EntechCommandBase {
    * @param targetAngleDegrees The angle to turn to
    * @param drive The drive subsystem to use
    */
-  public TurnAngleCommand(DriveSubsystem drive, NavXSubSystem navx, double redTargetAngleDegrees, double blueTargetAngleDegrees) {
+  public TurnAngleCommand(Drivetrain drive, NavXSubSystem navx, double redTargetAngleDegrees, double blueTargetAngleDegrees) {
 	  this.drive = drive;
 	  this.navx = navx;
 	  controller = new PIDController(P,I,D);

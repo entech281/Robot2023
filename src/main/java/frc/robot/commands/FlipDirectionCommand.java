@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.StoppingCounter;
 /**
  *
@@ -16,7 +16,7 @@ import frc.robot.utils.StoppingCounter;
  */
 public class FlipDirectionCommand extends EntechCommandBase {
 
-    protected final DriveSubsystem drive;
+    protected final Drivetrain drive;
     private YawAngleSupplier yawSupplier;
     private double angleToWait;
     private static final double TOLERANCE = 2.0;
@@ -30,7 +30,7 @@ public class FlipDirectionCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param current_angle The current yaw angle
      */
-    public FlipDirectionCommand(DriveSubsystem drive, YawAngleSupplier yawSupplier) {
+    public FlipDirectionCommand(Drivetrain drive, YawAngleSupplier yawSupplier) {
         super(drive);
         this.drive = drive;
         this.yawSupplier = yawSupplier;

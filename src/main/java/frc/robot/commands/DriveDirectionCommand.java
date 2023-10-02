@@ -4,15 +4,15 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveMode;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain.DriveMode;
 import frc.robot.filters.DriveInput;
 
 import edu.wpi.first.wpilibj.Timer;
 
 /** An example command that uses an example subsystem. */
 public class DriveDirectionCommand extends EntechCommandBase {
-  private final DriveSubsystem drive;
+  private final Drivetrain drive;
   private double forwardSpeed;
   private double rightSpeed;
   private double timeSec;
@@ -23,7 +23,7 @@ public class DriveDirectionCommand extends EntechCommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveDirectionCommand(DriveSubsystem drive, double forwardSpeed, double rightSpeed, double timeSec) {
+  public DriveDirectionCommand(Drivetrain drive, double forwardSpeed, double rightSpeed, double timeSec) {
       super(drive);
       this.drive = drive;
       this.timeSec = timeSec;

@@ -22,15 +22,15 @@ public class OperatorInterface {
     }
 
     private void setupButtons() {
-        driveStick.button(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
-        .onTrue(commandFactory.setDriverRotationEnableCommand(true))
-        .onFalse(commandFactory.setDriverRotationEnableCommand(false));
+        // driveStick.button(RobotConstants.DRIVER_STICK.TURN_TOGGLE)
+        // .onTrue(commandFactory.setDriverRotationEnableCommand(true))
+        // .onFalse(commandFactory.setDriverRotationEnableCommand(false));
 
-	    driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
-	        .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
+	    // driveStick.button(RobotConstants.DRIVER_STICK.AUTO_ALIGN_DRIVE)
+	    //     .whileTrue(commandFactory.alignHorizontalToTag(hidJoystickDriveInputSupplier));
 
-        driveStick.button(RobotConstants.DRIVER_STICK.SNAP_YAW)
-            .onTrue(commandFactory.getYawToNearestPerpendicular());
+        // driveStick.button(RobotConstants.DRIVER_STICK.SNAP_YAW)
+        //     .onTrue(commandFactory.getYawToNearestPerpendicular());
 
         driveStick.button(RobotConstants.DRIVER_STICK.AUTO_YAW_TOGGLE)
             .onTrue(commandFactory.autoGroundPickupPositionCube())
@@ -47,9 +47,9 @@ public class OperatorInterface {
 //        driveStick.button(RobotConstants.DRIVER_STICK.BRAKE_COAST)
 //            .onTrue(commandFactory.toggleBrakeModeCommand());
 
-	    driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
-	        .onTrue(commandFactory.toggleFieldAbsoluteCommand())
-	        .onFalse(commandFactory.toggleFieldAbsoluteCommand());
+	    // driveStick.button(RobotConstants.DRIVER_STICK.TOGGLE_FIELD_ABSOLUTE)
+	    //     .onTrue(commandFactory.toggleFieldAbsoluteCommand())
+	    //     .onFalse(commandFactory.toggleFieldAbsoluteCommand());
 
 	    driveStick.button(RobotConstants.DRIVER_STICK.ZERO_GYRO_ANGLE)
 	        .onTrue(commandFactory.getZeroGyro());
@@ -106,30 +106,6 @@ public class OperatorInterface {
             //.onTrue(commandFactory.armPositionFullExtension())
             //.onFalse(commandFactory.armPositionHome());
 
-        // ******* Operator Joytick *******
-        /**
-        operatorStick.button(RobotConstants.OPERATOR_STICK.GRIPPER)
-            .onTrue(commandFactory.openGripperCommand())
-            .onFalse(commandFactory.closeGripperCommand());
-
-        operatorStick.button(RobotConstants.OPERATOR_STICK.HOME_ELBOW)
-            .onTrue(commandFactory.homeElbowCommand());
-
-        operatorStick.button(RobotConstants.OPERATOR_STICK.HOME_TELESCOPE)
-            .onTrue(commandFactory.homeTelescopeCommand());
-
-	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.UP)
-	        .whileTrue(commandFactory.nudgeElbowUpCommand());
-
-	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.DOWN)
-	        .whileTrue(commandFactory.nudgeElbowDownCommand());
-
-	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.IN)
-	        .whileTrue(commandFactory.nudgeArmBackwardCommand());
-
-	    operatorStick.pov(RobotConstants.OPERATOR_STICK.POV.OUT)
-	        .whileTrue(commandFactory.nudgeArmForwardCommand());
-	        */
     }
 
     public void setDefaultCommands() {

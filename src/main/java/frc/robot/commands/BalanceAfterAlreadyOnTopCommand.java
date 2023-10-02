@@ -5,12 +5,12 @@ import edu.wpi.first.math.controller.PIDController;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.BrakeSubsystem;
 import frc.robot.subsystems.BrakeSubsystem.BrakeState;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.NavXSubSystem;
 
 public class BalanceAfterAlreadyOnTopCommand extends EntechCommandBase {
 
-  private final DriveSubsystem drive;
+  private final Drivetrain drive;
   private final NavXSubSystem navx;
   private BrakeSubsystem brake;
   private PIDController pid;
@@ -25,7 +25,7 @@ public class BalanceAfterAlreadyOnTopCommand extends EntechCommandBase {
    * @param dsubsys Drive subsystem used by this command.
    * @param nsubsys NavX subsystem used for pitch measurement
    */
-  public BalanceAfterAlreadyOnTopCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem) {
+  public BalanceAfterAlreadyOnTopCommand(Drivetrain dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem) {
 	  super(dsubsys,nsubsys,brakeSubsystem);
       drive = dsubsys;
       navx = nsubsys;
@@ -40,7 +40,7 @@ public class BalanceAfterAlreadyOnTopCommand extends EntechCommandBase {
    * @param nsubsys NavX subsystem used for pitch measurement
    * @param speed Drive speed (forward is positive, default)
    */
-  public BalanceAfterAlreadyOnTopCommand(DriveSubsystem dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem, double speed,boolean useBrakes) {
+  public BalanceAfterAlreadyOnTopCommand(Drivetrain dsubsys, NavXSubSystem nsubsys, BrakeSubsystem brakeSubsystem, double speed,boolean useBrakes) {
     super(dsubsys,nsubsys,brakeSubsystem);
     drive = dsubsys;
     navx = nsubsys;

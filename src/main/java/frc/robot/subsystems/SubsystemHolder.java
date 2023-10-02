@@ -5,7 +5,7 @@ import java.util.List;
 public class SubsystemHolder {
 
 
-	private DriveSubsystem drive;
+	private Drivetrain drive;
 	private VisionSubsystem vision;
 	private NavXSubSystem navx;
 	private ArmSubsystem arm;
@@ -14,7 +14,7 @@ public class SubsystemHolder {
 	private LEDSubsystem led;
 	private BrakeSubsystem brake;
 
-	public SubsystemHolder(DriveSubsystem drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm, ElbowSubsystem elbow,GripperSubsystem gripper, LEDSubsystem led, BrakeSubsystem brake) {
+	public SubsystemHolder(Drivetrain drive, NavXSubSystem navx, VisionSubsystem vision, ArmSubsystem arm, ElbowSubsystem elbow,GripperSubsystem gripper, LEDSubsystem led, BrakeSubsystem brake) {
 		this.drive = drive;
 		this.navx = navx;
 		this.vision = vision;
@@ -28,7 +28,7 @@ public class SubsystemHolder {
 	public List<EntechSubsystem> asList(){
 		return List.of(drive,vision,navx,arm,elbow,gripper,brake);
 	}
-	public DriveSubsystem getDrive() {
+	public Drivetrain getDrive() {
 		return drive;
 	}
 

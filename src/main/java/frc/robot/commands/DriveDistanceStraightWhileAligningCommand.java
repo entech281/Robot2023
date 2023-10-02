@@ -12,8 +12,8 @@ import frc.robot.commands.supplier.EstimatedPoseSupplier;
 import frc.robot.commands.supplier.YawAngleSupplier;
 import frc.robot.filters.DriveInput;
 import frc.robot.pose.ScoringLocation;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveMode;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase {
@@ -25,7 +25,7 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
   private double minSpeed;
   private double rampFraction;
   private double desiredDistanceMeters;
-  private final DriveSubsystem drive;
+  private final Drivetrain drive;
   private YawAngleSupplier yawSupplier;
   private EstimatedPoseSupplier poseSupplier;
   private Supplier<ScoringLocation> targetLocation;
@@ -37,7 +37,7 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveDistanceStraightWhileAligningCommand(DriveSubsystem drive, double desiredDistanceMeters, 
+  public DriveDistanceStraightWhileAligningCommand(Drivetrain drive, double desiredDistanceMeters, 
 		  double speed, YawAngleSupplier yawSupplier, EstimatedPoseSupplier poseSupplier, Supplier<ScoringLocation> scoringLocation) {
       super(drive);
       this.drive = drive;
@@ -51,7 +51,7 @@ public class DriveDistanceStraightWhileAligningCommand extends EntechCommandBase
 
   }
 
-  public DriveDistanceStraightWhileAligningCommand(DriveSubsystem drive, double desiredDistanceMeters, 
+  public DriveDistanceStraightWhileAligningCommand(Drivetrain drive, double desiredDistanceMeters, 
 		  double speed, double minSpeed, double ramp_fraction, YawAngleSupplier yawSupplier,EstimatedPoseSupplier poseSupplier, Supplier<ScoringLocation> scoringLocation) {
     super(drive);
     this.drive = drive;

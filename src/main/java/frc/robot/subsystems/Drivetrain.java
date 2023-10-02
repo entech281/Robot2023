@@ -24,10 +24,33 @@ import frc.robot.filters.DriveInput;
 import frc.robot.utils.SwerveUtils;
 import frc.robot.RobotConstants;
 
+import frc.robot.filters.FieldPoseToFieldAbsoluteDriveFilter;
+import frc.robot.filters.RobotRelativeDriveFilter;
+import frc.robot.filters.ForwardSpeedLimitFilter;
+import frc.robot.filters.SquareInputsFilter;
+import frc.robot.filters.HoldYawFilter;
+import frc.robot.filters.JoystickDeadbandFilter;
+import frc.robot.filters.NoRotationFilter;
+
 /**
  * The {@code Drivetrain} class contains fields and methods pertaining to the function of the drivetrain.
  */
 public class Drivetrain extends EntechSubsystem {
+
+    public enum DriveMode {
+        BRAKE,
+        COAST
+    }
+    private static final int COUNTER_RESET = 6;
+    private int holdYawSetPointCounter = COUNTER_RESET;
+    // DriveFilters used
+    private JoystickDeadbandFilter jsDeadbandFilter;
+    private RobotRelativeDriveFilter robotRelativeFilter;
+    private NoRotationFilter noRotationFilter;
+    private FieldPoseToFieldAbsoluteDriveFilter yawAngleCorrectionFilter;
+    private HoldYawFilter yawHoldFilter;
+    private SquareInputsFilter jsSquareInputsFilter;
+    private ForwardSpeedLimitFilter speedLimitFilter;
 
 	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = -1.653; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -1.650; // adjust as needed so that virtual (turn) position of wheel is zero when straight
@@ -108,9 +131,27 @@ public class Drivetrain extends EntechSubsystem {
 	}
 
     @Override
-    public void initialize()
-    {
+    public void initialize() {
+        jsDeadbandFilter = new JoystickDeadbandFilter();
+        jsDeadbandFilter.enable(true);
+        jsDeadbandFilter.setDeadband(0.15);
+
+        jsSquareInputsFilter = new SquareInputsFilter();
+        jsSquareInputsFilter.enable(false);
+
+        robotRelativeFilter = new RobotRelativeDriveFilter();
+        yawAngleCorrectionFilter = new FieldPoseToFieldAbsoluteDriveFilter();
+
+        noRotationFilter = new NoRotationFilter();
+        noRotationFilter.enable(false);
+
+        yawHoldFilter = new HoldYawFilter();
+        yawHoldFilter.enable(false);
+
+        speedLimitFilter = new ForwardSpeedLimitFilter();
+        speedLimitFilter.enable(false);
     }
+
     @Override
     public DriveStatus getStatus(){
         return new DriveStatus();
@@ -158,6 +199,69 @@ public class Drivetrain extends EntechSubsystem {
 			},
 			pose);
 	}
+
+    public void driveFilterYawOnly(DriveInput di) {
+
+        if ( ! yawHoldFilter.isSetpointValid() ) {
+            yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
+        }
+        DriveInput filtered = yawHoldFilter.filter(di);
+        drive(filtered);
+    }
+
+    public void driveFilterYawRobotRelative(DriveInput di) {
+        if (!yawHoldFilter.isSetpointValid()) {
+            yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
+        }
+        DriveInput filtered = robotRelativeFilter.filter(yawHoldFilter.filter(di));
+        drive(filtered);
+    }
+    public void filteredDrive(DriveInput di) {
+
+        // Special case: set the setpoint for the HoldYawFilter if nothing has until now
+        if ( ! yawHoldFilter.isSetpointValid() ) {
+            yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
+        }
+
+        // printDI("DI(0):",di);
+    	DriveInput filtered = di;
+        filtered = jsDeadbandFilter.filter(filtered);
+        // printDI("DI(1):",filtered);
+        filtered = jsSquareInputsFilter.filter(filtered);
+        // printDI("DI(2):",filtered);
+
+    	if (isRotationEnabled()) {
+            // Drive holding trigger and is allowed to twist, update the hold yaw filter setpoint to current value
+            // We run the holdyaw filter just to get the dashboard updated.
+            yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
+            holdYawSetPointCounter = COUNTER_RESET;
+        } else {
+        	if (holdYawSetPointCounter > 0) {
+        		yawHoldFilter.setSetpoint(di.getYawAngleDegrees());
+                holdYawSetPointCounter--;
+        	}
+            if (yawHoldFilter.isEnabled()) {
+                filtered = yawHoldFilter.filter(filtered);
+                // printDI("DI(3)",filtered);
+            } else {
+    		    filtered = noRotationFilter.filter(filtered);
+                // printDI("DI(4)",filtered);
+            }
+    	}
+
+    	if (isFieldAbsolute()) {
+            filtered = yawAngleCorrectionFilter.filter(filtered);
+            // printDI("DI(5)",filtered);
+            } else {
+    		filtered = robotRelativeFilter.filter(filtered);
+            // printDI("DI(6)",filtered);
+        }
+
+    	filtered = speedLimitFilter.filter(filtered);
+
+        // printDI("DI(7)",filtered);
+        drive(filtered);
+    }
 
     public void drive(DriveInput di) {
         drive(di.getForward(), di.getRight(), di.getRotation(), true, true);
@@ -318,4 +422,38 @@ public class Drivetrain extends EntechSubsystem {
         return 0.25*distance;
     }
 
+    public void setDriveMode(DriveMode mode) {
+    }
+    public void toggleBrakeCoastMode() {
+    }
+    public boolean isBrakeMode() {
+        return true;
+    }
+
+    public void setHoldYawAngle(double angle) {
+    }
+
+    public void nudgeYawLeft() {
+    }
+
+    public void nudgeYawRight() {
+    }
+	public boolean isFieldAbsolute() {
+		return true;
+	}
+	public boolean isFieldRelative() {
+		return false;
+	}
+	public void toggleFieldAbsolute() {
+	}
+
+	public void setRotationAllowed(boolean newValue) {
+	}
+	public boolean isRotationEnabled() {
+		return true;
+	}
+	public boolean isRotationLocked() {
+		return false;
+	}
+    
 }

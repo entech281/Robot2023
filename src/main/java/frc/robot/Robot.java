@@ -22,8 +22,8 @@ import frc.robot.oi.ShuffleboardInterface;
 import frc.robot.pose.VisionFirstNavxAsBackupPoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BrakeSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveMode;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain.DriveMode;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
 	GripperSubsystem gripper = new GripperSubsystem();	  
 	VisionSubsystem vision = new VisionSubsystem();
 	NavXSubSystem navx = new NavXSubSystem();
-	DriveSubsystem drive = new DriveSubsystem();
+	Drivetrain drive = new Drivetrain();
 	LEDSubsystem led = new LEDSubsystem();
     BrakeSubsystem brake = new BrakeSubsystem();
 	

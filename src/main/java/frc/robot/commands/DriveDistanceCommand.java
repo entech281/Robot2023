@@ -5,8 +5,8 @@
 package frc.robot.commands;
 
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveMode;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveDistanceCommand extends EntechCommandBase {
@@ -14,14 +14,14 @@ public class DriveDistanceCommand extends EntechCommandBase {
   private double minSpeed;
   private double rampFraction;
   private double desiredDistanceMeters;
-  private final DriveSubsystem drive;
+  private final Drivetrain drive;
 
   /**
    * Creates a new DriveDirectionCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveDistanceCommand(DriveSubsystem drive, double desiredDistanceMeters, double speed) {
+  public DriveDistanceCommand(Drivetrain drive, double desiredDistanceMeters, double speed) {
       super(drive);
       this.drive = drive;
       this.desiredDistanceMeters = desiredDistanceMeters;
@@ -30,7 +30,7 @@ public class DriveDistanceCommand extends EntechCommandBase {
       this.minSpeed = speed;
   }
 
-  public DriveDistanceCommand(DriveSubsystem drive, double desiredDistanceMeters, double speed, double minSpeed, double ramp_fraction) {
+  public DriveDistanceCommand(Drivetrain drive, double desiredDistanceMeters, double speed, double minSpeed, double ramp_fraction) {
     super(drive);
     this.drive = drive;
     this.desiredDistanceMeters = desiredDistanceMeters;

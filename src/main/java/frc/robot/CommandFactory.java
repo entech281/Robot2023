@@ -47,7 +47,7 @@ import frc.robot.commands.nudge.NudgeYawCommand;
 import frc.robot.filters.DriveInput;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.BrakeSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.GripperSubsystem;
 import frc.robot.subsystems.GripperSubsystem.GripperState;
@@ -66,7 +66,7 @@ import frc.robot.pose.ScoringLocation;
 public class CommandFactory {
 
 	private RobotState robotState;
-	private DriveSubsystem driveSubsystem;
+	private Drivetrain Drivetrain;
 	private VisionSubsystem visionSubsystem;
 	private NavXSubSystem navxSubsystem;
 	private ArmSubsystem armSubsystem;
@@ -76,7 +76,7 @@ public class CommandFactory {
     private BrakeSubsystem brakeSubsystem;
 
     public CommandFactory(RobotState robotState, SubsystemHolder allSubsystems ){
-    	this.driveSubsystem = allSubsystems.getDrive();
+    	this.Drivetrain = allSubsystems.getDrive();
     	this.navxSubsystem = allSubsystems.getNavx();
     	this.visionSubsystem = allSubsystems.getVision();
     	this.armSubsystem = allSubsystems.getArm();
@@ -124,18 +124,18 @@ public class CommandFactory {
             autonomousArmHigh(),
             new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
             autonomousArmSafe(),
-            new DriveDistanceStraightCommand(driveSubsystem, -4.2, 0.6, 0.2, 0.35, navxSubsystem),
-            new TurnAngleCommand(driveSubsystem, navxSubsystem, 147, 33),
+            new DriveDistanceStraightCommand(Drivetrain, -4.2, 0.6, 0.2, 0.35, navxSubsystem),
+            new TurnAngleCommand(Drivetrain, navxSubsystem, 147, 33),
             autofrogGrabBumpCommand()
         );
     	if (safe) {
             sg.setName("ConeBump -- Safe");
         } else {
             sg.addCommands(
-                new TurnAngleCommand(driveSubsystem, navxSubsystem, 0, 180),
+                new TurnAngleCommand(Drivetrain, navxSubsystem, 0, 180),
                 new ParallelCommandGroup(
-                    // new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.4, 0.45, 0.15, 0.3, navxSubsystem,robotState)
-                    new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.8, 0.45, 0.15, 0.3, navxSubsystem, robotState, () -> { return getScoringLocationForBumpAuto(); })
+                    // new DriveDistanceStraightWhileAligningCommand(Drivetrain, 4.4, 0.45, 0.15, 0.3, navxSubsystem,robotState)
+                    new DriveDistanceStraightWhileAligningCommand(Drivetrain, 4.8, 0.45, 0.15, 0.3, navxSubsystem, robotState, () -> { return getScoringLocationForBumpAuto(); })
                     , new SequentialCommandGroup(
                         new PositionElbowCommand(elbowSubsystem, 82, true),
                         new PositionTelescopeCommand(armSubsystem, 0.175, true)
@@ -157,15 +157,15 @@ public class CommandFactory {
         		autonomousArmHigh(),
         		new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
         		autonomousArmSafe(),
-        		new DriveDistanceStraightCommand(driveSubsystem, -3.9, 0.6, 0.1, 0.35, navxSubsystem),
+        		new DriveDistanceStraightCommand(Drivetrain, -3.9, 0.6, 0.1, 0.35, navxSubsystem),
         		new WaitCommand(0.3),
-        		new TurnAngleCommand(driveSubsystem, navxSubsystem,-163.0,-22),
+        		new TurnAngleCommand(Drivetrain, navxSubsystem,-163.0,-22),
         		autofrogGrabCommand(),
-                new TurnAngleCommand(driveSubsystem, navxSubsystem,0,180),
-                new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem),
+                new TurnAngleCommand(Drivetrain, navxSubsystem,0,180),
+                new DriveYawToNearestPerpendicular(Drivetrain, navxSubsystem),
                 new ParallelCommandGroup(
-                        new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 4.25, 0.5, 0.2, 0.25, navxSubsystem,robotState, () -> { return getScoringLocationForLaneAuto(); })
-                        // new DriveDistanceStraightCommand(driveSubsystem, 4.5, 0.55, 0.2, 0.25, navxSubsystem)
+                        new DriveDistanceStraightWhileAligningCommand(Drivetrain, 4.25, 0.5, 0.2, 0.25, navxSubsystem,robotState, () -> { return getScoringLocationForLaneAuto(); })
+                        // new DriveDistanceStraightCommand(Drivetrain, 4.5, 0.55, 0.2, 0.25, navxSubsystem)
                         , new SequentialCommandGroup(
                             new PositionElbowCommand(elbowSubsystem, 82, true),
                             new PositionTelescopeCommand(armSubsystem, 0.175, true)
@@ -177,7 +177,7 @@ public class CommandFactory {
            		    new ConeDeployCommand(elbowSubsystem, gripperSubsystem),
             		autonomousArmSafe(),
             		//new WaitCommand(0.25),
-            		new DriveDistanceStraightCommand(driveSubsystem, -4.5, 0.6, 0.35, 0.2, navxSubsystem)
+            		new DriveDistanceStraightCommand(Drivetrain, -4.5, 0.6, 0.35, 0.2, navxSubsystem)
        		);
         	sg.setName("TwoPieceLane");
         }
@@ -213,14 +213,14 @@ public class CommandFactory {
             homeTelescopeAndElbow(),
             autoGroundPickupPositionCube(),
             getCommandToTestAlignWhileDriving(),
-            new BalanceAfterAlreadyOnTopCommand(driveSubsystem,navxSubsystem,brakeSubsystem),
+            new BalanceAfterAlreadyOnTopCommand(Drivetrain,navxSubsystem,brakeSubsystem),
             deployBrakeCommand()
     	);
     }
 
 
     public Command getCommandToTestAlignWhileDriving() {
-    	Command c = new DriveDistanceStraightWhileAligningCommand(driveSubsystem, 1.0, 0.3, 0.2, 0.25, navxSubsystem, robotState, () -> { return getScoringLocationForLaneAuto(); });
+    	Command c = new DriveDistanceStraightWhileAligningCommand(Drivetrain, 1.0, 0.3, 0.2, 0.25, navxSubsystem, robotState, () -> { return getScoringLocationForLaneAuto(); });
     	c.setName("Drive1.5MetersWhileTryingtoAlignToA1");
     	return c;
     }
@@ -230,10 +230,10 @@ public class CommandFactory {
 
     private Command autonomousSetup() {
         return new SequentialCommandGroup(
-            new ZeroGyroCommand(navxSubsystem, driveSubsystem)
+            new ZeroGyroCommand(navxSubsystem, Drivetrain)
             , new RetractBrakeCommand(brakeSubsystem)
 	        , new GripperCommand(gripperSubsystem, GripperState.kClose)
-	        , new DriveSetBrakeMode(driveSubsystem)
+	        , new DriveSetBrakeMode(Drivetrain)
 	        , new PositionTelescopeCommand(armSubsystem, RobotConstants.ARM.POSITION_PRESETS.MIN_METERS, true)
         );
     }
@@ -289,10 +289,10 @@ public class CommandFactory {
 
             new GripperCommand(gripperSubsystem, GripperState.kOpen),
             autoGroundPickupPositionCone()
-            // from prior working, new DriveDistanceStraightCommand(driveSubsystem, 0.1375, 0.22, 0.15, 0.3, navxSubsystem)
-            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_FWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
+            // from prior working, new DriveDistanceStraightCommand(Drivetrain, 0.1375, 0.22, 0.15, 0.3, navxSubsystem)
+            , new DriveDistanceStraightCommand(Drivetrain, MOVE_DISTANCE_FWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
-            , new DriveDistanceStraightCommand(driveSubsystem, -MOVE_DISTANCE_BWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
+            , new DriveDistanceStraightCommand(Drivetrain, -MOVE_DISTANCE_BWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
             , dialCarryPosition()
         );
     }
@@ -307,10 +307,10 @@ public class CommandFactory {
 
             new GripperCommand(gripperSubsystem, GripperState.kOpen),
             autoGroundPickupPositionCone()
-            // from prior working, new DriveDistanceStraightCommand(driveSubsystem, 0.1375, 0.22, 0.15, 0.3, navxSubsystem)
-            , new DriveDistanceStraightCommand(driveSubsystem, MOVE_DISTANCE_FWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
+            // from prior working, new DriveDistanceStraightCommand(Drivetrain, 0.1375, 0.22, 0.15, 0.3, navxSubsystem)
+            , new DriveDistanceStraightCommand(Drivetrain, MOVE_DISTANCE_FWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
             , new GripperCommand(gripperSubsystem, GripperState.kClose)
-            , new DriveDistanceStraightCommand(driveSubsystem, -MOVE_DISTANCE_BWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
+            , new DriveDistanceStraightCommand(Drivetrain, -MOVE_DISTANCE_BWD, MOVE_SPEED, MOVE_MIN_SPEED, MOVE_RAMP, navxSubsystem)
             , dialCarryPosition()
         );
     }
@@ -334,8 +334,8 @@ public class CommandFactory {
             , autonomousArmHigh()
     		, new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
-            , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+            , new DriveDistanceCommand(Drivetrain, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+            , new DriveBrakeForSeconds(Drivetrain, HOLD_BRAKE_TIME)
         );
         sg.setName("Cone Wide");
         return sg;
@@ -352,9 +352,9 @@ public class CommandFactory {
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,MOVE_SECS)
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
-            , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+            , new DriveDirectionCommand(Drivetrain,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,MOVE_SECS)
+            , new DriveDistanceCommand(Drivetrain, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+            , new DriveBrakeForSeconds(Drivetrain, HOLD_BRAKE_TIME)
         );
         sg.setName("Cube Right");
         return sg;
@@ -372,9 +372,9 @@ public class CommandFactory {
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new DriveDirectionCommand(driveSubsystem,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,MOVE_SECS)
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
-            , new DriveBrakeForSeconds(driveSubsystem, HOLD_BRAKE_TIME)
+            , new DriveDirectionCommand(Drivetrain,JOG_FORWARD_SPEED,JOG_RIGHT_SPEED,MOVE_SECS)
+            , new DriveDistanceCommand(Drivetrain, MOVE_DISTANCE_METERS, 0.4, 0.3, .1)
+            , new DriveBrakeForSeconds(Drivetrain, HOLD_BRAKE_TIME)
         );
         sg.setName("Cube Left");
         return sg;
@@ -387,7 +387,7 @@ public class CommandFactory {
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.3, 0.3, .1)
+            , new DriveDistanceCommand(Drivetrain, MOVE_DISTANCE_METERS, 0.3, 0.3, .1)
 
         );
         if ( useBrakes) {
@@ -407,7 +407,7 @@ public class CommandFactory {
             , autonomousArmHigh()
             , new ConeDeployCommand(elbowSubsystem, gripperSubsystem)
             , autonomousArmSafe()
-            , new DriveDistanceCommand(driveSubsystem, MOVE_DISTANCE_METERS, 0.3, 0.3, .1)
+            , new DriveDistanceCommand(Drivetrain, MOVE_DISTANCE_METERS, 0.3, 0.3, .1)
 
         );
         if ( useBrakes) {
@@ -475,7 +475,7 @@ public class CommandFactory {
             , autonomousArmHigh()
             , autonomousScoreCube()
             , autonomousArmSafe()
-            , new DriveCrosshairBalence(driveSubsystem, navxSubsystem, brakeSubsystem)
+            , new DriveCrosshairBalence(Drivetrain, navxSubsystem, brakeSubsystem)
             , deployBrakeCommand()
 
         );
@@ -485,20 +485,20 @@ public class CommandFactory {
 
     private Command autoDriveOverAndBalance(double over_distance, double over_speed, double brake_time, double balance_speed, boolean useBrakes) {
         return new SequentialCommandGroup(
-              new DriveDistanceCommand(driveSubsystem, over_distance, over_speed, 0.3, .1)
-            , new DriveBrakeForSeconds(driveSubsystem, brake_time)
-            , new DriveCSForwardTipCommand(driveSubsystem, navxSubsystem)
-            , new DriveCSForwardDockCommand(driveSubsystem, navxSubsystem)
-            , new DriveCSForwardBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, useBrakes)
+              new DriveDistanceCommand(Drivetrain, over_distance, over_speed, 0.3, .1)
+            , new DriveBrakeForSeconds(Drivetrain, brake_time)
+            , new DriveCSForwardTipCommand(Drivetrain, navxSubsystem)
+            , new DriveCSForwardDockCommand(Drivetrain, navxSubsystem)
+            , new DriveCSForwardBalanceCommand(Drivetrain, navxSubsystem, brakeSubsystem, useBrakes)
         );
     }
 
 
     public Command autoDriveBalanceOnly(double balance_speed, boolean useBrakes) {
         return new SequentialCommandGroup(
-          new DriveCSForwardTipCommand(driveSubsystem, navxSubsystem, balance_speed)
-        , new DriveCSForwardDockCommand(driveSubsystem, navxSubsystem)
-        , new DriveCSForwardBalanceCommand(driveSubsystem, navxSubsystem, brakeSubsystem, useBrakes)
+          new DriveCSForwardTipCommand(Drivetrain, navxSubsystem, balance_speed)
+        , new DriveCSForwardDockCommand(Drivetrain, navxSubsystem)
+        , new DriveCSForwardBalanceCommand(Drivetrain, navxSubsystem, brakeSubsystem, useBrakes)
         );
     }
 
@@ -518,7 +518,7 @@ public class CommandFactory {
     }
 
     public void setDefaultDriveCommand (Command newDefaultCommand ) {
-    	driveSubsystem.setDefaultCommand(newDefaultCommand);
+    	Drivetrain.setDefaultCommand(newDefaultCommand);
     }
     public void setDefaultGripperCommand ( Command newDefaultCommand) {
     	gripperSubsystem.setDefaultCommand(newDefaultCommand);
@@ -529,11 +529,11 @@ public class CommandFactory {
     }
 
     public Command filteredDriveCommand( Supplier<DriveInput> operatorInput) {
-    	return new FilteredDriveCommand(driveSubsystem,addYawToOperatorJoystickInput( operatorInput));
+    	return new FilteredDriveCommand(Drivetrain,addYawToOperatorJoystickInput( operatorInput));
     }
 
     public Command driveCommand(Supplier<DriveInput> operatorInput) {
-        return new SimpleDriveCommand(driveSubsystem, addYawToOperatorJoystickInput(operatorInput));
+        return new SimpleDriveCommand(Drivetrain, addYawToOperatorJoystickInput(operatorInput));
     }
 
     public Command deployBrakeCommand() {
@@ -545,11 +545,11 @@ public class CommandFactory {
     }
 
     public Command toggleBrakeModeCommand() {
-        return new DriveToggleBrakeMode(driveSubsystem);
+        return new DriveToggleBrakeMode(Drivetrain);
     }
 
 	public Command toggleFieldAbsoluteCommand() {
-		return new ToggleFieldAbsoluteCommand(driveSubsystem);
+		return new ToggleFieldAbsoluteCommand(Drivetrain);
 	}
 
     public Command toggleGripperCommand() {
@@ -557,58 +557,58 @@ public class CommandFactory {
     }
 
 	public Command setDriverRotationEnableCommand(boolean newValue) {
-		return new DriveSetRotationEnableCommand(driveSubsystem,newValue);
+		return new DriveSetRotationEnableCommand(Drivetrain,newValue);
 	}
 
     public Command alignHorizontalToTag( Supplier<DriveInput> operatorInput) {
   		return new SequentialCommandGroup(
-  				new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem),
-  				new HorizontalAlignWithTagCommand(driveSubsystem, ledSubsystem, addYawToOperatorJoystickInput(operatorInput), robotState)
+  				new DriveYawToNearestPerpendicular(Drivetrain, navxSubsystem),
+  				new HorizontalAlignWithTagCommand(Drivetrain, ledSubsystem, addYawToOperatorJoystickInput(operatorInput), robotState)
   		);
     }
 
     public Command getYawToNearestPerpendicular() {
-        return new DriveYawToNearestPerpendicular(driveSubsystem, navxSubsystem );
+        return new DriveYawToNearestPerpendicular(Drivetrain, navxSubsystem );
     }
 
     public Command getZeroGyro() {
-        return new ZeroGyroCommand(navxSubsystem, driveSubsystem);
+        return new ZeroGyroCommand(navxSubsystem, Drivetrain);
     }
 
     public Command nudgeLeftCommand() {
-        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.LEFT);
+        return new NudgeDirectionCommand(Drivetrain, NudgeDirectionCommand.DIRECTION.LEFT);
     }
 
     public Command nudgeRightCommand() {
-        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.RIGHT);
+        return new NudgeDirectionCommand(Drivetrain, NudgeDirectionCommand.DIRECTION.RIGHT);
     }
 
     public Command oneLocationLeftCommand() {
-        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.SCORE_LEFT);
+        return new NudgeDirectionCommand(Drivetrain, NudgeDirectionCommand.DIRECTION.SCORE_LEFT);
     }
 
     public Command oneLocationRightCommand() {
-        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.SCORE_RIGHT);
+        return new NudgeDirectionCommand(Drivetrain, NudgeDirectionCommand.DIRECTION.SCORE_RIGHT);
     }
 
     public Command nudgeForwardCommand() {
-        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.FORWARD);
+        return new NudgeDirectionCommand(Drivetrain, NudgeDirectionCommand.DIRECTION.FORWARD);
     }
 
     public Command nudgeBackwardCommand() {
-        return new NudgeDirectionCommand(driveSubsystem, NudgeDirectionCommand.DIRECTION.BACKWARD);
+        return new NudgeDirectionCommand(Drivetrain, NudgeDirectionCommand.DIRECTION.BACKWARD);
     }
 
     public Command nudgeYawLeftCommand() {
-        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.LEFT);
+        return new NudgeYawCommand(Drivetrain, NudgeYawCommand.DIRECTION.LEFT);
     }
 
     public Command nudgeYawRightCommand() {
-        return new NudgeYawCommand(driveSubsystem, NudgeYawCommand.DIRECTION.RIGHT);
+        return new NudgeYawCommand(Drivetrain, NudgeYawCommand.DIRECTION.RIGHT);
     }
 
     public Command driveDistanceCommand(double distanceMeters) {
-        return new DriveDirectionCommand(driveSubsystem, distanceMeters, 0, 0);
+        return new DriveDirectionCommand(Drivetrain, distanceMeters, 0, 0);
     }
 
     public Command groundRetractedPosition() {

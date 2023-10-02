@@ -8,7 +8,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  *
@@ -16,7 +16,7 @@ import frc.robot.subsystems.DriveSubsystem;
  * @author aheitkamp
  */
 public class DriveForwardUntilTrueCommand extends EntechCommandBase {
-    private final DriveSubsystem drive;
+    private final Drivetrain drive;
     private final BooleanSupplier condition;
     private final Supplier<DriveInput> operatorInput;
 
@@ -28,7 +28,7 @@ public class DriveForwardUntilTrueCommand extends EntechCommandBase {
      * @param drive The drive subsystem on which this command will run
      * @param condition the condition that when true will make the robot stop driving
      */
-    public DriveForwardUntilTrueCommand(DriveSubsystem drive, BooleanSupplier condition, Supplier<DriveInput> operatorInput) {
+    public DriveForwardUntilTrueCommand(Drivetrain drive, BooleanSupplier condition, Supplier<DriveInput> operatorInput) {
         super(drive);
         this.drive = drive;
         this.condition = condition;

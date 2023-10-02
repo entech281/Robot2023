@@ -4,20 +4,20 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.DriveSubsystem.DriveMode;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain.DriveMode;
 
 /** An example command that uses an example subsystem. */
 public class DriveSetBrakeMode extends EntechCommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DriveSubsystem m_subsystem;
+  private final Drivetrain m_subsystem;
 
   /**
    * Creates a new DriveSetBrake.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveSetBrakeMode(DriveSubsystem subsystem) {
+  public DriveSetBrakeMode(Drivetrain subsystem) {
       super(subsystem);
       m_subsystem = subsystem;
   }

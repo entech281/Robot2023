@@ -7,7 +7,7 @@ import frc.robot.controllers.RobotLateralPIDController;
 import frc.robot.filters.DriveInput;
 import frc.robot.filters.JoystickDeadbandFilter;
 import frc.robot.filters.SquareInputsFilter;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LEDSubsystem;
 
 /**
@@ -27,7 +27,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
 
 
     
-    protected final DriveSubsystem drive;
+    protected final Drivetrain drive;
     protected final LEDSubsystem led;
     protected final LateralOffsetSupplier lateralOffsetSupplier;
     protected final Supplier<DriveInput> operatorInput;
@@ -42,7 +42,7 @@ public class HorizontalAlignWithTagCommand extends EntechCommandBase {
      * (Operator can still drive in the meantime)
      * @param joystick the joystick you controll the robot with
      */
-    public HorizontalAlignWithTagCommand(DriveSubsystem drive, LEDSubsystem led, Supplier<DriveInput> operatorInput, LateralOffsetSupplier lateralOffsetSupplier ) {
+    public HorizontalAlignWithTagCommand(Drivetrain drive, LEDSubsystem led, Supplier<DriveInput> operatorInput, LateralOffsetSupplier lateralOffsetSupplier ) {
         super(drive,led);
         this.drive = drive;
         this.led = led;

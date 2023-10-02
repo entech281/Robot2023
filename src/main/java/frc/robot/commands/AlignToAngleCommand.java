@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.controllers.RobotYawPIDController;
 import frc.robot.filters.DriveInput;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 /**
  *
  * 
@@ -18,7 +18,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class AlignToAngleCommand extends EntechCommandBase {
 
     private Supplier<Double> desiredAngleSupplier;
-    protected final DriveSubsystem drive;
+    protected final Drivetrain drive;
     protected final RobotYawPIDController pid;
     protected final Supplier<DriveInput> operatorInput;
     
@@ -30,7 +30,7 @@ public class AlignToAngleCommand extends EntechCommandBase {
      * @param latestPose  The supplier of latest pose of the robot to get the current yaw
      * @param joystick the joystick you controll the robot with
      */
-    public AlignToAngleCommand(DriveSubsystem drive,      		
+    public AlignToAngleCommand(Drivetrain drive,      		
     		Supplier<DriveInput> operatorInput,
     		Supplier<Double> desiredAngleSupplier) {
         super(drive);

@@ -11,7 +11,7 @@ import frc.robot.pose.LateralAlignCalculator;
 import frc.robot.pose.LateralOffset;
 import frc.robot.pose.MovingAveragePose;
 import frc.robot.pose.PoseEstimator;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.NavXSubSystem;
@@ -42,7 +42,7 @@ public class RobotContext {
 	//inject just what we need. later we might need arm-- we can add it then
 	public RobotContext(
 			RobotState robotState, 
-			DriveSubsystem drive, 
+			Drivetrain drive, 
 			NavXSubSystem navx, 
 			VisionSubsystem vision,	
 			ElbowSubsystem elbow,
@@ -50,7 +50,7 @@ public class RobotContext {
 			PoseEstimator poseEstimator) {
 		this.elbow = elbow;
 		this.ledSubsystem = ledSubsystem;
-	    driveSubsystem = drive;
+	    Drivetrain = drive;
 	    navXSubSystem = navx;
 	    visionSubsystem = vision;
 	    this.robotState = robotState;
@@ -96,7 +96,6 @@ public class RobotContext {
     			setAlignState(Color.kRed);
     		}
     	}
-    	driveSubsystem.setMaxSpeedPercent(maxSpeed);
     }   
 
     private void setAlignState(Color c) {
@@ -116,7 +115,7 @@ public class RobotContext {
     }
 
     private RobotState robotState;
-	private DriveSubsystem driveSubsystem;
+	private Drivetrain Drivetrain;
     private NavXSubSystem navXSubSystem;
     private VisionSubsystem visionSubsystem;
     private LEDSubsystem ledSubsystem;
